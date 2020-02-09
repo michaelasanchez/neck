@@ -1,22 +1,26 @@
 import * as React from "react"
 
+import { Fret } from "./Fret";
+
 export interface StringProps {
-  model: string;
-  scale: string;
+  frets: number;
 }
 
-// export const Dang = (props: HelloProps) => <h1>Hello from {props.compiler} and {props.framework}!</h1>;
-
-// 'HelloProps' describes the shape of props.
-// State is never set so we use the '{}' type.
 export class String extends React.Component<StringProps, {}> {
-  constructor(props: any) {
-    super(props);
-  }
 
   render() {
+    let frets = [];
+    
+    for (var i = 1; i < this.props.frets; i++) {
+      frets.push(<Fret fret={this.props.frets} />);
+    }
+
     return (
-      <div className="string"></div>
+      <div className="string">
+        <Fret open={true} fret={0} />
+        {frets}
+      </div>
     );
   }
+
 }

@@ -9,9 +9,9 @@
 @import "overrides";
 
 /* Components */
-@import "navbar";
-@import "options";
+@import "ui/navbar";
+@import "ui/options";
 
-@import "neck";
+@import "neck/neck";
 
 @import "left";

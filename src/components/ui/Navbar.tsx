@@ -11,21 +11,13 @@ export class Navbar extends React.Component<NavbarProps, {}> {
 
   constructor(props: any) {
     super(props);
-
-    this.state = {
-
-    }
-
-    console.log('Navbar', this);
   }
 
   handleShow() {
-    console.log('show', this.props);
     this.props.show();
   }
 
   render() {
-    console.log('Again', this.props);
     return (
       <nav className="navbar navbar-expand fixed-bottom justify-content-between navbar-dark bg-dark">
         <a className="navbar-brand" href="#">Neck</a>

@@ -1,19 +1,16 @@
 import * as React from 'react'
 
 import { Button, Modal } from 'react-bootstrap';
-import { OptionsModel } from '../../models/options.model';
 
 export interface OptionsProps {
-  hide: any;
-  options: OptionsModel;
+  hide: Function;
+  showing: any;
 }
 
 export class Options extends React.Component<OptionsProps, {}> {
 
   constructor(props: any) {
     super(props);
-
-    console.log('Options', this);
   }
 
   handleClose() {
@@ -24,9 +21,9 @@ export class Options extends React.Component<OptionsProps, {}> {
 
     return (
       <>
-        <Modal id="options" show={this.props.options.show} onHide={() => this.handleClose()}>
+        <Modal id="options" show={this.props.showing} onHide={() => this.handleClose()}>
           <Modal.Header closeButton>
-            <Modal.Title>Modal title</Modal.Title>
+            <Modal.Title>Options</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>

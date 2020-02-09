@@ -20,7 +20,7 @@ main {
   margin: $neck-margin-top auto $neck-margin-bottom;
   max-width: $neck-max-width + $fret-label-width * 2;
 
-  .other {
+  .backdrop {
     position: absolute;
     top: 0;
     width: 100%;

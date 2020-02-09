@@ -30,7 +30,7 @@ main {
   max-width: 500px;
 }
 
-.neck .other {
+.neck .backdrop {
   position: absolute;
   top: 0;
   width: 100%;
