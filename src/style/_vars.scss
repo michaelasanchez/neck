@@ -1,0 +1,49 @@
+$debug-border: none; //1px solid red;
+$debug-border-top: none; //1px solid red;
+$debug-border-right: none; //1px solid red;
+$debug-border-bottom: none; //1px solid red;
+$debug-border-left: none; //1px solid red;
+
+/* Fonts */
+$font-merriweather: "Merriweather", serif;
+
+
+/* Navbar */
+$navbar-height: 55px;
+
+
+/* Options */
+$modal-margin-top: 15px;
+$modal-margin-bottom: 70px;
+
+
+/* Neck */
+$neck-font-family: $font-merriweather;
+
+$neck-margin-top: 80px;
+$neck-margin-bottom: $neck-margin-top;
+
+$neck-max-width: 400px;
+
+/* Fretboard */
+$fretboard-background-color: #fcfcfc;
+
+/* Frets */
+$fret-height: 80px;
+
+$fret-border-bottom: 1px solid #ddd;
+
+/* Open Fret */
+$fret-open-height: 50px;
+
+$fret-open-border-bottom: 2px solid #aaa;
+$fret-open-font-weight: 700;
+
+/* Fret Labels */
+$fret-label-color: #999;
+$fret-label-width: 50px;
+
+$fret-animation-length: .2s;
+
+/* Fret Markers */
+$marker-diameter: 12px;

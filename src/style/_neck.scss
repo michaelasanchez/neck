@@ -1,0 +1,159 @@
+.neck {
+
+  .strings {
+    font-family: $neck-font-family;
+  }
+  
+  /* Fret Label Animations */
+  $open-to-first: $fret-open-height + ($fret-height - $fret-open-height) / 2;
+
+  .fret {
+    // .label.next {
+    //   transform: translateY(-$fret-height);
+    // }
+  }
+
+  &.up .fret {
+    // &:nth-child(2) {
+    //   .label.prev.out {
+    //     transform: translateY(-$open-to-first);
+    //   }
+    // }
+
+    .label.prev.out {
+      animation: up-out $fret-animation-length;
+    }
+
+    // &:nth-child(1) {
+    //   .label.next {
+    //     transform: translateY($open-to-first);
+    //   }
+    // }
+
+    .label.next.in {
+      animation: up-in $fret-animation-length;
+    }
+  }
+
+  &.down .fret {
+    // &:nth-child(1) {
+    //   .label.prev.out {
+    //     transform: translateY($open-to-first);
+    //   }
+    // }
+
+    .label.prev.out {
+      animation: down-out $fret-animation-length;
+    }
+
+    // &:nth-child(2) {
+    //   .label.next {
+    //     transform: translateY(-$open-to-first);
+    //   }
+    // }
+
+    .label.next.in {
+      animation: down-in $fret-animation-length;
+    }
+  }
+}
+
+.fretboard {
+  background-color: $fretboard-background-color;
+}
+
+.fretboard-labels,
+.fretboard-markers {
+  position: absolute;
+  width: 100%;
+}
+
+.fretboard-labels {
+  max-width: $neck-max-width + $fret-label-width * 2;
+  display: flex;
+  justify-content: space-between;
+
+  .fret-label-group {
+    width: $fret-label-width;
+
+    .fret-label {
+      @include debug;
+      @include center;
+
+      color: $fret-label-color;
+      height: $fret-height;
+
+      &.open {
+        height: $fret-open-height;
+      }
+    }
+  }
+}
+
+.fretboard-markers {
+  padding: $fret-open-height $fret-label-width 0;
+}
+
+.fret-marker {
+  @include center;
+
+  height: $fret-height;
+
+  color: #999;
+
+  .marker {
+    margin: 0 60px;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    border-radius: 50%;
+    width: $marker-diameter;
+    height: $marker-diameter;
+  }
+}
+
+.fret {
+  @include debug;
+
+  border-bottom: $fret-border-bottom;
+  height: $fret-height;
+
+  &.open {
+    border-bottom: $fret-open-border-bottom;
+    font-weight: $fret-open-font-weight;
+    height: $fret-open-height;
+
+    .fret-symbol {
+      background-color: #ccc;
+    }
+  }
+
+  .fret-symbol {
+    border-radius: 50%;
+    border: 1px solid #aaa;
+    height: 10px;
+    width: 10px;
+  }
+
+  .label {
+    &.next {
+      opacity: 0;
+
+      &.in {
+        opacity: 1;
+      }
+    }
+
+    &.prev {
+      opacity: 1;
+      // color: red;
+
+      &.out {
+        opacity: 0;
+      }
+    }
+  }
+
+  label {
+    margin: 0;
+  }
+}

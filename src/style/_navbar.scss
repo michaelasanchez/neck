@@ -1,0 +1,16 @@
+nav {
+  a.dropdown-item {
+    cursor: pointer;
+  }
+
+  button.options {
+    color: #fff;
+    margin-right: 15px;
+    opacity: 0.6;
+    transition: background-color opacity 100ms;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}

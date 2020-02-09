@@ -1,0 +1,42 @@
+
+  @keyframes up-out {
+    0% {
+      transform: translateY(0) scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-$fret-height * .4) scaleY(.5);
+      opacity: 0;
+    }
+  }
+  @keyframes up-in {
+    0% {
+      transform: translateY($fret-height * .4) scaleY(.5);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0) scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes down-out {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY($fret-height * .4) scaleY(.5);
+      opacity: 0;
+    }
+  }
+  @keyframes down-in {
+    0% {
+      transform: translateY(-$fret-height * .4) scaleY(.5);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }

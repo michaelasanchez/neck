@@ -1,0 +1,23 @@
+main.left {
+
+    // Navbar
+    nav {
+      flex-direction: row-reverse;
+
+      form {
+        flex-direction: row-reverse;
+
+        button.options {
+          margin: 0 0 0 15px;
+        }
+      }
+    }
+
+    // Options
+
+    // Neck
+    .neck .strings {
+      flex-direction: row-reverse;
+    }
+
+}

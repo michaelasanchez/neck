@@ -1,0 +1,14 @@
+@mixin flex-align($h, $v) {
+  display: flex;
+  align-items: $h;
+  justify-content: $v;
+}
+
+@mixin center {
+  @include flex-align(center, center);
+}
+
+@mixin debug {
+  border: $debug-border-top $debug-border-right $debug-border-bottom $debug-border-left;
+  border: $debug-border;
+}

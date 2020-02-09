@@ -1,0 +1,85 @@
+.modal #options {
+
+  max-height: calc(100vh - #{$modal-margin-top} - #{$modal-margin-bottom});
+  max-width: unset;
+  width: calc(100vw - 30px);
+  margin: $modal-margin-top 15px $modal-margin-bottom;
+  overflow: hidden;
+
+  position: absolute;
+  bottom: 0;
+
+  a[data-toggle]{
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  
+  label,
+  input {
+    cursor: pointer;
+  }
+
+  .modal-body {
+    padding: 0 1px;
+  }
+
+  .modal-footer {
+    padding: .25rem;
+    border-top: none;
+  }
+  
+  .card-title:only-child {
+    transition: margin .2s;
+  }
+  .collapsed .card-title:only-child {
+    margin-bottom: .25rem;
+  }
+
+  .form-inline h5 {
+    display: inline-block;
+  }
+
+  .list-group-item {
+    transition: background-color 200ms;
+
+    &:last-child {
+      border-bottom-left-radius: .25rem;
+      border-bottom-right-radius: .25rem;
+    }
+
+    &:hover {
+      // background-color: #f8f9fa;
+    }
+
+    .list-group-item {
+      border: none;
+      padding: 0.25rem 1.25rem;
+    }
+
+    .form-group,
+    .form-group h5 {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/* Modal Animation */
+.modal-content {
+  position: relative;
+  animation: animatebottom 0.2s;
+}
+
+@keyframes animatebottom {
+  from {
+    bottom: -300px;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
+}
