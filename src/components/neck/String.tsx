@@ -9,9 +9,8 @@ export interface StringProps {
 export class String extends React.Component<StringProps, {}> {
 
   render() {
-    let frets = [];
-    
-    for (var i = 1; i < this.props.frets; i++) {
+    let frets: JSX.Element[] = [];
+    for (var i = 1; i <= this.props.frets; i++) {
       frets.push(<Fret fret={this.props.frets} />);
     }
 

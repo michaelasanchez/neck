@@ -1,26 +1,27 @@
 import * as React from "react"
+import { times } from 'lodash';
 
 export interface FretMarkersProps {
-  options: string
+  markers: number[];
 }
 
-// export const Dang = (props: HelloProps) => <h1>Hello from {props.compiler} and {props.framework}!</h1>;
-
-// 'HelloProps' describes the shape of props.
-// State is never set so we use the '{}' type.
 export class FretMarkers extends React.Component<FretMarkersProps, {}> {
-  constructor(props: any) {
-    super(props);
-  }
 
   render() {
+    const markers: JSX.Element[] = [];
+
+    for (var m in this.props.markers) {
+      let curMarkers: JSX.Element[] = [];
+
+      times(this.props.markers[m], () => curMarkers.push(<div className="marker"></div>));
+      markers.push(<div className="fret-marker">{curMarkers}</div>)
+    }
+
     return (
       <div className="fret-marker-group">
-        <div className="fret-marker">
-          <div className="marker"></div>
-          <div className="marker"></div>
-        </div>
+        {markers}
       </div>
     );
   }
+  
 }

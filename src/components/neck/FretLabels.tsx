@@ -1,23 +1,22 @@
 import * as React from "react"
 
 export interface FretLabelsProps {
-  options: string
+  frets: number
 }
 
-// export const Dang = (props: HelloProps) => <h1>Hello from {props.compiler} and {props.framework}!</h1>;
-
-// 'HelloProps' describes the shape of props.
-// State is never set so we use the '{}' type.
 export class FretLabels extends React.Component<FretLabelsProps, {}> {
-  constructor(props: any) {
-    super(props);
-  }
 
   render() {
+    const labels: JSX.Element[] = [];
+    for (var i = 1; i <= this.props.frets; i++) {
+      labels.push(<div className="fret-label">{i}</div>)
+    }
+
     return (
       <div className="fret-label-group">
-        {/* <div class="fret-label{{label && $index > 0 ? '' : ' open'}}" ng-repeat="label in options track by $index">{{label && $index > 0 ? $index : null}}</div> */}
+        {labels}
       </div>
     );
   }
+
 }
