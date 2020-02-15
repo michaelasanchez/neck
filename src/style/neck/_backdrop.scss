@@ -4,31 +4,27 @@
   background-color: $fretboard-background-color;
 }
 
-.fretboard-labels,
+.fretboard-numbers,
 .fretboard-markers {
   position: absolute;
   width: 100%;
 }
 
-.fretboard-labels {
+.fretboard-numbers {
   max-width: $neck-max-width + $fret-label-width * 2;
   display: flex;
   justify-content: space-between;
   margin-top: $fret-open-height;
 
-  .fret-label-group {
+  .fret-number-group {
     width: $fret-label-width;
 
-    .fret-label {
+    .label {
       @include debug;
       @include center;
 
       color: $fret-label-color;
       height: $fret-height;
-
-      &.open {
-        height: $fret-open-height;
-      }
     }
   }
 }
@@ -37,7 +33,7 @@
   padding: $fret-open-height $fret-label-width 0;
 }
 
-.fret-marker {
+.fret-marker-group {
   @include center;
 
   height: $fret-height;

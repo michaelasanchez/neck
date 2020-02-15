@@ -1,20 +1,44 @@
 import * as React from 'react'
+import { map } from 'lodash'
 
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
+import { Key, Keys } from '../../models/Key';
 
 export interface NavbarProps {
   show: any;
   test: any;
+  setKey: Function;
 }
 
 export class Navbar extends React.Component<NavbarProps, {}> {
 
+  private keys: Key[];
+
   constructor(props: any) {
     super(props);
+
+    this.keys = Keys.All();
   }
 
   handleShow() {
     this.props.show();
+  }
+
+  handleKeySelect(key: any) {
+    const newKey = this.keys[parseInt(key)];
+    this.props.setKey(newKey);
+  }
+
+  renderMenuItems() {
+    return (
+      <>
+        {map(this.keys, (key, index) =>
+          <Dropdown.Item className="dropdown-item" onSelect={(e: any) =>this.handleKeySelect(e)} eventKey={index.toString()}>
+            {key.Root.toString()}
+          </Dropdown.Item>
+        )}
+      </>
+    );
   }
 
   render() {
@@ -26,18 +50,16 @@ export class Navbar extends React.Component<NavbarProps, {}> {
           <form className="form-inline">
             <Button variant="outline-success" className="options" onClick={() => this.handleShow()}>
               Options
-              </Button>
+            </Button>
 
             <div className="nav-item btn-group dropup">
-              <button type="button" className="btn btn-secondary">
-                Key of C
-                  </button>
-              <button type="button" className="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
-              </button>
-
-              <div className="dropdown-menu dropdown-menu-right">
-                <a className="dropdown-item"></a>
-              </div>
+              <Dropdown as={ButtonGroup}>
+                <Button variant="secondary">Key of C</Button>
+                <Dropdown.Toggle split variant="secondary" id="dropdown-custom-2" />
+                <Dropdown.Menu className="dropdown-menu dropdown-menu-right">
+                  {this.renderMenuItems()}
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           </form>
 

@@ -2,8 +2,10 @@ import * as React from "react"
 
 import { Navbar } from "./ui/Navbar";
 import { Options } from "./ui/Options";
+import { Key } from "../models/Key";
 
 export interface UiProps {
+  setKey: Function;
 }
 
 export interface UiState {
@@ -36,7 +38,7 @@ export class Ui extends React.Component<UiProps, UiState> {
     render() {
         return (
           <>
-            <Navbar show={() => this.showOptions()} test={this.state.showOptions}/>
+            <Navbar show={() => this.showOptions()} setKey={(k: Key) => this.props.setKey(k)} test={this.state.showOptions}/>
             <Options hide={() => this.hideOptions()} showing={this.state.showOptions} />
           </>
         )

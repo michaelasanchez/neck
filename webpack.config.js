@@ -21,7 +21,8 @@ module.exports = function makeWebpackConfig() {
   };
 
   // Enable sourcemaps for debugging webpack's output.
-  config.devtool = "source-map";
+  if (!isProd)
+    config.devtool = "source-map";
 
   // config.output = {
   //   // Absolute output directory

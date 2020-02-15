@@ -1,5 +1,5 @@
 import * as React from "react"
-import { times } from 'lodash';
+import { each, forEach, times } from 'lodash';
 
 export interface FretMarkersProps {
   markers: number[];
@@ -7,21 +7,29 @@ export interface FretMarkersProps {
 
 export class FretMarkers extends React.Component<FretMarkersProps, {}> {
 
+
   render() {
-    const markers: JSX.Element[] = [];
+    const markerGroups: JSX.Element[] = [];
 
-    for (var m in this.props.markers) {
-      let curMarkers: JSX.Element[] = [];
+    // console.log(each(this.props.markers, (m) => {
+    //   <div className="fret-marker">{times(m, _ => <div className="marker"></div>)}</div>
+    // }))
 
-      times(this.props.markers[m], () => curMarkers.push(<div className="marker"></div>));
-      markers.push(<div className="fret-marker">{curMarkers}</div>)
-    }
+    each(this.props.markers, (m) => {
+      markerGroups.push(
+        <div className="fret-marker-group">
+          {times(m, _ => <div className="marker"></div>)}
+        </div>
+      );
+    });
+
+    // console.log(markerGroups);
 
     return (
-      <div className="fret-marker-group">
-        {markers}
+      <div className="fret-marker-container">
+        {markerGroups}
       </div>
     );
   }
-  
+
 }
