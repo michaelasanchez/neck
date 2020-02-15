@@ -7,34 +7,22 @@ export interface OptionsProps {
   showing: any;
 }
 
-export class Options extends React.Component<OptionsProps, {}> {
+export const Options: React.FunctionComponent<OptionsProps> = ({ hide, showing}) => {
+  return (
+    <>
+    <Modal id="options" show={showing} onHide={() => hide()}>
+      <Modal.Header closeButton>
+        <Modal.Title>Options</Modal.Title>
+      </Modal.Header>
 
-  constructor(props: any) {
-    super(props);
-  }
+      <Modal.Body>
+        <p>Modal body text goes here.</p>
+      </Modal.Body>
 
-  handleClose() {
-    this.props.hide();
-  }
-
-  render() {
-
-    return (
-      <>
-        <Modal id="options" show={this.props.showing} onHide={() => this.handleClose()}>
-          <Modal.Header closeButton>
-            <Modal.Title>Options</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <p>Modal body text goes here.</p>
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => this.handleClose()}>Close</Button>
-          </Modal.Footer>
-        </Modal>
-      </>
-    );
-  }
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => hide()}>Close</Button>
+      </Modal.Footer>
+    </Modal>
+    </>
+  );
 }

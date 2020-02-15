@@ -5,14 +5,10 @@ export interface FretNumbersProps {
   frets: number
 }
 
-export class FretNumbers extends React.Component<FretNumbersProps, {}> {
-
-  render() {
-    return (
-      <div className="fret-number-group">
-        {times(this.props.frets, (i) => <div className="label">{i + 1}</div>)}
-      </div>
-    );
-  }
-
+export const FretNumbers: React.FunctionComponent<FretNumbersProps> = ({ frets }) => {
+  return (
+    <div className="fret-number-group">
+      {times(frets, (i) => <div className="label">{i + 1}</div>)}
+    </div>
+  )
 }

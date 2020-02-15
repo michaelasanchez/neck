@@ -12,6 +12,10 @@ export class Key {
     return this.root;
   }
 
+  public toString(): string {
+    return this.root.toString();
+  }
+
   public Flat(): Key {
     this.root = this.root.Flat();
     return this;

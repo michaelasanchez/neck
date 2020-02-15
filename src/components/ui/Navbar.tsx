@@ -8,6 +8,7 @@ export interface NavbarProps {
   show: any;
   test: any;
   setKey: Function;
+  testKey: Key;
 }
 
 export class Navbar extends React.Component<NavbarProps, {}> {
@@ -32,11 +33,7 @@ export class Navbar extends React.Component<NavbarProps, {}> {
   renderMenuItems() {
     return (
       <>
-        {map(this.keys, (key, index) =>
-          <Dropdown.Item className="dropdown-item" onSelect={(e: any) =>this.handleKeySelect(e)} eventKey={index.toString()}>
-            {key.Root.toString()}
-          </Dropdown.Item>
-        )}
+
       </>
     );
   }
@@ -54,10 +51,14 @@ export class Navbar extends React.Component<NavbarProps, {}> {
 
             <div className="nav-item btn-group dropup">
               <Dropdown as={ButtonGroup}>
-                <Button variant="secondary">Key of C</Button>
+                <Button variant="secondary">Key of {this.props.testKey.toString()}</Button>
                 <Dropdown.Toggle split variant="secondary" id="dropdown-custom-2" />
                 <Dropdown.Menu className="dropdown-menu dropdown-menu-right">
-                  {this.renderMenuItems()}
+                  {map(this.keys, (key, index) =>
+                    <Dropdown.Item className="dropdown-item" onSelect={(e: any) => this.handleKeySelect(e)} eventKey={index.toString()}>
+                      {key.Root.toString()}
+                    </Dropdown.Item>
+                  )}
                 </Dropdown.Menu>
               </Dropdown>
             </div>

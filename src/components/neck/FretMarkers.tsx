@@ -1,35 +1,18 @@
 import * as React from "react"
-import { each, forEach, times } from 'lodash';
+import { map, times } from 'lodash';
 
 export interface FretMarkersProps {
   markers: number[];
 }
 
-export class FretMarkers extends React.Component<FretMarkersProps, {}> {
-
-
-  render() {
-    const markerGroups: JSX.Element[] = [];
-
-    // console.log(each(this.props.markers, (m) => {
-    //   <div className="fret-marker">{times(m, _ => <div className="marker"></div>)}</div>
-    // }))
-
-    each(this.props.markers, (m) => {
-      markerGroups.push(
+export const FretMarkers: React.FunctionComponent<FretMarkersProps> = ({ markers }) => {
+  return (
+    <div className="fret-marker-container">
+      {map(markers, (m) =>
         <div className="fret-marker-group">
-          {times(m, _ => <div className="marker"></div>)}
+          {times(m, () => <div className="marker"></div>)}
         </div>
-      );
-    });
-
-    // console.log(markerGroups);
-
-    return (
-      <div className="fret-marker-container">
-        {markerGroups}
-      </div>
-    );
-  }
-
+      )}
+    </div>
+  )
 }
