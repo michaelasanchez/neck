@@ -12,34 +12,34 @@ var isProd = ENV === 'build';
 module.exports = function makeWebpackConfig() {
 
   var config = {
-    mode: "production",
+    mode: isProd ? 'production' : 'development',
   };
 
   config.resolve = {
     // Add '.ts' and '.tsx' as resolvable extensions.
-      extensions: ['.tsx', '.ts', '.js']
+    extensions: ['.tsx', '.ts', '.js']
   };
 
   // Enable sourcemaps for debugging webpack's output.
   if (!isProd)
-    config.devtool = "source-map";
+    config.devtool = 'source-map';
 
-  // config.output = {
-  //   // Absolute output directory
-  //   path: __dirname + '/dist',
+  config.output = {
+    //   // Absolute output directory
+    //   path: __dirname + '/dist',
 
-  //   // Output path from the view of the page
-  //   // Uses webpack-dev-server in development
-  //   publicPath: isProd ? '/neck/' : '/',
+    //   // Output path from the view of the page
+    //   // Uses webpack-dev-server in development
+    //   publicPath: isProd ? '/neck/' : '/',
 
-  //   // Filename for entry points
-  //   // Only adds hash in build mode
-  //   filename: isProd ? '[name].[hash].js' : '[name].bundle.js',
+    //   // Filename for entry points
+    //   // Only adds hash in build mode
+    filename: isProd ? '[name].[hash].js' : '[name].bundle.js',
 
-  //   // Filename for non-entry points
-  //   // Only adds hash in build mode
-  //   chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js'
-  // };
+    //   // Filename for non-entry points
+    //   // Only adds hash in build mode
+    //   chunkFilename: isProd ? '[name].[hash].js' : '[name].bundle.js'
+  };
 
   config.module = {
     rules: [
@@ -48,7 +48,7 @@ module.exports = function makeWebpackConfig() {
         exclude: /node_modules/,
         use: [
           {
-            loader: "ts-loader"
+            loader: 'ts-loader'
           }
         ]
       }, {
@@ -77,9 +77,9 @@ module.exports = function makeWebpackConfig() {
       },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
-        enforce: "pre",
+        enforce: 'pre',
         test: /\.js$/,
-        loader: "source-map-loader"
+        loader: 'source-map-loader'
       }
     ]
   };
@@ -100,7 +100,7 @@ module.exports = function makeWebpackConfig() {
   ]
 
   config.devServer = {
-    contentBase: path.join(__dirname, "./dist/"),
+    contentBase: path.join(__dirname, './dist/'),
     // // Serve index.html as the base
     // contentBase: resolveAppPath('public'),
     // // Enable compression

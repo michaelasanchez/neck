@@ -91,7 +91,7 @@ export class Note {
   }
 
   static G(): Note {
-    return new this(NoteValue.D);
+    return new this(NoteValue.G);
   }
 
   public Natural(): Note {

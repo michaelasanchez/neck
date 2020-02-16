@@ -18,13 +18,13 @@ export const StringComponent: React.FunctionComponent<StringProps> = ({ mode, fr
     let offsetNoteValue = (f + offset) % Note.NUM_NOTES;
 
     // Check if Note exists for current fret number
-    let test = filter(scale.Notes, (note: Note) => note.Value == offsetNoteValue);
-    return test.length ? test[0] : null;
+    let note = filter(scale.Notes, (note: Note) => note.Value == offsetNoteValue);
+    return note.length ? note[0] : null;
   }
   return (
     <div className="string">
       <Fret mode={mode} note={calcNote(0)} open={true}/>
-      {times(frets, (f) =><Fret mode={mode} note={calcNote(f + 1)} />)}
+      {times(frets, (f) =><Fret key={f} mode={mode} note={calcNote(f + 1)} />)}
     </div>
   )
 }
