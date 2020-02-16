@@ -20,15 +20,18 @@ const defaultProps: HomeProps = {
 }
 
 const Home: React.FunctionComponent<HomeProps> = ({ }) => {
-  const [key, setKey] = React.useState<Key>(Key.C().Sharp());
+  const [key, setKey] = React.useState<Key>(Key.C());
   const [tuning, setTuning] = React.useState<Tuning>(Tuning.Standard());
   const [mode, setMode] = React.useState<Mode>(Mode.Ionian());
 
   return (
     <>
-      <Neck musicKey={key} tuning={tuning} mode={mode} />
+      <Neck
+        musicKey={key}
+        tuning={tuning}
+        mode={mode} />
       <Ui
-        defKey={key}
+        musicKey={key}
         setKey={(k: Key) => setKey(k)}
         setTuning={(t: Tuning) => setTuning(t)}
         setMode={(m: Mode) => setMode(m)} />

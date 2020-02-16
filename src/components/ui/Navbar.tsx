@@ -6,15 +6,32 @@ import { Key, Keys } from '../../models/Key';
 
 export interface NavbarProps {
   show: any;
+  musicKey: Key;
   setKey: Function;
-  defKey: Key;
 }
 
-export const Navbar: React.FunctionComponent<NavbarProps> = ({ show, setKey, defKey }) => {
+export const Navbar: React.FunctionComponent<NavbarProps> = ({ show, setKey, musicKey }) => {
   const keys = Keys.All();
 
   const handleSetKey = (keyString: string) => {
     setKey(keys[parseInt(keyString)]);
+  }
+
+  const renderKeyDropdownMenu = () => {
+    return (
+      <Dropdown.Menu className="dropdown-menu dropdown-menu-right">
+        {map(keys, (key, index) =>
+          <Dropdown.Item
+            className="dropdown-item"
+            key={index}
+            eventKey={index.toString()}
+            onSelect={(keyString: string) => handleSetKey(keyString)}
+          >
+            {key.Root.toString()}
+          </Dropdown.Item>
+        )}
+      </Dropdown.Menu>
+    )
   }
 
   return (
@@ -25,24 +42,13 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({ show, setKey, def
         <form className="form-inline">
           <Button variant="outline-success" className="options" onClick={() => show()}>
             Options
-        </Button>
+          </Button>
 
           <div className="nav-item btn-group dropup">
             <Dropdown as={ButtonGroup}>
-              <Button variant="secondary">Key of {defKey.toString()}</Button>
+              <Button variant="secondary">Key of {musicKey.toString()}</Button>
               <Dropdown.Toggle split variant="secondary" id="dropdown-key" />
-              <Dropdown.Menu className="dropdown-menu dropdown-menu-right">
-                {map(keys, (key, index) =>
-                  <Dropdown.Item
-                    className="dropdown-item"
-                    key={index}
-                    onSelect={(e: string) => handleSetKey(e)}
-                    eventKey={index.toString()}
-                  >
-                    {key.Root.toString()}
-                  </Dropdown.Item>
-                )}
-              </Dropdown.Menu>
+              {renderKeyDropdownMenu()}
             </Dropdown>
           </div>
         </form>

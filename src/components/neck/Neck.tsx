@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FunctionComponent, useState } from 'react';
 import { times } from 'lodash';
 
 import { FretMode } from './Fret';
@@ -21,7 +22,7 @@ export interface NeckProps {
   fretmode?: FretMode;
 }
 
-export const Neck: React.FunctionComponent<NeckProps> = ({
+export const Neck: FunctionComponent<NeckProps> = ({
   musicKey,
   tuning,
   mode,
@@ -30,11 +31,11 @@ export const Neck: React.FunctionComponent<NeckProps> = ({
   markers = [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2],
   fretmode = FretMode.Note
 }) => {
-  const [curFrets, setFrets] = React.useState<number>(frets);
-  const [curStrings, setStrings] = React.useState<number>(strings);
-  const [curMarkers, setMarkers] = React.useState<number[]>(markers);
-  const [curTuning, setTuning] = React.useState<Tuning>(tuning);
-  const [curMode, setMode] = React.useState<FretMode>(fretmode);
+  const [curFrets, setFrets] = useState<number>(frets);
+  const [curStrings, setStrings] = useState<number>(strings);
+  const [curMarkers, setMarkers] = useState<number[]>(markers);
+  const [curTuning, setTuning] = useState<Tuning>(tuning);
+  const [curMode, setMode] = useState<FretMode>(fretmode);
 
   const calcScale = (key: Key) => {
     return new Scale(key.Root, mode);
@@ -53,7 +54,13 @@ export const Neck: React.FunctionComponent<NeckProps> = ({
       </div>
       <div className="strings">
         {times(curStrings, (i) =>
-          <StringComponent key={i} mode={curMode} frets={curFrets} scale={calcScale(musicKey)} offset={curTuning.Offsets[i]} />
+          <StringComponent
+            key={i}
+            mode={curMode}
+            frets={curFrets}
+            offset={curTuning.Offsets[i]}
+            scale={calcScale(musicKey)}
+          />
         )}
       </div>
     </div>
