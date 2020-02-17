@@ -5,12 +5,13 @@ import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { Key, Keys } from '../../models/Key';
 
 export interface NavbarProps {
-  show: any;
   musicKey: Key;
+  showing: boolean;
+  show: Function;
   setKey: Function;
 }
 
-export const Navbar: React.FunctionComponent<NavbarProps> = ({ show, setKey, musicKey }) => {
+export const Navbar: React.FunctionComponent<NavbarProps> = ({ show, showing, setKey, musicKey }) => {
   const keys = Keys.All();
 
   const handleSetKey = (keyString: string) => {
@@ -40,7 +41,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({ show, setKey, mus
       <div className="navbar-nav">
 
         <form className="form-inline">
-          <Button variant="outline-success" className="options" onClick={() => show()}>
+          <Button variant="outline-success" className={showing ? 'options active' : 'options'} onClick={() => show()}>
             Options
           </Button>
 

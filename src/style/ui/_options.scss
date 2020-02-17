@@ -13,6 +13,18 @@
   //   position: relative;
   // }
 
+  .modal-header {
+    align-items: center;
+
+    .close {
+      padding: 1.4rem;
+      
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
   .modal-body {
     padding: 0 1px;
   }
@@ -35,26 +47,12 @@
       border-bottom: none;
       align-items: center;
 
-      button {
-        width: 100%;
-        padding: 0;
-        text-align: left;
+      &:hover {
+        cursor: pointer;
+      }
 
-        .close {
-          padding: 1.3rem;
-        }
-
-        // Override
-        &.btn-link {
-          &:hover,
-          &:focus {
-            text-decoration: none;
-          }
-        }
-
-        h5 {
-          margin: 0;
-        }
+      h5 {
+        margin-bottom: .3rem;
       }
     }
 

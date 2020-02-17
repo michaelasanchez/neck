@@ -6,13 +6,13 @@ import { Scale } from '../../models/Scale';
 import { Note } from '../../models/Note';
 
 export interface StringProps {
-  mode: FretMode
+  fretmode: FretMode
   frets: number;
   offset: number;
   scale: Scale;
 }
 
-export const StringComponent: React.FunctionComponent<StringProps> = ({ mode, frets, offset, scale }) => {
+export const StringComponent: React.FunctionComponent<StringProps> = ({ fretmode, frets, offset, scale }) => {
   // Note Value = root offset + string offset, then repeat for global notes
   const calcNote = (f: number) => {
     let offsetNoteValue = (f + offset) % Note.NUM_NOTES;
@@ -23,8 +23,8 @@ export const StringComponent: React.FunctionComponent<StringProps> = ({ mode, fr
   }
   return (
     <div className="string">
-      <Fret mode={mode} note={calcNote(0)} open={true}/>
-      {times(frets, (f) =><Fret key={f} mode={mode} note={calcNote(f + 1)} />)}
+      <Fret fretmode={fretmode} note={calcNote(0)} open={true}/>
+      {times(frets, (f) =><Fret key={f} fretmode={fretmode} note={calcNote(f + 1)} />)}
     </div>
   )
 }

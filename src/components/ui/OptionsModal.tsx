@@ -1,14 +1,20 @@
 import * as React from 'react';
 
-import { Accordion, Card, Button, Modal } from 'react-bootstrap';
+import { Accordion, Button, Modal } from 'react-bootstrap';
 import { Option } from './Option';
+import { Tuning } from '../../models/Tuning';
+import { Mode } from '../../models/Mode';
 
 export interface OptionsModalProps {
+  showing: boolean;
+  tuning: Tuning;
+  mode: Mode;
   hide: Function;
-  showing: any;
+  setTuning: Function;
+  setMode: Function;
 }
 
-export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ hide, showing }) => {
+export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ showing, tuning, mode, hide, setTuning, setMode }: OptionsModalProps) => {
   return (
     <>
       <Modal id="options" show={showing} onHide={() => hide()}>
@@ -18,8 +24,22 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ hide,
 
         <Modal.Body>
           <Accordion>
-            <Option eventKey="0" header="Mode" body="Hello! I'm the body" />
-            <Option eventKey="1" header="Tuning" body="Hello! I'm the body" />
+            <Option
+              eventKey="0"
+              type="radio"
+              header="Tuning"
+              value={tuning}
+              options={Tuning.All()}
+              setValue={(t: Tuning) => setTuning(t)}
+            />
+            <Option
+              eventKey="1"
+              type="radio"
+              header="Mode"
+              value={mode}
+              options={Mode.All()}
+              setValue={(m: Mode) => setMode(m)}
+            />
           </Accordion>
         </Modal.Body>
 

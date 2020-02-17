@@ -14,7 +14,7 @@ export interface HomeProps {
 }
 
 const defaultProps: HomeProps = {
-  defaultKey: Key.D(),
+  defaultKey: Key.C(),
   defaultTuning: Tuning.Standard(),
   defaultMode: Mode.Ionian(),
 }
@@ -29,12 +29,16 @@ const Home: React.FunctionComponent<HomeProps> = ({ }) => {
       <Neck
         musicKey={key}
         tuning={tuning}
-        mode={mode} />
+        mode={mode}
+      />
       <Ui
         musicKey={key}
+        tuning={tuning}
+        mode={mode}
         setKey={(k: Key) => setKey(k)}
         setTuning={(t: Tuning) => setTuning(t)}
-        setMode={(m: Mode) => setMode(m)} />
+        setMode={(m: Mode) => setMode(m)}
+      />
     </>
   );
 }

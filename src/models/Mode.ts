@@ -5,12 +5,16 @@ export class Mode {
 
   private pattern: string;
 
+  public toString(): string {
+    return this.name;
+  }
+
   static Ionian(): Mode {
     return new Mode('Ionian', 'wwhwwwh');
   }
 
   static Dorian(): Mode {
-    return new Mode('Ionian', 'whwwwhw');
+    return new Mode('Dorian', 'whwwwhw');
   }
 
   static Phrygian(): Mode {
@@ -33,6 +37,18 @@ export class Mode {
     return new Mode('Locrian', 'hwwhwww');
   }
 
+  static All(): Mode[] {
+    return [
+      this.Ionian(),
+      this.Dorian(),
+      this.Phrygian(),
+      this.Lydian(),
+      this.Mixolydian(),
+      this.Aeolian(),
+      this.Locrian(),
+    ];
+  }
+
   constructor(name: string, stepPattern: string) {
     this.name = name;
     this.pattern = stepPattern;
@@ -51,5 +67,7 @@ export class Mode {
   private convertPattern(pattern: string): number[] {
     return [];
   }
+
+
 
 }

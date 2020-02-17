@@ -85,7 +85,7 @@ module.exports = function makeWebpackConfig() {
   };
   config.plugins = [
     new HtmlWebpackPlugin({
-      template: './index.html',
+      template: './src/public/index.html',
       inject: 'body'
     }),
     new MiniCssExtractPlugin(),

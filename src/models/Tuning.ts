@@ -7,6 +7,10 @@ export class Tuning {
     this.offsets = offsets;
   }
 
+  public toString(): string {
+    return this.name;
+  }
+
   get Name(): string {
     return this.name;
   }
@@ -20,14 +24,23 @@ export class Tuning {
   }
 
   static DropD(): Tuning {
-    return new this('Standard', [2, 9, 2, 7, 11, 4]);
+    return new this('Drop D', [2, 9, 2, 7, 11, 4]);
   }
 
   static Half_StepDown(): Tuning {
-    return new this('Drop D', [3, 8, 1, 6, 10, 3]);
+    return new this('Half-Step Down', [3, 8, 1, 6, 10, 3]);
   }
 
   static Full_StepDown(): Tuning {
     return new this('Full-Step Down', [2, 7, 0, 5, 9, 2]);
+  }
+
+  static All(): Tuning[] {
+    return [
+      this.Standard(),
+      this.DropD(),
+      this.Half_StepDown(),
+      this.Full_StepDown(),
+    ];
   }
 }

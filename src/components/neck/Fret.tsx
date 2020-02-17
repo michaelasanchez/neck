@@ -9,15 +9,15 @@ export enum FretMode {
 }
 
 export interface FretProps {
-  mode: FretMode;
+  fretmode: FretMode;
   open?: boolean;
   note?: Note;
 }
 
-export const Fret: React.FunctionComponent<FretProps> = ({ mode, open, note }) => {
+export const Fret: React.FunctionComponent<FretProps> = ({ fretmode, open, note }) => {
   const fretLabel = () => {
     if (note) {
-      switch (mode) {
+      switch (fretmode) {
         case FretMode.Note:
           return <label>{note.Label}</label>;
         case FretMode.Degree:

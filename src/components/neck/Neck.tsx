@@ -16,8 +16,8 @@ export interface NeckProps {
   musicKey: Key;
   tuning: Tuning;
   mode: Mode;
-  frets?: number;
-  strings?: number;
+  numFrets?: number;
+  numStrings?: number;
   markers?: number[];
   fretmode?: FretMode;
 }
@@ -26,16 +26,11 @@ export const Neck: FunctionComponent<NeckProps> = ({
   musicKey,
   tuning,
   mode,
-  frets = 12,
-  strings = 6,
+  numFrets = 12,
+  numStrings = 6,
   markers = [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2],
   fretmode = FretMode.Note
 }) => {
-  const [curFrets, setFrets] = useState<number>(frets);
-  const [curStrings, setStrings] = useState<number>(strings);
-  const [curMarkers, setMarkers] = useState<number[]>(markers);
-  const [curTuning, setTuning] = useState<Tuning>(tuning);
-  const [curMode, setMode] = useState<FretMode>(fretmode);
 
   const calcScale = (key: Key) => {
     return new Scale(key.Root, mode);
@@ -45,20 +40,20 @@ export const Neck: FunctionComponent<NeckProps> = ({
     <div className="neck">
       <div className="backdrop">
         <div className="fretboard-numbers">
-          <FretNumbers frets={curFrets} />
-          <FretNumbers frets={curFrets} />
+          <FretNumbers frets={numFrets} />
+          <FretNumbers frets={numFrets} />
         </div>
         <div className="fretboard-markers">
-          <FretMarkers markers={curMarkers} />
+          <FretMarkers markers={markers} />
         </div>
       </div>
       <div className="strings">
-        {times(curStrings, (i) =>
+        {times(numStrings, (i) =>
           <StringComponent
             key={i}
-            mode={curMode}
-            frets={curFrets}
-            offset={curTuning.Offsets[i]}
+            fretmode={fretmode}
+            frets={numFrets}
+            offset={tuning.Offsets[i]}
             scale={calcScale(musicKey)}
           />
         )}
