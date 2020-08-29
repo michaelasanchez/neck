@@ -1,60 +1,6 @@
 .neck {
-
   .strings {
     font-family: $neck-font-family;
-  }
-  
-  /* Fret Label Animations */
-  $open-to-first: $fret-open-height + ($fret-height - $fret-open-height) / 2;
-
-  .fret {
-    // .label.next {
-    //   transform: translateY(-$fret-height);
-    // }
-  }
-
-  &.up .fret {
-    // &:nth-child(2) {
-    //   .label.prev.out {
-    //     transform: translateY(-$open-to-first);
-    //   }
-    // }
-
-    .label.prev.out {
-      animation: up-out $fret-animation-length;
-    }
-
-    // &:nth-child(1) {
-    //   .label.next {
-    //     transform: translateY($open-to-first);
-    //   }
-    // }
-
-    .label.next.in {
-      animation: up-in $fret-animation-length;
-    }
-  }
-
-  &.down .fret {
-    // &:nth-child(1) {
-    //   .label.prev.out {
-    //     transform: translateY($open-to-first);
-    //   }
-    // }
-
-    .label.prev.out {
-      animation: down-out $fret-animation-length;
-    }
-
-    // &:nth-child(2) {
-    //   .label.next {
-    //     transform: translateY(-$open-to-first);
-    //   }
-    // }
-
-    .label.next.in {
-      animation: down-in $fret-animation-length;
-    }
   }
 }
 
@@ -82,25 +28,12 @@
   }
 
   .label {
-    &.next {
-      opacity: 0;
-
-      &.in {
-        opacity: 1;
-      }
-    }
-
     &.prev {
-      opacity: 1;
-      // color: red;
-
-      &.out {
-        opacity: 0;
-      }
+      opacity: 0;
     }
-  }
 
-  label {
-    margin: 0;
+    label {
+      margin-bottom: 0;
+    }
   }
 }

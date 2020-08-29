@@ -1,42 +1,74 @@
+$fret-animation-timing-function: ease-in-out;
+$fret-animation-duration: 300ms;
+$fret-animation-direction: forwards;
+$fret-animation-scale-y: 0.5;
 
-  @keyframes up-out {
-    0% {
-      transform: translateY(0) scaleY(1);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(-$fret-height * .4) scaleY(.5);
-      opacity: 0;
-    }
+$fret-height-hide-scale: 0.4;
+
+@keyframes up-out {
+  0% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
   }
-  @keyframes up-in {
-    0% {
-      transform: translateY($fret-height * .4) scaleY(.5);
-      opacity: 0;
+  100% {
+    transform: translateY(-$fret-height * $fret-height-hide-scale) scaleY($fret-animation-scale-y);
+    opacity: 0;
+  }
+}
+@keyframes up-in {
+  0% {
+    transform: translateY($fret-height * $fret-height-hide-scale) scaleY($fret-animation-scale-y);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes down-out {
+  0% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY($fret-height * $fret-height-hide-scale) scaleY($fret-animation-scale-y);
+    opacity: 0;
+  }
+}
+@keyframes down-in {
+  0% {
+    transform: translateY(-$fret-height * $fret-height-hide-scale) scaleY($fret-animation-scale-y);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+    opacity: 1;
+  }
+}
+
+.strings {
+  .fret .label {
+    animation-timing-function: $fret-animation-timing-function;
+    animation-direction: $fret-animation-direction;
+    animation-duration: $fret-animation-duration;
+  }
+
+  &.up .fret.animate {
+    .current {
+      animation-name: up-in;
     }
-    100% {
-      transform: translateY(0) scaleY(1);
-      opacity: 1;
+    .prev {
+      animation-name: up-out;
     }
   }
 
-  @keyframes down-out {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
+  &.down .fret.animate {
+    .current {
+      animation-name: down-in;
     }
-    100% {
-      transform: translateY($fret-height * .4) scaleY(.5);
-      opacity: 0;
+    .prev {
+      animation-name: down-out;
     }
   }
-  @keyframes down-in {
-    0% {
-      transform: translateY(-$fret-height * .4) scaleY(.5);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
+}

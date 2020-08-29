@@ -1,5 +1,26 @@
 import { isUndefined } from 'lodash';
 
+//  C           D           E     F           G           A           B   
+//        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb
+//  B#                      Fb    E#                                  Cb
+//  0     1     2     3     4     5     6     7     8     9     10    11 
+
+export enum NoteValue {
+  C = 0,
+  D = 2,
+  E = 4,
+  F = 5,
+  G = 7,
+  A = 9,
+  B = 11,
+}
+
+enum NoteSuffix {
+  Natural = 0,
+  Sharp = 1,
+  Flat = -1,
+}
+
 export class Note {
 
   public static NUM_NOTES = 12;
@@ -48,6 +69,10 @@ export class Note {
 
   set Base(value: NoteValue) {
     this.base = value;
+  }
+
+  get Modified(): number {
+    return (this.base + this.suffix) % Note.NUM_NOTES;
   }
 
   get Suffix(): NoteSuffix {
@@ -127,9 +152,9 @@ export class Note {
       }
     }
 
-    next = isUndefined(NoteValue[(mod + 1) % Note.NUM_NOTES]) ?
-    ((mod != this.base) ? new Note(mod, NoteSuffix.Sharp) : new Note(mod + 2, NoteSuffix.Flat)) :
-    ((mod + 1 == this.base) ? new Note(mod + 2, NoteSuffix.Flat) : new Note(mod + 1));
+    // next = isUndefined(NoteValue[(mod + 1) % Note.NUM_NOTES]) ?
+    // ((mod != this.base) ? new Note(mod, NoteSuffix.Sharp) : new Note(mod + 2, NoteSuffix.Flat)) :
+    // ((mod + 1 == this.base) ? new Note(mod + 2, NoteSuffix.Flat) : new Note(mod + 1));
 
     return next;
   }
@@ -137,48 +162,25 @@ export class Note {
   public WholeStepUp(): Note {
     let mod = this.ModifiedValue();
     let next: Note;
-    // console.log('-', mod, this.value, NoteValue[(mod)], (mod + 2), NoteValue[(mod + 2) % Note.NUM_NOTES]);
-    // console.log(mod, this.base, mod - this.base, (mod - this.base > 0));
 
-    // if (_.isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES])) {
-    //   if (mod + 1 == this.base) {
-    //     next = new Note(mod + 3, NoteSuffix.Flat);
-    //   } else {
-    //     next = new Note(mod + 1, NoteSuffix.Sharp);
-    //   }
-    // } else {
-    //   if (mod - this.base > 0) {
-    //     next = new Note(mod + 1, NoteSuffix.Sharp);
-    //   } else {
-    //     next = new Note(mod + 2);
-    //   }
-    // }
+    if (isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES])) {
+      if (mod + 1 == this.base) {
+        next = new Note(mod + 3, NoteSuffix.Flat);
+      } else {
+        next = new Note(mod + 1, NoteSuffix.Sharp);
+      }
+    } else {
+      if (mod - this.base > 0) {
+        next = new Note(mod + 1, NoteSuffix.Sharp);
+      } else {
+        next = new Note(mod + 2);
+      }
+    }
     
-    next = isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES]) ?
-      ((mod + 1 == this.base) ? new Note(mod + 3, NoteSuffix.Flat) : new Note(mod + 1, NoteSuffix.Sharp)) :
-      ((mod - this.base > 0) ? new Note(mod + 1, NoteSuffix.Sharp) : new Note(mod + 2));
+    // next = isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES]) ?
+    //   ((mod + 1 == this.base) ? new Note(mod + 3, NoteSuffix.Flat) : new Note(mod + 1, NoteSuffix.Sharp)) :
+    //   ((mod - this.base > 0) ? new Note(mod + 1, NoteSuffix.Sharp) : new Note(mod + 2));
 
     return next;
   }
-}
-
-//  C           D           E     F           G           A           B   
-//        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb
-//  B#                      Fb    E#                                  Cb
-//  0     1     2     3     4     5     6     7     8     9     10    11 
-
-export enum NoteValue {
-  C = 0,
-  D = 2,
-  E = 4,
-  F = 5,
-  G = 7,
-  A = 9,
-  B = 11,
-}
-
-enum NoteSuffix {
-  Natural = 0,
-  Sharp = 1,
-  Flat = -1,
 }

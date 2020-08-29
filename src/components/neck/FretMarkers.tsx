@@ -1,18 +1,22 @@
-import * as React from "react"
+import * as React from 'react';
 import { map, times } from 'lodash';
 
 export interface FretMarkersProps {
   markers: number[];
 }
 
-export const FretMarkers: React.FunctionComponent<FretMarkersProps> = ({ markers }) => {
+export const FretMarkers: React.FunctionComponent<FretMarkersProps> = ({
+  markers,
+}) => {
   return (
     <>
-      {map(markers, (m, i) =>
+      {map(markers, (m, i) => (
         <div className="fret-marker-group" key={i}>
-          {times(m, (i) => <div className="marker" key={i}></div>)}
+          {times(m, (i) => (
+            <div className="marker" key={i}></div>
+          ))}
         </div>
-      )}
+      ))}
     </>
-  )
-}
+  );
+};

@@ -1,29 +1,37 @@
-import { times } from "lodash";
-import * as React from "react";
-import { FretMarkers, FretMode, FretNumbers, StringComponent } from ".";
-import { IOptions, Key, Scale } from "../../models";
+import { times } from 'lodash';
+import * as React from 'react';
+import { FretMarkers, FretDisplayMode, FretNumbers, StringComponent } from '.';
+import { IOptions, Key, Scale, Mode } from '../../models';
+import { useEffect, useState } from 'react';
+
+const ENABLE_NECK_ANIMATION = true;
 
 export interface NeckProps {
   options?: IOptions;
-  fretmode?: FretMode;
 }
+
+const getScale = (key: Key, mode: Mode) => new Scale(key.Root, mode);
 
 export const Neck: React.FunctionComponent<NeckProps> = ({
   options,
-  fretmode = FretMode.Note,
 }) => {
-  const {
-    key,
-    tuning,
-    mode,
-    numFrets,
-    numStrings,
-    markers,
-  } = options;
+  const { key, tuning, mode, numFrets, numStrings, markers, fretMode } = options;
 
-  const calcScale = (key: Key) => {
-    return new Scale(key.Root, mode);
-  };
+  const [scale, setScale] = useState<Scale>(getScale(key, mode));
+  const [className, setClassName] = useState<string>();
+
+  useEffect(() => {
+    const nextScale = getScale(key, mode);
+    setScale(nextScale);
+
+    if (ENABLE_NECK_ANIMATION) {
+      if (nextScale?.Root.Modified > scale?.Root.Modified) {
+        setClassName('down');
+      } else {
+        setClassName('up');
+      }
+    }
+  }, [key, mode]);
 
   return (
     <div className="neck">
@@ -36,14 +44,14 @@ export const Neck: React.FunctionComponent<NeckProps> = ({
           <FretMarkers markers={markers} />
         </div>
       </div>
-      <div className="strings">
+      <div className={`strings ${className}`}>
         {times(numStrings, (i) => (
           <StringComponent
             key={i}
-            fretmode={fretmode}
+            fretmode={fretMode}
             frets={numFrets}
             offset={tuning.Offsets[i]}
-            scale={calcScale(key)}
+            scale={scale}
           />
         ))}
       </div>

@@ -1,4 +1,4 @@
-import { each, isUndefined, last} from 'lodash';
+import { each, isUndefined, last } from 'lodash';
 
 import { Note, NoteValue } from "./Note";
 import { Mode } from './Mode';
@@ -28,8 +28,6 @@ export class Scale {
       let nextNote = step == 'w' ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
       nextNote.Degree = notes.length;
       notes.push(nextNote);
-
-      // console.log(prevNote + '(' + prevNote.Value + ')', step, nextNote + '(' + nextNote.Value + ')')
     });
 
     // TODO: better

@@ -1,8 +1,8 @@
-import * as React from "react";
-import { useState } from "react";
-import { defaultOptions, Key, Mode, Tuning, IOptions } from "../models";
-import { Neck } from "./neck";
-import { Ui } from "./ui";
+import * as React from 'react';
+import { useState } from 'react';
+import { defaultOptions, IOptions, Key, Mode, Tuning } from '../models';
+import { Neck } from './neck';
+import { Ui } from './ui';
 
 export interface HomeProps {
   defaultKey?: Key;
@@ -10,26 +10,22 @@ export interface HomeProps {
   defaultMode?: Mode;
 }
 
-const defaultProps: HomeProps = {
-};
+const defaultProps: HomeProps = {};
 
 const Home: React.FunctionComponent<HomeProps> = ({}) => {
   const [options, setOptions] = useState<IOptions>(defaultOptions);
 
   const handleSetOptions = (updated: Partial<IOptions>) => {
-    setOptions({ 
+    setOptions({
       ...options,
-      ...updated
-     });
-  }
+      ...updated,
+    });
+  };
 
   return (
     <>
       <Neck options={options} />
-      <Ui
-        options={options}
-        setOptions={handleSetOptions}
-      />
+      <Ui options={options} setOptions={handleSetOptions} />
     </>
   );
 };

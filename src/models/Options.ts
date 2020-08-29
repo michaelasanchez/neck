@@ -1,4 +1,5 @@
 import { Tuning, Mode, Key } from ".";
+import { FretDisplayMode } from "../components/neck";
 
 
 export interface IOptions {
@@ -8,6 +9,7 @@ export interface IOptions {
   numFrets: number;
   numStrings: number;
   markers: number[];
+  fretMode: FretDisplayMode;
 }
 
 export interface IOption {
@@ -21,4 +23,5 @@ export const defaultOptions: IOptions = {
   numFrets: 12,
   numStrings: 6,
   markers: [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2],
+  fretMode: FretDisplayMode.Note,
 };

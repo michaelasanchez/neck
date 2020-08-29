@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Accordion, Button, Modal } from 'react-bootstrap';
-
+import { Accordion, Modal } from 'react-bootstrap';
 import { Mode } from '../../models/Mode';
 import { Tuning } from '../../models/Tuning';
 import { OptionCard } from './OptionCard';
@@ -14,7 +13,14 @@ export interface OptionsModalProps {
   setMode: Function;
 }
 
-export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ showing, tuning, mode, onHide, setTuning, setMode }: OptionsModalProps) => {
+export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
+  showing,
+  tuning,
+  mode,
+  onHide,
+  setTuning,
+  setMode,
+}: OptionsModalProps) => {
   return (
     <>
       <Modal id="options" show={showing} onHide={() => onHide()}>
@@ -49,4 +55,4 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ showi
       </Modal>
     </>
   );
-}
+};

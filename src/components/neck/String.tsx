@@ -1,12 +1,11 @@
-import * as React from "react";
-import { filter, times } from "lodash";
-
-import { Fret, FretMode } from "./Fret";
-import { Scale } from "../../models/Scale";
-import { Note } from "../../models/Note";
+import { filter, times } from 'lodash';
+import * as React from 'react';
+import { Note } from '../../models/Note';
+import { Scale } from '../../models/Scale';
+import { Fret, FretDisplayMode } from './Fret';
 
 export interface StringProps {
-  fretmode: FretMode;
+  fretmode: FretDisplayMode;
   frets: number;
   offset: number;
   scale: Scale;
@@ -29,9 +28,13 @@ export const StringComponent: React.FunctionComponent<StringProps> = ({
 }) => {
   return (
     <div className="string">
-      <Fret fretmode={fretmode} note={calcNote(0, offset, scale)} open={true} />
+      <Fret fretMode={fretmode} note={calcNote(0, offset, scale)} open={true} />
       {times(frets, (f) => (
-        <Fret key={f} fretmode={fretmode} note={calcNote(f + 1, offset, scale)} />
+        <Fret
+          key={f}
+          fretMode={fretmode}
+          note={calcNote(f + 1, offset, scale)}
+        />
       ))}
     </div>
   );
