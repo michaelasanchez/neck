@@ -1,44 +1,38 @@
-import * as React from "react"
-
-import { Navbar } from "./Navbar";
-import { OptionsModal } from "./OptionsModal";
-
-import { Key } from "../../models/Key";
-import { Mode } from "../../models/Mode";
-import { Tuning } from "../../models/Tuning";
+import * as React from "react";
+import { Navbar, OptionsModal } from ".";
+import { Key, Mode, Tuning, IOptions } from "../../models";
 
 export interface UiProps {
-  musicKey: Key;
-  tuning: Tuning;
-  mode: Mode;
-  setKey: Function;
-  setTuning: Function;
-  setMode: Function;
+  options: IOptions;
+  setOptions: (options: Partial<IOptions>) => void;
 }
 
 export interface UiState {
-  showOptions: boolean,
+  showOptions: boolean;
 }
 
-export const Ui: React.FunctionComponent<UiProps> = ({ musicKey, tuning, mode, setKey , setTuning, setMode }) => {
+export const Ui: React.FunctionComponent<UiProps> = ({
+  options,
+  setOptions,
+}) => {
   const [showOptions, setShowOptions] = React.useState<boolean>(false);
 
   return (
     <>
       <Navbar
-        musicKey={musicKey}
+        musicKey={options.key}
         showing={showOptions}
         show={() => setShowOptions(true)}
-        setKey={(k: Key) => setKey(k)}
+        setKey={(k: Key) => setOptions({ key: k })}
       />
       <OptionsModal
         showing={showOptions}
-        tuning={tuning}
-        mode={mode}
-        hide={() => setShowOptions(false)}
-        setTuning={(t: Tuning) => setTuning(t)}
-        setMode={(m: Mode) => setMode(m)}
+        onHide={() => setShowOptions(false)}
+        tuning={options.tuning}
+        mode={options.mode}
+        setTuning={(t: Tuning) => setOptions({ tuning: t })}
+        setMode={(m: Mode) => setOptions({ mode: m })}
       />
     </>
   );
-}
+};

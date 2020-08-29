@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { Note } from "../../models/Note";
+import { useState, useEffect } from "react";
 
 export enum FretMode {
   Note,
@@ -15,6 +16,7 @@ export interface FretProps {
 }
 
 export const Fret: React.FunctionComponent<FretProps> = ({ fretmode, open, note }) => {
+
   const fretLabel = () => {
     if (note) {
       switch (fretmode) {

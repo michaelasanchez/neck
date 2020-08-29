@@ -1,30 +1,30 @@
 import * as React from 'react';
-
 import { Accordion, Button, Modal } from 'react-bootstrap';
-import { Option } from './Option';
-import { Tuning } from '../../models/Tuning';
+
 import { Mode } from '../../models/Mode';
+import { Tuning } from '../../models/Tuning';
+import { OptionCard } from './OptionCard';
 
 export interface OptionsModalProps {
   showing: boolean;
   tuning: Tuning;
   mode: Mode;
-  hide: Function;
+  onHide: Function;
   setTuning: Function;
   setMode: Function;
 }
 
-export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ showing, tuning, mode, hide, setTuning, setMode }: OptionsModalProps) => {
+export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ showing, tuning, mode, onHide, setTuning, setMode }: OptionsModalProps) => {
   return (
     <>
-      <Modal id="options" show={showing} onHide={() => hide()}>
+      <Modal id="options" show={showing} onHide={() => onHide()}>
         <Modal.Header closeButton>
           <Modal.Title>Options</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
           <Accordion>
-            <Option
+            <OptionCard
               eventKey="0"
               type="radio"
               header="Tuning"
@@ -32,7 +32,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ showi
               options={Tuning.All()}
               setValue={(t: Tuning) => setTuning(t)}
             />
-            <Option
+            <OptionCard
               eventKey="1"
               type="radio"
               header="Mode"
@@ -44,7 +44,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({ showi
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => hide()}>Close</Button>
+          {/* <Button variant="secondary" onClick={() => hide()}>Close</Button> */}
         </Modal.Footer>
       </Modal>
     </>

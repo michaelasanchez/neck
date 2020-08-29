@@ -1,47 +1,38 @@
-import * as React from "react"
-
-import { Neck } from "./neck/Neck";
-import { Ui } from "./ui/Ui";
-
-import { Key } from "../models/Key";
-import { Mode } from "../models/Mode";
-import { Tuning } from "../models/Tuning";
+import * as React from "react";
+import { useState } from "react";
+import { defaultOptions, Key, Mode, Tuning, IOptions } from "../models";
+import { Neck } from "./neck";
+import { Ui } from "./ui";
 
 export interface HomeProps {
-  defaultKey?: Key,
-  defaultTuning?: Tuning,
-  defaultMode?: Mode,
+  defaultKey?: Key;
+  defaultTuning?: Tuning;
+  defaultMode?: Mode;
 }
 
 const defaultProps: HomeProps = {
-  defaultKey: Key.C(),
-  defaultTuning: Tuning.Standard(),
-  defaultMode: Mode.Ionian(),
-}
+};
 
-const Home: React.FunctionComponent<HomeProps> = ({ }) => {
-  const [key, setKey] = React.useState<Key>(Key.C());
-  const [tuning, setTuning] = React.useState<Tuning>(Tuning.Standard());
-  const [mode, setMode] = React.useState<Mode>(Mode.Ionian());
+const Home: React.FunctionComponent<HomeProps> = ({}) => {
+  const [options, setOptions] = useState<IOptions>(defaultOptions);
+
+  const handleSetOptions = (updated: Partial<IOptions>) => {
+    setOptions({ 
+      ...options,
+      ...updated
+     });
+  }
 
   return (
     <>
-      <Neck
-        musicKey={key}
-        tuning={tuning}
-        mode={mode}
-      />
+      <Neck options={options} />
       <Ui
-        musicKey={key}
-        tuning={tuning}
-        mode={mode}
-        setKey={(k: Key) => setKey(k)}
-        setTuning={(t: Tuning) => setTuning(t)}
-        setMode={(m: Mode) => setMode(m)}
+        options={options}
+        setOptions={handleSetOptions}
       />
     </>
   );
-}
+};
 
 Home.defaultProps = defaultProps;
 

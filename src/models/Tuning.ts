@@ -1,4 +1,6 @@
-export class Tuning {
+import { IOption } from ".";
+
+export class Tuning implements IOption {
   private name: string;
   private offsets: number[];
 
@@ -7,11 +9,7 @@ export class Tuning {
     this.offsets = offsets;
   }
 
-  public toString(): string {
-    return this.name;
-  }
-
-  get Name(): string {
+  public get Name(): string {
     return this.name;
   }
 

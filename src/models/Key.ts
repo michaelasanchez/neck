@@ -1,6 +1,7 @@
 import { Note } from "./Note";
+import { IOption } from "./Options";
 
-export class Key {
+export class Key implements IOption{
 
   private root: Note;
 
@@ -12,7 +13,7 @@ export class Key {
     return this.root;
   }
 
-  public toString(): string {
+  public get Name(): string {
     return this.root.toString();
   }
 

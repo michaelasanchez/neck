@@ -47,7 +47,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({ show, showing, se
 
           <div className="nav-item btn-group dropup">
             <Dropdown as={ButtonGroup}>
-              <Button variant="secondary">Key of {musicKey.toString()}</Button>
+              <Button variant="secondary">Key of {musicKey.Name}</Button>
               <Dropdown.Toggle split variant="secondary" id="dropdown-key" />
               {renderKeyDropdownMenu()}
             </Dropdown>

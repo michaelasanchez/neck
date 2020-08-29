@@ -1,13 +1,9 @@
-export class Mode {
+import { IOption } from "./Options";
+
+export class Mode implements IOption {
 
   private name: string;
-  private steps: number[];
-
   private pattern: string;
-
-  public toString(): string {
-    return this.name;
-  }
 
   static Ionian(): Mode {
     return new Mode('Ionian', 'wwhwwwh');
@@ -52,8 +48,6 @@ export class Mode {
   constructor(name: string, stepPattern: string) {
     this.name = name;
     this.pattern = stepPattern;
-
-    this.steps = this.convertPattern(stepPattern);
   }
 
   get Name(): string {
@@ -63,11 +57,4 @@ export class Mode {
   get Steps(): string {
     return this.pattern;
   }
-
-  private convertPattern(pattern: string): number[] {
-    return [];
-  }
-
-
-
 }
