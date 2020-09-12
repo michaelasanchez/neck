@@ -56,7 +56,7 @@ export class Note {
   }
 
   get Label(): string {
-    return NoteValue[this.base] ? `${NoteValue[this.base]}${this.SuffixLabel(this.suffix)}` : '';
+    return NoteValue[this.base] ? `${NoteValue[this.base]}${this.SuffixLabel(this.suffix)}` : 'ERROR';
   }
 
   get Value(): NoteValue {

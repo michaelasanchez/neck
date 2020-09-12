@@ -1,4 +1,4 @@
-import { IOption } from "./Options";
+import { IOption } from "./options";
 
 export class Mode implements IOption {
 

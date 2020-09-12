@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Accordion, Modal } from 'react-bootstrap';
 
 import { RadioOptionCard } from '.';
-import { Mode } from '../../models/Mode';
+import { Mode } from '../../models/mode';
 import { Tuning } from '../../models/Tuning';
 
 export interface OptionsModalProps {

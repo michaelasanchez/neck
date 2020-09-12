@@ -1,7 +1,7 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
-import { Key, Keys } from '../../models/Key';
+import { Key, Keys } from '../../models/key';
 import { FretDisplayMode } from '../neck';
 
 export interface NavbarProps {

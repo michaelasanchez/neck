@@ -1,5 +1,5 @@
-import { Note } from "./Note";
-import { IOption } from "./Options";
+import { Note } from "./note";
+import { IOption } from "./options";
 
 export class Key implements IOption {
 

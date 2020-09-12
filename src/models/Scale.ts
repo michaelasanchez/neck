@@ -1,7 +1,7 @@
 import { each, isUndefined, last } from 'lodash';
 
-import { Note, NoteValue } from "./Note";
-import { Mode } from './Mode';
+import { Note, NoteValue } from "./note";
+import { Mode } from './mode';
 
 export class Scale {
 

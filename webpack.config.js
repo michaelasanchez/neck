@@ -51,7 +51,8 @@ module.exports = function makeWebpackConfig() {
             loader: 'ts-loader'
           }
         ]
-      }, {
+      },
+      {
         test: /\.(scss|css)$/,
         use: [
           {
@@ -83,6 +84,8 @@ module.exports = function makeWebpackConfig() {
       }
     ]
   };
+
+  // Plugins
   config.plugins = [
     new HtmlWebpackPlugin({
       template: './src/public/index.html',
