@@ -15,10 +15,18 @@ export enum NoteValue {
   B = 11,
 }
 
+// TODO: roughing in doubles
 enum NoteSuffix {
+  DoubleFlat = -2,
+  Flat = -1,
   Natural = 0,
   Sharp = 1,
-  Flat = -1,
+  DoubleSharp = 2,
+}
+
+export enum NoteSuffixLabel {
+  Sharp = '\u266f',
+  Flat = '\u266d',
 }
 
 export class Note {
@@ -130,8 +138,18 @@ export class Note {
     return this;
   }
 
+  public DoubleSharp(): Note {
+    this.suffix = NoteSuffix.DoubleSharp;
+    return this;
+  }
+
   public Flat(): Note {
     this.suffix = NoteSuffix.Flat;
+    return this;
+  }
+
+  public DoubleFlat(): Note {
+    this.suffix = NoteSuffix.DoubleFlat;
     return this;
   }
 
