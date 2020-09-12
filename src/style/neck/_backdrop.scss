@@ -19,7 +19,7 @@
   .fret-number-group {
     width: $fret-label-width;
 
-    .label {
+    .fret-number {
       @include debug;
       @include center;
 
@@ -41,7 +41,7 @@
 
   color: #999;
 
-  .marker {
+  .fret-marker {
     margin: 0 60px;
     border: 1px solid #ddd;
     background-color: #eee;

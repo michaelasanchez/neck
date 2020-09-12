@@ -1,11 +1,11 @@
 import { Note } from "./Note";
 import { IOption } from "./Options";
 
-export class Key implements IOption{
+export class Key implements IOption {
 
   private root: Note;
 
-  constructor(root:Note) {
+  constructor(root: Note) {
     this.root = root;
   }
 
@@ -58,7 +58,7 @@ export class Key implements IOption{
 
 export class Keys {
 
-  static All(): Key[] {
+  static DropdownValues(): Key[] {
     return [
       Key.C().Sharp(),
       Key.F().Sharp(),

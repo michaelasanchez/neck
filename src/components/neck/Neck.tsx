@@ -1,10 +1,13 @@
 import { times } from 'lodash';
 import * as React from 'react';
-import { FretMarkers, FretDisplayMode, FretNumbers, StringComponent } from '.';
-import { IOptions, Key, Scale, Mode } from '../../models';
 import { useEffect, useState } from 'react';
 
-const ENABLE_NECK_ANIMATION = true;
+import { FretMarkers, FretNumbers, StringComponent } from '.';
+import { IOptions, Key, Mode, Scale } from '../../models';
+
+export const ENABLE_NECK_ANIMATION = true;
+export const ENABLE_NECK_MARKERS = true;
+export const ENABLE_NECK_NUMBERS = true;
 
 export interface NeckProps {
   options?: IOptions;
@@ -12,10 +15,8 @@ export interface NeckProps {
 
 const getScale = (key: Key, mode: Mode) => new Scale(key.Root, mode);
 
-export const Neck: React.FunctionComponent<NeckProps> = ({
-  options,
-}) => {
-  const { key, tuning, mode, numFrets, numStrings, markers, fretMode } = options;
+export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
+  const { key, tuning, mode, numFrets, markers, fretMode } = options;
 
   const [scale, setScale] = useState<Scale>(getScale(key, mode));
   const [className, setClassName] = useState<string>();
@@ -24,8 +25,15 @@ export const Neck: React.FunctionComponent<NeckProps> = ({
     const nextScale = getScale(key, mode);
     setScale(nextScale);
 
+    const root = scale?.Root;
+    const nextRoot = nextScale?.Root;
+
+    // Fret Animation
     if (ENABLE_NECK_ANIMATION) {
-      if (nextScale?.Root.Modified > scale?.Root.Modified) {
+      const diff = nextRoot.Modified - root.Modified
+      
+      // Default to up when equidistant
+      if ((diff < 0 && diff < -6) || (diff > 0 && diff < 6)) {
         setClassName('down');
       } else {
         setClassName('up');
@@ -36,16 +44,20 @@ export const Neck: React.FunctionComponent<NeckProps> = ({
   return (
     <div className="neck">
       <div className="backdrop">
-        <div className="fretboard-numbers">
-          <FretNumbers frets={numFrets} />
-          <FretNumbers frets={numFrets} />
-        </div>
-        <div className="fretboard-markers">
-          <FretMarkers markers={markers} />
-        </div>
+        {ENABLE_NECK_NUMBERS && (
+          <div className="fretboard-numbers">
+            <FretNumbers frets={numFrets} />
+            <FretNumbers frets={numFrets} />
+          </div>
+        )}
+        {ENABLE_NECK_MARKERS && (
+          <div className="fretboard-markers">
+            <FretMarkers markers={markers} />
+          </div>
+        )}
       </div>
       <div className={`strings ${className}`}>
-        {times(numStrings, (i) => (
+        {times(tuning.Offsets.length, (i) => (
           <StringComponent
             key={i}
             fretmode={fretMode}

@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
+
 import { Note } from '../../models/Note';
-import { useState, useEffect } from 'react';
+import { ENABLE_NECK_ANIMATION } from './Neck';
 
 export enum FretDisplayMode {
   Note,
@@ -10,8 +12,9 @@ export enum FretDisplayMode {
 
 export interface FretProps {
   fretMode: FretDisplayMode;
-  open?: boolean;
   note?: Note;
+  open?: boolean;
+  root?: boolean;
 }
 
 const fretLabel = (note: Note, fretMode: FretDisplayMode) => {
@@ -22,15 +25,16 @@ const fretLabel = (note: Note, fretMode: FretDisplayMode) => {
       case FretDisplayMode.Degree:
         return <label>{note.Degree}</label>;
       case FretDisplayMode.Marker:
-        return <div className="fret-symbol"></div>;
+        return <div className="fret-marker"></div>;
     }
   }
 };
 
 export const Fret: React.FunctionComponent<FretProps> = ({
   fretMode,
-  open,
   note,
+  open,
+  root,
 }) => {
   const [prevNote, setPrevNote] = useState<Note>();
   const [currentNote, setCurrentNote] = useState<Note>(note);
@@ -42,20 +46,20 @@ export const Fret: React.FunctionComponent<FretProps> = ({
       setPrevNote(currentNote);
       setCurrentNote(note);
 
-      setAnimate(true);
-      setTimeout(() => setAnimate(false), 1000);
+      if (ENABLE_NECK_ANIMATION) {
+        setAnimate(true);
+        setTimeout(() => setAnimate(false), 1000);
+      }
     }
   }, [note]);
-
-  const renderLabel = (className: string, note: Note) => (
-    <div className={`label ${className}`}>{fretLabel(note, fretMode)}</div>
-  );
 
   return (
     <>
       <div className={`fret${open ? ' open' : ''}${animate ? ' animate' : ''}`}>
-        {renderLabel('prev', prevNote)}
-        {renderLabel('current', currentNote)}
+        <div className={`label prev`}>{fretLabel(prevNote, fretMode)}</div>
+        <div className={`label current ${root ? 'root' : ''}`}>
+          {fretLabel(currentNote, fretMode)}
+        </div>
       </div>
     </>
   );

@@ -87,6 +87,7 @@ export class Note {
     return this.degree;
   }
 
+  // Only assigned in Scale
   set Degree(degree: number) {
     this.degree = degree;
   }
@@ -152,12 +153,13 @@ export class Note {
       }
     }
 
-    // next = isUndefined(NoteValue[(mod + 1) % Note.NUM_NOTES]) ?
-    // ((mod != this.base) ? new Note(mod, NoteSuffix.Sharp) : new Note(mod + 2, NoteSuffix.Flat)) :
-    // ((mod + 1 == this.base) ? new Note(mod + 2, NoteSuffix.Flat) : new Note(mod + 1));
-
     return next;
   }
+
+  //  C           D           E     F           G           A           B   
+  //        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb
+  //  B#                      Fb    E#                                  Cb
+  //  0     1     2     3     4     5     6     7     8     9     10    11 
 
   public WholeStepUp(): Note {
     let mod = this.ModifiedValue();
@@ -176,10 +178,6 @@ export class Note {
         next = new Note(mod + 2);
       }
     }
-    
-    // next = isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES]) ?
-    //   ((mod + 1 == this.base) ? new Note(mod + 3, NoteSuffix.Flat) : new Note(mod + 1, NoteSuffix.Sharp)) :
-    //   ((mod - this.base > 0) ? new Note(mod + 1, NoteSuffix.Sharp) : new Note(mod + 2));
 
     return next;
   }

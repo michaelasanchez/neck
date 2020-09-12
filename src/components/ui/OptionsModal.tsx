@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Accordion, Modal } from 'react-bootstrap';
+
+import { RadioOptionCard } from '.';
 import { Mode } from '../../models/Mode';
 import { Tuning } from '../../models/Tuning';
-import { OptionCard } from './OptionCard';
 
 export interface OptionsModalProps {
   showing: boolean;
@@ -30,18 +31,16 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
 
         <Modal.Body>
           <Accordion>
-            <OptionCard
+            <RadioOptionCard
               eventKey="0"
-              type="radio"
-              header="Tuning"
+              title="Tuning"
               value={tuning}
               options={Tuning.All()}
               setValue={(t: Tuning) => setTuning(t)}
             />
-            <OptionCard
+            <RadioOptionCard
               eventKey="1"
-              type="radio"
-              header="Mode"
+              title="Mode"
               value={mode}
               options={Mode.All()}
               setValue={(m: Mode) => setMode(m)}

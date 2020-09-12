@@ -19,7 +19,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
   setFretDisplayMode,
   musicKey,
 }) => {
-  const keys = Keys.All();
+  const keys = Keys.DropdownValues();
 
   const handleSetKey = (keyString: string) => setKey(keys[parseInt(keyString)]);
 

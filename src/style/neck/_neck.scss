@@ -15,12 +15,13 @@
     font-weight: $fret-open-font-weight;
     height: $fret-open-height;
 
-    .fret-symbol {
+    .fret-marker {
       background-color: #ccc;
     }
   }
 
-  .fret-symbol {
+  // FretDisplayMode.Marker
+  .fret-marker {
     border-radius: 50%;
     border: 1px solid #aaa;
     height: 10px;
@@ -32,8 +33,14 @@
       opacity: 0;
     }
 
+    &.root label {
+      transform: scale(1.1);
+      font-weight: 900;
+    }
+
     label {
       margin-bottom: 0;
+      transition: all 300ms;
     }
   }
 }
