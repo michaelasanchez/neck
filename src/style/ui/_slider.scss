@@ -1,0 +1,19 @@
+.rc-slider {
+  position: absolute;
+  top: 0;
+  right: 60px;
+  margin: 70px 0px;
+  height: 80%;
+}
+
+.neck {
+  // margin-right: 80px;
+}
+
+.rc-slider-vertical {
+  width: 50px;
+  
+  .rc-slider-mark {
+    top: -.6em;
+  }
+}
