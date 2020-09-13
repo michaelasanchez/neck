@@ -5,6 +5,7 @@ import { Key, Keys } from '../../models';
 import { useState } from 'react';
 
 const DEFAULT_INDEX_SHIFT = 3;
+const DEFAULT_INCLUDE_THEORETICAL = true;
 
 export interface KeySliderProps {
   setKey?: (key: Key) => void;
@@ -45,20 +46,20 @@ export const KeySlider: React.FunctionComponent<KeySliderProps> = ({
 
   const handleChange = (primaryIndex: number) => {
     const index = shiftIndex(primaryIndex, -DEFAULT_INDEX_SHIFT, numSliderVals);
-
     const keys = sliderVals[index];
 
     let nextKey;
-    let nextSecondaryIndex;
+    let nextSecondaryIndex = null;  // keep for comparison around #68
+
     if (keys.length > 1) {
-      if (secondaryIndex || secondaryIndex === 0) {
+      if (secondaryIndex !== null) {
         nextSecondaryIndex = shiftIndex(secondaryIndex, 1, keys.length);
       } else {
         nextSecondaryIndex = 0;
       }
     } else {
       nextKey = keys[0];
-      if (secondaryIndex || secondaryIndex === 0) {
+      if (secondaryIndex !== null) {
         nextSecondaryIndex = null;
       }
     }
@@ -71,7 +72,7 @@ export const KeySlider: React.FunctionComponent<KeySliderProps> = ({
       }
     }
 
-    setKey && setKey(nextKey);
+    setKey && nextKey && setKey(nextKey);
   };
 
   React.useEffect(() => {}, []);

@@ -10,10 +10,11 @@ export const FretMarkers: React.FunctionComponent<FretMarkersProps> = ({
 }) => {
   return (
     <>
+      <div className="fretboard-marker-group open"></div>
       {map(markers, (m, i) => (
-        <div className="fret-marker-group" key={i}>
+        <div className="fretboard-marker-group" key={i}>
           {times(m, (j) => (
-            <div className="fret-marker" key={j}></div>
+            <div className="fretboard-marker" key={j}></div>
           ))}
         </div>
       ))}

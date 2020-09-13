@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { Navbar, OptionsModal } from '.';
 import { IOptions, Key, Mode, Tuning } from '../../models';
 import { FretDisplayMode } from '../neck';

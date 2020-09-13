@@ -1,46 +1,65 @@
 .neck {
+  width: $neck-width;
+  max-width: 100%;
+  padding: $neck-padding-vertical 0;
+
+  font-family: $neck-font-family;
+
   .strings {
-    font-family: $neck-font-family;
-  }
-}
+    display: flex;
+    justify-content: space-around;
 
-.fret {
-  @include debug;
-
-  border-bottom: $fret-border-bottom;
-  height: $fret-height;
-
-  &.open {
-    border-bottom: $fret-open-border-bottom;
-    font-weight: $fret-open-font-weight;
-    height: $fret-open-height;
-
-    .fret-marker {
-      background-color: #ccc;
+    .string {
+      flex-grow: 1;
     }
   }
 
-  // FretDisplayMode.Marker
-  .fret-marker {
-    border-radius: 50%;
-    border: 1px solid #aaa;
-    height: 10px;
-    width: 10px;
-  }
+  .fret {
+    position: relative;
 
-  .label {
-    &.prev {
-      opacity: 0;
+    border-bottom: $fret-border-bottom;
+    height: $fret-height;
+
+    &.open {
+      height: $fret-open-height;
+
+      border-bottom: $fret-open-border-bottom;
+      font-weight: $fret-open-font-weight;
+
+      // FretDisplayMode
+      .label .fret-marker {
+        background-color: $fret-market-open-background-color;
+      }
     }
 
-    &.root label {
-      transform: scale(1.1);
-      font-weight: 900;
-    }
+    .label {
+      @include flex-center;
+      @include full;
 
-    label {
-      margin-bottom: 0;
-      transition: all 300ms;
+      position: absolute;
+
+      &.prev {
+        opacity: 0;
+      }
+
+      &.root label {
+        transform: scale(1.1);
+        font-weight: 900;
+      }
+
+      label {
+        margin-bottom: 0;
+      }
+
+      // FretDisplayMode
+      .fret-marker {
+        height: $fret-marker-height;
+        width: $fret-marker-width;
+
+        background-color: $fret-marker-background-color;
+        border: $fret-marker-border;
+        border-radius: 50%;
+      }
     }
   }
 }

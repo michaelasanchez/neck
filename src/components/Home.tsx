@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { defaultOptions, IOptions, Key, Mode, Tuning } from '../models';
+import { Backdrop } from './Backdrop';
 import { Neck } from './neck';
 import { Ui } from './ui';
 
@@ -24,7 +25,14 @@ const Home: React.FunctionComponent<HomeProps> = ({}) => {
 
   return (
     <>
-      <Neck options={options} />
+      {/* <div className="layer outer"> */}
+        <Backdrop options={options} />
+      {/* </div>
+      <div className="layer outer"> */}
+        <div className="layer">
+          <Neck options={options} />
+        </div>
+      {/* </div> */}
       <Ui options={options} setOptions={handleSetOptions} />
     </>
   );

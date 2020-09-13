@@ -48,7 +48,7 @@ export const Fret: React.FunctionComponent<FretProps> = ({
 
       if (ENABLE_NECK_ANIMATION) {
         setAnimate(true);
-        setTimeout(() => setAnimate(false), 1000);
+        setTimeout(() => setAnimate(false), 300);
       }
     }
   }, [note]);

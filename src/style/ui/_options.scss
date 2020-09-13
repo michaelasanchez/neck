@@ -1,12 +1,13 @@
 .modal #options {
   max-height: calc(100vh - #{$modal-margin-top} - #{$modal-margin-bottom});
-  max-width: unset;
+  max-width: 400px;
   width: calc(100vw - 30px);
   margin: $modal-margin-top 15px $modal-margin-bottom;
   overflow: hidden;
 
   position: absolute;
   bottom: 0;
+  right: 0;
 
   // Animation
   // .modal-content {

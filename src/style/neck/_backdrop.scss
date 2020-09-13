@@ -1,27 +1,38 @@
+.shadow {
+  width: $neck-width;
+  height: 1000px;
+  box-shadow: $neck-box-shadow;
+  margin: $neck-padding-vertical 0;
+}
 
-// Not being used yet (I think?)
+.shadow-overlay {
+  height: 100vh;
+  width: $neck-width;
+  background: $body-background-color;
+}
+
 .fretboard {
-  background-color: $fretboard-background-color;
+  background: $fretboard-background;
+  width: $neck-width;
 }
 
 .fretboard-numbers,
 .fretboard-markers {
-  position: absolute;
-  width: 100%;
+  padding: $neck-padding-vertical 0;
 }
 
 .fretboard-numbers {
-  max-width: $neck-max-width + $fret-label-width * 2;
   display: flex;
   justify-content: space-between;
-  margin-top: $fret-open-height;
+
+  &.right {
+    justify-content:  flex-end;
+  }
 
   .fret-number-group {
-    width: $fret-label-width;
 
     .fret-number {
-      @include debug;
-      @include center;
+      @include flex-center;
 
       color: $fret-label-color;
       height: $fret-height;
@@ -30,23 +41,26 @@
 }
 
 .fretboard-markers {
-  padding: 0 $fret-label-width 0;
-  margin-top: $fret-open-height;
+  width: $neck-width;
 }
 
-.fret-marker-group {
-  @include center;
+.fretboard-marker-group {
+  @include flex-center;
 
   height: $fret-height;
 
   color: #999;
 
-  .fret-marker {
-    margin: 0 60px;
-    border: 1px solid #ddd;
-    background-color: #eee;
+  // FretDisplayMode.Marker
+  .fretboard-marker:not(.open) {
+    height: $fretboard-marker-height;
+    width: $fretboard-marker-width;
+
+    background-color: $fretboard-marker-background-color;
+    border: $fretboard-marker-border;
     border-radius: 50%;
-    width: $marker-diameter;
-    height: $marker-diameter;
+
+    // Space for double marker
+    margin: 0 60px;
   }
 }

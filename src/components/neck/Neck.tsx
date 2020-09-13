@@ -1,13 +1,10 @@
 import { times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-
-import { FretMarkers, FretNumbers, StringComponent } from '.';
+import { StringComponent } from '.';
 import { IOptions, Key, Mode, Scale } from '../../models';
 
 export const ENABLE_NECK_ANIMATION = true;
-export const ENABLE_NECK_MARKERS = true;
-export const ENABLE_NECK_NUMBERS = true;
 
 export interface NeckProps {
   options?: IOptions;
@@ -30,8 +27,8 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
 
     // Fret Animation
     if (ENABLE_NECK_ANIMATION) {
-      const diff = nextRoot.Modified - root.Modified
-      
+      const diff = nextRoot.Modified - root.Modified;
+
       // Default to up when equidistant
       if ((diff < 0 && diff < -6) || (diff > 0 && diff < 6)) {
         setClassName('down');
@@ -43,19 +40,6 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
 
   return (
     <div className="neck">
-      <div className="backdrop">
-        {ENABLE_NECK_NUMBERS && (
-          <div className="fretboard-numbers">
-            <FretNumbers frets={numFrets} />
-            <FretNumbers frets={numFrets} />
-          </div>
-        )}
-        {ENABLE_NECK_MARKERS && (
-          <div className="fretboard-markers">
-            <FretMarkers markers={markers} />
-          </div>
-        )}
-      </div>
       <div className={`strings ${className}`}>
         {times(tuning.Offsets.length, (i) => (
           <StringComponent

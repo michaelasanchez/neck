@@ -48,7 +48,7 @@ describe('major scale', () => {
     }
   );
 
-  // TODO: fix
+  // TODO: fix?
   // test.each(theoreticalKeys)(
   //   'in key of %s',
   //   (firstArg: Key, expectedResult) => {

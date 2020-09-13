@@ -1,52 +1,67 @@
-$debug-border: none; //1px solid red;
-$debug-border-top: none; //1px solid red;
-$debug-border-right: none; //1px solid red;
-$debug-border-bottom: none; //1px solid red;
-$debug-border-left: none; //1px solid red;
+// $debug-border: none; //1px solid red;
+// $debug-border-top: none; //1px solid red;
+// $debug-border-right: none; //1px solid red;
+// $debug-border-bottom: none; //1px solid red;
 
-/* Colors */
+$body-background-color:  #fcfcfc;
+
+// $fretboard-background-color: #fff;
+
+// $debug-border-left: none; //1px solid red;
+
+// /* Colors */
 $white: #fff;
 
-/* Fonts */
+// /* Fonts */
 $font-merriweather: "Merriweather", serif;
 
 
-/* Navbar */
+// /* Navbar */
 $navbar-height: 55px;
 
 
-/* Options */
+// /* Options */
 $modal-margin-top: 15px;
 $modal-margin-bottom: 70px;
 
 
-/* Neck */
+// /* Neck */
+$neck-padding-vertical: 100px;
 $neck-font-family: $font-merriweather;
 
-$neck-margin-top: 80px;
-$neck-margin-bottom: $neck-margin-top;
+$neck-width: 400px;
 
-$neck-max-width: 400px;
+$neck-box-shadow: 0 20px 30px -10px #00000022;
 
 /* Fretboard */
-$fretboard-background-color: #fcfcfc;
+$fretboard-background: linear-gradient(0deg, #fcfcfc, #fff 10%, #fff 90%, #fcfcfc);
 
-/* Frets */
+/* Fretboard Markers */
+$fretboard-marker-background-color: #eee;
+$fretboard-marker-border: 1px solid #ddd;
+$fretboard-marker-diameter: 12px;
+
+$fretboard-marker-width: $fretboard-marker-diameter;
+$fretboard-marker-height: $fretboard-marker-diameter;
+
+// /* Frets */
 $fret-height: 80px;
-
 $fret-border-bottom: 1px solid #ddd;
 
-/* Open Fret */
-$fret-open-height: 50px;
-
+$fret-open-height: $fret-height;
 $fret-open-border-bottom: 2px solid #aaa;
 $fret-open-font-weight: 700;
 
-/* Fret Labels */
+// /* Fret Labels */
 $fret-label-color: #999;
-$fret-label-width: 50px;
 
 $fret-animation-length: .2s;
 
-/* Fret Markers */
-$marker-diameter: 12px;
+// /* Fret Markers */
+$fret-marker-background-color: #eee;
+$fret-market-open-background-color: #ccc;
+$fret-marker-border: 1px solid #aaa;
+$fret-marker-diameter: 12px;
+
+$fret-marker-width: $fret-marker-diameter;
+$fret-marker-height: $fret-marker-diameter;
