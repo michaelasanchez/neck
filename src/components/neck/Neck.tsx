@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { StringComponent } from '.';
 import { IOptions, Key, Mode, Scale } from '../../models';
+import { styles } from '../../shared';
 
 export const ENABLE_NECK_ANIMATION = true;
 
@@ -27,7 +28,7 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
 
     // Fret Animation
     if (ENABLE_NECK_ANIMATION) {
-      const diff = nextRoot.Modified - root.Modified;
+      const diff = nextRoot?.Modified - root?.Modified;
 
       // Default to up when equidistant
       if ((diff < 0 && diff < -6) || (diff > 0 && diff < 6)) {
@@ -39,7 +40,7 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
   }, [key, mode]);
 
   return (
-    <div className="neck">
+    <div className="neck" style={styles.neck}>
       <div className={`strings ${className}`}>
         {times(tuning.Offsets.length, (i) => (
           <StringComponent

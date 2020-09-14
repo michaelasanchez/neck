@@ -1,6 +1,4 @@
 .neck {
-  width: $neck-width;
-  max-width: 100%;
   padding: $neck-padding-vertical 0;
 
   font-family: $neck-font-family;
@@ -58,7 +56,8 @@
 
         background-color: $fret-marker-background-color;
         border: $fret-marker-border;
-        border-radius: 50%;
+        border-radius: 25%;
+        transform: rotate(45deg);
       }
     }
   }

@@ -60,7 +60,7 @@
     border: $fretboard-marker-border;
     border-radius: 50%;
 
-    // Space for double marker
-    margin: 0 60px;
+    // Space for double marker - 35% <- 50% -> 75%
+    margin: 0 15%;
   }
 }

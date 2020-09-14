@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { Key, Keys } from '../../models/key';
 import { FretDisplayMode } from '../neck';
+import { KeySlider } from './KeySlider';
 
 export interface NavbarProps {
   musicKey: Key;
@@ -61,7 +62,10 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
                 Key of {musicKey.Name}
               </Button>
               <Dropdown.Toggle split variant="secondary" id="dropdown-key" />
-              {renderKeyDropdownMenu()}
+              {/* {renderKeyDropdownMenu()} */}
+              <Dropdown.Menu className="dropdown-menu dropdown-menu-right">
+                <KeySlider setKey={(k: Key) => setKey(k)} />
+              </Dropdown.Menu>
             </Dropdown>
           </div>
         </form>

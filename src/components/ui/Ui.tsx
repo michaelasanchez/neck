@@ -1,9 +1,7 @@
 import * as React from 'react';
-
 import { Navbar, OptionsModal } from '.';
 import { IOptions, Key, Mode, Tuning } from '../../models';
 import { FretDisplayMode } from '../neck';
-import { KeySlider } from './KeySlider';
 
 export interface UiProps {
   options: IOptions;
@@ -53,7 +51,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setTuning={(t: Tuning) => setOptions({ tuning: t })}
         setMode={(m: Mode) => setOptions({ mode: m })}
       />
-      <KeySlider setKey={(k: Key) => setOptions({ key: k })} />
+      {/* <KeySlider setKey={(k: Key) => setOptions({ key: k })} /> */}
     </>
   );
 };

@@ -1,19 +1,28 @@
 .rc-slider {
-  position: absolute;
-  bottom: 40px;
-  right: 60px;
-  margin: 70px 0px;
-  height: 500px;
-}
-
-.neck {
-  // margin-right: 80px;
+  height: 490px;
 }
 
 .rc-slider-vertical {
-  width: 50px;
-  
+  width: 90px;
+
   .rc-slider-mark {
-    top: -.6em;
+    top: -5px;
+
+    .rc-slider-mark-text {
+      padding-left: 10px;
+      text-align: left;
+      width: 80px;
+    }
   }
+}
+
+$dropdown-padding-vertical: 30px;
+$dropdown-padding-horizontal: 20px;
+
+.navbar-expand .navbar-nav .dropdown-menu {
+  height: 500px + ($dropdown-padding-vertical * 2);
+  left: unset !important;
+  right: -10px !important;
+  // right: 32px !important;
+  padding: $dropdown-padding-vertical $dropdown-padding-horizontal;
 }

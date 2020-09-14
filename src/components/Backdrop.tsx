@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IOptions } from '../models';
+import { styles } from '../shared';
 import { FretMarkers, FretNumbers } from './neck';
 
 export const ENABLE_NECK_MARKERS = true;
@@ -16,11 +17,17 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({
 
   const neckStyles = {
     height: (numFrets + 1) * 80,
+    maxWidth: styles.neck.maxWidth,
   };
 
   const neckWithMarginStyles = {
     height: neckStyles.height + 100 * 2,
+    maxWidth: styles.neck.maxWidth,
   };
+
+  const fretMarkers = {
+    maxWidth: styles.neck.maxWidth,
+  }
 
   return (
     <>
@@ -38,7 +45,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({
       </div>
       <div className="layer">
         {ENABLE_NECK_MARKERS && (
-          <div className="fretboard-markers">
+          <div className="fretboard-markers" style={fretMarkers}>
             <FretMarkers markers={markers} />
           </div>
         )}

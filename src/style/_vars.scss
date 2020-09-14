@@ -3,7 +3,7 @@
 // $debug-border-right: none; //1px solid red;
 // $debug-border-bottom: none; //1px solid red;
 
-$body-background-color:  #fcfcfc;
+$body-background-color:  #fdfdfd;
 
 // $fretboard-background-color: #fff;
 
@@ -34,7 +34,7 @@ $neck-width: 400px;
 $neck-box-shadow: 0 20px 30px -10px #00000022;
 
 /* Fretboard */
-$fretboard-background: linear-gradient(0deg, #fcfcfc, #fff 10%, #fff 90%, #fcfcfc);
+$fretboard-background: linear-gradient(0deg, $body-background-color, #fff 10%, #fff 90%, $body-background-color);
 
 /* Fretboard Markers */
 $fretboard-marker-background-color: #eee;
