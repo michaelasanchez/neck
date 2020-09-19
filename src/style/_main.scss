@@ -27,11 +27,12 @@ body {
 
 main {
   position: relative;
-  // Prevent scrollbar + nav overlap
-  max-height: calc(100vh - #{$navbar-height});
 
   // main scrolls, not page
-  // overflow-y: auto;
+  overflow-y: auto;
+
+  // Prevent scrollbar + nav overlap
+  max-height: calc(100vh - #{$navbar-height});
 }
 
 .layer {
@@ -39,7 +40,6 @@ main {
   top: 0;
   min-height: 100%;
   width: 100%;
-  margin-bottom: $navbar-height;
 
   display: flex;
   flex-direction: column;

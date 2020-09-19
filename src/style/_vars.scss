@@ -37,7 +37,7 @@ $neck-box-shadow: 0 20px 30px -10px #00000022;
 $fretboard-background: linear-gradient(0deg, $body-background-color, #fff 10%, #fff 90%, $body-background-color);
 
 /* Fretboard Markers */
-$fretboard-marker-background-color: #eee;
+$fretboard-marker-background-color: #f8f8f8;
 $fretboard-marker-border: 1px solid #ddd;
 $fretboard-marker-diameter: 12px;
 
@@ -59,8 +59,8 @@ $fret-animation-length: .2s;
 
 // /* Fret Markers */
 $fret-marker-background-color: #eee;
-$fret-market-open-background-color: #ccc;
-$fret-marker-border: 1px solid #aaa;
+$fret-market-root-background-color: #ccc;
+$fret-marker-border: 1px solid #999;
 $fret-marker-diameter: 12px;
 
 $fret-marker-width: $fret-marker-diameter;

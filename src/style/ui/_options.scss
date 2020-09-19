@@ -9,17 +9,12 @@
   bottom: 0;
   right: 0;
 
-  // Animation
-  // .modal-content {
-  //   position: relative;
-  // }
-
   .modal-header {
     align-items: center;
 
     .close {
       padding: 1.4rem;
-      
+
       &:focus {
         outline: none;
       }
@@ -39,6 +34,7 @@
   .accordion {
     .card {
       border: none;
+
       // Stole from bootstrap
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
@@ -53,12 +49,12 @@
       }
 
       h5 {
-        margin-bottom: .3rem;
+        margin-bottom: 0.3rem;
       }
     }
 
     .card-body {
       padding-top: 0;
-    };
+    }
   }
 }

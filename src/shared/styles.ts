@@ -1,5 +1,15 @@
+const mobile = window.matchMedia("(max-width: 768px)");
+
 const NECK_WIDTH = 400;
-const FRET_NUMBERS_WIDTH = 40;
+
+const FRET_NUMBERS_WIDTH_DESKTOP = 60;
+const FRET_NUMBERS_WIDTH_MOBILE = 40;
+
+function getNumbersWidth(x: MediaQueryList) {
+  return x.matches ? FRET_NUMBERS_WIDTH_MOBILE : FRET_NUMBERS_WIDTH_DESKTOP;
+}
+
+const FRET_NUMBERS_WIDTH = getNumbersWidth(mobile);
 
 export const styles = {
   neck: {
