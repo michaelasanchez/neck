@@ -1,6 +1,6 @@
 import { map } from 'lodash';
 import * as React from 'react';
-import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
+import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { Key, Keys } from '../../models/key';
 import { FretDisplayMode } from '../neck';
 import { KeySlider } from './KeySlider';
@@ -8,6 +8,7 @@ import { KeySlider } from './KeySlider';
 export interface NavbarProps {
   musicKey: Key;
   showing: boolean;
+  setShowing: (showing: boolean) => void;
   show: Function;
   setKey: Function;
   setFretDisplayMode: Function;
@@ -16,6 +17,7 @@ export interface NavbarProps {
 export const Navbar: React.FunctionComponent<NavbarProps> = ({
   show,
   showing,
+  setShowing,
   setKey,
   setFretDisplayMode,
   musicKey,
@@ -50,23 +52,22 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
         <form className="form-inline">
           <Button
             variant="outline-success"
-            className={showing ? 'options active' : 'options'}
-            onClick={() => show()}
+            className={`options ${showing ? 'active' : ''}`}
+            onClick={() => setShowing(!showing)}
           >
             Options
           </Button>
 
           <div className="nav-item btn-group dropup">
-            <Dropdown as={ButtonGroup}>
-              <Button variant="secondary" onClick={() => setFretDisplayMode()}>
-                Key of {musicKey.Name}
-              </Button>
-              <Dropdown.Toggle split variant="secondary" id="dropdown-key" />
-              {/* {renderKeyDropdownMenu()} */}
-              <Dropdown.Menu className="dropdown-menu dropdown-menu-right">
-                <KeySlider setKey={(k: Key) => setKey(k)} />
-              </Dropdown.Menu>
-            </Dropdown>
+            <DropdownButton
+              as={ButtonGroup}
+              id="key-dropdown"
+              variant="secondary"
+              title={`Key of ${musicKey.Name}`}
+              disabled={showing}
+            >
+              <KeySlider setKey={(k: Key) => setKey(k)} />
+            </DropdownButton>
           </div>
         </form>
       </div>

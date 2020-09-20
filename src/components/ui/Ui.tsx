@@ -39,6 +39,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
       <Navbar
         musicKey={options.key}
         showing={showOptions}
+        setShowing={setShowOptions}
         show={() => setShowOptions(true)}
         setKey={(k: Key) => setOptions({ key: k })}
         setFretDisplayMode={handleFretDisplayModeUpdate}
@@ -51,7 +52,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setTuning={(t: Tuning) => setOptions({ tuning: t })}
         setMode={(m: Mode) => setOptions({ mode: m })}
       />
-      {/* <KeySlider setKey={(k: Key) => setOptions({ key: k })} /> */}
     </>
   );
 };

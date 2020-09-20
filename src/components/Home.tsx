@@ -56,8 +56,6 @@ const getDefaultOptions = (useCookie: boolean = USE_COOKIE): IOptions => {
   return defaultOptions;
 };
 
-const defaultProps: HomeProps = {};
-
 const Home: React.FunctionComponent<HomeProps> = ({}) => {
   const [options, setOptions] = useState<IOptions>(getDefaultOptions());
 
@@ -73,15 +71,15 @@ const Home: React.FunctionComponent<HomeProps> = ({}) => {
 
   return (
     <>
-      <Backdrop options={options} />
-      <div className="layer">
-        <Neck options={options} />
-      </div>
+      <main>
+        <Backdrop options={options} />
+        <div className="neck-container">
+          <Neck options={options} />
+        </div>
+      </main>
       <Ui options={options} setOptions={handleSetOptions} />
     </>
   );
 };
-
-Home.defaultProps = defaultProps;
 
 export default Home;

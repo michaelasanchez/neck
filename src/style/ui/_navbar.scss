@@ -1,4 +1,8 @@
 nav {
+  &.fixed-bottom {
+    z-index: 1055;
+  }
+
   a.dropdown-item {
     cursor: pointer;
   }
@@ -12,5 +16,15 @@ nav {
     &:hover {
       opacity: 1;
     }
+  }
+
+  .dropup button:disabled {
+    cursor: unset;
+  }
+
+  // BS Override
+  &.navbar-expand .navbar-nav .dropdown-menu {
+    right: -19px !important;
+    top: -2px !important;
   }
 }

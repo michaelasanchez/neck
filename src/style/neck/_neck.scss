@@ -3,7 +3,7 @@
 
   font-family: $neck-font-family;
 
-  .strings {
+  .neck-strings {
     display: flex;
     justify-content: space-around;
 
@@ -14,9 +14,9 @@
 
   .fret {
     position: relative;
+    height: $fret-height;
 
     border-bottom: $fret-border-bottom;
-    height: $fret-height;
 
     &.open {
       height: $fret-open-height;

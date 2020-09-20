@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { ReactNode } from 'react';
 import { Accordion, Card } from 'react-bootstrap';
 
 export interface OptionProps {
   eventKey: string;
-  header: JSX.Element;
-  body: JSX.Element;
+  header: ReactNode;
+  body: ReactNode;
 }
 
 export const OptionCard: React.FunctionComponent<OptionProps> = ({

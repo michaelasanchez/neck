@@ -41,7 +41,7 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
 
   return (
     <div className="neck" style={styles.neck}>
-      <div className={`strings ${className}`}>
+      <div className={`neck-strings ${className}`}>
         {times(tuning.Offsets.length, (i) => (
           <StringComponent
             key={i}

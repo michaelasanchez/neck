@@ -1,23 +1,7 @@
-// html,
-// body {
-//   min-height: 100vh;
-//   overflow: hidden;
-// }
-
-// body {
-// }
-
-// html,
-// body,
-// main,
-// .fretboard,
-// .neck {
-//   height: 100%;
-// }
-
 html,
 body,
-main {
+main,
+.app {
   height: 100%;
 }
 
@@ -35,7 +19,7 @@ main {
   max-height: calc(100vh - #{$navbar-height});
 }
 
-.layer {
+main > [class$=container] {
   position: absolute;
   top: 0;
   min-height: 100%;
@@ -46,12 +30,3 @@ main {
   align-items: center;
   justify-content: center;
 }
-
-// .ui {
-//   max-width: $neck-max-width;
-// }
-
-// .backdrop,
-// .neck {
-//   margin: 0 auto;
-// }

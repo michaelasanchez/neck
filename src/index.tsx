@@ -9,5 +9,5 @@ import Home from "./components/Home";
 
 ReactDOM.render(
   <Home />,
-  document.querySelector('main')
+  document.querySelector('.app')
 )
