@@ -11,7 +11,7 @@ export interface NeckProps {
   options?: IOptions;
 }
 
-const getScale = (key: Key, mode: Mode) => new Scale(key.Root, mode);
+const getScale = (key: Key, mode: Mode) => new Scale(key.Tonic, mode);
 
 export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
   const { key, tuning, mode, numFrets, markers, fretMode } = options;

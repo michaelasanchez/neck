@@ -1,7 +1,8 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-import { Key, Keys } from '../../models/key';
+import { Key } from '../../models/key';
+import { Keys } from '../../shared';
 import { FretDisplayMode } from '../neck';
 import { KeySlider } from './KeySlider';
 
@@ -36,7 +37,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             eventKey={index.toString()}
             onSelect={(keyString: string) => handleSetKey(keyString)}
           >
-            {key.Root.toString()}
+            {key.Tonic.toString()}
           </Dropdown.Item>
         ))}
       </Dropdown.Menu>

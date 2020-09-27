@@ -1,8 +1,9 @@
 import React = require('react');
 import { size, map, each, keyBy, isArray, uniq } from 'lodash';
 import Slider from 'rc-slider';
-import { Key, Keys } from '../../models';
+import { Key } from '../../models';
 import { useState } from 'react';
+import { Keys } from '../../shared';
 
 const DEFAULT_INDEX_SHIFT = 3;
 const DEFAULT_INCLUDE_THEORETICAL = true;

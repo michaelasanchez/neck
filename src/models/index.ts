@@ -1,3 +1,4 @@
+export * from './chord';
 export * from './key';
 export * from './mode';
 export * from './note';

@@ -2,7 +2,7 @@ import { map } from "lodash";
 import { Key, Mode, Note, NoteSuffixLabel, Scale } from ".";
 
 const noteLabelsFromKey = (key: Key, mode: Mode = Mode.Ionian()): string[] => {
-  const scale = new Scale(key.Root, mode);
+  const scale = new Scale(key.Tonic, mode);
   return map(scale.Notes, n => formatNoteLabel(n));
 }
 
@@ -42,8 +42,8 @@ describe('major scale', () => {
 
   test.each(keys)(
     'in key of %s',
-    (firstArg: Key, expectedResult) => {
-      const notes = noteLabelsFromKey(firstArg)
+    (key: Key, expectedResult) => {
+      const notes = noteLabelsFromKey(key)
       expect(notes).toEqual(expectedResult);
     }
   );

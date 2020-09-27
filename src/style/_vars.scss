@@ -65,3 +65,8 @@ $fret-marker-diameter: 12px;
 
 $fret-marker-width: $fret-marker-diameter;
 $fret-marker-height: $fret-marker-diameter;
+
+/* Indicators */
+$indicator-radius: 20px;
+$indicator-background: radial-gradient(rgba(135, 206, 235, 0), rgba(135, 206, 235, .1));
+$indicator-border: 4px solid rgba(135, 206, 235, .2);

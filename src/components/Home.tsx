@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { useState } from 'react';
+
 import { defaultOptions, IOptions, Key, Mode, Note, Tuning } from '../models';
 import { Backdrop } from './Backdrop';
+import Indicators from './Indicators';
 import { Neck } from './neck';
 import { Ui } from './ui';
 
-const USE_COOKIE = false;
+const USE_COOKIE = true;
 
 export interface HomeProps {
   defaultKey?: Key;
@@ -45,7 +47,7 @@ const getDefaultOptions = (useCookie: boolean = USE_COOKIE): IOptions => {
   let parsed;
   if (saved && useCookie) {
     parsed = JSON.parse(saved);
-    const rootNote = new Note(parsed.key.root.base, parsed.key.root.suffix);
+    const rootNote = new Note(parsed.key._tonic.base, parsed.key._tonic.suffix);
 
     parsed.key = new Key(rootNote);
     parsed.mode = new Mode(parsed.mode.name, parsed.mode.pattern);
@@ -75,6 +77,9 @@ const Home: React.FunctionComponent<HomeProps> = ({}) => {
         <Backdrop options={options} />
         <div className="neck-container">
           <Neck options={options} />
+        </div>
+        <div className="indicators-container">
+          <Indicators options={options} />
         </div>
       </main>
       <Ui options={options} setOptions={handleSetOptions} />

@@ -17,6 +17,8 @@ export class Scale {
     mode: Mode
   ) {
     this.rootNote = root;
+    this.rootNote.Degree = 0;
+    
     this.mode = mode;
   }
 

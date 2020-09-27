@@ -1,4 +1,6 @@
-const mobile = window.matchMedia("(max-width: 768px)");
+const mobile = window && window.matchMedia
+  ? window.matchMedia("(max-width: 768px)")
+  : {} as MediaQueryList;
 
 const NECK_WIDTH = 400;
 

@@ -1,0 +1,24 @@
+.indicators {
+  display: flex;
+  max-width: $neck-width;
+  padding: $neck-padding-vertical 0;
+  width: 100%;
+  margin: 0 $fretboard-marker-width;
+
+  .string {
+    width: 100%;
+
+    .fret {
+      height: $fret-height;
+      @include flex-center;
+
+      .indicator {
+        background: $indicator-background;
+        border-radius: 50%;
+        border: $indicator-border;
+        width: $indicator-radius * 2;
+        height: $indicator-radius * 2;
+      }
+    }
+  }
+}
