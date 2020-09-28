@@ -50,7 +50,7 @@ export class Mode implements IOption {
     this.pattern = stepPattern;
   }
 
-  get Name(): string {
+  get Label(): string {
     return this.name;
   }
 

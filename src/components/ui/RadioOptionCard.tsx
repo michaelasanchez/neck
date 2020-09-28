@@ -21,7 +21,7 @@ export const RadioOptionCard: React.FunctionComponent<RadioOptionCard> = (
   const header = (
     <>
       <h5>{title}</h5>
-      <h6 className="card-subtitle small text-muted">{value.Name}</h6>
+      <h6 className="card-subtitle small text-muted">{value.Label}</h6>
     </>
   );
 
@@ -32,8 +32,8 @@ export const RadioOptionCard: React.FunctionComponent<RadioOptionCard> = (
           id={`${header}-${i}`}
           key={`${header}-${i}`}
           type={'radio'}
-          label={o.Name}
-          checked={o.Name === value.Name}
+          label={o.Label}
+          checked={o.Label === value.Label}
           onChange={() => setValue(options[i])}
         />
       ))}

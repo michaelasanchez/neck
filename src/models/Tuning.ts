@@ -9,7 +9,7 @@ export class Tuning implements IOption {
     this.offsets = offsets;
   }
 
-  public get Name(): string {
+  public get Label(): string {
     return this.name;
   }
 

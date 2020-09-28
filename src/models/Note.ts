@@ -62,7 +62,6 @@ export class Note {
     // TODO: this should always return a string if it has a value
     return NoteValue[this.base] ? `${NoteValue[this.base]}${this.SuffixLabel(this.suffix)}` : null;
   }
-
   get Label(): string {
     return NoteValue[this.base] ? `${NoteValue[this.base]}${this.SuffixLabel(this.suffix)}` : 'ERROR';
   }

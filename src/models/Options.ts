@@ -12,7 +12,7 @@ export interface IOptions {
 }
 
 export interface IOption {
-  Name: string;
+  Label: string;
 }
 
 const basicOptions: Partial<IOptions> = {
@@ -24,13 +24,13 @@ const basicOptions: Partial<IOptions> = {
 
 export const ukeOptions: IOptions = {
   ...basicOptions as IOptions,
-  tuning: { Name: 'Ukulele', Offsets: [7, 0, 4, 9] } as Tuning, // ukulele
+  tuning: { Label: 'Ukulele', Offsets: [7, 0, 4, 9] } as Tuning, // ukulele
   markers: [0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 2], // ukulele
 }
 
 export const guitarOptions: IOptions = {
   ...basicOptions as IOptions,
-  tuning: { Name: 'Standard', Offsets: [4, 9, 2, 7, 11, 4] } as Tuning, 
+  tuning: { Label: 'Standard', Offsets: [4, 9, 2, 7, 11, 4] } as Tuning, 
   markers: [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2],
 }
 

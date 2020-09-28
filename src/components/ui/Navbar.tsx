@@ -64,7 +64,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
               as={ButtonGroup}
               id="key-dropdown"
               variant="secondary"
-              title={`Key of ${musicKey.Name}`}
+              title={`Key of ${musicKey.Label}`}
               disabled={showing}
             >
               <KeySlider setKey={(k: Key) => setKey(k)} />

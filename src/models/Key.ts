@@ -24,22 +24,22 @@ export class Key implements IOption {
     return this._tonic;
   }
 
-  get Name(): string {
+  get Label(): string {
     return this._tonic.toString();
   }
 
-  get RelativeMajor(): Note {
-    if (this._type === KeyType.Major) return null;
-
-    const scale = new Scale(this._tonic, Mode.Dorian());
-    return scale.Notes[2];
-  }
-
-  get RelativeMinor(): Note {
+  get RelativeMajor(): Key {
     if (this._type === KeyType.Minor) return null;
 
+    const scale = new Scale(this._tonic, Mode.Dorian());
+    return new Key(scale.Notes[2]);
+  }
+
+  get RelativeMinor(): Key {
+    if (this._type === KeyType.Major) return null;
+
     const scale = new Scale(this._tonic, Mode.Ionian());
-    return scale.Notes[5];
+    return new Key(scale.Notes[5]);
   }
 
   public Sharp(): Key {

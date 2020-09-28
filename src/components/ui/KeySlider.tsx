@@ -34,7 +34,7 @@ const numSliderVals = size(sliderVals);
 
 let marks: SliderValues = {};
 each(sliderVals, (x: Key[], i: string) => {
-  const label = map(x, (k: Key) => k.Name).join(' / ');
+  const label = map(x, (k: Key) => k.Label).join(' / ');
   const key = shiftIndex(parseInt(i), DEFAULT_INDEX_SHIFT, numSliderVals);
 
   marks[key] = label;
