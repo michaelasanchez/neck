@@ -38,5 +38,12 @@ export class ChordForm {
     this._offsets = tuning.Offsets;
   }
 
-
+  public static All() {
+    return [
+      ChordFormType.MajorForm1,
+      ChordFormType.MajorForm2,
+      ChordFormType.MinorForm1,
+      ChordFormType.MinorForm2,
+    ];
+  }
 }
