@@ -120,7 +120,7 @@ export class Scale {
     return indexOf(scaleNotes, note.Label);
   }
 
-  public getTranslatedNote = (note: Note): Note => {
+  public getNoteFromBaseNote = (note: Note): Note => {
     const result = filter(this._notes, n => n.Base === note.Base);
     return result.length === 1 ? result[0] : null;
   }
