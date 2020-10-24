@@ -1,6 +1,7 @@
 import { map } from 'lodash';
 import * as React from 'react';
-import { IOptions } from '../models';
+
+import { IAppOptions } from '../models';
 import { styles } from '../shared';
 import { FretMarkers, FretNumbers } from './neck';
 
@@ -10,7 +11,7 @@ export const ENABLE_NECK_NUMBERS = true;
 const ENABLE_STRINGS = false;
 
 export interface BackdropProps {
-  options?: IOptions;
+  options?: IAppOptions;
 }
 
 export const Backdrop: React.FunctionComponent<BackdropProps> = ({

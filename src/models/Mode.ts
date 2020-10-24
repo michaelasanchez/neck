@@ -1,4 +1,4 @@
-import { IOption } from "./options";
+import { IOption } from "./AppOptions";
 
 export class Mode implements IOption {
 
@@ -45,6 +45,7 @@ export class Mode implements IOption {
     ];
   }
 
+  // TODO: make this private
   constructor(name: string, stepPattern: string) {
     this.name = name;
     this.pattern = stepPattern;

@@ -1,6 +1,6 @@
 import { Mode } from ".";
 import { Note } from "./note";
-import { IOption } from "./options";
+import { IOption } from "./AppOptions";
 import { Scale } from "./scale";
 
 export enum KeyType {

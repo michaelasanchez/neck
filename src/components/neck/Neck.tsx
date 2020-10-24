@@ -1,14 +1,15 @@
 import { times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+
 import { StringComponent } from '.';
-import { IOptions, Key, Mode, Scale } from '../../models';
+import { IAppOptions, Key, Mode, Scale } from '../../models';
 import { styles } from '../../shared';
 
 export const ENABLE_NECK_ANIMATION = true;
 
 export interface NeckProps {
-  options?: IOptions;
+  options?: IAppOptions;
 }
 
 const getScale = (key: Key, mode: Mode) => new Scale(key.Tonic, mode);

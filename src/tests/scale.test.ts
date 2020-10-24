@@ -1,5 +1,5 @@
 import { map } from "lodash";
-import { Key, Mode, Note, NoteSuffixLabel, Scale } from ".";
+import { Key, Mode, Note, NoteSuffixLabel, Scale } from "../models";
 
 const noteLabelsFromKey = (key: Key, mode: Mode = Mode.Ionian()): string[] => {
   const scale = new Scale(key.Tonic, mode);

@@ -8,7 +8,7 @@ export enum ChordType {
   Minor = 'm',
 }
 
-export enum ChordModifer {
+export enum ChordModifier {
   None = '',
   Seven = '7',
 }
@@ -23,29 +23,34 @@ const getTypeLabel = (type: ChordType): any => {
 }
 
 // I        tonic
-// ii       upertonic
-// iii      ediant
-// IV       ubdominant
-// V        ominant
+// ii       supertonic
+// iii      mediant
+// IV       subdominant
+// V        dominant
 // vi	      submediant
-// viio     leading tone / subtonic
+// viio     leading tone (#)
+//            / subtonic (b)
 //  / ♭VII
 
 //  I   ii  iii IV  V   vi  viio
 //  ----------------------------
 //  C   Dm  Em  F   G   Am  Bdim
 
-const getPitches = (type: ChordModifer): number[] => {
-  switch (type) {
-    case ChordModifer.None:
-      return [0, 2, 4];
-    case ChordModifer.Seven:
-      return [0, 2, 4, 7];
+const getPitches = (type: ChordType, mod: ChordModifier): number[] => {
+  if (type === ChordType.Major) {
+    switch (mod) {
+      case ChordModifier.None:
+        return [0, 2, 4];
+      case ChordModifier.Seven:
+        return [0, 2, 4, 7];
+    }
   }
+
+  return [];
 }
 
-const calculatePitches = (scale: Scale, type: ChordType, mod: ChordModifer): Note[] => {
-  return map(getPitches(mod), p => {
+const calculatePitches = (scale: Scale, type: ChordType, mod: ChordModifier): Note[] => {
+  return map(getPitches(type, mod), p => {
     const degree = p % scale.Notes.length;
     const noteResult = filter(scale.Notes, n => n.Degree == degree);
     return noteResult[0];
@@ -56,7 +61,7 @@ export class Chord {
 
   private _root: Note;
   private _type: ChordType;
-  private _modifier: ChordModifer;
+  private _modifier: ChordModifier;
 
   private _keys: Key[];
 
@@ -64,16 +69,18 @@ export class Chord {
 
   private _pitches: Note[];
 
-  constructor(root: Note, type?: ChordType, mod?: ChordModifer) {
+  constructor(root: Note, type?: ChordType, mod?: ChordModifier) {
     this._root = root;
     this._type = type || ChordType.Major;
-    this._modifier = mod || ChordModifer.None;
+    this._modifier = mod || ChordModifier.None;
 
     const scale = this._type === ChordType.Major
       ? new Scale(root, Mode.Ionian())
       : new Scale(root, Mode.Aeolian());
 
-    this._keys = this._type === ChordType.Minor ? [new Key(this._root).RelativeMajor] : [new Key(this._root)];
+    this._keys = this._type === ChordType.Minor
+      ? [new Key(this._root).RelativeMajor]
+      : [new Key(this._root)];
 
     this._pitches = calculatePitches(scale, this._type, this._modifier);
   }

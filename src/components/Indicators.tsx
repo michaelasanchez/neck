@@ -1,19 +1,19 @@
-import { each, filter, isEqual, map, min, reduce, times } from 'lodash';
+import { each, filter, map, min, reduce, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Chord, ChordType, IOptions, Note, Tuning } from '../models';
+import { Chord, ChordType, IAppOptions, Note, Tuning } from '../models';
 import {
   ChordForm,
   ChordFormType,
   mapTypeToPositions,
-} from '../models/ChordForm';
+} from '../models/chordForm';
 
 export const START_DEFAULT = 0;
 export const RANGE_DEFAULT = 4;
 
 interface IndicatorsProps {
-  options: IOptions;
+  options: IAppOptions;
 }
 
 // Returns a fret number based on note, tuning
@@ -35,13 +35,11 @@ const calcVariations = (
   start: number = START_DEFAULT,
   range: number = RANGE_DEFAULT
 ): number[][] => {
-  // Find all notes that fall between start <-> start + range
+  // Notes that fall within start and start + range
   const matches = map(tuning.Offsets, (o: number, i: number) => {
     return filter(chord.Pitches, (n) => {
       let pos = calcNotePosition(n, o, start);
-
-      const isWithinRange = pos >= start && pos <= start + range;
-      return isWithinRange;
+      return pos >= start && pos <= start + range;
     });
   });
 
@@ -73,20 +71,20 @@ const matchesChordForm = function (
   form: ChordFormType
 ): boolean {
   const start = min(variation);
-
   const formPositions = mapTypeToPositions(form);
 
   let matches = true;
   each(variation, (pos: number, i: number) => {
-    if (pos - start !== formPositions[i] && formPositions[i] !== null)
+    if (pos - start !== formPositions[i] && formPositions[i] !== null) {
       matches = false;
-    console.log(pos - start, formPositions[i], matches);
+      return false;
+    }
   });
 
   return matches;
 };
 
-const testStyle: React.CSSProperties = {
+const buttonStyle: React.CSSProperties = {
   position: 'fixed',
   width: 100,
   height: 40,
@@ -94,16 +92,27 @@ const testStyle: React.CSSProperties = {
   left: 10,
 };
 
-const Indicators: React.FunctionComponent<IndicatorsProps> = ({ options }) => {
+const prevStyle: React.CSSProperties = {
+  ...buttonStyle,
+  left: 10,
+};
+
+const nextStyle: React.CSSProperties = {
+  ...buttonStyle,
+  left: 120,
+};
+
+export const Indicators: React.FunctionComponent<IndicatorsProps> = ({
+  options,
+}) => {
   const { tuning, numFrets } = options;
 
-  const [current, setCurrent] = useState<number>(0);
+  const [currentVariationIndex, setCurrentVariationIndex] = useState<number>(0);
   const [variations, setVariations] = useState<number[][]>();
 
   useEffect(() => {
     // Test Chord
     const chord = new Chord(Note.C(), ChordType.Major);
-
     const variations: number[][] = [];
 
     times(8, (n) => {
@@ -111,7 +120,7 @@ const Indicators: React.FunctionComponent<IndicatorsProps> = ({ options }) => {
     });
 
     const filteredVariations: number[][] = [];
-    each(ChordForm.All(), (f) => {
+    each(ChordForm.AllChordFormTypes(), (f) => {
       const matches = filter(variations, (v) => matchesChordForm(v, f));
       console.log(matches);
       matches.length && filteredVariations.push(matches[0]);
@@ -126,29 +135,47 @@ const Indicators: React.FunctionComponent<IndicatorsProps> = ({ options }) => {
       return <></>;
     }
 
+    const getNextVariationIndex = (mod: number): number => {
+      return (
+        (currentVariationIndex + variations.length + mod) % variations.length
+      );
+    };
+
     return (
-      <Button
-        title="test"
-        style={testStyle}
-        onClick={() => setCurrent((current + 1) % variations.length)}
-      />
+      <>
+        <Button
+          disabled={!variations.length}
+          style={prevStyle}
+          onClick={() => setCurrentVariationIndex(getNextVariationIndex(-1))}
+        >
+          Prev
+        </Button>
+        <Button
+          disabled={!variations.length}
+          style={nextStyle}
+          onClick={() => setCurrentVariationIndex(getNextVariationIndex(1))}
+        >
+          Next
+        </Button>
+      </>
     );
   };
 
   const renderIndicator = (stringIndex: number, fretNum: number) => {
     return (
       <div className={`fret${fretNum === 0 ? ' open' : ''}`} key={fretNum}>
-        {variations[current][stringIndex] === fretNum && (
+        {variations[currentVariationIndex][stringIndex] === fretNum && (
           <div className="indicator"></div>
         )}
       </div>
     );
   };
 
+  const renderIndicators = variations && variations.length > 0;
   return (
     <div className="indicators">
       {renderDebug()}
-      {variations &&
+      {renderIndicators &&
         map(tuning.Offsets, (s: number, i: number) => {
           return (
             <div className="string" key={i}>
@@ -160,5 +187,3 @@ const Indicators: React.FunctionComponent<IndicatorsProps> = ({ options }) => {
     </div>
   );
 };
-
-export default Indicators;

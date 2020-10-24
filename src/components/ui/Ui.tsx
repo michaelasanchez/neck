@@ -1,11 +1,12 @@
 import * as React from 'react';
+
 import { Navbar, OptionsModal } from '.';
-import { IOptions, Key, Mode, Tuning } from '../../models';
+import { IAppOptions, Key, Mode, Tuning } from '../../models';
 import { FretDisplayMode } from '../neck';
 
 export interface UiProps {
-  options: IOptions;
-  setOptions: (options: Partial<IOptions>) => void;
+  options: IAppOptions;
+  setOptions: (options: Partial<IAppOptions>) => void;
 }
 
 export interface UiState {
