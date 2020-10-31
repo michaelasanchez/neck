@@ -1,4 +1,3 @@
-export * from './AppOptions';
 export * from './chord';
 export * from './chordForm';
 export * from './chordVariation';

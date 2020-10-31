@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import { Navbar, OptionsModal } from '.';
-import { IAppOptions, Key, Mode, Tuning } from '../../models';
+import { Key, Mode, Tuning } from '../../models';
+import { IAppOptions } from '../../shared';
 import { FretDisplayMode } from '../neck';
 
 export interface UiProps {

@@ -1,13 +1,15 @@
-import { each, filter, map, min, reduce, times } from 'lodash';
+import { each, filter, find, map, min, reduce, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { Chord, ChordType, IAppOptions, Note, Tuning } from '../models';
+
+import { Chord, ChordModifier, Note, Tuning } from '../models';
 import {
   ChordForm,
   ChordFormType,
   mapTypeToPositions,
 } from '../models/chordForm';
+import { IAppOptions } from '../shared';
 
 export const START_DEFAULT = 0;
 export const RANGE_DEFAULT = 4;
@@ -16,8 +18,8 @@ interface IndicatorsProps {
   options: IAppOptions;
 }
 
-// Returns a fret number based on note, tuning
-//  and a minimum fret position
+// Returns a fret number based on a Note, tuning
+//  offset and an optional minimum fret position
 const calcNotePosition = (
   note: Note,
   offset: number,
@@ -28,7 +30,8 @@ const calcNotePosition = (
   return pos;
 };
 
-// Returns an array of
+// Returns an array of of possible note positions
+//  with a specified range that form a chord
 const calcVariations = (
   chord: Chord,
   tuning: Tuning,
@@ -48,7 +51,6 @@ const calcVariations = (
   const numVariations = reduce(potentialNotes, (acc, next) => acc * next);
 
   // Calculate variations
-  // TODO: improve this?
   let variations: number[][] = [];
   times(numVariations, (n) => {
     let multiplier = 1;
@@ -110,23 +112,24 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = ({
   const [currentVariationIndex, setCurrentVariationIndex] = useState<number>(0);
   const [variations, setVariations] = useState<number[][]>();
 
+  // Init
   useEffect(() => {
     // Test Chord
-    const chord = new Chord(Note.C(), ChordType.Major);
+    const chord = new Chord(Note.C(), ChordModifier.Major);
     const variations: number[][] = [];
 
-    times(8, (n) => {
+    // Generate chord variations
+    times(10, (n) => {
       variations.push(...calcVariations(chord, tuning, n));
     });
 
-    const filteredVariations: number[][] = [];
-    each(ChordForm.AllChordFormTypes(), (f) => {
-      const matches = filter(variations, (v) => matchesChordForm(v, f));
-      console.log(matches);
-      matches.length && filteredVariations.push(matches[0]);
-    });
+    // Only keep variations that match a chord form
+    const filteredVariations: number[][] = filter(
+      map(ChordForm.AllChordFormTypes(), (chordForm) =>
+        find(variations, (v) => matchesChordForm(v, chordForm))
+      )
+    );
 
-    // setVariations(variations);
     setVariations(filteredVariations);
   }, []);
 
@@ -135,11 +138,8 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = ({
       return <></>;
     }
 
-    const getNextVariationIndex = (mod: number): number => {
-      return (
-        (currentVariationIndex + variations.length + mod) % variations.length
-      );
-    };
+    const getNextVariationIndex = (next: number): number =>
+      (currentVariationIndex + variations.length + next) % variations.length;
 
     return (
       <>

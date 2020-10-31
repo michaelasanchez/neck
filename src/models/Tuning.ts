@@ -1,4 +1,4 @@
-import { IOption } from ".";
+import { IOption } from "../shared";
 
 export class Tuning implements IOption {
   private name: string;

@@ -3,8 +3,8 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { StringComponent } from '.';
-import { IAppOptions, Key, Mode, Scale } from '../../models';
-import { styles } from '../../shared';
+import { Key, Mode, Scale } from '../../models';
+import { IAppOptions, styles } from '../../shared';
 
 export const ENABLE_NECK_ANIMATION = true;
 

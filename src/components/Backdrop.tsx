@@ -1,8 +1,7 @@
 import { map } from 'lodash';
 import * as React from 'react';
 
-import { IAppOptions } from '../models';
-import { styles } from '../shared';
+import { IAppOptions, styles } from '../shared';
 import { FretMarkers, FretNumbers } from './neck';
 
 export const ENABLE_NECK_MARKERS = true;

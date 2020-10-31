@@ -1,8 +1,8 @@
 import { map } from "lodash";
-import { Chord, ChordType, Key, Mode, Note, NoteSuffixLabel, Scale } from "../models";
+import { Chord, ChordModifier, Note, NoteSuffixLabel } from "../models";
 
 const noteLabelsFromChord = (note: Note): string[] => {
-  const chord = new Chord(note, ChordType.Major);
+  const chord = new Chord(note, ChordModifier.Major);
   return map(chord.Pitches, n => formatNoteLabel(n));
 }
 

@@ -3,21 +3,16 @@ import { Key, Mode } from ".";
 import { Note } from "./note";
 import { Scale } from "./scale";
 
-export enum ChordType {
+export enum ChordModifier {
   Major = '',
   Minor = 'm',
 }
 
-export enum ChordModifier {
-  None = '',
-  Seven = '7',
-}
-
-const getTypeLabel = (type: ChordType): any => {
+const getModifierLabel = (type: ChordModifier): any => {
   switch (type) {
-    case ChordType.Major:
+    case ChordModifier.Major:
       return 'Major';
-    case ChordType.Minor:
+    case ChordModifier.Minor:
       return 'Minor';
   }
 }
@@ -36,21 +31,19 @@ const getTypeLabel = (type: ChordType): any => {
 //  ----------------------------
 //  C   Dm  Em  F   G   Am  Bdim
 
-const getPitches = (type: ChordType, mod: ChordModifier): number[] => {
-  if (type === ChordType.Major) {
-    switch (mod) {
-      case ChordModifier.None:
-        return [0, 2, 4];
-      case ChordModifier.Seven:
-        return [0, 2, 4, 7];
-    }
+const getPitches = (mod: ChordModifier): number[] => {
+  switch (mod) {
+    case ChordModifier.Major:
+      return [0, 2, 4];
+    // case ChordModifier.DominantSeventh:
+    //   return [0, 2, 4, 7];
   }
 
   return [];
 }
 
-const calculatePitches = (scale: Scale, type: ChordType, mod: ChordModifier): Note[] => {
-  return map(getPitches(type, mod), p => {
+const calculatePitches = (scale: Scale, mod: ChordModifier): Note[] => {
+  return map(getPitches(mod), p => {
     const degree = p % scale.Notes.length;
     const noteResult = filter(scale.Notes, n => n.Degree == degree);
     return noteResult[0];
@@ -60,7 +53,6 @@ const calculatePitches = (scale: Scale, type: ChordType, mod: ChordModifier): No
 export class Chord {
 
   private _root: Note;
-  private _type: ChordType;
   private _modifier: ChordModifier;
 
   private _keys: Key[];
@@ -69,36 +61,31 @@ export class Chord {
 
   private _pitches: Note[];
 
-  constructor(root: Note, type?: ChordType, mod?: ChordModifier) {
+  constructor(root: Note, mod?: ChordModifier) {
     this._root = root;
-    this._type = type || ChordType.Major;
-    this._modifier = mod || ChordModifier.None;
+    this._modifier = mod || ChordModifier.Major;
 
-    const scale = this._type === ChordType.Major
+    const scale = this._modifier === ChordModifier.Major
       ? new Scale(root, Mode.Ionian())
       : new Scale(root, Mode.Aeolian());
 
-    this._keys = this._type === ChordType.Minor
+    this._keys = this._modifier === ChordModifier.Minor
       ? [new Key(this._root).RelativeMajor]
       : [new Key(this._root)];
 
-    this._pitches = calculatePitches(scale, this._type, this._modifier);
+    this._pitches = calculatePitches(scale, this._modifier);
   }
 
   get Label(): string {
-    return `${this._root.Label} ${getTypeLabel(this._type)} ${this._modifier}`
+    return `${this._root.Label} ${getModifierLabel(this._modifier)}`
   }
 
   get Abbreviated(): string {
-    return `${this._root.Label}${this._type}${this._modifier}`;
+    return `${this._root.Label}${this._modifier}`;
   }
 
   get Root(): Note {
     return this._root;
-  }
-
-  get Type(): ChordType {
-    return this._type;
   }
 
   get Keys(): Key[] {

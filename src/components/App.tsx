@@ -1,15 +1,11 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import {
-  // defaultOptions as DefaultAppOptions,
-  IAppOptions,
-  Key,
-  Mode,
-  Note,
-  Tuning,
-} from '../models';
+import { Key, Mode, Note, Tuning } from '../models';
+import { AppOptions, IAppOptions } from '../shared';
+import { Loading } from './Loading';
 import { Neck } from './neck';
 import { Ui } from './ui';
 
@@ -21,8 +17,9 @@ export interface AppProps {
   defaultMode?: Mode;
 }
 
-const parseCookieString = (cookieString: string): IAppOptions => {
+const parseOptionsCookie = (cookieString: string): IAppOptions => {
   let parsed = JSON.parse(cookieString);
+
   const rootNote = new Note(parsed.key._tonic.base, parsed.key._tonic.suffix);
 
   parsed.key = new Key(rootNote);
@@ -35,18 +32,17 @@ const parseCookieString = (cookieString: string): IAppOptions => {
 const App: React.FunctionComponent<AppProps> = ({}) => {
   const { getCookie, setCookie } = useCookie();
 
-  // TODO: this currently only work with a cookie... don't lose the cookie
+  const [options, setOptions] = useState<IAppOptions>();
 
-  // TODO: should this happen every render?
-  const saved = getCookie('options');
-  let defaultOptions;
-  if (!!saved.length) {
-    defaultOptions = parseCookieString(saved);
-  // } else {
-  //   defaultOptions = DefaultAppOptions;
-  }
+  useEffect(() => {
+    const saved = getCookie('options');
 
-  const [options, setOptions] = useState<IAppOptions>(defaultOptions);
+    setOptions(
+      USE_COOKIE && !!saved.length
+        ? parseOptionsCookie(saved)
+        : AppOptions.Default()
+    );
+  }, []);
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {
     const newOptions = {
@@ -74,6 +70,8 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       </>
     );
   }
+
+  return <Loading />;
 };
 
 export default App;

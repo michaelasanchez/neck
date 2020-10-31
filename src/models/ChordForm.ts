@@ -1,7 +1,6 @@
 
-import { Chord, ChordModifier, ChordType } from "./chord";
+import { Chord, ChordModifier } from "./chord";
 import { ChordVariation } from "./ChordVariation";
-import { Tuning } from "./Tuning";
 
 export enum ChordFormType {
   MajorForm1,
@@ -15,7 +14,7 @@ export enum ChordFormType {
   Dominant7Form2,
   Minor7Form1,
   Minor7Form2
-} 
+}
 
 // TODO: this is specific to 6 strings and standard tuning...
 export const mapTypeToPositions = (type: ChordFormType): number[] => {
@@ -45,26 +44,21 @@ export const mapTypeToPositions = (type: ChordFormType): number[] => {
 }
 
 
-
 export class ChordForm {
 
-  private _chordType: ChordType;
   private _chordModifier: ChordModifier;
 
   // constructor(chord: Chord) {
-  constructor(type: ChordType, modifier: ChordModifier) {
-    this._chordType = type;
+  constructor(modifier: ChordModifier) {
     this._chordModifier = modifier;
   }
 
-  public static fromVariation = (chord: Chord, variation: ChordVariation): ChordForm=> {
+  public static fromVariation = (chord: Chord, variation: ChordVariation): ChordForm => {
 
-    
+    // TODO: do we need this?
 
     return null;
   }
-
-
 
   public static AllChordFormTypes() {
     return [
@@ -73,6 +67,23 @@ export class ChordForm {
       ChordFormType.MajorForm3,
       ChordFormType.MajorForm4,
       ChordFormType.MajorForm5,
+      ChordFormType.MinorForm1,
+      ChordFormType.MinorForm2,
+    ];
+  }
+
+  public static MajorChordFormTypes() {
+    return [
+      ChordFormType.MajorForm1,
+      ChordFormType.MajorForm2,
+      ChordFormType.MajorForm3,
+      ChordFormType.MajorForm4,
+      ChordFormType.MajorForm5,
+    ];
+  }
+
+  public static MinorChordFormTypes() {
+    return [
       ChordFormType.MinorForm1,
       ChordFormType.MinorForm2,
     ];
