@@ -1,9 +1,10 @@
 import { map } from "lodash";
+
 import { Chord, ChordModifier, Note, NoteSuffixLabel } from "../models";
 
 const noteLabelsFromChord = (note: Note): string[] => {
   const chord = new Chord(note, ChordModifier.Major);
-  return map(chord.Pitches, n => formatNoteLabel(n));
+  return map(chord.Factors, n => formatNoteLabel(n));
 }
 
 const formatNoteLabel = (note: Note): string => {

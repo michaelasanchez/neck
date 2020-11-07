@@ -1,6 +1,4 @@
-
 import { Chord, ChordModifier } from "./chord";
-import { ChordVariation } from "./ChordVariation";
 
 export enum ChordFormType {
   MajorForm1,
@@ -39,26 +37,52 @@ export const mapTypeToPositions = (type: ChordFormType): number[] => {
     case ChordFormType.MinorForm2:
       return [null, 0, 2, 2, 1, 0];
     default:
-      return [null, null, null, null, null, null];
+      return null;
   }
 }
 
-
 export class ChordForm {
 
-  private _chordModifier: ChordModifier;
+  private _label: string;
+  private _positions: number[];
 
-  // constructor(chord: Chord) {
-  constructor(modifier: ChordModifier) {
-    this._chordModifier = modifier;
+  constructor(modifier: ChordModifier, positions: number[], label?: string) {
+    this._label = label || `${Chord.getModifierLabel(modifier)} Chord`;
+    this._positions = positions;
   }
 
-  public static fromVariation = (chord: Chord, variation: ChordVariation): ChordForm => {
-
-    // TODO: do we need this?
-
-    return null;
+  get Label(): string {
+    return this._label;
   }
+
+  get Positions(): number[] {
+    return this._positions
+  }
+
+  public static getChordForms(modifier: ChordModifier): ChordForm[] {
+    switch (modifier) {
+      case ChordModifier.Major:
+        return this.MajorChordForms;
+      case ChordModifier.Minor:
+        return this.MinorChordForms;
+      default:
+        return [];
+    }
+  }
+
+  public static MajorChordForms: ChordForm[] = [
+    new ChordForm(ChordModifier.Major, [null, 3, 2, 0, 1, 0]),
+    new ChordForm(ChordModifier.Major, [null, 0, 2, 2, 2, 0]),
+    new ChordForm(ChordModifier.Major, [3, 2, 0, 0, 0, 3]),
+    new ChordForm(ChordModifier.Major, [0, 2, 2, 1, 0, 0]),
+    new ChordForm(ChordModifier.Major, [null, null, 0, 2, 3, 2]),
+  ];
+
+  public static MinorChordForms: ChordForm[] = [
+    new ChordForm(ChordModifier.Minor, [0, 2, 2, 0, 0, 0]),
+    new ChordForm(ChordModifier.Minor, [null, 0, 2, 2, 1, 0]),
+  ];
+
 
   public static AllChordFormTypes() {
     return [

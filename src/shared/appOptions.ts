@@ -26,7 +26,7 @@ export class AppOptions {
     return {
       key: Key.C(),
       mode: Mode.Ionian(),
-      numFrets: 20,
+      numFrets: 13,
       fretMode: FretDisplayMode.Note
     }
   }

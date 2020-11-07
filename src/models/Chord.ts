@@ -1,20 +1,12 @@
 import { filter, map } from "lodash";
+
 import { Key, Mode } from ".";
 import { Note } from "./note";
 import { Scale } from "./scale";
 
 export enum ChordModifier {
-  Major = '',
-  Minor = 'm',
-}
-
-const getModifierLabel = (type: ChordModifier): any => {
-  switch (type) {
-    case ChordModifier.Major:
-      return 'Major';
-    case ChordModifier.Minor:
-      return 'Minor';
-  }
+  Major,
+  Minor,
 }
 
 // I        tonic
@@ -59,9 +51,9 @@ export class Chord {
 
   private _degree: number;
 
-  private _pitches: Note[];
+  private _factors: Note[];
 
-  constructor(root: Note, mod?: ChordModifier) {
+  constructor(root: Note, mod: ChordModifier) {
     this._root = root;
     this._modifier = mod || ChordModifier.Major;
 
@@ -73,11 +65,11 @@ export class Chord {
       ? [new Key(this._root).RelativeMajor]
       : [new Key(this._root)];
 
-    this._pitches = calculatePitches(scale, this._modifier);
+    this._factors = calculatePitches(scale, this._modifier);
   }
 
   get Label(): string {
-    return `${this._root.Label} ${getModifierLabel(this._modifier)}`
+    return `${this._root.Label} ${Chord.getModifierLabel(this._modifier)}`
   }
 
   get Abbreviated(): string {
@@ -88,11 +80,37 @@ export class Chord {
     return this._root;
   }
 
+  get Modifier(): ChordModifier {
+    return this._modifier;
+  }
+
+  get ModifierLabel(): string {
+    return Chord.getModifierLabel(this._modifier);
+  }
+
   get Keys(): Key[] {
     return this._keys;
   }
 
-  get Pitches(): Note[] {
-    return this._pitches;
+  get Factors(): Note[] {
+    return this._factors;
+  }
+
+  static getModifierLabel = (type: ChordModifier): any => {
+    switch (type) {
+      case ChordModifier.Major:
+        return 'Major';
+      case ChordModifier.Minor:
+        return 'Minor';
+    }
+  }
+
+  static getModifierAbbreviation = (type: ChordModifier): any => {
+    switch (type) {
+      case ChordModifier.Major:
+        return '';
+      case ChordModifier.Minor:
+        return 'm';
+    }
   }
 }

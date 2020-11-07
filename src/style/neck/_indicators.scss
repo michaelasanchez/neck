@@ -18,6 +18,31 @@
         border: $indicator-border;
         width: $indicator-radius * 2;
         height: $indicator-radius * 2;
+
+        &.muted {
+          background: none;
+          border: none;
+          height: auto;
+          width: auto;
+
+          $muted-symbol-diameter: 30px;
+
+          &::before,
+          &::after {
+            border: $indicator-muted-border;
+            content: '';
+            position: absolute;
+            transform: translate(-50%, -50%) rotate(45deg);
+          }
+
+          &::before {
+            width: $muted-symbol-diameter;
+          }
+
+          &::after {
+            height: $muted-symbol-diameter;
+          }
+        }
       }
     }
   }
