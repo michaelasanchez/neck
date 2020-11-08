@@ -1,18 +1,17 @@
 import { each, min } from "lodash";
+import { ChordForm, ChordModifier, Tuning } from ".";
 
-import { Tuning } from ".";
-import { ChordModifier } from "./chord";
-import { ChordForm } from "./ChordForm";
 
 export class ChordVariation {
 
   private _positions: number[];
-  private _bar: number;
+  private _barre: number[];
 
   private _chordForm: ChordForm;
 
   constructor(positions: number[], modifier?: ChordModifier, tuning?: Tuning) {
     this._positions = positions;
+    this._barre = new Array(this._positions.length).fill(null);
 
     if (modifier !== null && !!tuning) {
       each(ChordForm.getChordForms(ChordModifier.Major), (f) => {
@@ -27,13 +26,17 @@ export class ChordVariation {
     return this._positions;
   }
 
+  get Barre(): number[] {
+    return this._barre;
+  }
+
   get ChordForm(): ChordForm {
     return this._chordForm;
   }
 
-  public hasChordForm = (): boolean => !!this._chordForm;
+  hasChordForm = (): boolean => !!this._chordForm;
 
-  public matchesChordForm = (
+  matchesChordForm = (
     chordForm: ChordForm,
     convert: boolean = false,
   ): boolean => {
@@ -50,14 +53,25 @@ export class ChordVariation {
 
     if (matches && convert) {
       each(chordForm.Positions, (p: number, i: number) => {
+
+        // Muted
         if (p === null) this._positions[i] = null;
+
+        // Barre
+        if (chordForm.isBarre()) {
+          const barrePosition = this._positions[chordForm.Barre];
+          if (chordForm.Barre <= i && barrePosition > 0) {
+            this._barre[i] = barrePosition;
+          }
+        }
+
       });
     }
 
     return matches;
   };
 
-  public Equals = (chordVariation: ChordVariation): boolean => {
+  Equals = (chordVariation: ChordVariation): boolean => {
     let matches = true;
 
     // TODO: Once ChordVariation can be unique we can simplify here

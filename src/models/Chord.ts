@@ -96,6 +96,7 @@ export class Chord {
     return this._factors;
   }
 
+  // TODO: Figure out where these should go
   static getModifierLabel = (type: ChordModifier): any => {
     switch (type) {
       case ChordModifier.Major:

@@ -1,54 +1,23 @@
+import { countBy, indexOf } from "lodash";
 import { Chord, ChordModifier } from "./chord";
-
-export enum ChordFormType {
-  MajorForm1,
-  MajorForm2,
-  MajorForm3,
-  MajorForm4,
-  MajorForm5,
-  MinorForm1,
-  MinorForm2,
-  Dominant7Form1,
-  Dominant7Form2,
-  Minor7Form1,
-  Minor7Form2
-}
-
-// TODO: this is specific to 6 strings and standard tuning...
-export const mapTypeToPositions = (type: ChordFormType): number[] => {
-  switch (type) {
-    case ChordFormType.MajorForm1:
-      // C Shape
-      return [null, 3, 2, 0, 1, 0];
-    case ChordFormType.MajorForm2:
-      // A Shape
-      return [null, 0, 2, 2, 2, 0];
-    case ChordFormType.MajorForm3:
-      // G Shape
-      return [3, 2, 0, 0, 0, 3];
-    case ChordFormType.MajorForm4:
-      // E Shape
-      return [0, 2, 2, 1, 0, 0];
-    case ChordFormType.MajorForm5:
-      // D Shape
-      return [null, null, 0, 2, 3, 2];
-    case ChordFormType.MinorForm1:
-      return [0, 2, 2, 0, 0, 0];
-    case ChordFormType.MinorForm2:
-      return [null, 0, 2, 2, 1, 0];
-    default:
-      return null;
-  }
-}
 
 export class ChordForm {
 
   private _label: string;
   private _positions: number[];
 
+  private _barre: number;
+
   constructor(modifier: ChordModifier, positions: number[], label?: string) {
     this._label = label || `${Chord.getModifierLabel(modifier)} Chord`;
     this._positions = positions;
+
+    const openCount = countBy(this._positions, p => p === 0);
+    if (openCount.true > 1) {
+      this._barre = indexOf(this._positions, 0);
+    } else {
+      this._barre = null;
+    }
   }
 
   get Label(): string {
@@ -57,6 +26,14 @@ export class ChordForm {
 
   get Positions(): number[] {
     return this._positions
+  }
+
+  get Barre(): number {
+    return this._barre;
+  }
+
+  isBarre(): boolean {
+    return this._barre !== null;
   }
 
   public static getChordForms(modifier: ChordModifier): ChordForm[] {
@@ -70,6 +47,7 @@ export class ChordForm {
     }
   }
 
+  // TODO: Eventually we'll have to take "instrument" and tuning here
   public static MajorChordForms: ChordForm[] = [
     new ChordForm(ChordModifier.Major, [null, 3, 2, 0, 1, 0]),
     new ChordForm(ChordModifier.Major, [null, 0, 2, 2, 2, 0]),
@@ -82,34 +60,4 @@ export class ChordForm {
     new ChordForm(ChordModifier.Minor, [0, 2, 2, 0, 0, 0]),
     new ChordForm(ChordModifier.Minor, [null, 0, 2, 2, 1, 0]),
   ];
-
-
-  public static AllChordFormTypes() {
-    return [
-      ChordFormType.MajorForm1,
-      ChordFormType.MajorForm2,
-      ChordFormType.MajorForm3,
-      ChordFormType.MajorForm4,
-      ChordFormType.MajorForm5,
-      ChordFormType.MinorForm1,
-      ChordFormType.MinorForm2,
-    ];
-  }
-
-  public static MajorChordFormTypes() {
-    return [
-      ChordFormType.MajorForm1,
-      ChordFormType.MajorForm2,
-      ChordFormType.MajorForm3,
-      ChordFormType.MajorForm4,
-      ChordFormType.MajorForm5,
-    ];
-  }
-
-  public static MinorChordFormTypes() {
-    return [
-      ChordFormType.MinorForm1,
-      ChordFormType.MinorForm2,
-    ];
-  }
 }

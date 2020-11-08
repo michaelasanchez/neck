@@ -63,12 +63,12 @@ export class Keys {
 
   static SliderValueWithTheoretical(): KeyValues {
     return {
-      0: [Key.C()/*, Key.B().Sharp()*/],
+      0: [Key.C(), Key.B().Sharp()],
       1: [Key.C().Sharp(), Key.D().Flat()],
       2: [Key.D()],
       3: [Key.D().Sharp(), Key.E().Flat()],
-      4: [Key.E()/*, Key.F().Flat()*/],
-      5: [Key.F()/*, Key.E().Sharp()*/],
+      4: [Key.E(), Key.F().Flat()],
+      5: [Key.F(), Key.E().Sharp()],
       6: [Key.F().Sharp(), Key.G().Flat()],
       7: [Key.G()],
       8: [Key.G().Sharp(), Key.A().Flat()],

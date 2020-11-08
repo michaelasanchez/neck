@@ -90,7 +90,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = ({
 }) => {
   const { tuning, numFrets } = options;
 
-  const [currentVariationIndex, setCurrentVariationIndex] = useState<number>(0);
+  const [currentVariationIndex, setCurrentVariationIndex] = useState<number>(1);
   const [variations, setVariations] = useState<ChordVariation[]>();
 
   // Init
@@ -113,8 +113,6 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = ({
     let filteredVariations: ChordVariation[];
     if (FILTER_BY_CHORD_FORM) {
       filteredVariations = filter(variations, (v) => v.hasChordForm());
-
-      console.log(filteredVariations);
     }
 
     setVariations(filteredVariations || variations);
@@ -151,31 +149,60 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = ({
   const renderIndicator = (
     fretNum: number,
     show: boolean = false,
-    muted: boolean = false
+    muted: boolean = false,
+    barre: boolean = false,
+    start: boolean = false
   ) => {
     return (
       <div className={`fret${fretNum === 0 ? ' open' : ''}`} key={fretNum}>
-        {show && <div className={`indicator${muted ? ' muted' : ''}`}></div>}
+        {show && (
+          <div
+            className={`indicator${muted ? ' muted' : ''}${
+              barre ? (start ? ' barre start' : ' barre') : ''
+            }`}
+          ></div>
+        )}
       </div>
     );
   };
 
   const renderIndicators = variations && variations.length > 0;
+
+  let currentVariation, barreStart: number;
+  if (variations?.length > 0 && currentVariationIndex != null) {
+    currentVariation = variations[currentVariationIndex];
+
+    barreStart = findIndex(currentVariation.Barre, (p) => p !== null);
+  }
+
   return (
     <div className="indicators">
       {renderDebug()}
       {renderIndicators &&
         map(tuning.Offsets, (s: number, i: number) => {
-          const variationPosition =
-            variations[currentVariationIndex].Positions[i];
-          const open = variationPosition === 0;
-          const muted = variationPosition === null;
+          const position = variations[currentVariationIndex].Positions[i];
+
+          const barre = variations[currentVariationIndex].Barre[i];
+          const start = i === barreStart;
+
+          const open = position === 0;
+          const muted = position === null;
+
           return (
             <div className="string" key={i}>
               {renderIndicator(0, open || muted, muted)}
-              {times(numFrets, (f) =>
-                renderIndicator(f + 1, variationPosition === f + 1)
-              )}
+              {times(numFrets, (f) => {
+                const fretNum = f + 1;
+                const showPosition = position === fretNum;
+                const showBarre = barre === fretNum;
+                return renderIndicator(
+                  fretNum,
+                  showPosition || showBarre,
+                  false,
+                  showBarre,
+                  start
+                );
+              })}
             </div>
           );
         })}

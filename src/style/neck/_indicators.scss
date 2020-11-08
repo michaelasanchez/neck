@@ -19,13 +19,60 @@
         width: $indicator-radius * 2;
         height: $indicator-radius * 2;
 
+        &.barre {
+          background: $indicator-barre-background;
+          border-radius: 0;
+          border-left: none;
+          border-right: none;
+          height: $indicator-barre-diameter;
+          width: 100%;
+
+
+          &.start {
+            background: none;
+            border: none;
+            position: relative;
+
+            &::before,
+            &::after {
+              content: '';
+              display:block;
+              height: $indicator-barre-diameter;
+              position: absolute;
+              left: 50%;
+            }
+
+            // Start cap
+            &::before {
+              background: $indicator-barre-start-background;
+              border-top-left-radius: $indicator-barre-diameter / 2;
+              border-bottom-left-radius: $indicator-barre-diameter / 2;
+              border-left: $indicator-border;
+              border-top: $indicator-border;
+              border-bottom: $indicator-border;
+              width: $indicator-barre-diameter / 2;
+              left: calc(50% - #{$indicator-barre-diameter} / 2 + #{$indicator-barre-start-offset})
+
+            }
+
+            // Start barre
+            &::after {
+              width: calc(50% - #{$indicator-barre-start-offset});
+
+              background: $indicator-barre-background; 
+              border-top: $indicator-border;
+              border-bottom: $indicator-border;
+              left: calc(50% + #{$indicator-barre-start-offset});
+            }
+          }
+        }
+
         &.muted {
           background: none;
           border: none;
           height: auto;
           width: auto;
 
-          $muted-symbol-diameter: 30px;
 
           &::before,
           &::after {
@@ -36,11 +83,11 @@
           }
 
           &::before {
-            width: $muted-symbol-diameter;
+            width: $indicator-muted-diameter;
           }
 
           &::after {
-            height: $muted-symbol-diameter;
+            height: $indicator-muted-diameter;
           }
         }
       }

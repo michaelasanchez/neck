@@ -68,6 +68,16 @@ $fret-marker-height: $fret-marker-diameter;
 
 /* Indicators */
 $indicator-radius: 20px;
-$indicator-background: radial-gradient(rgba(135, 206, 235, 0), rgba(135, 206, 235, .1));
-$indicator-border: 4px solid rgba(135, 206, 235, .4);
+$indicator-gradient-inner: rgba(135, 206, 235, 0);
+$indicator-gradient-outer: rgba(135, 206, 235, .1);
+$indicator-background: radial-gradient($indicator-gradient-inner, $indicator-gradient-outer 70%) no-repeat;
+$indicator-border-width: 4px;
+$indicator-border: $indicator-border-width solid rgba(135, 206, 235, .4);
+
 $indicator-muted-border: $indicator-border;
+$indicator-muted-diameter: 30px;
+
+$indicator-barre-diameter: 30px;
+$indicator-barre-background: linear-gradient($indicator-gradient-outer, $indicator-gradient-inner, $indicator-gradient-outer)  no-repeat;
+$indicator-barre-start-background: radial-gradient(circle at right, $indicator-gradient-inner, $indicator-gradient-outer 70%) no-repeat;
+$indicator-barre-start-offset: -15px;
