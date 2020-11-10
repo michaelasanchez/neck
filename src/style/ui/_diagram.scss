@@ -1,0 +1,101 @@
+
+
+$diagram-string-color: black;
+$diagram-string-width: 2px;
+$diagram-string-border: $diagram-string-width solid $diagram-string-color;
+
+$diagram-fret-border-color: rgb(200, 200, 200);
+$diagram-fret-border: 1px solid $diagram-fret-border-color;
+$diagram-fret-height: 30px;
+$diagram-fret-width: 25px;
+
+$diagram-symbol-border-color: black;
+$diagram-symbol-border-width: 3px;
+
+$diagram-mute-border: $diagram-symbol-border-width solid $diagram-symbol-border-color;
+$diagram-mute-diameter: 20px;
+
+$diagram-dot-background-color: gray;
+$diagram-dot-border: $diagram-symbol-border-width solid $diagram-symbol-border-color;
+$diagram-dot-diameter: 16px;
+
+.diagram {
+  display: flex;
+  > .string {
+    .fret{
+      border-bottom: $diagram-fret-border;
+      height: $diagram-fret-height;
+      width: $diagram-fret-width;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+
+      position: relative;
+
+      &.fret:first-child {
+        border-top: $diagram-fret-border;
+      }
+
+      .symbol {
+        position: absolute;
+
+
+        &.string {
+          border-left: $diagram-string-border;
+          height: 100%;
+          left: 50%;
+
+        }
+
+        &.mute {
+          position: relative;
+
+          &::before,
+          &::after {
+            content: '';
+            display: block;
+            border: $diagram-mute-border;
+            height: $diagram-mute-diameter;
+            position: absolute;
+          }
+
+          &::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+          }
+
+          &::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+          }
+        }
+
+        &.dot { 
+          background: $diagram-dot-background-color;
+          border: $diagram-dot-border;
+
+          height: $diagram-dot-diameter;
+          width: $diagram-dot-diameter;
+          border-radius: $diagram-dot-diameter / 2;
+
+          &.root {
+            border-radius: $diagram-dot-diameter / 3;
+            transform: rotate(45deg);
+          }
+        }
+      }
+    }
+
+    &:first-child {
+      .fret {
+        border-left: $diagram-fret-border;
+      }
+    }
+    
+    &:last-child {
+      .fret {
+        border-right: $diagram-fret-border;
+      }
+    }
+  }
+}

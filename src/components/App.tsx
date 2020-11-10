@@ -3,13 +3,16 @@ import { useEffect, useState } from 'react';
 
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Key, Mode, Note, Tuning } from '../models';
+import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, Tuning } from '../models';
 import { AppOptions, IAppOptions } from '../shared';
+import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
 import { Loading } from './Loading';
 import { Neck } from './neck';
 import { Ui } from './ui';
 
 const USE_COOKIE = true;
+
+const SHOW_INDICATORS = true;
 
 export interface AppProps {
   defaultKey?: Key;
@@ -33,6 +36,16 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   const { getCookie, setCookie } = useCookie();
 
   const [options, setOptions] = useState<IAppOptions>();
+  const [indicatorsOptions, setIndicatorsOptions] = useState<
+    IndicatorsDisplayOptions
+  >({
+    mode: IndicatorsMode.Chord,
+    chord: new ChordVariation(
+      [null, 3, 2, 0, 1, 0],
+      new Chord(Note.C(), ChordModifier.Major),
+      Tuning.Standard()
+    ),
+  });
 
   useEffect(() => {
     const saved = getCookie('options');
@@ -62,11 +75,20 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
           <div className="neck-container">
             <Neck options={options} />
           </div>
-          <div className="indicators-container">
-            <Indicators options={options} />
-          </div>
+          {SHOW_INDICATORS && (
+            <div className="indicators-container">
+              <Indicators
+                appOptions={options}
+                displayOptions={indicatorsOptions}
+              />
+            </div>
+          )}
         </main>
-        <Ui options={options} setOptions={handleSetOptions} />
+        <Ui
+          appOptions={options}
+          indicatorsOptions={indicatorsOptions}
+          setOptions={handleSetOptions}
+        />
       </>
     );
   }

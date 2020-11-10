@@ -1,8 +1,6 @@
 import { filter, map } from "lodash";
 
-import { Key, Mode } from ".";
-import { Note } from "./note";
-import { Scale } from "./scale";
+import { Key, Mode, Note, Scale } from ".";
 
 export enum ChordModifier {
   Major,

@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-import { Navbar, OptionsModal } from '.';
-import { Key, Mode, Tuning } from '../../models';
+import { ChordDiagram, ChordSlideIn, Navbar, OptionsModal, SlideIn } from '.';
+import { IndicatorsDisplayOptions } from '..';
+import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, Tuning } from '../../models';
 import { IAppOptions } from '../../shared';
 import { FretDisplayMode } from '../neck';
 
 export interface UiProps {
-  options: IAppOptions;
+  appOptions: IAppOptions;
+  indicatorsOptions: IndicatorsDisplayOptions;
   setOptions: (options: Partial<IAppOptions>) => void;
 }
 
@@ -15,14 +17,15 @@ export interface UiState {
 }
 
 export const Ui: React.FunctionComponent<UiProps> = ({
-  options,
+  appOptions,
+  indicatorsOptions,
   setOptions,
 }) => {
   const [showOptions, setShowOptions] = React.useState<boolean>(false);
 
   const handleFretDisplayModeUpdate = (fretMode: FretDisplayMode) => {
     let updated: FretDisplayMode;
-    switch (options.fretMode) {
+    switch (appOptions.fretMode) {
       case FretDisplayMode.Degree:
         updated = FretDisplayMode.Marker;
         break;
@@ -39,7 +42,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
   return (
     <>
       <Navbar
-        musicKey={options.key}
+        musicKey={appOptions.key}
         showing={showOptions}
         setShowing={setShowOptions}
         show={() => setShowOptions(true)}
@@ -49,11 +52,12 @@ export const Ui: React.FunctionComponent<UiProps> = ({
       <OptionsModal
         showing={showOptions}
         onHide={() => setShowOptions(false)}
-        tuning={options.tuning}
-        mode={options.mode}
+        tuning={appOptions.tuning}
+        mode={appOptions.mode}
         setTuning={(t: Tuning) => setOptions({ tuning: t })}
         setMode={(m: Mode) => setOptions({ mode: m })}
       />
+      <ChordSlideIn appOptions={appOptions} />
     </>
   );
 };

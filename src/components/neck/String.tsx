@@ -1,7 +1,6 @@
 import { filter, times } from 'lodash';
 import * as React from 'react';
-import { Note } from '../../models/note';
-import { Scale } from '../../models/scale';
+import { Note, Scale } from '../../models';
 import { Fret, FretDisplayMode } from './Fret';
 
 export interface StringProps {

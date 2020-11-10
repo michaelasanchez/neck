@@ -1,5 +1,5 @@
 import { countBy, indexOf } from "lodash";
-import { Chord, ChordModifier } from "./chord";
+import { Chord, ChordModifier } from ".";
 
 export class ChordForm {
 

@@ -1,5 +1,5 @@
 import { each, min } from "lodash";
-import { ChordForm, ChordModifier, Tuning } from ".";
+import { Chord, ChordForm, ChordModifier, Tuning } from ".";
 
 
 export class ChordVariation {
@@ -9,12 +9,12 @@ export class ChordVariation {
 
   private _chordForm: ChordForm;
 
-  constructor(positions: number[], modifier?: ChordModifier, tuning?: Tuning) {
+  constructor(positions: number[], chord?: Chord, tuning?: Tuning) {
     this._positions = positions;
     this._barre = new Array(this._positions.length).fill(null);
 
-    if (modifier !== null && !!tuning) {
-      each(ChordForm.getChordForms(ChordModifier.Major), (f) => {
+    if (chord !== null && !!tuning) {
+      each(ChordForm.getChordForms(chord.Modifier), (f) => {
         if (this.matchesChordForm(f, true)) {
           this._chordForm = f;
         }

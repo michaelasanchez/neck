@@ -1,4 +1,5 @@
 export * from './ChordDiagram';
+export * from './ChordSlideIn';
 export * from './KeySlider';
 export * from './Navbar';
 export * from './OptionCard';
