@@ -1,16 +1,20 @@
 import { each, filter, findIndex, map, times } from 'lodash';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 import { ChordDiagram, SlideIn } from '.';
-import { FILTER_BY_CHORD_FORM } from '..';
-import { Chord, ChordModifier, ChordVariation, Note, Tuning } from '../../models';
+import { Chord, ChordModifier, ChordVariation, Note } from '../../models';
 import { IAppOptions } from '../../shared';
 import { ChordUtils, VARIATION_SPAN_DEFAULT } from '../../shared/chord.utils';
+import { IndicatorsDisplayOptions } from '../Indicators';
+
+export const FILTER_BY_CHORD_FORM = false;
+export const FILTER_DUPLICATES = true;
 
 export interface IChordSlideInProps {
   appOptions: IAppOptions;
+  setIndicatorsOptions: (update: Partial<IndicatorsDisplayOptions>) => void;
 }
 
 const buttonStyle: React.CSSProperties = {
@@ -31,14 +35,17 @@ const nextStyle: React.CSSProperties = {
   left: 120,
 };
 
-export const ChordSlideIn: React.FC<IChordSlideInProps> = ({ appOptions }) => {
+export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
+  appOptions,
+  setIndicatorsOptions,
+}) => {
   const { numFrets, tuning } = appOptions;
 
   const [variations, setVariations] = useState<ChordVariation[]>();
   const [currentVariationIndex, setCurrentVariationIndex] = useState<number>(0);
 
   // Init
-  React.useEffect(() => {
+  useEffect(() => {
     // Test Chord
     const chord = new Chord(Note.C(), ChordModifier.Major);
     const variations: ChordVariation[] = [];
@@ -49,8 +56,10 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({ appOptions }) => {
       each(
         ChordUtils.calcVariations(chord, tuning, offset, span),
         (newVariation) => {
-          // Filter duplicates
-          if (findIndex(variations, (v) => v.Equals(newVariation)) < 0)
+          if (
+            !FILTER_DUPLICATES ||
+            findIndex(variations, (v) => v.Equals(newVariation)) < 0
+          )
             variations.push(newVariation);
         }
       );
@@ -65,7 +74,13 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({ appOptions }) => {
     setVariations(filteredVariations || variations);
   }, []);
 
-  if (variations) console.log(variations);
+
+  useEffect(() => {
+    if (variations) {
+      console.log(variations);
+      setIndicatorsOptions({ chord: variations[0] });
+    }
+  }, [variations]); 
 
   const renderDebug = () => {
     if (!variations) {
@@ -95,10 +110,14 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({ appOptions }) => {
     );
   };
 
+  const tester = (e: any) => {
+    console.log('e', e);
+  }
+
   return (
     <SlideIn>
       {map(variations, (v: ChordVariation, i: number) => (
-        <ChordDiagram chordVariation={v} key={i} />
+        <ChordDiagram chordVariation={v} key={i} onClick={setIndicatorsOptions} />
       ))}
     </SlideIn>
   );

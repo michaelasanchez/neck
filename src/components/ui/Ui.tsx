@@ -8,8 +8,9 @@ import { FretDisplayMode } from '../neck';
 
 export interface UiProps {
   appOptions: IAppOptions;
-  indicatorsOptions: IndicatorsDisplayOptions;
   setOptions: (options: Partial<IAppOptions>) => void;
+  indicatorsOptions: IndicatorsDisplayOptions;
+  setIndicatorsOptions: (u: Partial<IndicatorsDisplayOptions>) => void;
 }
 
 export interface UiState {
@@ -18,8 +19,9 @@ export interface UiState {
 
 export const Ui: React.FunctionComponent<UiProps> = ({
   appOptions,
-  indicatorsOptions,
   setOptions,
+  indicatorsOptions,
+  setIndicatorsOptions,
 }) => {
   const [showOptions, setShowOptions] = React.useState<boolean>(false);
 
@@ -57,7 +59,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setTuning={(t: Tuning) => setOptions({ tuning: t })}
         setMode={(m: Mode) => setOptions({ mode: m })}
       />
-      <ChordSlideIn appOptions={appOptions} />
+      {/* <ChordSlideIn appOptions={appOptions} setIndicatorsOptions={setIndicatorsOptions} /> */}
     </>
   );
 };

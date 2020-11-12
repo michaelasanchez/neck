@@ -1,13 +1,8 @@
-import { each, filter, findIndex, map, reduce, times } from 'lodash';
+import { findIndex, map, times } from 'lodash';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
 
-import { Chord, ChordModifier, ChordVariation, Note, Scale, Tuning } from '../models';
+import { ChordVariation } from '../models';
 import { IAppOptions } from '../shared';
-import { ChordUtils, VARIATION_SPAN_DEFAULT } from '../shared/chord.utils';
-
-export const FILTER_BY_CHORD_FORM = true;
 
 export enum IndicatorsMode {
   Chord,
@@ -31,8 +26,6 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = ({
 }) => {
   const { tuning, numFrets } = appOptions;
   const { mode } = displayOptions;
-
-  const [currentVariationIndex, setCurrentVariationIndex] = useState<number>(0);
 
   const renderIndicator = (
     fretNum: number,

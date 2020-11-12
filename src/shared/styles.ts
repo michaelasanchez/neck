@@ -15,7 +15,7 @@ const FRET_NUMBERS_WIDTH = getNumbersWidth(mobile);
 
 export const styles = {
   neck: {
-    width: 400,
+    width: NECK_WIDTH,
     margin: `0 ${FRET_NUMBERS_WIDTH}px`,
     maxWidth: `calc(100% - ${FRET_NUMBERS_WIDTH * 2}px)`,
   },

@@ -32,21 +32,21 @@ const parseOptionsCookie = (cookieString: string): IAppOptions => {
   return parsed;
 };
 
+const getDefaultIndicatorsOptions = (): IndicatorsDisplayOptions => {
+  return {
+    mode: IndicatorsMode.Chord,
+  };
+};
+
 const App: React.FunctionComponent<AppProps> = ({}) => {
   const { getCookie, setCookie } = useCookie();
 
   const [options, setOptions] = useState<IAppOptions>();
   const [indicatorsOptions, setIndicatorsOptions] = useState<
     IndicatorsDisplayOptions
-  >({
-    mode: IndicatorsMode.Chord,
-    chord: new ChordVariation(
-      [null, 3, 2, 0, 1, 0],
-      new Chord(Note.C(), ChordModifier.Major),
-      Tuning.Standard()
-    ),
-  });
+  >(getDefaultIndicatorsOptions());
 
+  // Init
   useEffect(() => {
     const saved = getCookie('options');
 
@@ -65,6 +65,17 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     setCookie('options', JSON.stringify(newOptions));
     setOptions(newOptions);
+  };
+
+  const handleSetIndicatorsOptions = (
+    updated: Partial<IndicatorsDisplayOptions>
+  ) => {
+    const newOptions = {
+      ...indicatorsOptions,
+      ...updated,
+    };
+
+    setIndicatorsOptions(newOptions);
   };
 
   if (options) {
@@ -88,6 +99,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
           appOptions={options}
           indicatorsOptions={indicatorsOptions}
           setOptions={handleSetOptions}
+          setIndicatorsOptions={handleSetIndicatorsOptions}
         />
       </>
     );

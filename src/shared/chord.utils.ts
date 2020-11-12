@@ -1,11 +1,13 @@
 import { filter, map, reduce, times } from "lodash";
-
 import { Chord, ChordVariation, Note, Tuning } from "../models";
+
 
 export const VARIATION_OFFSET_DEFAULT = 0;
 export const VARIATION_SPAN_DEFAULT = 4;
 
 export const VARIATION_SPAN_INCLUDES_OPEN = false;
+
+export const CONVERT_VARIATION_TO_CHORD_FORM = true;
 
 export class ChordUtils {
 
@@ -33,7 +35,8 @@ export class ChordUtils {
     offset: number = VARIATION_OFFSET_DEFAULT,
     span: number = VARIATION_SPAN_DEFAULT
   ): ChordVariation[] => {
-    // Matches will contain a set of notes for each string / tuning offset
+
+    // Matches will contain a set of notes for each string (tuning offset)
     //  Each note is a component of chord
     if (offset === 0 && VARIATION_SPAN_INCLUDES_OPEN) span++;
     const matches: Note[][] = map(tuning.Offsets, (o: number, i: number) => {
@@ -44,14 +47,14 @@ export class ChordUtils {
     });
 
     // Calculate number of combinations from matched notes
-    const potentialNotes = map(matches, (m) => m.length);
-    const numVariations = reduce(potentialNotes, (acc, n) => acc * n);
+    const noteCounts = map(matches, (m) => m.length);
+    const numVariations = reduce(noteCounts, (acc, n) => acc * n);
 
     // Calculate variations
     let variations: ChordVariation[] = [];
     times(numVariations, (n) => {
       let multiplier = 1;
-      const positions = map(potentialNotes, (p, i) => {
+      const positions = map(noteCounts, (p, i) => {
         const prev = multiplier;
         multiplier *= p;
 
@@ -59,7 +62,7 @@ export class ChordUtils {
         return ChordUtils.calcNotePosition(matches[i][index], tuning.Offsets[i], offset);
       });
 
-      variations.push(new ChordVariation(positions, chord, tuning));
+      variations.push(new ChordVariation(positions, chord, tuning, CONVERT_VARIATION_TO_CHORD_FORM));
     });
 
     return variations;

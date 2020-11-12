@@ -1,12 +1,10 @@
 
+$diagram-string-border: 2px solid black;
 
-$diagram-string-color: black;
-$diagram-string-width: 2px;
-$diagram-string-border: $diagram-string-width solid $diagram-string-color;
+$diagram-fret-border: 1px solid rgb(100, 100, 100); //rgb(200, 200, 200);
 
-$diagram-fret-border-color: rgb(200, 200, 200);
-$diagram-fret-border: 1px solid $diagram-fret-border-color;
 $diagram-fret-height: 30px;
+
 $diagram-fret-width: 25px;
 
 $diagram-symbol-border-color: black;
@@ -21,6 +19,7 @@ $diagram-dot-diameter: 16px;
 
 .diagram {
   display: flex;
+
   > .string {
     .fret{
       border-bottom: $diagram-fret-border;
@@ -95,6 +94,52 @@ $diagram-dot-diameter: 16px;
     &:last-child {
       .fret {
         border-right: $diagram-fret-border;
+      }
+    }
+  }
+
+
+  &.md > .string .fret {
+    height: $diagram-fret-height / 2;
+    width: $diagram-fret-width / 2;
+
+    .symbol {
+
+      &.dot {
+        height: 10px;
+        width: 10px;
+        border-width: 1.5px;
+      }
+
+      &.mute {
+        &::before,
+        &::after {
+          border-width: 2px;
+          height: 12px;
+        }
+      }
+    }
+  }
+
+  &.sm > .string .fret {
+    height: $diagram-fret-height / 4;
+    width: $diagram-fret-width / 3;
+
+    .symbol {
+      border-left-width: 1px;
+
+      &.dot {
+        height: 6px;
+        width: 6px;
+        border-width: 1px;
+      }
+
+      &.mute {
+        &::before,
+        &::after {
+          border-width: 1px;
+          height: 8px;
+        }
       }
     }
   }
