@@ -153,7 +153,7 @@ export class Note {
   }
 
   public HalfStepUp() : Note {
-    let mod = this.ModifiedValue();
+    let mod = this.Modified;
     let next: Note;
 
     if (isUndefined(NoteValue[(mod + 1) % Note.NUM_NOTES])) {
@@ -179,7 +179,7 @@ export class Note {
   //  0     1     2     3     4     5     6     7     8     9     10    11 
 
   public WholeStepUp(): Note {
-    let mod = this.ModifiedValue();
+    let mod = this.Modified;
     let next: Note;
 
     if (isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES])) {
