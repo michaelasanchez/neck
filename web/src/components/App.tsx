@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
@@ -46,6 +46,8 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     IndicatorsDisplayOptions
   >(getDefaultIndicatorsOptions());
 
+  const mainRef = useRef<HTMLDivElement>();
+
   // Init
   useEffect(() => {
     const saved = getCookie('options');
@@ -81,7 +83,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   if (options) {
     return (
       <>
-        <main>
+        <main ref={mainRef}>
           <Backdrop options={options} />
           <div className="neck-container">
             <Neck options={options} />
@@ -91,6 +93,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
               <Indicators
                 appOptions={options}
                 displayOptions={indicatorsOptions}
+                mainRef={mainRef}
               />
             </div>
           )}

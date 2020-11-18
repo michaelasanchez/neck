@@ -77,7 +77,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
 
   useEffect(() => {
     if (variations) {
-      console.log(variations);
       setIndicatorsOptions({ chord: variations[0] });
     }
   }, [variations]); 

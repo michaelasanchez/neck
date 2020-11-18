@@ -39,7 +39,7 @@ export const StringComponent: React.FunctionComponent<StringProps> = ({
             key={f}
             fretMode={fretmode}
             note={note}
-            root={note?.Value == scale.Root.Value}
+            root={note?.Value == scale.Tonic.Value}
           />
         );
       })}

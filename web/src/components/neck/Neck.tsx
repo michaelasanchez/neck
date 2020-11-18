@@ -24,14 +24,13 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
     const nextScale = getScale(key, mode);
     setScale(nextScale);
 
-    const root = scale?.Root;
-    const nextRoot = nextScale?.Root;
+    const root = scale?.Tonic;
+    const nextRoot = nextScale?.Tonic;
 
     // Fret Animation
     if (ENABLE_NECK_ANIMATION) {
       const diff = nextRoot?.Modified - root?.Modified;
 
-      // Default to up when equidistant
       if ((diff < 0 && diff < -6) || (diff > 0 && diff < 6)) {
         setClassName('down');
       } else {
