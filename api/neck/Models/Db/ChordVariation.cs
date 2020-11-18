@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace neck.Models.Db
 {
-    public class ChordVariation
+    public class ChordVariation : DbEntity
     {
         private List<int?> _positions;
         private List<int?> _barre;
@@ -18,14 +18,10 @@ namespace neck.Models.Db
         public ChordVariation(List<int?> positions, Chord chord, Tuning tuning, bool convert = false)
         {
             _positions = positions;
-            _barre = clearBarre(_positions);
         }
-
-        public Guid ID { get; set; }
 
         public string Label { get; set; }
 
-        [NotMapped]
         public List<int?> Positions {
             get => _positions;
             set {
@@ -39,26 +35,10 @@ namespace neck.Models.Db
             }
         }
 
-        public string PositionsString
-        {
-            get => string.Join(",", _positions.Select(p => p == null ? "null" : p.ToString()));
-            set
-            {
-                var test = value.Split(",").Select<string, int?>(p => {
-                    if (p == "null") return null;
-                    return int.Parse(p);
-                }).ToList();
-
-            }
-        }
-
-        [NotMapped]
         public List<int?> Barre {
             get => _barre;
             set => _barre = value;
         }
-
-        public string BarreString => string.Join(",", _barre.Select(b => b == null ? "null" : b.ToString()));
 
         private List<int?> clearBarre(List<int?> positions)
         {

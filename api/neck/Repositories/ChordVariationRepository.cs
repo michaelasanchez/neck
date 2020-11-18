@@ -1,4 +1,5 @@
 ﻿using neck.Models;
+using neck.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,8 @@ namespace neck.Repositories
                     return calcNotePosition(matches[countIndex][index], tuning.Offsets[countIndex], offset);
                 }).ToList();
 
-                variations.Add(new ChordVariation(positions, chord, tuning));
+                // TODO: We only select notes that are present. For now
+                variations.Add(new ChordVariation(positions.Cast<int?>().ToList(), chord, tuning));
             }
 
             return variations;

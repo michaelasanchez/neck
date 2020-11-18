@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace neck.Models.Db
 {
+
     public class NeckContext : DbContext
     {
         public DbSet<ChordVariation> ChordVariations { get; set; }
@@ -23,16 +24,23 @@ namespace neck.Models.Db
 
             modelBuilder.Entity<ChordVariation>(entity =>
             {
-                entity.HasKey(e => e.ID);
+                entity.Property(v => v.Positions).HasConversion(
+                        p => string.Join(",", p.Select(n => n == null ? "null" : n.ToString())),
+                        p => p.Split(',', StringSplitOptions.None).Select(n => (int?)Convert.ToInt32(n)).ToList()
+                    );
+                entity.Property(v => v.Barre).HasConversion(
+                        b => string.Join(",", b.Select(n => n == null ? "null" : n.ToString())),
+                        b => b.Split(',', StringSplitOptions.None).Select(n => (int?)Convert.ToInt32(n)).ToList()
+                    );
             });
 
-            //    modelBuilder.Entity<Book>(entity =>
-            //    {
-            //        entity.HasKey(e => e.ISBN);
-            //        entity.Property(e => e.Title).IsRequired();
-            //        entity.HasOne(d => d.Publisher)
-            //          .WithMany(p => p.Books);
-            //    });
+            modelBuilder.Entity<Tuning>(entity =>
+            {
+                entity.Property(t => t.Offsets).HasConversion(
+                    t => t.ToString(),
+                    t => t.Split(',', StringSplitOptions.None).Select(n => Convert.ToInt32(n)).ToList()
+                );
+            });
         }
     }
 }

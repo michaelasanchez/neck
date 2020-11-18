@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using neck.Models;
+using neck.Models.Db;
 using neck.Repositories;
 using System;
 using System.Collections.Generic;
