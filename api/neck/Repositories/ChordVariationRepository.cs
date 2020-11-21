@@ -13,21 +13,21 @@ namespace neck.Repositories
 
         // Returns a fret number based on a Note, tuning
         //  offset and an optional minimum fret position
-        public static int calcNotePosition(Note note, int tuning, int min = 0)
+        public static int CalcNotePosition(Note note, int tuningPosition, int min = 0)
         {
-            var pos = (note.Modified - tuning + Notes.Count) % Notes.Count;
+            var pos = (note.Modified - tuningPosition + Notes.Count) % Notes.Count;
             while (pos < min) pos += Notes.Count;
             return pos;
         }
 
         public static bool isNoteInRange(Note note, int tuning, int offset, int span)
         {
-            var pos = calcNotePosition(note, tuning, offset);
+            var pos = CalcNotePosition(note, tuning, offset);
             return pos >= offset && pos <= offset + (span - 1);
         }
 
 
-        public static List<ChordVariation> Generate(Chord chord, Tuning tuning, int offset, int span)
+        public List<ChordVariation> Generate(Chord chord, Tuning tuning, int offset, int span)
         {
             // Matches will contain a set of notes for each string (tuning offset)
             //  Each note is a component of chord
@@ -50,7 +50,7 @@ namespace neck.Repositories
                     multiplier *= count;
 
                     var index = (v / prev) % count;
-                    return calcNotePosition(matches[countIndex][index], tuning.Offsets[countIndex], offset);
+                    return CalcNotePosition(matches[countIndex][index], tuning.Offsets[countIndex], offset);
                 }).ToList();
 
                 // TODO: We only select notes that are present. For now

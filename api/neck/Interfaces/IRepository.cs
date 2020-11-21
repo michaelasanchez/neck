@@ -1,22 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-    interface IRepository<IDbEntity> : IDisposable
+    public interface IRepository<T> //: IDisposable
     {
-        IEnumerable<IDbEntity> Get();
+        public Task<T> Get(Guid? id);
 
-        IDbEntity Get(Guid id);
+        //public Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate);
 
-        void Insert(IDbEntity entity);
+        public Task<IEnumerable<T>> GetAll();
 
-        void Delete(IDbEntity entity);
+        public Task Insert(T entity);
 
-        void Update(IDbEntity entity);
+        public Task Delete(T entity);
 
-        void Save();
+        public Task Update(T entity);
+
+        public Task<int> Count();
     }
 }

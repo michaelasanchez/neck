@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-    public interface IDatedEntity
+    public interface IController<T>
     {
-        DateTimeOffset Created { get; set; }
-        DateTimeOffset? Updated { get; set; }
+        public Task<List<T>> Get();
+
+        public Task Insert(T entity);
     }
 }

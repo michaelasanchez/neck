@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-    interface IDbEntity : IDatedEntity
+    public interface IDbEntity : IDatedEntity
     {
         Guid Id { get; set; }
     }

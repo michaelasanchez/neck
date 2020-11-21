@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using neck.Interfaces;
 using neck.Models;
 using neck.Models.Db;
 using neck.Repositories;
@@ -12,19 +13,23 @@ namespace neck.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ChordVariationController : ControllerBase
+    public class ChordVariationController : GenericController<ChordVariation>
     {
         private readonly ILogger<ChordVariationController> _logger;
 
-        public ChordVariationController(ILogger<ChordVariationController> logger)
+        public ChordVariationController(ILogger<ChordVariationController> logger, IRepository<ChordVariation> repository)
+            : base(repository)
         {
             _logger = logger;
         }
 
-        [HttpGet]
-        public List<ChordVariation> Get(ChordVariationGetParams getParams)
+        [HttpPost]
+        public List<ChordVariation> Generate([FromBody] ChordVariationGetParams getParams)
         {
-            return ChordVariationRepository.Generate(getParams.chord, getParams.tuning, 0, 4);
+            var chord = getParams.chord ?? new Chord(Note.C(), Enums.ChordEnums.ChordModifier.Major);
+            var tuning = getParams.tuning ?? Tuning.Standard();
+
+            return ((ChordVariationRepository)_repository).Generate(chord, tuning, 0, 4);
         }
     }
 

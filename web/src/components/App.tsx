@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, Tuning } from '../models';
-import { AppOptions, IAppOptions } from '../shared';
+import { Key, Mode, Note, Tuning } from '../models';
+import { BaseRequest, AppOptions, IAppOptions } from '../shared';
+import { ApiRequest } from '../shared/apirequest';
 import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
 import { Loading } from './Loading';
 import { Neck } from './neck';
@@ -55,6 +55,12 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         ? parseOptionsCookie(saved)
         : AppOptions.Default()
     );
+
+    // DEBUG
+    var weneedithere = new ApiRequest('ChordVariation').Get();
+
+    // debugger;
+
   }, []);
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {

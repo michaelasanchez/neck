@@ -1,46 +1,74 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using neck.Comparers;
+using neck.Converters;
+using neck.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace neck.Models.Db
 {
 
-    public class NeckContext : DbContext
-    {
-        public DbSet<ChordVariation> ChordVariations { get; set; }
+	public class NeckContext : DbContext
+	{
+		public DbSet<ChordVariation> ChordVariations { get; set; }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer(Configuration["ConnectionStrings:NeckDatabase"]);
-        //}
+		public NeckContext(DbContextOptions<NeckContext> options) : base(options) { }
 
-        public NeckContext(DbContextOptions<NeckContext> options) : base(options) { }
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+			modelBuilder.Entity<ChordVariation>(entity =>
+			{
+				entity.Property(v => v.Positions)
+					.HasConversion(
+						p => PositionsConverter.ListToString(p),
+						p => PositionsConverter.StringToNullableList(p)
+					)
+					.Metadata
+					.SetValueComparer(PositionsComparer.Compare);
 
-            modelBuilder.Entity<ChordVariation>(entity =>
-            {
-                entity.Property(v => v.Positions).HasConversion(
-                        p => string.Join(",", p.Select(n => n == null ? "null" : n.ToString())),
-                        p => p.Split(',', StringSplitOptions.None).Select(n => (int?)Convert.ToInt32(n)).ToList()
-                    );
-                entity.Property(v => v.Barre).HasConversion(
-                        b => string.Join(",", b.Select(n => n == null ? "null" : n.ToString())),
-                        b => b.Split(',', StringSplitOptions.None).Select(n => (int?)Convert.ToInt32(n)).ToList()
-                    );
-            });
+				entity.Property(v => v.Barre)
+					.HasConversion(
+						b => PositionsConverter.ListToString(b),
+						b => PositionsConverter.StringToNullableList(b)
+					)
+					.Metadata
+					.SetValueComparer(PositionsComparer.Compare);
+			});
 
-            modelBuilder.Entity<Tuning>(entity =>
-            {
-                entity.Property(t => t.Offsets).HasConversion(
-                    t => t.ToString(),
-                    t => t.Split(',', StringSplitOptions.None).Select(n => Convert.ToInt32(n)).ToList()
-                );
-            });
-        }
-    }
+			modelBuilder.Entity<Tuning>(entity =>
+			{
+				entity.Property(t => t.Offsets)
+					.HasConversion(
+						t => PositionsConverter.ListToString(t),
+						t => PositionsConverter.StringToList(t, 0)
+					)
+					.Metadata
+					.SetValueComparer(PositionsComparer.Compare);
+			});
+		}
+
+		public override int SaveChanges()
+		{
+			AddTimestamps();
+			return base.SaveChanges();
+		}
+
+		private void AddTimestamps()
+		{
+			var entities = ChangeTracker.Entries().Where(x => x.Entity is IDatedEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
+
+
+			foreach (var entity in entities)
+			{
+				if (entity.State == EntityState.Added)
+				{
+					((IDatedEntity)entity.Entity).Created = DateTime.UtcNow;
+				}
+
+				((IDatedEntity)entity.Entity).Updated = DateTime.UtcNow;
+			}
+		}
+	}
 }
