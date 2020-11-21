@@ -9,6 +9,10 @@ namespace neck.Interfaces
     {
         public Task<List<T>> Get();
 
-        public Task Insert(T entity);
-    }
+		public Task Insert(T entity);
+
+        //public Task Update(T entity);
+
+        public Task Delete(T entity);
+	}
 }

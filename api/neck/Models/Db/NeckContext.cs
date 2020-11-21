@@ -4,6 +4,8 @@ using neck.Converters;
 using neck.Interfaces;
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace neck.Models.Db
 {
@@ -26,7 +28,7 @@ namespace neck.Models.Db
 						p => PositionsConverter.StringToNullableList(p)
 					)
 					.Metadata
-					.SetValueComparer(PositionsComparer.Compare);
+					.SetValueComparer(PositionsComparer.CompareNullable);
 
 				entity.Property(v => v.Barre)
 					.HasConversion(
@@ -34,7 +36,7 @@ namespace neck.Models.Db
 						b => PositionsConverter.StringToNullableList(b)
 					)
 					.Metadata
-					.SetValueComparer(PositionsComparer.Compare);
+					.SetValueComparer(PositionsComparer.CompareNullable);
 			});
 
 			modelBuilder.Entity<Tuning>(entity =>
@@ -53,6 +55,12 @@ namespace neck.Models.Db
 		{
 			AddTimestamps();
 			return base.SaveChanges();
+		}
+
+		public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+		{
+			AddTimestamps();
+			return base.SaveChangesAsync(cancellationToken);
 		}
 
 		private void AddTimestamps()

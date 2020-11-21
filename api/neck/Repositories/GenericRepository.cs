@@ -3,6 +3,7 @@ using neck.Interfaces;
 using neck.Models.Db;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -30,6 +31,8 @@ namespace neck.Repositories
         {
             await _set.AddAsync(entity);
             await _context.SaveChangesAsync();
+
+            Debug.WriteLine(entity.ToString());
         }
 
         public Task Update(TEntity entity) {

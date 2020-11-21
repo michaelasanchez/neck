@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using neck.Generators;
 using neck.Interfaces;
 using neck.Models.Db;
 using neck.Repositories;
@@ -46,6 +47,8 @@ namespace neck
             services.AddControllers();
 
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
+            services.AddSingleton(typeof(ChordVariationGenerator));
 
             services.AddDbContext<NeckContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("NeckDatabase")));
