@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using neck.Enums;
 
@@ -17,14 +18,17 @@ namespace neck.Models
             _suffix = suffix;
         }
 
-        public string Label => $"{_base} {_suffix}";
+        [NotMapped]
+        public string Label => $"{_base}{_suffix}";
 
         public NoteValue Base => _base;
 
         public NoteSuffix Suffix => _suffix;
 
+        [NotMapped]
         public int Degree { get => _degree.GetValueOrDefault(); set => _degree = value; }
 
+        [NotMapped]
         public int Modified { get => ((int)_base + (int)_suffix) % Notes.Count; }
 
         public Note HalfStepUp()

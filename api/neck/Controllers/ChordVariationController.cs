@@ -3,11 +3,7 @@ using Microsoft.Extensions.Logging;
 using neck.Generators;
 using neck.Interfaces;
 using neck.Models;
-using neck.Models.Db;
-using neck.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Controllers
@@ -29,6 +25,12 @@ namespace neck.Controllers
 		{
 			_logger = logger;
 			_generator = generator;
+		}
+
+		public override Task Insert(ChordVariation entity)
+		{
+			//var exists = _repository.
+			return base.Insert(entity);
 		}
 
 		[HttpPost("{controller}/generate")]

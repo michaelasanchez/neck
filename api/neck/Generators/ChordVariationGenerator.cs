@@ -1,5 +1,4 @@
 ﻿using neck.Models;
-using neck.Models.Db;
 using System;
 using System.Collections.Generic;
 using System.Linq;

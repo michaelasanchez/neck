@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using neck.Models.Db;
+using neck.Models;
 
 namespace neck.Migrations
 {
@@ -19,20 +19,49 @@ namespace neck.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("neck.Models.Db.ChordVariation", b =>
+            modelBuilder.Entity("neck.Models.ChordVariation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Barre")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("FormationHash")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("FormationId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Label")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("TuningId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("Updated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TuningId");
+
+                    b.HasIndex("FormationId", "FormationHash");
+
+                    b.ToTable("ChordVariations");
+                });
+
+            modelBuilder.Entity("neck.Models.Formation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Hash")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Positions")
                         .HasColumnType("nvarchar(max)");
@@ -40,12 +69,12 @@ namespace neck.Migrations
                     b.Property<DateTimeOffset?>("Updated")
                         .HasColumnType("datetimeoffset");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id", "Hash");
 
-                    b.ToTable("ChordVariations");
+                    b.ToTable("Formation");
                 });
 
-            modelBuilder.Entity("neck.Models.Db.Tuning", b =>
+            modelBuilder.Entity("neck.Models.Tuning", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,6 +92,21 @@ namespace neck.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tuning");
+                });
+
+            modelBuilder.Entity("neck.Models.ChordVariation", b =>
+                {
+                    b.HasOne("neck.Models.Tuning", "Tuning")
+                        .WithMany()
+                        .HasForeignKey("TuningId");
+
+                    b.HasOne("neck.Models.Formation", "Formation")
+                        .WithMany()
+                        .HasForeignKey("FormationId", "FormationHash");
+
+                    b.Navigation("Formation");
+
+                    b.Navigation("Tuning");
                 });
 #pragma warning restore 612, 618
         }

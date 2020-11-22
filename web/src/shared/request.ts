@@ -24,14 +24,13 @@ export class BaseRequest {
 
   protected _baseOptions: BaseRequestOptions;
 
-  protected constructor(url?: string, type: RequestType = RequestType.Get, options: BaseRequestOptions = DefaultBaseRequestOptions) {
+  protected constructor(url?: string, options: BaseRequestOptions = DefaultBaseRequestOptions) {
     if (url) this._url = url;
 
-    this._type = type;
     this._baseOptions = options;
   }
 
-  protected execute() {
+  private execute() {
     const convert = this._baseOptions.convertToJson;
 
     // THIS DOESNT WORK
@@ -61,6 +60,14 @@ export class BaseRequest {
     this._url = value;
   }
 
+  get Type(): RequestType {
+    return this._type;
+  }
+
+  set Type(value: RequestType) {
+    this._type = value;
+  }
+
   get Data(): {} {
     return this._data;
   }
@@ -71,6 +78,22 @@ export class BaseRequest {
     }
   }
 
+  Get(): Promise<void> {
+    this.Type = RequestType.Get;
+    return this.execute()
+  }
+
+  Post(data?: {}): Promise<void> {
+    this.Type = RequestType.Post;
+    this.Data = data;
+    return this.execute();
+  }
+
+  Delete(data?: {}): Promise<void> {
+    this.Type = RequestType.Delete;
+    this.Data = data;
+    return this.execute();
+  }
 
   // protected async executeAsync() {
   //   const convert = this._baseOptions.convertToJson;

@@ -58,7 +58,9 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     // DEBUG
     var weneedithere = new ApiRequest('ChordVariation').Get();
-
+    weneedithere.then(data => {
+      console.log(data);
+    })
     // debugger;
 
   }, []);

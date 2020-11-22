@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using static neck.Enums.ChordEnums;
@@ -49,8 +50,18 @@ namespace neck.Models
                 .ToList();
         }
 
+        public Note Root => _root;
+
+        public ChordModifier Modifier => _modifier;
+
+        [NotMapped]
+        public string Label => $"{_root.Label} {_modifier}";
+
+        [NotMapped]
         public List<Key> Keys => _keys;
 
+        [NotMapped]
         public List<Note> Components => _components;
+
     }
 }
