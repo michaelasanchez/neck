@@ -41,11 +41,11 @@ namespace neck.Controllers
 		{
 			if (variation.Formation != null)
 			{
-				//var formation = _formationRepo.FirstOrDefault(f => f.Hash == variation.Formation.Hash);
-				//if (formation != null)
-				//{
-				//	variation.Formation.Id = formation.Id;
-				//}
+				var formation = _formationRepo.FirstOrDefault(f => f.Hash == variation.Formation.Hash);
+				if (formation != null)
+				{
+					variation.Formation.Id = formation.Id;
+				}
 			}
 
 			var chord = variation.Chord;
