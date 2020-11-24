@@ -17,15 +17,21 @@ namespace neck.Controllers
 		}
 
 		[HttpGet]
-		public virtual async Task<List<T>> Get() => (List<T>)await _repository.GetAll();
+		public virtual async Task<ActionResult<IEnumerable<T>>> Get() => Ok(await _repository.GetAll());
 
 		[HttpPost]
-		public virtual async Task Insert(T entity) => await _repository.Insert(entity);
+		public virtual async Task<IActionResult> Insert(T entity)
+		{
+			await _repository.Insert(entity);
+			var result = await _repository.Save();
+
+			return Ok();
+		}
 
 		//[HttpPatch]
 		//public async Task Update(T entity) => await _repository.Update(entity);
 
 		[HttpDelete]
-		public virtual async Task Delete(T entity) => await _repository.Delete(entity);
+		public virtual async Task<IActionResult> Delete(T entity) => Ok(await _repository.Delete(entity));
 	}
 }

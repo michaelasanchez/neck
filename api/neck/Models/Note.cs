@@ -1,137 +1,161 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using neck.Enums;
 
 namespace neck.Models
 {
-    public class Note
-    {
-        private NoteValue _base;
-        private NoteSuffix _suffix;
+	public class Note : DbEntity
+	{
+		public NoteValue Base;
+		public NoteSuffix Suffix;
 
-        private int? _degree;
+		[NotMapped]
+		public string Label => $"{Base}{SuffixSymbol(Suffix)}";
 
-        public Note(NoteValue value, NoteSuffix suffix = NoteSuffix.Natural)
-        {
-            _base = value;
-            _suffix = suffix;
-        }
+		[NotMapped]
+		public string LongLabel => $"{Base} {Suffix}";
 
-        [NotMapped]
-        public string Label => $"{_base}{_suffix}";
+		[NotMapped]
+		public int Pitch { get => ((int)Base + (int)Suffix) % Notes.Count; }
 
-        public NoteValue Base => _base;
+		[NotMapped]
+		public int? Degree;
 
-        public NoteSuffix Suffix => _suffix;
+		public Note() { }
 
-        [NotMapped]
-        public int Degree { get => _degree.GetValueOrDefault(); set => _degree = value; }
+		public Note(NoteValue value, NoteSuffix suffix = NoteSuffix.Natural)
+		{
+			Base = value;
+			Suffix = suffix;
+		}
 
-        [NotMapped]
-        public int Modified { get => ((int)_base + (int)_suffix) % Notes.Count; }
+		//public override bool Equals(object obj)
+		//{
+		//	var note = obj as Note;
+		//	return String.Equals(Base, note.Base)
+		//		&& String.Equals(Suffix, note.Suffix);
+		//}
 
-        public Note HalfStepUp()
-        {
-            int step = 0;
-            var nextSuffix = NoteSuffix.Natural;
+		private string SuffixSymbol(NoteSuffix suffix)
+		{
+			switch (suffix)
+			{
+				case NoteSuffix.Sharp:
+					return "\u266f";
+				case NoteSuffix.Flat:
+					return "\u266d";
+				default:
+					return string.Empty;
+			}
+		}
 
-            if (Enum.IsDefined(typeof(NoteValue), (Modified + 1) % Notes.Count))
-            {
-                if (Modified + 1 == (int)_base)
-                {
-                    step = 2;
-                    nextSuffix = NoteSuffix.Flat;
-                }
-                else
-                {
-                    step = 1;
-                }
-            }
-            else
-            {
-                if (Modified != (int)_base)
-                {
-                    nextSuffix = NoteSuffix.Sharp;
-                }
-                else
-                {
-                    step = 2;
-                    nextSuffix = NoteSuffix.Flat;
-                }
-            }
+		#region Calculate note intervals & accidentals
+		// TODO: Add half/whole step down?
 
-            return new Note((NoteValue)(Modified + step), nextSuffix);
-        }
+		public Note HalfStepUp()
+		{
+			int step = 0;
+			var nextSuffix = NoteSuffix.Natural;
 
-        public Note WholeStepUp()
-        {
-            int step;
-            NoteSuffix nextSuffix = NoteSuffix.Natural;
-            if (Enum.IsDefined(typeof(NoteValue), (Modified + 2) % Notes.Count))
-            {
-                if (Modified - (int)_base > 0)
-                {
-                    step = 1;
-                    nextSuffix = NoteSuffix.Sharp;
-                }
-                else
-                {
-                    step = 2;
-                }
-            }
-            else
-            {
-                if (Modified + 1 == (int)_base)
-                {
-                    step = 3;
-                    nextSuffix = NoteSuffix.Flat;
-                }
-                else
-                {
-                    step = 1;
-                    nextSuffix = NoteSuffix.Sharp;
-                }
-            }
+			if (Enum.IsDefined(typeof(NoteValue), (Pitch + 1) % Notes.Count))
+			{
+				if (Pitch + 1 == (int)Base)
+				{
+					step = 2;
+					nextSuffix = NoteSuffix.Flat;
+				}
+				else
+				{
+					step = 1;
+				}
+			}
+			else
+			{
+				if (Pitch != (int)Base)
+				{
+					nextSuffix = NoteSuffix.Sharp;
+				}
+				else
+				{
+					step = 2;
+					nextSuffix = NoteSuffix.Flat;
+				}
+			}
 
-            return new Note((NoteValue)(Modified + step), nextSuffix);
-        }
+			return new Note((NoteValue)(Pitch + step), nextSuffix);
+		}
 
-        #region Natural Note static constructors
-        public static Note A()
-        {
-            return new Note(NoteValue.A, NoteSuffix.Natural);
-        }
+		public Note WholeStepUp()
+		{
+			int step;
+			NoteSuffix nextSuffix = NoteSuffix.Natural;
+			if (Enum.IsDefined(typeof(NoteValue), (Pitch + 2) % Notes.Count))
+			{
+				if (Pitch - (int)Base > 0)
+				{
+					step = 1;
+					nextSuffix = NoteSuffix.Sharp;
+				}
+				else
+				{
+					step = 2;
+				}
+			}
+			else
+			{
+				if (Pitch + 1 == (int)Base)
+				{
+					step = 3;
+					nextSuffix = NoteSuffix.Flat;
+				}
+				else
+				{
+					step = 1;
+					nextSuffix = NoteSuffix.Sharp;
+				}
+			}
 
-        public static Note B()
-        {
-            return new Note(NoteValue.B, NoteSuffix.Natural);
-        }
+			return new Note((NoteValue)(Pitch + step), nextSuffix);
+		}
+		#endregion
 
-        public static Note C()
-        {
-            return new Note(NoteValue.C, NoteSuffix.Natural);
-        }
+		#region Natural Note static constructors
+		public static Note A()
+		{
+			return new Note(NoteValue.A, NoteSuffix.Natural);
+		}
 
-        public static Note D()
-        {
-            return new Note(NoteValue.D, NoteSuffix.Natural);
-        }
+		public static Note B()
+		{
+			return new Note(NoteValue.B, NoteSuffix.Natural);
+		}
 
-        public static Note E()
-        {
-            return new Note(NoteValue.E, NoteSuffix.Natural);
-        }
+		public static Note C()
+		{
+			return new Note(NoteValue.C, NoteSuffix.Natural);
+		}
 
-        public static Note F()
-        {
-            return new Note(NoteValue.F, NoteSuffix.Natural);
-        }
+		public static Note D()
+		{
+			return new Note(NoteValue.D, NoteSuffix.Natural);
+		}
 
-        public static Note G()
-        {
-            return new Note(NoteValue.G, NoteSuffix.Natural);
-        }
-        #endregion
-    }
+		public static Note E()
+		{
+			return new Note(NoteValue.E, NoteSuffix.Natural);
+		}
+
+		public static Note F()
+		{
+			return new Note(NoteValue.F, NoteSuffix.Natural);
+		}
+
+		public static Note G()
+		{
+			return new Note(NoteValue.G, NoteSuffix.Natural);
+		}
+		#endregion
+	}
 }

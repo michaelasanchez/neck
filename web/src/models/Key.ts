@@ -24,7 +24,7 @@ export class Key implements IOption {
   }
 
   get Label(): string {
-    return this._tonic.toString();
+    return this._tonic.Label;
   }
 
   get RelativeMajor(): Key {

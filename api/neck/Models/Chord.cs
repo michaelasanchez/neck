@@ -7,29 +7,39 @@ using static neck.Enums.ChordEnums;
 
 namespace neck.Models
 {
-    public class Chord
+    public class Chord : DbEntity
     {
-        private Note _root;
-        private ChordModifier _modifier;
+        public Note Root { get; set; }
+        public ChordModifier Modifier { get; set; }
+
+        public string Label => $"{Root?.Label} {Modifier}";
+
+        [NotMapped]
+        public List<Key> Keys => _keys;
+
+        [NotMapped]
+        public List<Note> Components => _components;
 
         private List<Key> _keys;
         private List<Note> _components;
 
+        public Chord() { }
+
         public Chord(Note root, ChordModifier mod)
         {
-            _root = root;
-            _modifier = mod;
+            Root = root;
+            Modifier = mod;
 
             _keys = new List<Key>
             {
-                new Key(_root, _modifier == ChordModifier.Major ? KeyType.Major : KeyType.Minor)
+                new Key(Root, Modifier == ChordModifier.Major ? KeyType.Major : KeyType.Minor)
             };
 
-            var scale = _modifier == ChordModifier.Major
-                ? new Scale(_root, Mode.Ionian())
-                : new Scale(_root, Mode.Aeolian());
+            var scale = Modifier == ChordModifier.Major
+                ? new Scale(Root, Mode.Ionian())
+                : new Scale(Root, Mode.Aeolian());
 
-            _components = calculateComponents(scale, _modifier);
+            _components = calculateComponents(scale, Modifier);
         }
 
         private List<int> getDegrees(ChordModifier mod) {
@@ -39,7 +49,7 @@ namespace neck.Models
                 case ChordModifier.Minor:
                     return new List<int> { 0, 2, 3 };
                 default:
-                    return null;    
+                    return null;
             }
         }
 
@@ -49,19 +59,6 @@ namespace neck.Models
                 .Select(d => scale.Notes.FirstOrDefault(n => n.Degree == d))
                 .ToList();
         }
-
-        public Note Root => _root;
-
-        public ChordModifier Modifier => _modifier;
-
-        [NotMapped]
-        public string Label => $"{_root.Label} {_modifier}";
-
-        [NotMapped]
-        public List<Key> Keys => _keys;
-
-        [NotMapped]
-        public List<Note> Components => _components;
 
     }
 }

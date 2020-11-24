@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using neck.Models;
 
 namespace neck.Migrations
 {
     [DbContext(typeof(NeckContext))]
-    partial class NeckContextModelSnapshot : ModelSnapshot
+    [Migration("20201122100635_AddFormation")]
+    partial class AddFormation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -88,6 +90,9 @@ namespace neck.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int>("Hash")
+                        .HasColumnType("int");
+
                     b.Property<string>("Positions")
                         .HasColumnType("nvarchar(max)");
 
@@ -95,6 +100,8 @@ namespace neck.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id", "Hash");
 
                     b.ToTable("Formation");
                 });

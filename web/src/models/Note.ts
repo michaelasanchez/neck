@@ -15,8 +15,7 @@ export enum NoteValue {
   B = 11,
 }
 
-// TODO: roughing in doubles
-enum NoteSuffix {
+export enum NoteSuffix {
   DoubleFlat = -2,
   Flat = -1,
   Natural = 0,
@@ -28,6 +27,9 @@ export enum NoteSuffixLabel {
   Sharp = '\u266f',
   Flat = '\u266d',
 }
+
+const SharpSymbol = '\u266f';
+const FlatSymbol = '\u266f';
 
 export class Note {
 
@@ -43,27 +45,32 @@ export class Note {
     this.Suffix = suffix;
   }
 
-  private ModifiedValue() : NoteValue {
+  private ModifiedValue(): NoteValue {
     return this.base + this.suffix;
   }
 
-  private SuffixLabel(suffix: NoteSuffix) {
+  private SuffixLabel(suffix: NoteSuffix, long = false) {
     switch (suffix) {
+      case NoteSuffix.DoubleFlat:
+        return long ? 'Double Flat' : `${FlatSymbol}${FlatSymbol}`;
       case NoteSuffix.Flat:
-        return '\u266d';
+        return long ? 'Flat' : `${FlatSymbol}`;
       case NoteSuffix.Natural:
-        return '';
+        return long ? 'Natural' : '';
       case NoteSuffix.Sharp:
-        return '\u266f';
+        return long ? 'Sharp' : `${SharpSymbol}`;
+      case NoteSuffix.DoubleSharp:
+        return long ? 'Double Sharp' : `${SharpSymbol}${SharpSymbol}`;
     }
   }
 
-  public toString(): string {
-    // TODO: this should always return a string if it has a value
-    return NoteValue[this.base] ? `${NoteValue[this.base]}${this.SuffixLabel(this.suffix)}` : null;
-  }
   get Label(): string {
+    // Cheap visual test
     return NoteValue[this.base] ? `${NoteValue[this.base]}${this.SuffixLabel(this.suffix)}` : 'ERROR';
+  }
+
+  get LongLabel(): string {
+    return NoteValue[this.base] ? `${NoteValue[this.base]} ${this.SuffixLabel(this.suffix, true)}` : 'ERROR';
   }
 
   get Value(): NoteValue {
@@ -152,7 +159,7 @@ export class Note {
     return this;
   }
 
-  public HalfStepUp() : Note {
+  public HalfStepUp(): Note {
     let mod = this.Modified;
     let next: Note;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace neck.Models
@@ -9,7 +10,6 @@ namespace neck.Models
 
         public Formation Formation { get; set; }
 
-        [NotMapped]
         public Chord Chord { get; set; }
              
         public Tuning Tuning { get; set; }
@@ -18,7 +18,7 @@ namespace neck.Models
 
         public ChordVariation(List<int?> positions, Chord chord, Tuning tuning, string label = null)
         {
-            Label = label ?? chord.Label;
+            Label = label ?? chord?.Label;
             Formation = new Formation(positions);
             Chord = chord;
             Tuning = tuning;

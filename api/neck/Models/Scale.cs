@@ -51,7 +51,7 @@ namespace neck.Models
                 var prevNote = notes.Last();
                 var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
                 nextNote.Degree = notes.Count;
-                if (nextNote.Modified != root.Modified) notes.Add(nextNote);
+                if (nextNote.Pitch != root.Pitch) notes.Add(nextNote);
             });
 
             return notes;

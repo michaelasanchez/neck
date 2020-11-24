@@ -22,26 +22,28 @@ namespace neck.Models
 
 			modelBuilder.Entity<Formation>(entity =>
 			{
-				entity.HasKey(f => new { f.Id, f.Hash });
-				entity.Property(v => v.Positions)
+				entity.Ignore(f => f.Hash);
+				entity.Property(f => f.Positions)
 					.HasConversion(
-						o => PositionsConverter.ListToString(o),
-						o => PositionsConverter.StringToNullableList(o)
+						p => PositionsConverter.ListToString(p),
+						p => PositionsConverter.StringToNullableList(p)
 					)
 					.Metadata
 					.SetValueComparer(PositionsComparer.CompareNullable);
 			});
 
-			modelBuilder.Entity<Tuning>(entity =>
-			{
-				entity.Property(t => t.Offsets)
-					.HasConversion(
-						t => PositionsConverter.ListToString(t),
-						t => PositionsConverter.StringToList(t, 0)
-					)
-					.Metadata
-					.SetValueComparer(PositionsComparer.Compare);
-			});
+			modelBuilder.Entity<Tuning>()
+				.Property(t => t.Offsets)
+				.HasConversion(
+					o => PositionsConverter.ListToString(o),
+					o => PositionsConverter.StringToList(o, 0)
+				)
+				.Metadata
+				.SetValueComparer(PositionsComparer.Compare);
+
+			modelBuilder.Entity<Note>()
+				.HasIndex(n => new { n.Base, n.Suffix })
+				.IsUnique();
 		}
 
 		public override int SaveChanges()
@@ -54,6 +56,12 @@ namespace neck.Models
 		{
 			AddTimestamps();
 			return base.SaveChangesAsync(cancellationToken);
+		}
+
+		public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+		{
+			AddTimestamps();
+			return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 		}
 
 		private void AddTimestamps()

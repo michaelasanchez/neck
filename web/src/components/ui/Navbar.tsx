@@ -37,7 +37,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             eventKey={index.toString()}
             onSelect={(keyString: string) => handleSetKey(keyString)}
           >
-            {key.Tonic.toString()}
+            {key.Tonic.Label}
           </Dropdown.Item>
         ))}
       </Dropdown.Menu>

@@ -27,25 +27,38 @@ namespace neck.Repositories
 
         public virtual async Task<TEntity> Get(Guid? id) => await _set.FirstOrDefaultAsync(z => z.Id == id);
 
-        public virtual IQueryable<TEntity> GetWhere(Expression<Func<TEntity, bool>> predicate) => _set.Where(predicate);
+        public virtual TEntity FirstOrDefault(Expression<Func<TEntity, bool>> predicate) => _set.FirstOrDefault(predicate);
 
-        public virtual async Task Insert(TEntity entity)
+        public virtual async Task<int> Insert(TEntity entity)
         {
             await _set.AddAsync(entity);
-            await _context.SaveChangesAsync();
-
-            Debug.WriteLine(entity.ToString());
+            return await Save();
         }
 
-        public virtual Task Update(TEntity entity) {
+        public virtual async Task<int> Update(TEntity entity) {
             _context.Entry(entity).State = EntityState.Modified;
-            return _context.SaveChangesAsync();
+            return await Save();
         }
 
-        public virtual Task Delete(TEntity entity)
+        public virtual async Task<int> Delete(TEntity entity)
         {
             _set.Remove(entity);
-            return _context.SaveChangesAsync();
+            return await Save();
+        }
+
+        public virtual async Task<int> Save()
+        {
+            int result;
+            try
+            {
+                result = await _context.SaveChangesAsync();
+            } catch (Exception ex)
+			{
+                Debug.WriteLine(ex.ToString());
+                return 0;
+			}
+
+            return result;
         }
 
         public virtual async Task<int> Count() => await _set.CountAsync();

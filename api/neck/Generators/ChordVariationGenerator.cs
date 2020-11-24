@@ -1,4 +1,5 @@
-﻿using neck.Models;
+﻿using neck.Interfaces;
+using neck.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace neck.Generators
 {
-	public class ChordVariationGenerator
+	public class ChordVariationGenerator : GenericGenerator<ChordVariation>
     {
         private bool VARIATION_SPAN_INCLUDES_OPEN = false;
 
@@ -14,7 +15,7 @@ namespace neck.Generators
         //  offset and an optional minimum fret position
         private int CalcNotePosition(Note note, int tuningPosition, int min = 0)
         {
-            var pos = (note.Modified - tuningPosition + Notes.Count) % Notes.Count;
+            var pos = (note.Pitch - tuningPosition + Notes.Count) % Notes.Count;
             while (pos < min) pos += Notes.Count;
             return pos;
         }

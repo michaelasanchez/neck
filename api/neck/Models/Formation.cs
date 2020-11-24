@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace neck.Models
@@ -19,9 +21,7 @@ namespace neck.Models
 			Positions = positions;
 		}
 
-		public int Hash {
-			get => Positions.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode()));
-			set => Hash = value;
-		}
+		[JsonIgnore]
+		public int Hash => Positions.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode()));
 	}
 }
