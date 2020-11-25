@@ -40,7 +40,13 @@ namespace neck
 
 			services.AddControllers().AddNewtonsoftJson();
 
-			services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+			//services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+
+			services.AddScoped(typeof(IRepository<Chord>), typeof(ChordRepository));
+			services.AddScoped(typeof(IRepository<ChordVariation>), typeof(ChordVariationRepository));
+			services.AddScoped(typeof(IRepository<Formation>), typeof(FormationRepository));
+			services.AddScoped(typeof(IRepository<Note>), typeof(NoteRepository));
+
 			services.AddScoped(typeof(IGenerator<>), typeof(GenericGenerator<>));
 
 			services.AddSingleton(typeof(ChordVariationGenerator));

@@ -12,7 +12,11 @@ namespace neck.Models
 
 	public class NeckContext : DbContext
 	{
+		public DbSet<Chord> Chords { get; set; }
 		public DbSet<ChordVariation> ChordVariations { get; set; }
+		public DbSet<Formation> Formations { get; set; }
+		public DbSet<Note> Notes { get; set; }
+		public DbSet<Tuning> Tunings { get; set; }
 
 		public NeckContext(DbContextOptions<NeckContext> options) : base(options) { }
 
@@ -20,9 +24,12 @@ namespace neck.Models
 		{
 			base.OnModelCreating(modelBuilder);
 
+			modelBuilder.Entity<Chord>()
+				.HasIndex(c => new { c.RootId, c.Modifier });
+
 			modelBuilder.Entity<Formation>(entity =>
 			{
-				entity.Ignore(f => f.Hash);
+				entity.HasIndex(f => new { f.Positions });
 				entity.Property(f => f.Positions)
 					.HasConversion(
 						p => PositionsConverter.ListToString(p),
@@ -32,6 +39,10 @@ namespace neck.Models
 					.SetValueComparer(PositionsComparer.CompareNullable);
 			});
 
+			modelBuilder.Entity<Note>()
+				.HasIndex(n => new { n.Base, n.Suffix })
+				.IsUnique();
+
 			modelBuilder.Entity<Tuning>()
 				.Property(t => t.Offsets)
 				.HasConversion(
@@ -40,10 +51,6 @@ namespace neck.Models
 				)
 				.Metadata
 				.SetValueComparer(PositionsComparer.Compare);
-
-			modelBuilder.Entity<Note>()
-				.HasIndex(n => new { n.Base, n.Suffix })
-				.IsUnique();
 		}
 
 		public override int SaveChanges()

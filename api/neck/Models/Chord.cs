@@ -9,7 +9,10 @@ namespace neck.Models
 {
     public class Chord : DbEntity
     {
+
+        public Guid RootId { get; set; }
         public Note Root { get; set; }
+        
         public ChordModifier Modifier { get; set; }
 
         public string Label => $"{Root?.Label} {Modifier}";

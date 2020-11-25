@@ -10,9 +10,9 @@ namespace neck.Interfaces
     {
         public Task<T> Get(Guid? id);
 
-		public T FirstOrDefault(Expression<Func<T, bool>> predicate);
+        public Task<IEnumerable<T>> GetAll();
 
-		public Task<IEnumerable<T>> GetAll();
+        public Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate);
 
         public Task<int> Insert(T entity);
 
@@ -21,6 +21,8 @@ namespace neck.Interfaces
         public Task<int> Update(T entity);
 
         public Task<int> Save();
+
+        public Task<T> Exists(T entity);
 
         public Task<int> Count();
     }

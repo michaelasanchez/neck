@@ -20,8 +20,5 @@ namespace neck.Models
 		{
 			Positions = positions;
 		}
-
-		[JsonIgnore]
-		public int Hash => Positions.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode()));
 	}
 }
