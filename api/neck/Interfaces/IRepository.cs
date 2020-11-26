@@ -1,4 +1,5 @@
-﻿using System;
+﻿using neck.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,13 +15,13 @@ namespace neck.Interfaces
 
         public Task<T> FirstOrDefault(Expression<Func<T, bool>> predicate);
 
-        public Task<int> Insert(T entity);
+        public Task<OperationResult<int>> Insert(T entity);
 
-        public Task<int> Delete(T entity);
+        public Task<OperationResult<int>> Delete(T entity);
 
-        public Task<int> Update(T entity);
+        public Task<OperationResult<int>> Update(T entity);
 
-        public Task<int> Save();
+        public Task<OperationResult<int>> Save();
 
         public Task<T> Exists(T entity);
 

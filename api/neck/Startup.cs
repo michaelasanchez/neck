@@ -46,6 +46,7 @@ namespace neck
 			services.AddScoped(typeof(IRepository<ChordVariation>), typeof(ChordVariationRepository));
 			services.AddScoped(typeof(IRepository<Formation>), typeof(FormationRepository));
 			services.AddScoped(typeof(IRepository<Note>), typeof(NoteRepository));
+			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 
 			services.AddScoped(typeof(IGenerator<>), typeof(GenericGenerator<>));
 

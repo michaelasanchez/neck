@@ -18,49 +18,15 @@ namespace neck.Controllers
 
 		private readonly IGenerator<ChordVariation> _generator;
 
-		private IRepository<Chord> _chordRepo;
-		private IRepository<Formation> _formationRepo;
-		private IRepository<Note> _noteRepo;
-
 		public ChordVariationController(
 			ILogger<ChordVariationController> logger,
 			IRepository<ChordVariation> repository,
-			IGenerator<ChordVariation> generator,
-			IRepository<Chord> chordRepository,
-			IRepository<Formation> formationRepository,
-			IRepository<Note> noteRepository
+			IGenerator<ChordVariation> generator
 		)
 			: base(repository)
 		{
 			_logger = logger;
 			_generator = generator;
-
-			_chordRepo = chordRepository;
-			_formationRepo = formationRepository;
-			_noteRepo = noteRepository;
-		}
-
-		public async override Task<IActionResult> Insert(ChordVariation variation)
-		{
-			if (variation.Formation != null)
-			{
-				var formation = await _formationRepo.Exists(variation.Formation);
-				if (formation != null)
-				{
-					variation.Formation = formation;
-				}
-			}
-
-			if (variation?.Chord?.Root != null)
-			{
-				var chord = await _chordRepo.Exists(variation.Chord);
-				if (chord != null)
-				{
-					variation.Chord = chord;
-				}
-			}
-
-			return await base.Insert(variation);
 		}
 
 		[HttpPost("{controller}/generate")]

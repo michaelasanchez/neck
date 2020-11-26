@@ -25,11 +25,17 @@ namespace neck.Models
 			base.OnModelCreating(modelBuilder);
 
 			modelBuilder.Entity<Chord>()
-				.HasIndex(c => new { c.RootId, c.Modifier });
+				.HasIndex(c => new { c.RootId, c.Modifier })
+				.IsUnique();
+
+			modelBuilder.Entity<ChordVariation>()
+				.HasIndex(c => new { c.Label, c.ChordId, c.FormationId, c.TuningId })
+				.IsUnique();
 
 			modelBuilder.Entity<Formation>(entity =>
 			{
-				entity.HasIndex(f => new { f.Positions });
+				entity.HasIndex(f => new { f.Positions })
+					.IsUnique();
 				entity.Property(f => f.Positions)
 					.HasConversion(
 						p => PositionsConverter.ListToString(p),
@@ -43,16 +49,21 @@ namespace neck.Models
 				.HasIndex(n => new { n.Base, n.Suffix })
 				.IsUnique();
 
-			modelBuilder.Entity<Tuning>()
-				.Property(t => t.Offsets)
+			modelBuilder.Entity<Tuning>(entity =>
+			{
+				entity.HasIndex(t => t.Offsets)
+					.IsUnique();
+				entity.Property(t => t.Offsets)
 				.HasConversion(
 					o => PositionsConverter.ListToString(o),
 					o => PositionsConverter.StringToList(o, 0)
 				)
 				.Metadata
 				.SetValueComparer(PositionsComparer.Compare);
+			});
 		}
 
+		#region SaveChanges(Async)
 		public override int SaveChanges()
 		{
 			AddTimestamps();
@@ -70,6 +81,7 @@ namespace neck.Models
 			AddTimestamps();
 			return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 		}
+		#endregion
 
 		private void AddTimestamps()
 		{

@@ -13,7 +13,7 @@ namespace neck.Repositories
 	public class GenericRepository<TEntity> : IRepository<TEntity>
 		where TEntity : class, IDbEntity
 	{
-		protected NeckContext _context;
+		private NeckContext _context;
 
 		protected DbSet<TEntity> _set;
 
@@ -41,25 +41,25 @@ namespace neck.Repositories
 			return await _set.FirstOrDefaultAsync(predicate);
 		}
 
-		public virtual async Task<int> Insert(TEntity entity)
+		public virtual async Task<OperationResult<int>> Insert(TEntity entity)
 		{
 			await _set.AddAsync(entity);
 			return await Save();
 		}
 
-		public virtual async Task<int> Update(TEntity entity)
+		public virtual async Task<OperationResult<int>> Update(TEntity entity)
 		{
 			_context.Entry(entity).State = EntityState.Modified;
 			return await Save();
 		}
 
-		public virtual async Task<int> Delete(TEntity entity)
+		public virtual async Task<OperationResult<int>> Delete(TEntity entity)
 		{
 			_set.Remove(entity);
 			return await Save();
 		}
 
-		public virtual async Task<int> Save()
+		public virtual async Task<OperationResult<int>> Save()
 		{
 			int result;
 			try
@@ -68,11 +68,10 @@ namespace neck.Repositories
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.ToString());
-				return 0;
+				return OperationResult<int>.CreateFailure(ex);
 			}
 
-			return result;
+			return OperationResult<int>.CreateSuccess(result);
 		}
 
 		public virtual Task<TEntity> Exists(TEntity entity)

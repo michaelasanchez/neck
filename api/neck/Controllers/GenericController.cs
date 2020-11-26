@@ -22,10 +22,9 @@ namespace neck.Controllers
 		[HttpPost]
 		public virtual async Task<IActionResult> Insert(T entity)
 		{
-			await _repository.Insert(entity);
-			var result = await _repository.Save();
+			var result = await _repository.Insert(entity);
 
-			return Ok();
+			return result.Success ? Ok("All good") : BadRequest(result.Message);
 		}
 
 		//[HttpPatch]
