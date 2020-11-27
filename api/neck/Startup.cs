@@ -10,6 +10,8 @@ using neck.Interfaces;
 using neck.Models;
 using neck.Repositories;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System.Text.Json;
 
 namespace neck
 {
@@ -38,7 +40,7 @@ namespace neck
 					});
 			});
 
-			services.AddControllers().AddNewtonsoftJson();
+			services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
 			//services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
@@ -52,6 +54,9 @@ namespace neck
 
 			services.AddDbContext<NeckContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("NeckDatabase")));
+
+			// Register the Swagger generator, defining 1 or more Swagger documents
+			//services.AddSwaggerGen();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +68,17 @@ namespace neck
 			}
 
 			app.UseHttpsRedirection();
+
+
+			// Enable middleware to serve generated Swagger as a JSON endpoint.
+			//app.UseSwagger();
+
+			//// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+			//// specifying the Swagger JSON endpoint.
+			//app.UseSwaggerUI(c =>
+			//{
+			//	c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+			//});
 
 			app.UseRouting();
 

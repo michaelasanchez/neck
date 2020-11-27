@@ -61,6 +61,47 @@ namespace neck.Migrations
                 principalTable: "Instruments",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.Sql(@"
+                DECLARE @instrumentId UNIQUEIDENTIFIER = NEWID();
+                DECLARE @tuningId UNIQUEIDENTIFIER = NEWID();
+
+                DECLARE @now DATETIMEOFFSET = SYSDATETIMEOFFSET()
+
+                INSERT INTO Instruments (
+	                Id,
+	                Label,
+	                NumStrings,
+	                Created,
+	                Updated
+                ) VALUES (
+	                @instrumentId,
+	                'Guitar',
+	                6,
+	                @now,
+	                @now            
+                )
+
+                INSERT INTO Tunings (
+                    Id,
+                    Label,
+                    [Offsets],
+                    InstrumentId,
+                    Created,
+                    Updated
+                ) VALUES (
+                    @tuningId,
+                    'Standard Tuning',
+                    '4,9,2,7,11,4',
+                    @instrumentId,
+                    @now,
+                    @now
+                )
+
+                UPDATE Instruments
+	                SET DefaultTuningId = @tuningId
+	                WHERE Id = @instrumentId
+                ");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

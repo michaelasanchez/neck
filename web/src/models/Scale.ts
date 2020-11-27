@@ -58,7 +58,7 @@ const calcNotes = (root: Note, mode: Mode): Note[] => {
 
 export class Scale {
 
-  private _root: Note;
+  private _tonic: Note;
 
   private _mode: Mode
 
@@ -69,25 +69,25 @@ export class Scale {
     root: Note,
     mode: Mode
   ) {
-    this._root = root;
-    this._root.Degree = 0;
+    this._tonic = root;
+    this._tonic.Degree = 0;
 
     this._mode = mode;
 
-    this._notes = calcNotes(this._root, this._mode);
+    this._notes = calcNotes(this._tonic, this._mode);
   }
 
   get Notes() {
     return this._notes;
   }
 
-  get Root(): Note {
-    return this._root;
+  get Tonic(): Note {
+    return this._tonic;
   }
 
-  set Root(updated: Note) {
-    this._root = updated;
-    this._notes = calcNotes(this._root, this._mode);
+  set Tonic(updated: Note) {
+    this._tonic = updated;
+    this._notes = calcNotes(this._tonic, this._mode);
   }
 
   // get Type(): ScaleType {
@@ -100,7 +100,7 @@ export class Scale {
 
   set Mode(updated: Mode) {
     this._mode = updated;
-    this._notes = calcNotes(this._root, this._mode);
+    this._notes = calcNotes(this._tonic, this._mode);
   }
 
   public containsNote = (note: Note): boolean => {

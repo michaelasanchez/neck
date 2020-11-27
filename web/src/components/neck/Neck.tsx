@@ -24,14 +24,13 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
     const nextScale = getScale(key, mode);
     setScale(nextScale);
 
-    const root = scale?.Root;
-    const nextRoot = nextScale?.Root;
+    const root = scale?.Tonic;
+    const nextRoot = nextScale?.Tonic;
 
     // Fret Animation
     if (ENABLE_NECK_ANIMATION) {
       const diff = nextRoot?.Modified - root?.Modified;
 
-      // Default to up when equidistant
       if ((diff < 0 && diff < -6) || (diff > 0 && diff < 6)) {
         setClassName('down');
       } else {
@@ -43,7 +42,7 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
   return (
     <div className="neck" style={styles.neck}>
       <div className={`neck-strings ${className}`}>
-        {times(tuning.Offsets.length, (i) => (
+        {tuning && times(tuning.Offsets.length, (i) => (
           <StringComponent
             key={i}
             fretmode={fretMode}

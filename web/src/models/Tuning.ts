@@ -1,10 +1,12 @@
+import { ApiType } from ".";
 import { IOption } from "../shared";
 
-export class Tuning implements IOption {
+export class Tuning extends ApiType implements IOption {
   private _label: string;
   private _offsets: number[];
 
   constructor(label: string, offsets: number[]) {
+    super();
     this._label = label;
     this._offsets = offsets;
   }

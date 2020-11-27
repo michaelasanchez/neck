@@ -15,7 +15,7 @@ enum RequestType {
   Delete = 'DELETE'
 }
 
-export class BaseRequest {
+export class BaseRequest<TResult> {
 
   protected _url: string;
   protected _type: RequestType;
@@ -78,18 +78,20 @@ export class BaseRequest {
     }
   }
 
-  Get(): Promise<void> {
+  // TODO: This is just GetAll for now
+  Get(): Promise<TResult[]> {
     this.Type = RequestType.Get;
     return this.execute()
   }
 
-  Post(data?: {}): Promise<void> {
+  Post(data?: {}): Promise<TResult | TResult[]> {
     this.Type = RequestType.Post;
     this.Data = data;
     return this.execute();
   }
 
-  Delete(data?: {}): Promise<void> {
+  // TODO: Not sure if this works
+  Delete(data?: {}): Promise<TResult> {
     this.Type = RequestType.Delete;
     this.Data = data;
     return this.execute();

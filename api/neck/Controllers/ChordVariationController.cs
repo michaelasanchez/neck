@@ -57,21 +57,32 @@ namespace neck.Controllers
 
 		[HttpPost]
 		[Route("generaterange")]
-		public async Task<List<ChordVariation>> GenerateRange([FromBody] ChordVariationGenerateParams @params)
+		public async Task<ActionResult<List<ChordVariation>>> GenerateRange([FromBody] ChordVariationGenerateRangeParams @params)
 		{
 			var chord = @params.chord ?? await _chordRepo.GetAsync(@params.chordId);
 			var tuning = @params.tuning ?? await _tuningRepo.GetAsync(@params.tuningId);
 
-			if (chord == null || tuning == null)
-			{
-				return new List<ChordVariation>();
-			}
+			if (chord == null) return BadRequest("Chord or chordId is required");
+			if (tuning == null) return BadRequest("Tuning or tuningId is required");
 
 			var range = @params.range ?? 12;
 			var offset = @params.offset ?? 0;
 			var span = @params.span ?? 4;
 
-			return ((ChordVariationGenerator)_generator).GenerateRange(chord, tuning, offset, range, span);
+			// TODO: Remove this eventually..
+			List<ChordVariation> variations;
+			try
+			{
+				variations = ((ChordVariationGenerator)_generator).GenerateRange(chord, tuning, offset, range, span);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine(ex.ToString());
+				return BadRequest($"An error occured while generating variations: {ex.ToString()}");
+			}
+
+			// TODO: 
+			return Ok(variations);
 		}
 	}
 
@@ -81,8 +92,12 @@ namespace neck.Controllers
 		public Guid? tuningId;
 		public Chord chord;
 		public Tuning tuning;
-		public int? range;
 		public int? offset;
 		public int? span;
+	}
+
+	public class ChordVariationGenerateRangeParams : ChordVariationGenerateParams
+	{
+		public int? range;
 	}
 }

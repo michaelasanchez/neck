@@ -1,21 +1,17 @@
 import { each } from 'lodash';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import {
-  ChordModifier,
-  ChordVariation,
-  Key,
-  Mode,
-  Note,
-  NoteSuffix,
-  NoteValue,
-  Tuning,
-} from '../models';
+import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, NoteSuffix, NoteValue, Tuning } from '../models';
+import { ApiRequest } from '../network';
+import { ChordVariationApi } from '../network/ChordVariationApi';
+import { TuningApi } from '../network/TuningApi';
 import { AppOptions, IAppOptions } from '../shared';
-import { ApiRequest } from '../shared/apirequest';
 import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
 import { Loading } from './Loading';
+import { Neck } from './neck';
 import { Ui, UiOptions } from './ui';
 
 const USE_COOKIE = true;
@@ -40,10 +36,8 @@ const parseOptionsCookie = (cookieString: string): IAppOptions => {
   return parsed;
 };
 
-const getDefaultIndicatorsOptions = (): IndicatorsDisplayOptions => {
-  return {
-    mode: IndicatorsMode.Chord,
-  };
+const DefaultIndicatorsOptions = {
+  mode: IndicatorsMode.Chord,
 };
 
 const App: React.FunctionComponent<AppProps> = ({}) => {
@@ -53,44 +47,49 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   const [
     indicatorsOptions,
     setIndicatorsOptions,
-  ] = useState<IndicatorsDisplayOptions>(getDefaultIndicatorsOptions());
+  ] = useState<IndicatorsDisplayOptions>(DefaultIndicatorsOptions);
   const [uiOptions, setUiOptions] = useState<UiOptions>();
+
+  const mainRef = useRef<HTMLDivElement>();
 
   // Init
   useEffect(() => {
     const saved = getCookie('options');
 
-    setOptions(
+    const options =
       USE_COOKIE && !!saved.length
         ? parseOptionsCookie(saved)
-        : AppOptions.Default()
-    );
+        : AppOptions.Default();
+    setOptions(options);
 
     // DEBUG
-    var tunings = new ApiRequest('Tuning').Get().then((data) => {
+    // DEFINE CHORD FOR VARIATIONS
+    const chord = {
+      root: {
+        base: NoteValue.F,
+        suffix: NoteSuffix.Sharp.toString(),
+      },
+      modifier: ChordModifier.Major,
+    } as Partial<Chord>;
+
+    // INITIAL REQUEST(S)
+    new TuningApi().Get().then((data) => {
+      // DEBUG
       console.log('TUNINGS', data);
-    });
-    var variations = new ApiRequest('ChordVariation', 'GenerateRange')
-      .Post({
-        // chordid: '8C99611C-6A9B-4267-C8CA-08D891C3370D',
-        chord: {
-          root: {
-            base: NoteValue.F,
-            suffix: NoteSuffix.Sharp.toString(),
-          },
-          modifier: ChordModifier.Major,
-        },
-        tuningid: 'D2FD35C9-A44E-4E2A-97AC-08D891C3371E',
-      })
-      .then((data: any) => {
-        const newVariations: ChordVariation[] = [];
-        each(data, (v) => {
-          newVariations.push(
-            new ChordVariation(v.formation.positions, v.chord, v.tuning)
-          );
+      const tuningId = data[0].Id;
+
+      new ChordVariationApi()
+        .GenerateRange({ chord, tuningId, range: options.numFrets })
+        .then((data: any) => {
+          const newVariations: ChordVariation[] = [];
+          each(data, (v) => {
+            newVariations.push(
+              new ChordVariation(v.Formation.Positions, v.Chord, v.Tuning, true)
+            );
+          });
+          handleSetUiOptions({ variations: newVariations });
         });
-        handleSetUiOptions({ variations: newVariations });
-      });
+    });
   }, []);
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {
@@ -122,17 +121,18 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   if (options) {
     return (
       <>
-        <main>
-          {/* <Backdrop options={options} /> */}
+        <main ref={mainRef}>
+          <Backdrop options={options} />
           <div className="neck-container">
-            {/* <Neck options={options} /> */}
+            <Neck options={options} />
           </div>
           {SHOW_INDICATORS && (
             <div className="indicators-container">
-              {/* <Indicators
+              <Indicators
                 appOptions={options}
                 displayOptions={indicatorsOptions}
-              /> */}
+                mainRef={mainRef}
+              />
             </div>
           )}
         </main>
