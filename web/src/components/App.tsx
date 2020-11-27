@@ -1,15 +1,21 @@
 import { each } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-
-import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { ChordVariation, Key, Mode, Note, NoteSuffix, NoteValue, Tuning } from '../models';
+import {
+  ChordModifier,
+  ChordVariation,
+  Key,
+  Mode,
+  Note,
+  NoteSuffix,
+  NoteValue,
+  Tuning,
+} from '../models';
 import { AppOptions, IAppOptions } from '../shared';
 import { ApiRequest } from '../shared/apirequest';
 import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
 import { Loading } from './Loading';
-import { Neck } from './neck';
 import { Ui, UiOptions } from './ui';
 
 const USE_COOKIE = true;
@@ -64,23 +70,24 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     var tunings = new ApiRequest('Tuning').Get().then((data) => {
       console.log('TUNINGS', data);
     });
-    var variations = new ApiRequest('ChordVariation', 'generaterange')
+    var variations = new ApiRequest('ChordVariation', 'GenerateRange')
       .Post({
         // chordid: '8C99611C-6A9B-4267-C8CA-08D891C3370D',
-        
-          "chord": {
-            "root": {
-                "base": NoteValue.F,
-                "suffix": NoteSuffix.Sharp.toString()
-            },
-            "modifier": 0
+        chord: {
+          root: {
+            base: NoteValue.F,
+            suffix: NoteSuffix.Sharp.toString(),
+          },
+          modifier: ChordModifier.Major,
         },
         tuningid: 'D2FD35C9-A44E-4E2A-97AC-08D891C3371E',
       })
       .then((data: any) => {
-        const newVariations: ChordVariation[] = []
-        each(data, v => {
-          newVariations.push(new ChordVariation(v.formation.positions, v.chord, v.tuning));
+        const newVariations: ChordVariation[] = [];
+        each(data, (v) => {
+          newVariations.push(
+            new ChordVariation(v.formation.positions, v.chord, v.tuning)
+          );
         });
         handleSetUiOptions({ variations: newVariations });
       });
@@ -99,24 +106,18 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   const handleSetIndicatorsOptions = (
     updated: Partial<IndicatorsDisplayOptions>
   ) => {
-    const newOptions = {
+    setIndicatorsOptions({
       ...indicatorsOptions,
       ...updated,
-    };
-
-    setIndicatorsOptions(newOptions);
+    });
   };
 
-  const handleSetUiOptions = (
-    updated: Partial<UiOptions>
-  ) => {
-    const newOptions = {
+  const handleSetUiOptions = (updated: Partial<UiOptions>) => {
+    setUiOptions({
       ...uiOptions,
       ...updated,
-    };
-
-    setUiOptions(newOptions);
-  }
+    });
+  };
 
   if (options) {
     return (

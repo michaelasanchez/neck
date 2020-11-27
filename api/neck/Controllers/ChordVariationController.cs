@@ -41,46 +41,37 @@ namespace neck.Controllers
 		[Route("generate")]
 		public async Task<List<ChordVariation>> Generate([FromBody] ChordVariationGenerateParams @params)
 		{
-			if ((@params.chordId == null && @params.chord == null) ||
-				(@params.tuningId == null && @params.tuning == null))
+			var chord = @params.chord ?? await _chordRepo.GetAsync(@params.chordId);
+			var tuning = @params.tuning ?? await _tuningRepo.GetAsync(@params.tuningId);
+
+			if (chord == null || tuning == null)
 			{
 				return new List<ChordVariation>();
 			}
 
-			var chord = @params.chord ?? await _chordRepo.GetAsync(@params.chordId);
-			var tuning = @params.tuning ?? await _tuningRepo.GetAsync(@params.tuningId);
-
 			var offset = @params.offset ?? 0;
 			var span = @params.span ?? 4;
 
-			ChordVariationGenerator yeah = (ChordVariationGenerator)_generator;
-			var uhh = ((ChordVariationGenerator)_generator).GenerateVariations(chord, tuning, offset, span);
-
-
-			return uhh;
+			return ((ChordVariationGenerator)_generator).GenerateVariations(chord, tuning, offset, span);
 		}
 
 		[HttpPost]
 		[Route("generaterange")]
 		public async Task<List<ChordVariation>> GenerateRange([FromBody] ChordVariationGenerateParams @params)
 		{
-			if ((@params.chordId == null && @params.chord == null) ||
-				(@params.tuningId == null && @params.tuning == null))
+			var chord = @params.chord ?? await _chordRepo.GetAsync(@params.chordId);
+			var tuning = @params.tuning ?? await _tuningRepo.GetAsync(@params.tuningId);
+
+			if (chord == null || tuning == null)
 			{
 				return new List<ChordVariation>();
 			}
 
-			var chord = @params.chord ?? await _chordRepo.GetAsync(@params.chordId);
-			var tuning = @params.tuning ?? await _tuningRepo.GetAsync(@params.tuningId);
-
+			var range = @params.range ?? 12;
 			var offset = @params.offset ?? 0;
 			var span = @params.span ?? 4;
 
-			ChordVariationGenerator yeah = (ChordVariationGenerator)_generator;
-			var uhh = ((ChordVariationGenerator)_generator).GenerateRange(chord, tuning, offset, 14, span);
-
-
-			return uhh;
+			return ((ChordVariationGenerator)_generator).GenerateRange(chord, tuning, offset, range, span);
 		}
 	}
 
@@ -90,6 +81,7 @@ namespace neck.Controllers
 		public Guid? tuningId;
 		public Chord chord;
 		public Tuning tuning;
+		public int? range;
 		public int? offset;
 		public int? span;
 	}

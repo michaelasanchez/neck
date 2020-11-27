@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +8,16 @@ namespace neck.Models
 {
     public class Tuning : DbEntity
     {
-        public string Label;
+        public string Label { get; set; }
+
+        public Guid InstrumentId { get; set; }
+
+        public Instrument Instrument { get; set; }
+
+        [NotMapped]
+        public Guid? InstrumentDefaultId { get; set; }
+
+        public Instrument InstrumentDefault { get; set; }
 
         // Offset from C (noteValue 0)
         public List<int> Offsets;

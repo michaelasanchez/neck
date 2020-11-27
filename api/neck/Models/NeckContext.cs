@@ -15,6 +15,7 @@ namespace neck.Models
 		public DbSet<Chord> Chords { get; set; }
 		public DbSet<ChordVariation> ChordVariations { get; set; }
 		public DbSet<Formation> Formations { get; set; }
+		public DbSet<Instrument> Instruments { get; set; }
 		public DbSet<Note> Notes { get; set; }
 		public DbSet<Tuning> Tunings { get; set; }
 
@@ -45,6 +46,11 @@ namespace neck.Models
 					.SetValueComparer(PositionsComparer.CompareNullable);
 			});
 
+			modelBuilder.Entity<Instrument>()
+				.HasOne(i => i.DefaultTuning)
+				.WithOne(t => t.InstrumentDefault)
+				.HasForeignKey<Instrument>(i => i.DefaultTuningId);
+
 			modelBuilder.Entity<Note>()
 				.HasIndex(n => new { n.Base, n.Suffix })
 				.IsUnique();
@@ -53,13 +59,16 @@ namespace neck.Models
 			{
 				entity.HasIndex(t => t.Offsets)
 					.IsUnique();
+				entity.HasOne(t => t.Instrument)
+					.WithMany(i => i.Tunings)
+					.HasForeignKey(t => t.InstrumentId);
 				entity.Property(t => t.Offsets)
-				.HasConversion(
-					o => PositionsConverter.ListToString(o),
-					o => PositionsConverter.StringToList(o, 0)
-				)
-				.Metadata
-				.SetValueComparer(PositionsComparer.Compare);
+					.HasConversion(
+						o => PositionsConverter.ListToString(o),
+						o => PositionsConverter.StringToList(o, 0)
+					)
+					.Metadata
+					.SetValueComparer(PositionsComparer.Compare);
 			});
 		}
 
