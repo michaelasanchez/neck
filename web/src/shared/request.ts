@@ -40,7 +40,7 @@ export class BaseRequest {
       headers: { 'Content-type': 'application/json' }
     } : null;
 
-    return fetch(this._url)
+    return fetch(this._url, init)
       .then(response => convert ? response.json() : response)
       .then(response => {
         console.log('base response', response);

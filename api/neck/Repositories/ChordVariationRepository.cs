@@ -44,7 +44,6 @@ namespace neck.Repositories
 				}
 			}
 
-
 			if (variation.Tuning != null)
 			{
 				var tuning = await _tuningRepo.Value.Exists(variation.Tuning);

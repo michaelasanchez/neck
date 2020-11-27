@@ -1,7 +1,7 @@
 import { Chord, ChordModifier, ChordVariation, Note, Tuning } from "../models";
 import { BaseRequest } from "./request";
 
-const DOMAIN_DEFAULT = 'https://localhost:5001/';
+const DOMAIN_DEFAULT = 'https://localhost:5001';
 
 export enum ApiType {
   ChordVariation
@@ -14,9 +14,8 @@ export class ApiRequest extends BaseRequest {
   private _entity: string;
   private _action: string;
   
-  constructor(entityType: 'ChordVariation') {
-    super(`${DOMAIN_DEFAULT}${entityType}`);
-
+  constructor(entityType: 'ChordVariation', action: string = '') {
+    super(`${DOMAIN_DEFAULT}/${entityType}${action.length && '/'}${action}`);
   }
 
   Generate(): Promise<void> {

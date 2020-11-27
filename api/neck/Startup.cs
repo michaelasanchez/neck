@@ -48,9 +48,7 @@ namespace neck
 			services.AddScoped(typeof(IRepository<Note>), typeof(NoteRepository));
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 
-			services.AddScoped(typeof(IGenerator<>), typeof(GenericGenerator<>));
-
-			services.AddSingleton(typeof(ChordVariationGenerator));
+			services.AddScoped(typeof(IGenerator<ChordVariation>), typeof(ChordVariationGenerator));
 
 			services.AddDbContext<NeckContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("NeckDatabase")));

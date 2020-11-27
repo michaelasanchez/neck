@@ -26,7 +26,7 @@ namespace neck.Repositories
 			_queryable = _set.AsQueryable();
 		}
 
-		public virtual Task<TEntity> Get(Guid? id)
+		public virtual Task<TEntity> GetAsync(Guid? id)
 		{
 			return FirstOrDefault(z => z.Id == id);
 		}
@@ -43,6 +43,12 @@ namespace neck.Repositories
 
 		public virtual async Task<OperationResult<int>> Insert(TEntity entity)
 		{
+			var exists = await Exists(entity);
+			if (exists != null)
+			{
+				return OperationResult<int>.CreateFailure($"{typeof(TEntity)} already exists");
+			}
+
 			await _set.AddAsync(entity);
 			return await Save();
 		}

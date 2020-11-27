@@ -9,7 +9,7 @@ namespace neck.Models
     {
         public string Label;
 
-        // Offset from note 0 - C
+        // Offset from C (noteValue 0)
         public List<int> Offsets;
 
         public Tuning() { }

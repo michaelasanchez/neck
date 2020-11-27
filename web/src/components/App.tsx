@@ -57,7 +57,10 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     );
 
     // DEBUG
-    var weneedithere = new ApiRequest('ChordVariation').Get();
+    var weneedithere = new ApiRequest('ChordVariation', 'generaterange').Post({
+      "chordid": "8C99611C-6A9B-4267-C8CA-08D891C3370D",
+      "tuningid": "D2FD35C9-A44E-4E2A-97AC-08D891C3371E",
+  });
     weneedithere.then(data => {
       console.log(data);
     })

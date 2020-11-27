@@ -10,7 +10,7 @@ import { ChordUtils, VARIATION_SPAN_DEFAULT } from '../../shared/chord.utils';
 import { IndicatorsDisplayOptions } from '../Indicators';
 
 export const FILTER_BY_CHORD_FORM = false;
-export const FILTER_DUPLICATES = true;
+export const FILTER_DUPLICATES = false;
 
 export interface IChordSlideInProps {
   appOptions: IAppOptions;
@@ -60,7 +60,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             !FILTER_DUPLICATES ||
             findIndex(variations, (v) => v.Equals(newVariation)) < 0
           )
-            variations.push(newVariation);
+          variations.push(newVariation);
         }
       );
     });
@@ -77,7 +77,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
 
   useEffect(() => {
     if (variations) {
-      console.log(variations);
       setIndicatorsOptions({ chord: variations[0] });
     }
   }, [variations]); 

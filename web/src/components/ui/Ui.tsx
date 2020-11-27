@@ -59,7 +59,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setTuning={(t: Tuning) => setOptions({ tuning: t })}
         setMode={(m: Mode) => setOptions({ mode: m })}
       />
-      {/* <ChordSlideIn appOptions={appOptions} setIndicatorsOptions={setIndicatorsOptions} /> */}
+      <ChordSlideIn appOptions={appOptions} setIndicatorsOptions={setIndicatorsOptions} />
     </>
   );
 };

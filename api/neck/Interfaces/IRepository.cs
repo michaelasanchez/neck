@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-    public interface IRepository<T> //: IDisposable
+    public interface IRepository<T>
     {
-        public Task<T> Get(Guid? id);
+        public Task<T> GetAsync(Guid? id);
 
         public Task<IEnumerable<T>> GetAll();
 

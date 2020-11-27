@@ -13,9 +13,9 @@ namespace neck.Generators
 
         // Returns a fret number based on a Note, tuning
         //  offset and an optional minimum fret position
-        private int CalcNotePosition(Note note, int tuningPosition, int min = 0)
+        public int CalcNotePosition(Note note, int tuningOffset, int min = 0)
         {
-            var pos = (note.Pitch - tuningPosition + Notes.Count) % Notes.Count;
+            var pos = (note.Pitch - tuningOffset + Notes.Count) % Notes.Count;
             while (pos < min) pos += Notes.Count;
             return pos;
         }
@@ -26,7 +26,19 @@ namespace neck.Generators
             return pos >= offset && pos <= offset + (span - 1);
         }
 
-        public List<ChordVariation> GenerateInRange(Chord chord, Tuning tuning, int offset, int span)
+        public List<ChordVariation> GenerateRange(Chord chord, Tuning tuning, int start, int end, int span)
+		{
+            var variations = new List<ChordVariation>();
+
+            for (var i = start; i <= end - span; i++)
+			{
+                variations.AddRange(GenerateVariations(chord, tuning, i, span));
+			}
+
+            return variations;
+		}
+
+        public List<ChordVariation> GenerateVariations(Chord chord, Tuning tuning, int offset, int span)
         {
             // Matches will contain a set of notes for each string (tuning offset)
             //  Each note is a component of chord

@@ -7,61 +7,74 @@ using static neck.Enums.ChordEnums;
 
 namespace neck.Models
 {
-    public class Chord : DbEntity
-    {
+	public class Chord : DbEntity
+	{
 
-        public Guid RootId { get; set; }
-        public Note Root { get; set; }
-        
-        public ChordModifier Modifier { get; set; }
+		public Guid RootId { get; set; }
+		public Note Root { get; set; }
 
-        public string Label => $"{Root?.Label} {Modifier}";
+		public ChordModifier Modifier { get; set; }
 
-        [NotMapped]
-        public List<Key> Keys => _keys;
+		public string Label => $"{Root?.Label} {Modifier}";
 
-        [NotMapped]
-        public List<Note> Components => _components;
+		[NotMapped]
+		public List<Key> Keys => _keys;
 
-        private List<Key> _keys;
-        private List<Note> _components;
+		[NotMapped]
+		public List<Note> Components
+		{
+			get
+			{
+				if (_components == null && Root != null)
+				{
+					_components = mapComponents(Root, Modifier);
+				}
 
-        public Chord() { }
+				return _components;
+			}
+		}
 
-        public Chord(Note root, ChordModifier mod)
-        {
-            Root = root;
-            Modifier = mod;
+		private List<Key> _keys;
+		private List<Note> _components;
 
-            _keys = new List<Key>
-            {
-                new Key(Root, Modifier == ChordModifier.Major ? KeyType.Major : KeyType.Minor)
-            };
+		public Chord() { }
 
-            var scale = Modifier == ChordModifier.Major
-                ? new Scale(Root, Mode.Ionian())
-                : new Scale(Root, Mode.Aeolian());
+		public Chord(Note root, ChordModifier modifier)
+		{
+			Root = root;
+			Modifier = modifier;
 
-            _components = calculateComponents(scale, Modifier);
-        }
+			_keys = new List<Key>
+			{
+				new Key(Root, Modifier == ChordModifier.Minor ? KeyType.Minor : KeyType.Major)
+			};
 
-        private List<int> getDegrees(ChordModifier mod) {
-            switch (mod) {
-                case ChordModifier.Major:
-                    return new List<int> { 0, 2, 4 };
-                case ChordModifier.Minor:
-                    return new List<int> { 0, 2, 3 };
-                default:
-                    return null;
-            }
-        }
+			_components = mapComponents(Root, Modifier);
+		}
 
-        private List<Note> calculateComponents(Scale scale, ChordModifier mod)
-        {
-            return getDegrees(mod)
-                .Select(d => scale.Notes.FirstOrDefault(n => n.Degree == d))
-                .ToList();
-        }
+		private List<int> getDegrees(ChordModifier mod)
+		{
+			switch (mod)
+			{
+				case ChordModifier.Major:
+					return new List<int> { 0, 2, 4 };
+				case ChordModifier.Minor:
+					return new List<int> { 0, 2, 3 };
+				default:
+					return null;
+			}
+		}
 
-    }
+		private List<Note> mapComponents(Note root, ChordModifier mod)
+		{
+			var scale = mod== ChordModifier.Major
+				? new Scale(root, Mode.Ionian())
+				: new Scale(root, Mode.Aeolian());
+
+			return getDegrees(mod)
+				.Select(d => scale.Notes.FirstOrDefault(n => n.Degree == d))
+				.ToList();
+		}
+
+	}
 }

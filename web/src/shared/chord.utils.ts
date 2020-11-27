@@ -7,7 +7,7 @@ export const VARIATION_SPAN_DEFAULT = 4;
 
 export const VARIATION_SPAN_INCLUDES_OPEN = false;
 
-export const CONVERT_VARIATION_TO_CHORD_FORM = true;
+export const CONVERT_VARIATION_TO_CHORD_FORM = false;
 
 export class ChordUtils {
 
