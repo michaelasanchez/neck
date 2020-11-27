@@ -6,11 +6,16 @@ import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, Tuning } from '.
 import { IAppOptions } from '../../shared';
 import { FretDisplayMode } from '../neck';
 
+export interface UiOptions {
+  variations?: ChordVariation[];
+}
+
 export interface UiProps {
   appOptions: IAppOptions;
   setOptions: (options: Partial<IAppOptions>) => void;
   indicatorsOptions: IndicatorsDisplayOptions;
   setIndicatorsOptions: (u: Partial<IndicatorsDisplayOptions>) => void;
+  uiOptions: UiOptions;
 }
 
 export interface UiState {
@@ -22,6 +27,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
   setOptions,
   indicatorsOptions,
   setIndicatorsOptions,
+  uiOptions
 }) => {
   const [showOptions, setShowOptions] = React.useState<boolean>(false);
 
@@ -59,7 +65,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setTuning={(t: Tuning) => setOptions({ tuning: t })}
         setMode={(m: Mode) => setOptions({ mode: m })}
       />
-      <ChordSlideIn appOptions={appOptions} setIndicatorsOptions={setIndicatorsOptions} />
+      <ChordSlideIn appOptions={appOptions} setIndicatorsOptions={setIndicatorsOptions} uiOptions={uiOptions} />
     </>
   );
 };

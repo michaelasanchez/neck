@@ -1,14 +1,16 @@
+import { each } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Key, Mode, Note, Tuning } from '../models';
-import { BaseRequest, AppOptions, IAppOptions } from '../shared';
+import { ChordVariation, Key, Mode, Note, NoteSuffix, NoteValue, Tuning } from '../models';
+import { AppOptions, IAppOptions } from '../shared';
 import { ApiRequest } from '../shared/apirequest';
 import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
 import { Loading } from './Loading';
 import { Neck } from './neck';
-import { Ui } from './ui';
+import { Ui, UiOptions } from './ui';
 
 const USE_COOKIE = true;
 
@@ -27,7 +29,7 @@ const parseOptionsCookie = (cookieString: string): IAppOptions => {
 
   parsed.key = new Key(rootNote);
   parsed.mode = new Mode(parsed.mode.name, parsed.mode.pattern);
-  parsed.tuning = new Tuning(parsed.tuning.name, parsed.tuning.offsets);
+  parsed.tuning = new Tuning(parsed.tuning.Label, parsed.tuning.Offsets);
 
   return parsed;
 };
@@ -42,9 +44,11 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   const { getCookie, setCookie } = useCookie();
 
   const [options, setOptions] = useState<IAppOptions>();
-  const [indicatorsOptions, setIndicatorsOptions] = useState<
-    IndicatorsDisplayOptions
-  >(getDefaultIndicatorsOptions());
+  const [
+    indicatorsOptions,
+    setIndicatorsOptions,
+  ] = useState<IndicatorsDisplayOptions>(getDefaultIndicatorsOptions());
+  const [uiOptions, setUiOptions] = useState<UiOptions>();
 
   // Init
   useEffect(() => {
@@ -57,15 +61,29 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     );
 
     // DEBUG
-    var weneedithere = new ApiRequest('ChordVariation', 'generaterange').Post({
-      "chordid": "8C99611C-6A9B-4267-C8CA-08D891C3370D",
-      "tuningid": "D2FD35C9-A44E-4E2A-97AC-08D891C3371E",
-  });
-    weneedithere.then(data => {
-      console.log(data);
-    })
-    // debugger;
-
+    var tunings = new ApiRequest('Tuning').Get().then((data) => {
+      console.log('TUNINGS', data);
+    });
+    var variations = new ApiRequest('ChordVariation', 'generaterange')
+      .Post({
+        // chordid: '8C99611C-6A9B-4267-C8CA-08D891C3370D',
+        
+          "chord": {
+            "root": {
+                "base": NoteValue.F,
+                "suffix": NoteSuffix.Sharp.toString()
+            },
+            "modifier": 0
+        },
+        tuningid: 'D2FD35C9-A44E-4E2A-97AC-08D891C3371E',
+      })
+      .then((data: any) => {
+        const newVariations: ChordVariation[] = []
+        each(data, v => {
+          newVariations.push(new ChordVariation(v.formation.positions, v.chord, v.tuning));
+        });
+        handleSetUiOptions({ variations: newVariations });
+      });
   }, []);
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {
@@ -89,20 +107,31 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     setIndicatorsOptions(newOptions);
   };
 
+  const handleSetUiOptions = (
+    updated: Partial<UiOptions>
+  ) => {
+    const newOptions = {
+      ...uiOptions,
+      ...updated,
+    };
+
+    setUiOptions(newOptions);
+  }
+
   if (options) {
     return (
       <>
         <main>
-          <Backdrop options={options} />
+          {/* <Backdrop options={options} /> */}
           <div className="neck-container">
-            <Neck options={options} />
+            {/* <Neck options={options} /> */}
           </div>
           {SHOW_INDICATORS && (
             <div className="indicators-container">
-              <Indicators
+              {/* <Indicators
                 appOptions={options}
                 displayOptions={indicatorsOptions}
-              />
+              /> */}
             </div>
           )}
         </main>
@@ -111,6 +140,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
           indicatorsOptions={indicatorsOptions}
           setOptions={handleSetOptions}
           setIndicatorsOptions={handleSetIndicatorsOptions}
+          uiOptions={uiOptions}
         />
       </>
     );

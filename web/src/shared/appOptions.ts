@@ -5,6 +5,7 @@ export interface IAppOptions {
   instrument: Instrument;
   key: Key;
   tuning: Tuning;
+  tuningId: string;
   mode: Mode;
   numFrets: number;
   markers: number[];

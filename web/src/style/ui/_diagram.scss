@@ -13,14 +13,21 @@ $diagram-symbol-border-width: 3px;
 $diagram-mute-border: $diagram-symbol-border-width solid $diagram-symbol-border-color;
 $diagram-mute-diameter: 20px;
 
-$diagram-dot-background-color: gray;
+$diagram-dot-background-color: rgba(0, 0, 0, .7);
 $diagram-dot-border: $diagram-symbol-border-width solid $diagram-symbol-border-color;
 $diagram-dot-diameter: 16px;
 
 .diagram {
   display: flex;
 
+  > span {
+    padding-top: $diagram-fret-height;
+    line-height: $diagram-fret-height;
+    padding-right: .4em;
+  }
+
   > .string {
+
     .fret{
       border-bottom: $diagram-fret-border;
       height: $diagram-fret-height;
@@ -30,10 +37,9 @@ $diagram-dot-diameter: 16px;
       align-items: center;
       justify-content: center;
 
-
       position: relative;
 
-      &.fret:first-child {
+      &:first-child {
         border-top: $diagram-fret-border;
       }
 
@@ -83,63 +89,96 @@ $diagram-dot-diameter: 16px;
           }
         }
       }
+
+      &.open {
+        border-top: none;
+        border-bottom-color: black;
+        border-bottom-width: 3px;
+
+        .symbol {
+          &.dot {
+            background: none;
+            // background: rgba($diagram-dot-background-color, .5);
+          }
+        }
+      }
     }
 
-    &:first-child {
-      .fret {
+    &:first-of-type {
+      .fret:not(.open) {
         border-left: $diagram-fret-border;
       }
     }
     
-    &:last-child {
-      .fret {
+    &:last-of-type {
+      .fret:not(.open) {
         border-right: $diagram-fret-border;
       }
     }
   }
 
 
-  &.md > .string .fret {
-    height: $diagram-fret-height / 2;
-    width: $diagram-fret-width / 2;
+  &.md {
+    > span {
+      padding-top: $diagram-fret-height / 2;
+      line-height: $diagram-fret-height / 2;
+      font-size: .7rem;
+    }
 
-    .symbol {
+    > .string .fret {
+      height: $diagram-fret-height / 2;
+      width: $diagram-fret-width / 2;
 
-      &.dot {
-        height: 10px;
-        width: 10px;
-        border-width: 1.5px;
-      }
+      .symbol {
 
-      &.mute {
-        &::before,
-        &::after {
-          border-width: 2px;
-          height: 12px;
+        &.dot {
+          height: 10px;
+          width: 10px;
+          border-width: 1.5px;
+        }
+
+        &.mute {
+          &::before,
+          &::after {
+            border-width: 2px;
+            height: 12px;
+          }
         }
       }
     }
   }
 
-  &.sm > .string .fret {
-    height: $diagram-fret-height / 4;
-    width: $diagram-fret-width / 3;
+  &.sm {
+    > span {
+      padding-top: $diagram-fret-height / 3;
+      line-height: $diagram-fret-height / 3;
+      font-size: .6rem;
+    }
 
-    .symbol {
-      border-left-width: 1px;
+    > .string .fret {
+      height: $diagram-fret-height / 3;
+      width: $diagram-fret-width / 3;
 
-      &.dot {
-        height: 6px;
-        width: 6px;
-        border-width: 1px;
+      .symbol {
+        border-left-width: 1px;
+
+        &.dot {
+          height: 6px;
+          width: 6px;
+          border-width: 1px;
+        }
+
+        &.mute {
+          &::before,
+          &::after {
+            border-width: 1px;
+            height: 8px;
+          }
+        }
       }
 
-      &.mute {
-        &::before,
-        &::after {
-          border-width: 1px;
-          height: 8px;
-        }
+      &.open {
+        border-bottom-width: 2px;
       }
     }
   }

@@ -1,20 +1,20 @@
 import { IOption } from "../shared";
 
 export class Tuning implements IOption {
-  private name: string;
-  private offsets: number[];
+  private _label: string;
+  private _offsets: number[];
 
-  constructor(name: string, offsets: number[]) {
-    this.name = name;
-    this.offsets = offsets;
+  constructor(label: string, offsets: number[]) {
+    this._label = label;
+    this._offsets = offsets;
   }
 
   public get Label(): string {
-    return this.name;
+    return this._label;
   }
 
   get Offsets(): number[] {
-    return this.offsets;
+    return this._offsets;
   }
 
   static Standard(): Tuning {

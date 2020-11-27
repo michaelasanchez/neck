@@ -33,7 +33,6 @@ export class BaseRequest {
   private execute() {
     const convert = this._baseOptions.convertToJson;
 
-    // THIS DOESNT WORK
     const init = this._data ? {
       method: this._type,
       body: JSON.stringify(this._data),
@@ -43,7 +42,8 @@ export class BaseRequest {
     return fetch(this._url, init)
       .then(response => convert ? response.json() : response)
       .then(response => {
-        console.log('base response', response);
+        // console.log('base response', response);
+        return response;
       })
       .catch(reason => {
         const message = reason?.message || 'Failed to fetch'

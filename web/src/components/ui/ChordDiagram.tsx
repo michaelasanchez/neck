@@ -16,42 +16,46 @@ export interface ChordDiagramProps {
 
 export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   chordVariation: chord,
-  onClick: handleClick
+  onClick: handleClick,
 }) => {
   const minPos = min(chord.Positions);
   const maxPos = max(chord.Positions);
-
+  const paddingTop = (minPos == 0 ? 0 : 1) * FRET_PADDING_DEFAULT;
+  const paddingBottom = 1 * FRET_PADDING_DEFAULT;
+  const paddingTotal = paddingTop + paddingBottom;
+  // 1 is inclusive
   const numFrets = max([
-    maxPos - minPos + 1 + FRET_PADDING_DEFAULT * 2,
+    maxPos - minPos + 1 + FRET_PADDING_DEFAULT * paddingTotal,
     MIN_NUM_FRETS_DEFAULT,
   ]);
+
+  const renderFretSymbols = (open: boolean, show: boolean, mute: boolean) => {
+    return (
+      <>
+        {!open && <div className="symbol string"></div>}
+        {show ? <div className="symbol dot"></div> : <></>}
+        {mute && <div className="symbol mute"></div>}
+      </>
+    );
+  };
 
   return (
     <div
       className="diagram sm"
-      style={{padding: '.5rem'}}
+      style={{ padding: '.5rem' }}
       onClick={() => handleClick({ chord })}
     >
-      ({minPos})
+      {minPos != 0 && <span>{minPos}</span>}
       {times(chord.Positions.length, (s) => {
         return (
           <div className="string" key={s}>
             {times(numFrets, (f) => {
+              const show = chord.Positions[s] == f + minPos - paddingTop;
+              const open = minPos == 0 && f == 0;
+              const mute = chord.Positions[s] == null && f === 0;
               return (
-                <div className="fret" key={f}>
-                  <div className="symbol string"></div>
-                  {chord.Positions[s] == f + minPos - FRET_PADDING_DEFAULT ? (
-                    // ROOT_POSITIONS[s] === true ? (
-                    //   <div className="symbol dot root"></div>
-                    // ) : (
-                    <div className="symbol dot"></div>
-                  ) : (
-                    // )
-                    <></>
-                  )}
-                  {chord.Positions[s] == null && f === 0 && (
-                    <div className="symbol mute"></div>
-                  )}
+                <div className={`fret${open ? ' open' : ''}`} key={f}>
+                  {renderFretSymbols(open, show, mute)}
                 </div>
               );
             })}

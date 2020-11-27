@@ -1,21 +1,29 @@
-import { Chord, ChordModifier, ChordVariation, Note, Tuning } from "../models";
+import { Chord, ChordModifier, Note, Tuning } from "../models";
 import { BaseRequest } from "./request";
 
 const DOMAIN_DEFAULT = 'https://localhost:5001';
 
-export enum ApiType {
-  ChordVariation
+export type EntityType = 'ChordVariation' | 'Tuning';
+
+export enum Api {
+  ChordVariation,
+  Tuning
 }
+
+export type EntityTypeTestTest = Api.ChordVariation | Api.Tuning;
 
 export class ApiRequest extends BaseRequest {
 
   private _domain: string;
 
-  private _entity: string;
+  private _entityType: EntityType;
   private _action: string;
-  
-  constructor(entityType: 'ChordVariation', action: string = '') {
-    super(`${DOMAIN_DEFAULT}/${entityType}${action.length && '/'}${action}`);
+
+  constructor(entityType: EntityType, action: string = '') {
+    super(`${DOMAIN_DEFAULT}/${entityType}${action.length ? '/' : ''}${action}`);
+
+    this._entityType = entityType;
+    this._action = action;
   }
 
   Generate(): Promise<void> {
