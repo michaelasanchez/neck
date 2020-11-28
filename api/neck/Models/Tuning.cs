@@ -13,6 +13,7 @@ namespace neck.Models
 
         public Guid InstrumentId { get; set; }
 
+        [JsonIgnore]
         public Instrument Instrument { get; set; }
 
         [JsonIgnore]

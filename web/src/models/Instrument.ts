@@ -1,20 +1,14 @@
+import { ApiType } from ".";
+import { Tuning } from "./Tuning";
 
-
-export enum Instrument {
+export enum InstrumentEnum {
   Guitar,
   Ukulele
 }
 
-// export class Instrument implements IOption {
-
-
-
-//   constructor()
-//  {
-
-//  }
-
-//  get Label(): string {
-//    return '';
-//  }
-// }
+export class Instrument extends ApiType {
+  public DefaultTuning: Tuning;
+  public DefaultTuningId: string;
+  public Label: string;
+  public NumStrings: number;
+}

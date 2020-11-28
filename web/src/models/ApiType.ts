@@ -10,6 +10,4 @@ export class ApiType implements IApiType {
   public Created: string;
   public Updated: string;
 
-  constructor() {}
-
 }

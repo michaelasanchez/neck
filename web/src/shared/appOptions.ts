@@ -1,8 +1,8 @@
 import { FretDisplayMode } from "../components/neck";
-import { Instrument, Key, Mode, Tuning } from "../models";
+import { InstrumentEnum, Key, Mode, Tuning } from "../models";
 
 export interface IAppOptions {
-  instrument: Instrument;
+  instrument: InstrumentEnum;
   key: Key;
   tuning: Tuning;
   tuningId: string;
@@ -35,7 +35,7 @@ export class AppOptions {
   static GuitarOptions(): IAppOptions {
     return {
       ...this._baseOptions() as IAppOptions,
-      instrument: Instrument.Guitar,
+      instrument: InstrumentEnum.Guitar,
       tuning: { Label: 'Standard', Offsets: [4, 9, 2, 7, 11, 4] } as Tuning,
       markers: [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2],
     }
@@ -44,7 +44,7 @@ export class AppOptions {
   static UkuleleOptions(): IAppOptions {
     return {
       ...this._baseOptions() as IAppOptions,
-      instrument: Instrument.Ukulele,
+      instrument: InstrumentEnum.Ukulele,
       tuning: { Label: 'Ukulele', Offsets: [7, 0, 4, 9] } as Tuning, // ukulele
       markers: [0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 2], // ukulele
     }

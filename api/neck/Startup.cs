@@ -40,13 +40,18 @@ namespace neck
 					});
 			});
 
-			services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ContractResolver = new DefaultContractResolver());
+			services.AddControllers().AddNewtonsoftJson(o =>
+			{
+				o.SerializerSettings.ContractResolver = new DefaultContractResolver();
+				o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+			});
 
 			//services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 			services.AddScoped(typeof(IRepository<Chord>), typeof(ChordRepository));
 			services.AddScoped(typeof(IRepository<ChordVariation>), typeof(ChordVariationRepository));
 			services.AddScoped(typeof(IRepository<Formation>), typeof(FormationRepository));
+			services.AddScoped(typeof(IRepository<Instrument>), typeof(InstrumentRepository));
 			services.AddScoped(typeof(IRepository<Note>), typeof(NoteRepository));
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 

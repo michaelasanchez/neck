@@ -1,4 +1,5 @@
-﻿using neck.Interfaces;
+﻿using neck.Comparers;
+using neck.Interfaces;
 using neck.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace neck.Generators
 	public class ChordVariationGenerator : GenericGenerator<ChordVariation>
     {
         private bool VARIATION_SPAN_INCLUDES_OPEN = false;
+        private bool FILTER_DUPLICATE_VARIATIONS = true;
 
         // Returns a fret number based on a Note, tuning
         //  offset and an optional minimum fret position
@@ -32,7 +34,10 @@ namespace neck.Generators
 
             for (var i = start; i <= end - span; i++)
 			{
-                variations.AddRange(GenerateVariations(chord, tuning, i, span));
+                var newVariations = GenerateVariations(chord, tuning, i, span);
+
+                // TODO: filter out duplicates!
+                variations.AddRange(newVariations);
 			}
 
             return variations;

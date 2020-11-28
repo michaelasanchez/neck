@@ -7,6 +7,7 @@ import { useCookie } from '../hooks/useCookie';
 import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, NoteSuffix, NoteValue, Tuning } from '../models';
 import { ApiRequest } from '../network';
 import { ChordVariationApi } from '../network/ChordVariationApi';
+import { InstrumentApi } from '../network/InstrumentApi';
 import { TuningApi } from '../network/TuningApi';
 import { AppOptions, IAppOptions } from '../shared';
 import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
@@ -17,6 +18,8 @@ import { Ui, UiOptions } from './ui';
 const USE_COOKIE = true;
 
 const SHOW_INDICATORS = true;
+
+const CONVERT_VARIATION_TO_CHORD_FORM = true;
 
 export interface AppProps {
   defaultKey?: Key;
@@ -66,17 +69,17 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     // DEFINE CHORD FOR VARIATIONS
     const chord = {
       root: {
-        base: NoteValue.F,
-        suffix: NoteSuffix.Sharp.toString(),
+        base: NoteValue.G,
+        // suffix: NoteSuffix.Sharp,
       },
       modifier: ChordModifier.Major,
     } as Partial<Chord>;
 
     // INITIAL REQUEST(S)
-    new TuningApi().Get().then((data) => {
-      // DEBUG
-      console.log('TUNINGS', data);
-      const tuningId = data[0].Id;
+    new InstrumentApi().Get().then((instruments) => {
+      
+      // TODO: instrument id should be stored in cookie instead of picking the first one here
+      const tuningId = instruments[0].DefaultTuning.Id;
 
       new ChordVariationApi()
         .GenerateRange({ chord, tuningId, range: options.numFrets })
@@ -84,7 +87,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
           const newVariations: ChordVariation[] = [];
           each(data, (v) => {
             newVariations.push(
-              new ChordVariation(v.Formation.Positions, v.Chord, v.Tuning, true)
+              new ChordVariation(v.Formation.Positions, v.Chord, v.Tuning, CONVERT_VARIATION_TO_CHORD_FORM)
             );
           });
           handleSetUiOptions({ variations: newVariations });

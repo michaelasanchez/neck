@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace neck.Models
 {
@@ -16,6 +14,7 @@ namespace neck.Models
 
 		public Tuning DefaultTuning { get; set; }
 
+		[JsonIgnore]
 		public ICollection<Tuning> Tunings { get; set; }
 	}
 }

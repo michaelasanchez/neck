@@ -16,7 +16,7 @@ namespace neck.Controllers
 	{
 		private readonly ILogger<ChordVariationController> _logger;
 
-		private readonly IGenerator<ChordVariation> _generator;
+		private readonly ChordVariationGenerator _generator;
 
 		private IRepository<Chord> _chordRepo;
 		private IRepository<Tuning> _tuningRepo;
@@ -31,7 +31,7 @@ namespace neck.Controllers
 			: base(repository)
 		{
 			_logger = logger;
-			_generator = generator;
+			_generator = (ChordVariationGenerator)generator;
 
 			_chordRepo = chordRepository;
 			_tuningRepo = tuningRepository;
@@ -52,7 +52,7 @@ namespace neck.Controllers
 			var offset = @params.offset ?? 0;
 			var span = @params.span ?? 4;
 
-			return ((ChordVariationGenerator)_generator).GenerateVariations(chord, tuning, offset, span);
+			return _generator.GenerateVariations(chord, tuning, offset, span);
 		}
 
 		[HttpPost]
@@ -73,7 +73,7 @@ namespace neck.Controllers
 			List<ChordVariation> variations;
 			try
 			{
-				variations = ((ChordVariationGenerator)_generator).GenerateRange(chord, tuning, offset, range, span);
+				variations = _generator.GenerateRange(chord, tuning, offset, range, span);
 			}
 			catch (Exception ex)
 			{
