@@ -26,17 +26,20 @@ namespace neck.Repositories
 			_queryable = _set.AsQueryable();
 		}
 
-		public virtual Task<TEntity> GetAsync(Guid? id)
+		public virtual IQueryable<TEntity> DefaultIncludes() => _queryable;
+
+		public virtual Task<TEntity> GetByIdAsync(Guid? id)
 		{
-			return FirstOrDefault(z => z.Id == id);
+			return DefaultIncludes().FirstOrDefaultAsync(t => t.Id == id);
 		}
 
+		// Default includes don't apply here
 		public virtual Task<IEnumerable<TEntity>> GetAll()
 		{
 			return Task.FromResult(_set.AsEnumerable());
 		}
 
-		public virtual async Task<TEntity> FirstOrDefault(Expression<Func<TEntity, bool>> predicate)
+		public virtual async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
 		{
 			return await _set.FirstOrDefaultAsync(predicate);
 		}
@@ -82,7 +85,7 @@ namespace neck.Repositories
 
 		public virtual Task<TEntity> Exists(TEntity entity)
 		{
-			return FirstOrDefault(t => t.Id == entity.Id);
+			return FirstOrDefaultAsync(t => t.Id == entity.Id);
 		}
 
 		public virtual async Task<int> Count() => await _set.CountAsync();

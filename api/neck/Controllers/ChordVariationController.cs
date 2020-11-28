@@ -37,12 +37,11 @@ namespace neck.Controllers
 			_tuningRepo = tuningRepository;
 		}
 
-		[HttpPost]
-		[Route("generate")]
+		[HttpPost("Generate")]
 		public async Task<List<ChordVariation>> Generate([FromBody] ChordVariationGenerateParams @params)
 		{
-			var chord = @params.chord ?? await _chordRepo.GetAsync(@params.chordId);
-			var tuning = @params.tuning ?? await _tuningRepo.GetAsync(@params.tuningId);
+			var chord = @params.chord ?? await _chordRepo.GetByIdAsync(@params.chordId);
+			var tuning = @params.tuning ?? await _tuningRepo.GetByIdAsync(@params.tuningId);
 
 			if (chord == null || tuning == null)
 			{
@@ -55,12 +54,11 @@ namespace neck.Controllers
 			return _generator.GenerateVariations(chord, tuning, offset, span);
 		}
 
-		[HttpPost]
-		[Route("generaterange")]
+		[HttpPost("GenerateRange")]
 		public async Task<ActionResult<List<ChordVariation>>> GenerateRange([FromBody] ChordVariationGenerateRangeParams @params)
 		{
-			var chord = @params.chord ?? await _chordRepo.GetAsync(@params.chordId);
-			var tuning = @params.tuning ?? await _tuningRepo.GetAsync(@params.tuningId);
+			var chord = @params.chord ?? await _chordRepo.GetByIdAsync(@params.chordId);
+			var tuning = @params.tuning ?? await _tuningRepo.GetByIdAsync(@params.tuningId);
 
 			if (chord == null) return BadRequest("Chord or chordId is required");
 			if (tuning == null) return BadRequest("Tuning or tuningId is required");
@@ -77,7 +75,6 @@ namespace neck.Controllers
 			}
 			catch (Exception ex)
 			{
-				Debug.WriteLine(ex.ToString());
 				return BadRequest($"An error occured while generating variations: {ex.ToString()}");
 			}
 

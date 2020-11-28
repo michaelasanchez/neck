@@ -33,7 +33,9 @@ export class BaseRequest<TResult> {
   private execute() {
     const convert = this._baseOptions.convertToJson;
 
-    const init = this._data ? {
+    // TODO: should get ever have a body?
+    const init = this._type != RequestType.Get && this._data ? {
+    // const init = this._data ? {
       method: this._type,
       body: JSON.stringify(this._data),
       headers: { 'Content-type': 'application/json' }
@@ -79,7 +81,7 @@ export class BaseRequest<TResult> {
   }
 
   // TODO: This is just GetAll for now
-  Get(): Promise<TResult[]> {
+  Get(): Promise<TResult | TResult[]> {
     this.Type = RequestType.Get;
     return this.execute()
   }

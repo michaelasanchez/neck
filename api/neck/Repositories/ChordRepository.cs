@@ -13,19 +13,14 @@ namespace neck.Repositories
 		{
 		}
 
-		public override Task<Chord> GetAsync(Guid? id)
+		public override IQueryable<Chord> DefaultIncludes()
 		{
-			var result = _queryable
-				.Include(c => c.Root)
-				.First(c => c.Id == id);
-
-			return Task.FromResult(result);
+			return _queryable.Include(c => c.Root);
 		}
 
 		public override Task<Chord> Exists(Chord chord)
 		{
-			var result = _queryable
-				.Include(c => c.Root)
+			var result = DefaultIncludes()
 				.FirstOrDefault(c => c.Root.Base == chord.Root.Base
 					&& c.Root.Suffix == chord.Root.Suffix
 					&& c.Modifier == chord.Modifier);

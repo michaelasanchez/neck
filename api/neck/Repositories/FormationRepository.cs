@@ -12,7 +12,7 @@ namespace neck.Repositories
 
 		public override Task<Formation> Exists(Formation formation)
 		{
-			return FirstOrDefault(f => f.Positions == formation.Positions);
+			return FirstOrDefaultAsync(f => f.Positions == formation.Positions);
 		}
 
 	}

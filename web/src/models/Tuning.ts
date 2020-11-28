@@ -11,13 +11,11 @@ export class Tuning extends ApiType implements IOption {
     this._offsets = offsets;
   }
 
-  public get Label(): string {
-    return this._label;
-  }
+  get Label(): string { return this._label; }
+  set Label(value: string) { this._label = value; }
 
-  get Offsets(): number[] {
-    return this._offsets;
-  }
+  get Offsets(): number[] { return this._offsets; }
+  set Offsets(value: number[]) { this._offsets = value; }
 
   static Standard(): Tuning {
     return new this('Standard', [4, 9, 2, 7, 11, 4]);

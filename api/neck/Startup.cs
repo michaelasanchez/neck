@@ -47,6 +47,8 @@ namespace neck
 			});
 
 			//services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+			//services.AddMvc()
+			//	.AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 			services.AddScoped(typeof(IRepository<Chord>), typeof(ChordRepository));
 			services.AddScoped(typeof(IRepository<ChordVariation>), typeof(ChordVariationRepository));

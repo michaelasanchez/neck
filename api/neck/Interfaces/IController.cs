@@ -8,7 +8,9 @@ namespace neck.Interfaces
 {
     public interface IController<T>
     {
-        public Task<ActionResult<IEnumerable<T>>> Get();
+        public Task<ActionResult<IEnumerable<T>>> GetAll();
+
+		public Task<ActionResult<T>> GetById(Guid id);
 
 		public Task<IActionResult> Insert(T entity);
 

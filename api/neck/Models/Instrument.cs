@@ -15,6 +15,6 @@ namespace neck.Models
 		public Tuning DefaultTuning { get; set; }
 
 		[JsonIgnore]
-		public ICollection<Tuning> Tunings { get; set; }
+		public virtual ICollection<Tuning> Tunings { get; set; }
 	}
 }

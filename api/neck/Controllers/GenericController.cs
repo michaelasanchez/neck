@@ -17,7 +17,19 @@ namespace neck.Controllers
 		}
 
 		[HttpGet]
-		public virtual async Task<ActionResult<IEnumerable<T>>> Get() => Ok(await _repository.GetAll());
+		public virtual async Task<ActionResult<IEnumerable<T>>> GetAll() => Ok(await _repository.GetAll());
+
+		[HttpGet("{id:Guid}")]
+		public virtual async Task<ActionResult<T>> GetById(Guid id)
+		{
+			var result = await _repository.GetByIdAsync(id);
+			if (result == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(result);
+		}
 
 		[HttpPost]
 		public virtual async Task<IActionResult> Insert(T entity)

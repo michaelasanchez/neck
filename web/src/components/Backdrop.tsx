@@ -28,10 +28,6 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({
     maxWidth: styles.neck.maxWidth,
   };
 
-  const fretMarkers = {
-    maxWidth: styles.neck.maxWidth,
-  };
-
   const renderString = () => {
     return (
       <div className="strings">
@@ -67,7 +63,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({
       </div>
       <div className="fretboard-markers-container">
         {ENABLE_NECK_MARKERS && (
-          <div className="fretboard-markers" style={fretMarkers}>
+          <div className="fretboard-markers" style={styles.fretMarkers}>
             <FretMarkers markers={markers} />
           </div>
         )}

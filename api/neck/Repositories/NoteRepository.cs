@@ -12,7 +12,7 @@ namespace neck.Repositories
 
 		public override Task<Note> Exists(Note note)
 		{
-			return FirstOrDefault(n => n.Base == note.Base && n.Suffix == note.Suffix);
+			return FirstOrDefaultAsync(n => n.Base == note.Base && n.Suffix == note.Suffix);
 		}
 
 	}

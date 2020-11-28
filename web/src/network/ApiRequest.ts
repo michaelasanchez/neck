@@ -46,6 +46,16 @@ export class ApiRequest<TResult = ApiType> extends BaseRequest<TResult> {
     return `${this.Domain}/${this.EntityType}${this.Action ? '/' : ''}${this.Action}`;
   }
 
+  GetAll = (): Promise<TResult[]> => {
+    return super.Get() as Promise<TResult[]>;
+  }
+
+  GetById = (id: string): Promise<TResult> => {
+    // TODO: will this work?
+    this.Action = id;
+    return super.Get() as Promise<TResult>;
+  }
+
   Post(data?: {}, action?: string): Promise<TResult | TResult[]> {
 
     if (action) {

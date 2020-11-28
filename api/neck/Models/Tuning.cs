@@ -17,10 +17,6 @@ namespace neck.Models
         public Instrument Instrument { get; set; }
 
         [JsonIgnore]
-        [NotMapped]
-        public Guid? InstrumentDefaultId { get; set; }
-
-        [JsonIgnore]
         public Instrument InstrumentDefault { get; set; }
 
         // Offset from C (noteValue 0)

@@ -4,11 +4,18 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, NoteSuffix, NoteValue, Tuning } from '../models';
-import { ApiRequest } from '../network';
+import {
+  Chord,
+  ChordModifier,
+  ChordVariation,
+  Key,
+  Mode,
+  Note,
+  NoteValue,
+  Tuning,
+} from '../models';
 import { ChordVariationApi } from '../network/ChordVariationApi';
 import { InstrumentApi } from '../network/InstrumentApi';
-import { TuningApi } from '../network/TuningApi';
 import { AppOptions, IAppOptions } from '../shared';
 import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
 import { Loading } from './Loading';
@@ -30,6 +37,8 @@ export interface AppProps {
 const parseOptionsCookie = (cookieString: string): IAppOptions => {
   let parsed = JSON.parse(cookieString);
 
+  console.log('PARSED', parsed);
+
   const rootNote = new Note(parsed.key._tonic.base, parsed.key._tonic.suffix);
 
   parsed.key = new Key(rootNote);
@@ -37,6 +46,14 @@ const parseOptionsCookie = (cookieString: string): IAppOptions => {
   parsed.tuning = new Tuning(parsed.tuning.Label, parsed.tuning.Offsets);
 
   return parsed;
+};
+
+const serializeOptionsCookie = (options: IAppOptions): string => {
+  options.tuning = {
+    Label: options.tuning.Label,
+    Offsets: options.tuning.Offsets,
+  } as Tuning;
+  return JSON.stringify(options);
 };
 
 const DefaultIndicatorsOptions = {
@@ -63,10 +80,12 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       USE_COOKIE && !!saved.length
         ? parseOptionsCookie(saved)
         : AppOptions.Default();
-    setOptions(options);
 
+    loadOptions(options);
+  }, []);
+
+  const loadOptions = (options: IAppOptions) => {
     // DEBUG
-    // DEFINE CHORD FOR VARIATIONS
     const chord = {
       root: {
         base: NoteValue.G,
@@ -75,25 +94,42 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       modifier: ChordModifier.Major,
     } as Partial<Chord>;
 
-    // INITIAL REQUEST(S)
-    new InstrumentApi().Get().then((instruments) => {
-      
-      // TODO: instrument id should be stored in cookie instead of picking the first one here
-      const tuningId = instruments[0].DefaultTuning.Id;
+    if (options.instrumentId) {
+      let instrumentRequest = new InstrumentApi()
+        .GetById(options.instrumentId)
+        .then((instrument) => {
+          // TODO: figure out default/saved tuning
+          const tuning = instrument.DefaultTuning;
 
-      new ChordVariationApi()
-        .GenerateRange({ chord, tuningId, range: options.numFrets })
-        .then((data: any) => {
-          const newVariations: ChordVariation[] = [];
-          each(data, (v) => {
-            newVariations.push(
-              new ChordVariation(v.Formation.Positions, v.Chord, v.Tuning, CONVERT_VARIATION_TO_CHORD_FORM)
-            );
-          });
-          handleSetUiOptions({ variations: newVariations });
+          new ChordVariationApi()
+            .GenerateRange({
+              chord,
+              tuningId: tuning.Id,
+              range: options.numFrets,
+            })
+            .then((response: any) => {
+              const newVariations: ChordVariation[] = [];
+              each(response, (v) => {
+                newVariations.push(
+                  new ChordVariation(
+                    v.Formation.Positions,
+                    v.Chord,
+                    v.Tuning,
+                    CONVERT_VARIATION_TO_CHORD_FORM
+                  )
+                );
+              });
+              handleSetUiOptions({ variations: newVariations });
+              handleSetOptions({
+                ...options,
+                tuning,
+                tuningId: tuning.Id,
+                instrumentId: instrument.Id,
+              });
+            });
         });
-    });
-  }, []);
+    }
+  };
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {
     const newOptions = {
@@ -101,7 +137,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       ...updated,
     };
 
-    setCookie('options', JSON.stringify(newOptions));
+    setCookie('options', serializeOptionsCookie(newOptions));
     setOptions(newOptions);
   };
 

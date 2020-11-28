@@ -13,9 +13,14 @@ namespace neck.Repositories
 		{
 		}
 
+		public override IQueryable<Instrument> DefaultIncludes()
+		{
+			return _queryable.Include(i => i.DefaultTuning);
+		}
+
 		public override Task<IEnumerable<Instrument>> GetAll()
 		{
-			return Task.FromResult(_queryable.Include(i => i.DefaultTuning).AsEnumerable());
+			return Task.FromResult(DefaultIncludes().AsEnumerable());
 		}
 	}
 }

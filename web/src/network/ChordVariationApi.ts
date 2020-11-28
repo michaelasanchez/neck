@@ -15,8 +15,8 @@ export interface ChordVariationGenerateRangeParams extends ChordVariationGenerat
 }
 
 enum ChordVariationAction {
-  Generate = 'generate',
-  GenerateRange = 'generaterange',
+  Generate = 'Generate',
+  GenerateRange = 'GenerateRange',
 }
 
 export class ChordVariationApi extends ApiRequest<ChordVariation> {

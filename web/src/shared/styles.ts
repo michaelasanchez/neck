@@ -13,11 +13,13 @@ function getNumbersWidth(x: MediaQueryList) {
 
 const FRET_NUMBERS_WIDTH = getNumbersWidth(mobile);
 
+const MAX_WIDTH = `calc(100% - ${FRET_NUMBERS_WIDTH * 2}px)`;
+
 export const styles = {
   neck: {
     width: NECK_WIDTH,
     margin: `0 ${FRET_NUMBERS_WIDTH}px`,
-    maxWidth: `calc(100% - ${FRET_NUMBERS_WIDTH * 2}px)`,
+    maxWidth: MAX_WIDTH,
   },
   fretNumbers: {
     maxWidth: NECK_WIDTH + FRET_NUMBERS_WIDTH * 2,
@@ -25,5 +27,8 @@ export const styles = {
   },
   fretNumberGroup: {
     width: FRET_NUMBERS_WIDTH,
+  },
+  fretMarkers: {
+    maxWidth: MAX_WIDTH,
   },
 }
