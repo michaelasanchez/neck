@@ -42,10 +42,9 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   return (
     <div
       className="diagram sm"
-      style={{ padding: '.5rem' }}
       onClick={() => handleClick({ chord })}
     >
-      {minPos != 0 && <span>{minPos}</span>}
+      <span>{minPos != 0 && minPos}</span>
       {times(chord.Positions.length, (s) => {
         return (
           <div className="string" key={s}>

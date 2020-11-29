@@ -109,7 +109,7 @@ export class Scale {
   }
 
   public containsChord = (chord: Chord): boolean => {
-    const chordNotes = NoteUtils.toString(chord.Factors);
+    const chordNotes = NoteUtils.toString(chord.Tones);
     const keyNotes = NoteUtils.toString(this._notes);
 
     const found = map(chordNotes, n => indexOf(keyNotes, n) >= 0);

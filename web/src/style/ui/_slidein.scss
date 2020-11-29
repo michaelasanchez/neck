@@ -1,11 +1,35 @@
+$diagrams-per-row: 4;
+
 .slidein {
   position: absolute;
   left: 0;
   top: 200px;
 
-  /* TODO: DEBUG */
   display: flex;
-  flex-wrap: wrap;
-  max-width: 600px;
+  flex-direction: column;
+  
+  min-height: 300px;
+  min-width: 300px;
+
+  // padding: 1em;
+
   /* TODO: DEBUG */
+  // display: flex;
+  // flex-wrap: wrap;
+  // max-width: 400px;
+  /* TODO: DEBUG */
+  
+  
+  background: white;
+  box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .contents {
+    flex-grow: 1;
+  }
 }

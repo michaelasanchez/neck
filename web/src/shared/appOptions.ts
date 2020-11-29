@@ -1,7 +1,8 @@
 import { FretDisplayMode } from "../components/neck";
-import { Instrument, Key, Mode, Tuning } from "../models";
+import { Chord, ChordModifier, Instrument, Key, Mode, Note, Tuning } from "../models";
 
 export interface IAppOptions {
+  chord: Chord;
   instrument: Instrument;
   instrumentId: string;
   key: Key;
@@ -28,6 +29,7 @@ export class AppOptions {
     return {
       key: Key.C(),
       mode: Mode.Ionian(),
+      chord: new Chord(Note.C(), ChordModifier.Major),
       numFrets: 13,
       fretMode: FretDisplayMode.Note
     }

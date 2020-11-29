@@ -16,7 +16,7 @@ namespace neck.Controllers
 			_repository = repository;
 		}
 
-		[HttpGet]
+		[HttpGet("all")]
 		public virtual async Task<ActionResult<IEnumerable<T>>> GetAll() => Ok(await _repository.GetAll());
 
 		[HttpGet("{id:Guid}")]

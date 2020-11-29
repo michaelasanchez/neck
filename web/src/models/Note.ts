@@ -35,18 +35,18 @@ export class Note {
 
   public static NUM_NOTES = 12;
 
-  private base: NoteValue;
-  private suffix: NoteSuffix;
+  private _base: NoteValue;
+  private _suffix: NoteSuffix;
 
-  private degree: number;
+  private _degree: number;
 
   constructor(value: NoteValue = NoteValue.C, suffix: NoteSuffix = NoteSuffix.Natural) {
-    this.base = value % Note.NUM_NOTES;
+    this._base = value % Note.NUM_NOTES;
     this.Suffix = suffix;
   }
 
   private ModifiedValue(): NoteValue {
-    return this.base + this.suffix;
+    return this._base + this._suffix;
   }
 
   private SuffixLabel(suffix: NoteSuffix, long = false) {
@@ -66,11 +66,11 @@ export class Note {
 
   get Label(): string {
     // Cheap visual test
-    return NoteValue[this.base] ? `${NoteValue[this.base]}${this.SuffixLabel(this.suffix)}` : 'ERROR';
+    return NoteValue[this._base] ? `${NoteValue[this._base]}${this.SuffixLabel(this._suffix)}` : 'ERROR';
   }
 
   get LongLabel(): string {
-    return NoteValue[this.base] ? `${NoteValue[this.base]} ${this.SuffixLabel(this.suffix, true)}` : 'ERROR';
+    return NoteValue[this._base] ? `${NoteValue[this._base]} ${this.SuffixLabel(this._suffix, true)}` : 'ERROR';
   }
 
   get Value(): NoteValue {
@@ -78,32 +78,32 @@ export class Note {
   }
 
   get Base(): NoteValue {
-    return this.base;
+    return this._base;
   }
 
   set Base(value: NoteValue) {
-    this.base = value;
+    this._base = value;
   }
 
   get Modified(): number {
-    return (this.base + this.suffix) % Note.NUM_NOTES;
+    return (this._base + this._suffix) % Note.NUM_NOTES;
   }
 
   get Suffix(): NoteSuffix {
-    return this.suffix;
+    return this._suffix;
   }
 
   set Suffix(suffix: NoteSuffix) {
-    this.suffix = suffix;
+    this._suffix = suffix;
   }
 
   get Degree(): number {
-    return this.degree;
+    return this._degree;
   }
 
   // Only assigned in Scale
   set Degree(degree: number) {
-    this.degree = degree;
+    this._degree = degree;
   }
 
   static A(): Note {
@@ -135,27 +135,27 @@ export class Note {
   }
 
   public Natural(): Note {
-    this.suffix = NoteSuffix.Natural;
+    this._suffix = NoteSuffix.Natural;
     return this;
   }
 
   public Sharp(): Note {
-    this.suffix = NoteSuffix.Sharp;
+    this._suffix = NoteSuffix.Sharp;
     return this;
   }
 
   public DoubleSharp(): Note {
-    this.suffix = NoteSuffix.DoubleSharp;
+    this._suffix = NoteSuffix.DoubleSharp;
     return this;
   }
 
   public Flat(): Note {
-    this.suffix = NoteSuffix.Flat;
+    this._suffix = NoteSuffix.Flat;
     return this;
   }
 
   public DoubleFlat(): Note {
-    this.suffix = NoteSuffix.DoubleFlat;
+    this._suffix = NoteSuffix.DoubleFlat;
     return this;
   }
 
@@ -164,13 +164,13 @@ export class Note {
     let next: Note;
 
     if (isUndefined(NoteValue[(mod + 1) % Note.NUM_NOTES])) {
-      if (mod != this.base) {
+      if (mod != this._base) {
         next = new Note(mod, NoteSuffix.Sharp);
       } else {
         next = new Note(mod + 2, NoteSuffix.Flat);
       }
     } else {
-      if (mod + 1 == this.base) {
+      if (mod + 1 == this._base) {
         next = new Note(mod + 2, NoteSuffix.Flat);
       } else {
         next = new Note(mod + 1);
@@ -190,13 +190,13 @@ export class Note {
     let next: Note;
 
     if (isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES])) {
-      if (mod + 1 == this.base) {
+      if (mod + 1 == this._base) {
         next = new Note(mod + 3, NoteSuffix.Flat);
       } else {
         next = new Note(mod + 1, NoteSuffix.Sharp);
       }
     } else {
-      if (mod - this.base > 0) {
+      if (mod - this._base > 0) {
         next = new Note(mod + 1, NoteSuffix.Sharp);
       } else {
         next = new Note(mod + 2);

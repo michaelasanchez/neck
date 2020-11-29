@@ -5,6 +5,13 @@ import { Key, Mode, Note, Scale } from ".";
 export enum ChordModifier {
   Major,
   Minor,
+  Diminished,
+  MajorSeventh,
+  MinorSeventh,
+  DominantSevent,
+  Suspended,
+  Augmented,
+  Extended,
 }
 
 // I        tonic
@@ -49,7 +56,7 @@ export class Chord {
 
   private _degree: number;
 
-  private _factors: Note[];
+  private _tones: Note[];
 
   constructor(root: Note, mod: ChordModifier) {
     this._root = root;
@@ -63,7 +70,7 @@ export class Chord {
       ? [new Key(this._root).RelativeMajor]
       : [new Key(this._root)];
 
-    this._factors = calculatePitches(scale, this._modifier);
+    this._tones = calculatePitches(scale, this._modifier);
   }
 
   get Label(): string {
@@ -90,8 +97,8 @@ export class Chord {
     return this._keys;
   }
 
-  get Factors(): Note[] {
-    return this._factors;
+  get Tones(): Note[] {
+    return this._tones;
   }
 
   // TODO: Figure out where these should go

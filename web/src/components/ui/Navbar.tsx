@@ -52,6 +52,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
       <div className="navbar-nav">
         <form className="form-inline">
           <Button
+            size="lg"
             variant="outline-success"
             className={`options ${showing ? 'active' : ''}`}
             onClick={() => setShowing(!showing)}
@@ -61,6 +62,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
 
           <div className="nav-item btn-group dropup">
             <DropdownButton
+              size="lg"
               as={ButtonGroup}
               id="key-dropdown"
               variant="secondary"

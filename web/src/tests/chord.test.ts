@@ -4,7 +4,7 @@ import { Chord, ChordModifier, Note, NoteSuffixLabel } from "../models";
 
 const noteLabelsFromChord = (note: Note): string[] => {
   const chord = new Chord(note, ChordModifier.Major);
-  return map(chord.Factors, n => formatNoteLabel(n));
+  return map(chord.Tones, n => formatNoteLabel(n));
 }
 
 const formatNoteLabel = (note: Note): string => {

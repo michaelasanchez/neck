@@ -25,11 +25,25 @@ export class ChordVariationApi extends ApiRequest<ChordVariation> {
     super('ChordVariation');
   }
 
+  private hack = (chord: Partial<Chord>): Chord => {
+
+    console.log('PARAMS', chord);
+
+    return {
+      Root: chord.Root,
+      Modifier: chord.Modifier
+    } as Chord;
+  }
+
   Generate(params: ChordVariationGenerateParams): Promise<ChordVariation[]> {
     return super.Post(params, ChordVariationAction.Generate) as Promise<ChordVariation[]>;
   }
 
   GenerateRange(params: ChordVariationGenerateRangeParams): Promise<ChordVariation[]> {
+
+    // TODO: Figure out what is goin on here. Cheap fix for now
+    if (params.chord) params.chord = this.hack(params.chord);
+
     return super.Post(params, ChordVariationAction.GenerateRange) as Promise<ChordVariation[]>;
   }
 

@@ -60,7 +60,14 @@ namespace neck.Controllers
 			var chord = @params.chord ?? await _chordRepo.GetByIdAsync(@params.chordId);
 			var tuning = @params.tuning ?? await _tuningRepo.GetByIdAsync(@params.tuningId);
 
-			if (chord == null) return BadRequest("Chord or chordId is required");
+			if (chord == null)
+			{
+				return BadRequest("Chord or chordId is required");
+			}
+			else if (chord.Root == null)
+			{
+				return BadRequest("Chord root note is required");
+			}
 			if (tuning == null) return BadRequest("Tuning or tuningId is required");
 
 			var range = @params.range ?? 12;

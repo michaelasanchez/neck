@@ -1,52 +1,41 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { ChordDiagram, SlideIn, UiOptions } from '.';
-import { ChordVariation } from '../../models';
+import { ChordModifier, ChordVariation, Note } from '../../models';
 import { IAppOptions } from '../../shared';
 import { IndicatorsDisplayOptions } from '../Indicators';
 
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
+const SlideInTitle = 'Chord';
+
 export interface IChordSlideInProps {
-  appOptions: IAppOptions;
   setIndicatorsOptions: (update: Partial<IndicatorsDisplayOptions>) => void;
+  appOptions: IAppOptions;
   uiOptions: UiOptions;
 }
 
-const buttonStyle: React.CSSProperties = {
-  position: 'fixed',
-  width: 100,
-  height: 40,
-  top: 10,
-  left: 10,
-};
-
-const prevStyle: React.CSSProperties = {
-  ...buttonStyle,
-  left: 10,
-};
-
-const nextStyle: React.CSSProperties = {
-  ...buttonStyle,
-  left: 120,
-};
-
 export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
-  appOptions,
   setIndicatorsOptions,
+  appOptions,
   uiOptions,
 }) => {
-  const { numFrets, tuning } = appOptions;
+
+  const [rootNote, setRootNote] = useState<Note>(appOptions?.chord?.Root);
+  const [modifier, setModifier] = useState<ChordModifier>(appOptions?.chord?.Modifier);
 
   const [variations, setVariations] = useState<ChordVariation[]>();
-  const [currentVariationIndex, setCurrentVariationIndex] = useState<number>(0);
 
   useEffect(() => {
-    if (uiOptions?.variations?.length)
-      setVariations(uiOptions.variations);
+    console.log('CURRENT', appOptions?.chord);
+    console.log('STATE', rootNote, modifier);
+  }, [appOptions?.chord]);
+
+  useEffect(() => {
+    if (uiOptions?.variations?.length) setVariations(uiOptions.variations);
   }, [uiOptions?.variations]);
 
   useEffect(() => {
@@ -55,35 +44,61 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     }
   }, [variations]);
 
-  const renderDebug = () => {
-    if (!variations) {
-      return <></>;
-    }
+  const notes = [
+    Note.A(),
+    Note.B(),
+    Note.C(),
+    Note.D(),
+    Note.E(),
+    Note.F(),
+    Note.G(),
+  ];
 
-    const getNextVariationIndex = (next: number): number =>
-      (currentVariationIndex + variations.length + next) % variations.length;
+  console.log('RENDER', uiOptions, notes, ChordModifier);
 
-    return (
-      <>
-        <Button
-          disabled={!variations.length}
-          style={prevStyle}
-          onClick={() => setCurrentVariationIndex(getNextVariationIndex(-1))}
+  // TODO: should have chord on ui options now
+  //  just have to matchs that to a note in the
+  //  notes array and... its.. so.. close
+
+  const headerTitle = <h2>{SlideInTitle}</h2>;
+  const headerButton = (
+    <>
+      <ButtonGroup size="lg" className="mb-2">
+        <DropdownButton
+          variant="secondary"
+          as={ButtonGroup}
+          title="C"
+          id="dropdown-note"
         >
-          Prev
-        </Button>
-        <Button
-          disabled={!variations.length}
-          style={nextStyle}
-          onClick={() => setCurrentVariationIndex(getNextVariationIndex(1))}
+          {map(notes, (n: Note, i: number) => (
+            <Dropdown.Item eventKey={i.toString()} key={i}>
+              {n.Label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+        <DropdownButton
+          variant="secondary"
+          as={ButtonGroup}
+          title="Major"
+          id="dropdown-modifier"
         >
-          Next
-        </Button>
-      </>
-    );
-  };
+          {map(notes, (n: Note, i: number) => (
+            <Dropdown.Item eventKey={i.toString()} key={i}>
+              {n.Label}
+            </Dropdown.Item>
+          ))}
+        </DropdownButton>
+      </ButtonGroup>
+    </>
+  );
+
   return (
-    <SlideIn>
+    <SlideIn
+      className="chord"
+      headerTitle={headerTitle}
+      headerButton={headerButton}
+      loading={!variations}
+    >
       {map(variations, (v: ChordVariation, i: number) => (
         <ChordDiagram
           chordVariation={v}

@@ -19,13 +19,12 @@ export class Key implements IOption {
     this._type = type || KeyType.Major;
   }
 
-  get Tonic(): Note {
-    return this._tonic;
-  }
+  get Tonic(): Note { return this._tonic; }
+  set Tonic(value: Note) { this._tonic = value; };
 
-  get Label(): string {
-    return this._tonic.Label;
-  }
+  // TODO: this is weird
+  get Label(): string { return this._tonic.Label; }
+  set Label(value: string) { this._tonic.Label; }
 
   get RelativeMajor(): Key {
     if (this._type === KeyType.Minor) return null;

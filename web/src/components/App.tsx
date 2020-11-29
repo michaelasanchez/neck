@@ -26,7 +26,7 @@ const USE_COOKIE = true;
 
 const SHOW_INDICATORS = true;
 
-const CONVERT_VARIATION_TO_CHORD_FORM = true;
+const CONVERT_VARIATION_TO_CHORD_FORM = false;
 
 export interface AppProps {
   defaultKey?: Key;
@@ -36,11 +36,11 @@ export interface AppProps {
 
 const parseOptionsCookie = (cookieString: string): IAppOptions => {
   let parsed = JSON.parse(cookieString);
-
-  console.log('PARSED', parsed);
-
+  
   const rootNote = new Note(parsed.key._tonic.base, parsed.key._tonic.suffix);
+  const chordRoot = new Note(parsed.chord.Root.Base, parsed.chord.Root.Suffix);
 
+  parsed.chord = new Chord(chordRoot, parsed.chord.Modifier);
   parsed.key = new Key(rootNote);
   parsed.mode = new Mode(parsed.mode.name, parsed.mode.pattern);
   parsed.tuning = new Tuning(parsed.tuning.Label, parsed.tuning.Offsets);
@@ -49,6 +49,19 @@ const parseOptionsCookie = (cookieString: string): IAppOptions => {
 };
 
 const serializeOptionsCookie = (options: IAppOptions): string => {
+  options.chord = {
+    Root: {
+      Base: options.chord.Root.Base,
+      Suffix: options.chord.Root.Suffix,
+    },
+    Modifier: options.chord.Modifier
+  } as Chord;
+  // options.key = {
+  //   Tonic: {
+  //     Base: options.key.Tonic.Base,
+  //     Suffix: options.key.Tonic.Suffix,
+  //   }
+  // } as Key;
   options.tuning = {
     Label: options.tuning.Label,
     Offsets: options.tuning.Offsets,
@@ -78,21 +91,35 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     const options =
       USE_COOKIE && !!saved.length
-        ? parseOptionsCookie(saved)
-        : AppOptions.Default();
-
-    loadOptions(options);
+        ? loadOptions(parseOptionsCookie(saved))
+        : loadDefault();
   }, []);
+  
+  // DEBUG
+  const chord = {
+    root: Note.C(),
+    modifier: ChordModifier.Major,
+  } as Partial<Chord>;
+
+  const loadDefault = () => {
+    new InstrumentApi().GetAll().then((instruments) => {
+      // TODO: assume first for default
+      const instrument = instruments[0];
+      const tuning = instrument.DefaultTuning;
+
+      const options = AppOptions.Default();
+
+      handleSetOptions({
+        ...options,
+        tuning,
+        tuningId: tuning.Id,
+        instrumentId: instrument.Id,
+      });
+      loadUiOptions(options.numFrets, options.chord as Chord, tuning);
+    });
+  };
 
   const loadOptions = (options: IAppOptions) => {
-    // DEBUG
-    const chord = {
-      root: {
-        base: NoteValue.G,
-        // suffix: NoteSuffix.Sharp,
-      },
-      modifier: ChordModifier.Major,
-    } as Partial<Chord>;
 
     if (options.instrumentId) {
       let instrumentRequest = new InstrumentApi()
@@ -101,34 +128,38 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
           // TODO: figure out default/saved tuning
           const tuning = instrument.DefaultTuning;
 
-          new ChordVariationApi()
-            .GenerateRange({
-              chord,
-              tuningId: tuning.Id,
-              range: options.numFrets,
-            })
-            .then((response: any) => {
-              const newVariations: ChordVariation[] = [];
-              each(response, (v) => {
-                newVariations.push(
-                  new ChordVariation(
-                    v.Formation.Positions,
-                    v.Chord,
-                    v.Tuning,
-                    CONVERT_VARIATION_TO_CHORD_FORM
-                  )
-                );
-              });
-              handleSetUiOptions({ variations: newVariations });
-              handleSetOptions({
-                ...options,
-                tuning,
-                tuningId: tuning.Id,
-                instrumentId: instrument.Id,
-              });
-            });
+          handleSetOptions({
+            ...options,
+            tuning,
+            tuningId: tuning.Id,
+            instrumentId: instrument.Id,
+          });
+          loadUiOptions(options.numFrets, options.chord as Chord, tuning);
         });
     }
+  };
+
+  const loadUiOptions = (numFrets: number, chord: Chord, tuning: Tuning) => {
+    new ChordVariationApi()
+      .GenerateRange({
+        chord,
+        tuningId: tuning.Id,
+        range: numFrets,
+      })
+      .then((response: any) => {
+        const newVariations: ChordVariation[] = [];
+        each(response, (v) => {
+          newVariations.push(
+            new ChordVariation(
+              v.Formation.Positions,
+              v.Chord,
+              v.Tuning,
+              CONVERT_VARIATION_TO_CHORD_FORM
+            )
+          );
+        });
+        handleSetUiOptions({ variations: newVariations });
+      });
   };
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {
@@ -137,8 +168,8 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       ...updated,
     };
 
-    setCookie('options', serializeOptionsCookie(newOptions));
     setOptions(newOptions);
+    setCookie('options', serializeOptionsCookie(newOptions));
   };
 
   const handleSetIndicatorsOptions = (

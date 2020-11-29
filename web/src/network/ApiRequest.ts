@@ -47,11 +47,11 @@ export class ApiRequest<TResult = ApiType> extends BaseRequest<TResult> {
   }
 
   GetAll = (): Promise<TResult[]> => {
+    this.Action = 'all';
     return super.Get() as Promise<TResult[]>;
   }
 
   GetById = (id: string): Promise<TResult> => {
-    // TODO: will this work?
     this.Action = id;
     return super.Get() as Promise<TResult>;
   }

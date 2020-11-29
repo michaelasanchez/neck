@@ -80,7 +80,6 @@ export class BaseRequest<TResult> {
     }
   }
 
-  // TODO: This is just GetAll for now
   Get(): Promise<TResult | TResult[]> {
     this.Type = RequestType.Get;
     return this.execute()

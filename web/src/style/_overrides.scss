@@ -1,3 +1,9 @@
+/* Button Group */
+.btn-group-lg > .dropdown .btn {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+}
+
 /* Navbar */
 nav.fixed-bottom {
   // z-index: 1060;
@@ -6,6 +12,7 @@ nav.fixed-bottom {
 /* Dropdown */
 .dropdown-menu {
   min-width: unset;
+  width: 100%;
 }
 
 .dropdown .dropdown-toggle {
