@@ -107,31 +107,35 @@ export class Note {
   }
 
   static A(): Note {
-    return new this(NoteValue.A);
+    return new Note(NoteValue.A);
   }
 
   static B(): Note {
-    return new this(NoteValue.B);
+    return new Note(NoteValue.B);
   }
 
   static C(): Note {
-    return new this(NoteValue.C);
+    return new Note(NoteValue.C);
   }
 
   static D(): Note {
-    return new this(NoteValue.D);
+    return new Note(NoteValue.D);
   }
 
   static E(): Note {
-    return new this(NoteValue.E);
+    return new Note(NoteValue.E);
   }
 
   static F(): Note {
-    return new this(NoteValue.F);
+    return new Note(NoteValue.F);
   }
 
   static G(): Note {
     return new this(NoteValue.G);
+  }
+
+  public Equals(note: Note): boolean {
+    return this.Base == note.Base && this.Suffix == note.Suffix;
   }
 
   public Natural(): Note {

@@ -49,24 +49,27 @@ const parseOptionsCookie = (cookieString: string): IAppOptions => {
 };
 
 const serializeOptionsCookie = (options: IAppOptions): string => {
-  options.chord = {
+  const newOptions = { ...options };
+
+  newOptions.chord = {
     Root: {
       Base: options.chord.Root.Base,
       Suffix: options.chord.Root.Suffix,
     },
     Modifier: options.chord.Modifier
   } as Chord;
+  // TODO: Fix this
   // options.key = {
   //   Tonic: {
   //     Base: options.key.Tonic.Base,
   //     Suffix: options.key.Tonic.Suffix,
   //   }
   // } as Key;
-  options.tuning = {
+  newOptions.tuning = {
     Label: options.tuning.Label,
-    Offsets: options.tuning.Offsets,
+    Offsets: newOptions.tuning.Offsets,
   } as Tuning;
-  return JSON.stringify(options);
+  return JSON.stringify(newOptions);
 };
 
 const DefaultIndicatorsOptions = {
@@ -95,11 +98,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         : loadDefault();
   }, []);
   
-  // DEBUG
-  const chord = {
-    root: Note.C(),
-    modifier: ChordModifier.Major,
-  } as Partial<Chord>;
 
   const loadDefault = () => {
     new InstrumentApi().GetAll().then((instruments) => {
@@ -170,6 +168,10 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     setOptions(newOptions);
     setCookie('options', serializeOptionsCookie(newOptions));
+
+    if (updated?.chord != null && options?.chord != null && !updated.chord.Root.Equals(options.chord.Root)) {
+      loadUiOptions(options.numFrets, updated.chord, options.tuning);
+    }
   };
 
   const handleSetIndicatorsOptions = (

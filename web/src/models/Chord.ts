@@ -11,7 +11,7 @@ export enum ChordModifier {
   DominantSevent,
   Suspended,
   Augmented,
-  Extended,
+  // Extended,
 }
 
 // I        tonic
@@ -81,13 +81,11 @@ export class Chord {
     return `${this._root.Label}${this._modifier}`;
   }
 
-  get Root(): Note {
-    return this._root;
-  }
+  get Root(): Note { return this._root; }
+  set Root(value: Note) { this._root = value; }
 
-  get Modifier(): ChordModifier {
-    return this._modifier;
-  }
+  get Modifier(): ChordModifier { return this._modifier; }
+  set Modifier(value: ChordModifier) { this._modifier = value; }
 
   get ModifierLabel(): string {
     return Chord.getModifierLabel(this._modifier);

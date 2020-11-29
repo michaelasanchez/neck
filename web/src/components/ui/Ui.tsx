@@ -1,8 +1,7 @@
 import * as React from 'react';
-
-import { ChordDiagram, ChordSlideIn, Navbar, OptionsModal, SlideIn } from '.';
+import { ChordSlideIn, Navbar, OptionsModal } from '.';
 import { IndicatorsDisplayOptions } from '..';
-import { Chord, ChordModifier, ChordVariation, Key, Mode, Note, Tuning } from '../../models';
+import { ChordVariation, Key, Mode, Tuning } from '../../models';
 import { IAppOptions } from '../../shared';
 import { FretDisplayMode } from '../neck';
 
@@ -27,7 +26,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
   setOptions,
   indicatorsOptions,
   setIndicatorsOptions,
-  uiOptions
+  uiOptions,
 }) => {
   const [showOptions, setShowOptions] = React.useState<boolean>(false);
 
@@ -65,7 +64,12 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setTuning={(t: Tuning) => setOptions({ tuning: t })}
         setMode={(m: Mode) => setOptions({ mode: m })}
       />
-      <ChordSlideIn appOptions={appOptions} setIndicatorsOptions={setIndicatorsOptions} uiOptions={uiOptions} />
+      <ChordSlideIn
+        appOptions={appOptions}
+        setAppOptions={setOptions}
+        setIndicatorsOptions={setIndicatorsOptions}
+        uiOptions={uiOptions}
+      />
     </>
   );
 };

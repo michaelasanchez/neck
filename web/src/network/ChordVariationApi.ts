@@ -26,11 +26,11 @@ export class ChordVariationApi extends ApiRequest<ChordVariation> {
   }
 
   private hack = (chord: Partial<Chord>): Chord => {
-
-    console.log('PARAMS', chord);
-
     return {
-      Root: chord.Root,
+      Root: {
+        Base: chord.Root.Base,
+        Suffix: chord.Root.Suffix,
+      },
       Modifier: chord.Modifier
     } as Chord;
   }

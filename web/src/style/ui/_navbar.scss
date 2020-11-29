@@ -7,12 +7,17 @@ nav {
     cursor: pointer;
   }
 
+  button.btn-lg {
+    border-width: 3px;
+  }
+
   button.options {
     color: #fff;
     margin-right: 15px;
     opacity: 0.6;
     transition: background-color opacity 100ms;
 
+    &.active,
     &:hover {
       opacity: 1;
     }

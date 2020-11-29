@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Loading } from '../Loading';
 
@@ -29,12 +30,13 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
     transform: `translateX(-${slideInWidth}px)`,
   };
 
-  const show = true;
+  const [show, setShow] = useState<boolean>(true);
 
   return (
     <div
       className={`slidein ${className}`}
       style={show ? slideInStyle : slideOutStyle}
+      // onClick={() => setShow(!show)}
     >
       <div className="header">
         <div className="title">{headerTitle}</div>
