@@ -12,6 +12,9 @@ namespace neck.Models
 		// Position from string nut or open note
 		public List<int?> Positions;
 
+		[NotMapped]
+		public bool isBarre { get; set; }
+
 		public ICollection<ChordVariation> ChordVariations;
 
 		public Formation() { }

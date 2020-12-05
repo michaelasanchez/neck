@@ -36,7 +36,7 @@ export interface AppProps {
 
 const parseOptionsCookie = (cookieString: string): IAppOptions => {
   let parsed = JSON.parse(cookieString);
-  
+
   const rootNote = new Note(parsed.key._tonic.base, parsed.key._tonic.suffix);
   const chordRoot = new Note(parsed.chord.Root.Base, parsed.chord.Root.Suffix);
 
@@ -56,7 +56,7 @@ const serializeOptionsCookie = (options: IAppOptions): string => {
       Base: options.chord.Root.Base,
       Suffix: options.chord.Root.Suffix,
     },
-    Modifier: options.chord.Modifier
+    Modifier: options.chord.Modifier,
   } as Chord;
   // TODO: Fix this
   // options.key = {
@@ -97,7 +97,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         ? loadOptions(parseOptionsCookie(saved))
         : loadDefault();
   }, []);
-  
 
   const loadDefault = () => {
     new InstrumentApi().GetAll().then((instruments) => {
@@ -118,7 +117,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   };
 
   const loadOptions = (options: IAppOptions) => {
-
     if (options.instrumentId) {
       let instrumentRequest = new InstrumentApi()
         .GetById(options.instrumentId)
@@ -137,17 +135,20 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     }
   };
 
-  const loadUiOptions = (numFrets: number, chord: Chord, tuning: Tuning) => {
+  const loadUiOptions = (numFrets: number, chord: Chord, tuning: Tuning) =>
     new ChordVariationApi()
       .GenerateRange({
         chord,
         tuningId: tuning.Id,
         range: numFrets,
+        span: 4,
       })
       .then((response: any) => {
         const newVariations: ChordVariation[] = [];
+        //
         each(response, (v) => {
           newVariations.push(
+            //
             new ChordVariation(
               v.Formation.Positions,
               v.Chord,
@@ -158,7 +159,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         });
         handleSetUiOptions({ variations: newVariations });
       });
-  };
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {
     const newOptions = {
@@ -169,7 +169,12 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     setOptions(newOptions);
     setCookie('options', serializeOptionsCookie(newOptions));
 
-    if (updated?.chord != null && options?.chord != null && !updated.chord.Root.Equals(options.chord.Root)) {
+    if (
+      updated?.chord != null &&
+      options?.chord != null &&
+      (!updated.chord.Root.Equals(options.chord.Root) ||
+        updated.chord.Modifier != options.chord.Modifier)
+    ) {
       loadUiOptions(options.numFrets, updated.chord, options.tuning);
     }
   };

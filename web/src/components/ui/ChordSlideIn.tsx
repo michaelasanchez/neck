@@ -1,7 +1,8 @@
-import { filter, findIndex, map } from 'lodash';
+import { filter, findIndex, indexOf, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Accordion, Button, ButtonGroup, Collapse, Dropdown, DropdownButton, Form, FormControl, InputGroup } from 'react-bootstrap';
+
 import { ChordDiagram, SlideIn, UiOptions } from '.';
 import { Chord, ChordModifier, ChordVariation, Note } from '../../models';
 import { IAppOptions } from '../../shared';
@@ -10,7 +11,7 @@ import { IndicatorsDisplayOptions } from '../Indicators';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-const SlideInTitle = 'Chord';
+const SlideInTitle = 'Chords';
 
 export interface IChordSlideInProps {
   setIndicatorsOptions: (update: Partial<IndicatorsDisplayOptions>) => void;
@@ -106,73 +107,115 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
       update = true;
       updatedRoot = root;
     }
-    if (!!mod && mod != modifier) {
+    if (mod !== null && mod != modifier) {
       update = true;
       updatedModifier = mod;
     }
 
-    if (updatedRoot || updatedModifier) {
+    if (updatedRoot || updatedModifier !== null) {
       setAppOptions({
-        chord: new Chord(updatedRoot || rootNote, updatedModifier || modifier),
+        chord: new Chord(
+          updatedRoot || rootNote,
+          updatedModifier !== null ? updatedModifier : modifier
+        ),
       });
     }
   };
 
-  const headerButton = (
-    <>
-      <ButtonGroup size="lg" className="mb-2">
-        <DropdownButton
-          variant="secondary"
-          as={ButtonGroup}
-          title={rootNote.Label}
-          id="dropdown-note"
-        >
-          {map(notes, (n: Note, i: number) => (
-            <Dropdown.Item
-              eventKey={i.toString()}
-              key={i}
-              active={i == selectedRootIndex}
-              onSelect={() => handleRootUpdate(n)}
-            >
-              {n.Label}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        <DropdownButton
-          variant="secondary"
-          as={ButtonGroup}
-          title={getChordModifierLabel(modifier)}
-          id="dropdown-modifier"
-        >
-          {map(modifiers, (m: string, i: number) => (
-            <Dropdown.Item
-              eventKey={i.toString()}
-              key={i}
-              active={i == modifier}
-              onSelect={() => handleModifierUpdate(i)}
-            >
-              {getChordModifierLabel(i)}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-      </ButtonGroup>
-    </>
+  const headerBadge = (
+    <ButtonGroup size="lg">
+      <DropdownButton
+        variant="secondary"
+        as={ButtonGroup}
+        title={rootNote.Label}
+        id="dropdown-note"
+      >
+        {map(notes, (n: Note, i: number) => (
+          <Dropdown.Item
+            eventKey={i.toString()}
+            key={i}
+            active={i == selectedRootIndex}
+            onSelect={() => handleRootUpdate(n)}
+          >
+            {n.Label}
+          </Dropdown.Item>
+        ))}
+      </DropdownButton>
+      <DropdownButton
+        variant="secondary"
+        as={ButtonGroup}
+        title={getChordModifierAbbreviation(modifier)}
+        id="dropdown-modifier"
+      >
+        {map(modifiers, (m: string, i: number) => (
+          <Dropdown.Item
+            eventKey={i.toString()}
+            key={i}
+            active={i == modifier}
+            onSelect={() => handleModifierUpdate(i)}
+            disabled={indexOf([0, 1, 3], i) < 0}
+          >
+            {getChordModifierLabel(i)}
+          </Dropdown.Item>
+        ))}
+      </DropdownButton>
+    </ButtonGroup>
   );
+
+  // const [open, setOpen] = useState(false);
 
   return (
     <SlideIn
       className="chord"
-      headerTitle={<h2>{SlideInTitle}</h2>}
-      headerButton={headerButton}
+      title={<h2>{SlideInTitle}</h2>}
+      badge={headerBadge}
+      // header={
+      //   <>
+      //     <InputGroup size="sm">
+      //       <InputGroup.Prepend>
+      //         <InputGroup.Text id="inputGroup-sizing-sm">Range</InputGroup.Text>
+      //       </InputGroup.Prepend>
+      //       <FormControl />
+      //     </InputGroup>
+      //     <InputGroup size="sm">
+      //       <InputGroup.Prepend>
+      //         <InputGroup.Text id="inputGroup-sizing-sm">Offset</InputGroup.Text>
+      //       </InputGroup.Prepend>
+      //       <FormControl />
+      //     </InputGroup>
+      //     |
+      //     <InputGroup size="sm">
+      //       <InputGroup.Prepend>
+      //         <InputGroup.Text id="inputGroup-sizing-sm">Span</InputGroup.Text>
+      //       </InputGroup.Prepend>
+      //       <FormControl />
+      //     </InputGroup>
+      //   </>
+      // }
       loading={!variations}
     >
-      {map(variations, (v: ChordVariation, i: number) => (
-        <ChordDiagram
-          chordVariation={v}
-          key={i}
-          onClick={setIndicatorsOptions}
-        />
-      ))}
+      {/* <div className="d-flex justify-content-end">
+        <Button onClick={() => setOpen(!open)} variant="link">
+          Options
+        </Button>
+      </div>
+      <Collapse in={open}>
+        <div>
+          <Form inline>
+            <Form.Label className="mx-2">Span</Form.Label>
+            <Form.Control />
+          </Form>
+        </div>
+      </Collapse> */}
+      <div className="variations">
+        {map(variations, (v: ChordVariation, i: number) => (
+          <ChordDiagram
+            chordVariation={v}
+            key={i}
+            onClick={setIndicatorsOptions}
+          />
+        ))}
+      </div>
     </SlideIn>
   );
 };

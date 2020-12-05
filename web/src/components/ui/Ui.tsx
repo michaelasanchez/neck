@@ -56,20 +56,22 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setKey={(k: Key) => setOptions({ key: k })}
         setFretDisplayMode={handleFretDisplayModeUpdate}
       />
-      <OptionsModal
-        showing={showOptions}
-        onHide={() => setShowOptions(false)}
-        tuning={appOptions.tuning}
-        mode={appOptions.mode}
-        setTuning={(t: Tuning) => setOptions({ tuning: t })}
-        setMode={(m: Mode) => setOptions({ mode: m })}
-      />
-      <ChordSlideIn
-        appOptions={appOptions}
-        setAppOptions={setOptions}
-        setIndicatorsOptions={setIndicatorsOptions}
-        uiOptions={uiOptions}
-      />
+      <div className="modal-container">
+        <OptionsModal
+          showing={showOptions}
+          onHide={() => setShowOptions(false)}
+          tuning={appOptions.tuning}
+          mode={appOptions.mode}
+          setTuning={(t: Tuning) => setOptions({ tuning: t })}
+          setMode={(m: Mode) => setOptions({ mode: m })}
+        />
+      </div>
+        <ChordSlideIn
+          appOptions={appOptions}
+          setAppOptions={setOptions}
+          setIndicatorsOptions={setIndicatorsOptions}
+          uiOptions={uiOptions}
+        />
     </>
   );
 };

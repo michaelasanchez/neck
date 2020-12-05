@@ -62,12 +62,14 @@ namespace neck.Generators
 			var noteCounts = matches.Select(m => m.Count());
 			var numVariations = noteCounts.Aggregate((acc, count) => acc * count);
 
+			// Used to validate variation contains all chord tones
+			var toneCheck = chord.Tones.Select(n => false).ToList();
+
 			// Calculate variations
 			var variations = new List<ChordVariation>();
 			for (var v = 0; v < numVariations; v++)
 			{
 				var multiplier = 1;
-				var chordCheck = chord.Tones.Select(n => false).ToList();
 				var positions = noteCounts.Select((count, countIndex) =>
 				{
 					var prev = multiplier;
@@ -76,19 +78,23 @@ namespace neck.Generators
 					var index = (v / prev) % count;
 
 					var note = matches[countIndex][index];
+
+					// Check tones have been included
 					var toneIndex = chord.Tones.IndexOf(chord.Tones.FirstOrDefault(n => n.Equals(note)));
-					chordCheck[toneIndex] = true;
+					toneCheck[toneIndex] = true;
+
 					return CalcNotePosition(note, tuning.Offsets[countIndex], fretOffset);
 				}).Cast<int?>().ToList();
 				// TODO: Eventually we'll want to get rid of this cast
 				//	in order to support chords that can ignore specific tunings
 
-				var isValidChord = chordCheck.All(c => c);
-
-				if (isValidChord)
+				if (toneCheck.All(c => c))
 				{
 					variations.Add(new ChordVariation(positions, chord, tuning));
 				}
+
+				// Reset
+				toneCheck.ForEach(c => c = false);
 			}
 
 			return variations;

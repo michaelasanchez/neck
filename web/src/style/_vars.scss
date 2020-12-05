@@ -17,12 +17,12 @@ $font-merriweather: "Merriweather", serif;
 
 
 // /* Navbar */
-$navbar-height: 55px;
+$navbar-height: 67.6px;
 
 
 // /* Options */
 $modal-margin-top: 15px;
-$modal-margin-bottom: 70px;
+$modal-margin-bottom: $navbar-height + 15px;
 
 
 // /* Neck */

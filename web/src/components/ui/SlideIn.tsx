@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Dropdown } from 'react-bootstrap';
+
 import { Loading } from '../Loading';
 
 export interface ISlideInProps {
   className?: string;
-  headerTitle?: JSX.Element;
-  headerButton?: JSX.Element;
+  title?: JSX.Element;
+  badge?: JSX.Element; // TODO: expecting ButtonGroup
+  header?: JSX.Element;
   loading: boolean;
 }
 
@@ -18,7 +19,7 @@ const slideInBaseStyle = {
 };
 
 export const SlideIn: React.FC<ISlideInProps> = (props) => {
-  const { className, headerTitle, headerButton: headerRight, loading } = props;
+  const { children, className, title, badge, header, loading } = props;
 
   const slideInStyle = {
     ...slideInBaseStyle,
@@ -38,12 +39,15 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
       style={show ? slideInStyle : slideOutStyle}
       // onClick={() => setShow(!show)}
     >
-      <div className="header">
-        <div className="title">{headerTitle}</div>
-        <div className="right">{headerRight}</div>
-      </div>
+      <div className="badge">{badge}</div>
+      <div className="title">{title}</div>
+      {header && <div className="header">{header}</div>}
       <div className="contents">
-        {loading ? <Loading variant="secondary" showLoadingText={false} /> : <>{props.children}</>}
+        {loading ? (
+          <Loading variant="secondary" showLoadingText={false} />
+        ) : (
+          children
+        )}
       </div>
     </div>
   );

@@ -30,7 +30,7 @@ export class AppOptions {
       key: Key.C(),
       mode: Mode.Ionian(),
       chord: new Chord(Note.C(), ChordModifier.Major),
-      numFrets: 13,
+      numFrets: 14,
       fretMode: FretDisplayMode.Note
     }
   }
@@ -38,7 +38,7 @@ export class AppOptions {
   static GuitarOptions(): IAppOptions {
     return {
       ...this._baseOptions() as IAppOptions,
-      markers: [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2, 0],
+      markers: [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2, 0, 0],
     }
   }
 
