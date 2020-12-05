@@ -10,7 +10,13 @@ namespace neck.Enums
         public enum ChordModifier
         {
             Major,
-            Minor
+            Minor,
+            Diminished,
+            MajorSeventh,
+            MinorSeventh,
+            DominantSeventh,
+            Suspended,
+            Augmented,
         }
     }
 }

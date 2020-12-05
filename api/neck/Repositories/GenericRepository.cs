@@ -88,9 +88,6 @@ namespace neck.Repositories
 			return FirstOrDefaultAsync(t => t.Id == entity.Id);
 		}
 
-		public virtual async Task<int> Count() => await _set.CountAsync();
-
-		// TODO: why bool?
-		//public async Task<int> Count(Expression<Func<TEntity, bool>> predicate) => await _set.CountAsync(predicate);
+		public async Task<int> Count(Expression<Func<TEntity, bool>> predicate) => await _set.CountAsync(predicate);
 	}
 }

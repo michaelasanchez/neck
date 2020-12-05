@@ -27,6 +27,6 @@ namespace neck.Interfaces
 
         public Task<T> Exists(T entity);
 
-        public Task<int> Count();
+        public Task<int> Count(Expression<Func<T, bool>> predicate);
     }
 }

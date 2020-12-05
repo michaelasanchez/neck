@@ -7,58 +7,70 @@ using System.Threading.Tasks;
 
 namespace neck.Models
 {
-    public class OperationResult<TResult>
-    {
-        public OperationResult()
-        {
-        }
+	public interface IOperationResult
+	{
+		public bool Success { get; }
+		public string Message { get; }
+		public Exception Exception { get; }
+	}
 
-        public bool Success { get; private set; }
-        public TResult Result { get; private set; }
-        public string Message { get; private set; }
-        public Exception Exception { get; private set; }
+	public interface IOperationResult<TResult> : IOperationResult
+	{
+		public TResult Result { get; }
+	}
 
-        public static OperationResult<TResult> CreateSuccess(TResult result)
-        {
-            return new OperationResult<TResult> { Success = true, Result = result };
-        }
+	public class OperationResult<TResult> : IOperationResult<TResult>
+	{
+		public OperationResult()
+		{
+		}
 
-        public static OperationResult<TResult> CreateFailure(string nonSuccessMessage)
-        {
-            return new OperationResult<TResult> { Success = false, Message = nonSuccessMessage };
-        }
+		public bool Success { get; private set; }
+		public TResult Result { get; private set; }
+		public string Message { get; private set; }
+		public Exception Exception { get; private set; }
 
-        public static OperationResult<TResult> CreateFailure(Exception ex)
-        {
-            var cur = ex;
-            var message = new StringBuilder(ex.Message);
+		public static OperationResult<TResult> CreateSuccess(TResult result)
+		{
+			return new OperationResult<TResult> { Success = true, Result = result };
+		}
 
-            while (cur.InnerException != null)
+		public static OperationResult<TResult> CreateFailure(string nonSuccessMessage)
+		{
+			return new OperationResult<TResult> { Success = false, Message = nonSuccessMessage };
+		}
+
+		public static OperationResult<TResult> CreateFailure(Exception ex)
+		{
+			var cur = ex;
+			var message = new StringBuilder(ex.Message);
+
+			while (cur.InnerException != null)
 			{
-                cur = ex.InnerException;
-                message.Append(String.Format("{1}{1}{0}", cur.Message, Environment.NewLine));
+				cur = ex.InnerException;
+				message.Append(String.Format("{1}{1}{0}", cur.Message, Environment.NewLine));
 			}
 
-            return new OperationResult<TResult>
-            {
-                Success = false,
-                Message = String.Format("{0}{1}{1}{2}", GetInnerMessages(ex), Environment.NewLine, ex.StackTrace),
-                Exception = ex
-            };
-        }
-
-        private static string GetInnerMessages(Exception ex)
-        {
-            var cur = ex;
-            var messages = new StringBuilder(ex.Message);
-
-            while (cur.InnerException != null)
-            {
-                cur = ex.InnerException;
-                messages.Append(String.Format("{1}{1}{0}", cur.Message, Environment.NewLine));
-            }
-
-            return messages.ToString();
+			return new OperationResult<TResult>
+			{
+				Success = false,
+				Message = String.Format("{0}{1}{1}{2}", GetInnerMessages(ex), Environment.NewLine, ex.StackTrace),
+				Exception = ex
+			};
 		}
-    }
+
+		private static string GetInnerMessages(Exception ex)
+		{
+			var cur = ex;
+			var messages = new StringBuilder(ex.Message);
+
+			while (cur.InnerException != null)
+			{
+				cur = ex.InnerException;
+				messages.Append(String.Format("{1}{1}{0}", cur.Message, Environment.NewLine));
+			}
+
+			return messages.ToString();
+		}
+	}
 }

@@ -9,6 +9,8 @@ namespace neck.Models
 {
 	public class Chord : DbEntity
 	{
+		private List<Key> _keys;
+		private List<Note> _tones;
 
 		public Guid RootId { get; set; }
 		public Note Root { get; set; }
@@ -21,21 +23,18 @@ namespace neck.Models
 		public List<Key> Keys => _keys;
 
 		[NotMapped]
-		public List<Note> Components
+		public List<Note> Tones
 		{
 			get
 			{
-				if (_components == null && Root != null)
+				if (_tones == null && Root != null)
 				{
-					_components = mapComponents(Root, Modifier);
+					_tones = mapComponents(Root, Modifier);
 				}
 
-				return _components;
+				return _tones;
 			}
 		}
-
-		private List<Key> _keys;
-		private List<Note> _components;
 
 		public Chord() { }
 
@@ -49,7 +48,7 @@ namespace neck.Models
 				new Key(Root, Modifier == ChordModifier.Minor ? KeyType.Minor : KeyType.Major)
 			};
 
-			_components = mapComponents(Root, Modifier);
+			_tones = mapComponents(Root, Modifier);
 		}
 
 		private List<int> getDegrees(ChordModifier mod)
@@ -59,7 +58,9 @@ namespace neck.Models
 				case ChordModifier.Major:
 					return new List<int> { 0, 2, 4 };
 				case ChordModifier.Minor:
-					return new List<int> { 0, 2, 3 };
+					return new List<int> { 0, 2, 4 };
+				case ChordModifier.MajorSeventh:
+					return new List<int> { 0, 2, 4, 6 };
 				default:
 					return null;
 			}
@@ -67,11 +68,13 @@ namespace neck.Models
 
 		private List<Note> mapComponents(Note root, ChordModifier mod)
 		{
-			var scale = mod== ChordModifier.Major
-				? new Scale(root, Mode.Ionian())
-				: new Scale(root, Mode.Aeolian());
+			var scale = mod == ChordModifier.Minor
+				? new Scale(root, Mode.Aeolian())
+				: new Scale(root, Mode.Ionian());
 
-			return getDegrees(mod)
+			var degrees = getDegrees(mod);
+
+			return degrees
 				.Select(d => scale.Notes.FirstOrDefault(n => n.Degree == d))
 				.ToList();
 		}

@@ -31,6 +31,21 @@ namespace neck.Models
 			Suffix = suffix;
 		}
 
+		public bool Equals(Note note)
+		{
+			return this.Base == note.Base && this.Suffix == note.Suffix;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is Note note)
+			{
+				return Equals(note);
+			}
+
+			return false;
+		}
+
 		//public override bool Equals(object obj)
 		//{
 		//	var note = obj as Note;
