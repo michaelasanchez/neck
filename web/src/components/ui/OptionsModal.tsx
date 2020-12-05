@@ -20,9 +20,12 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   setTuning,
   setMode,
 }: OptionsModalProps) => {
+
+  const cont = React.useRef();
+
   return (
-    <>
-      <Modal id="options" show={showing} onHide={() => onHide()}>
+    <div className="options-container" ref={cont}>
+      <Modal id="options" show={showing} onHide={() => onHide()} container={cont} className="lg" >
         <Modal.Header closeButton>
           <Modal.Title>Options</Modal.Title>
         </Modal.Header>
@@ -50,6 +53,6 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
           {/* <Button variant="secondary" onClick={() => hide()}>Close</Button> */}
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 };
