@@ -5,13 +5,16 @@ import { Chord, ChordForm, Tuning } from ".";
 export class ChordVariation {
 
   private _positions: number[];
-  private _barre: number[];
+
+  public Barres: number[];
+  // private _barre: number[];
 
   private _chordForm: ChordForm;
 
-  constructor(positions: number[], chord?: Chord, tuning?: Tuning, convert: boolean = false) {
+  constructor(positions: number[], barres: number[], chord?: Chord, tuning?: Tuning, convert: boolean = false) {
     this._positions = positions;
-    this._barre = new Array(this._positions.length).fill(null);
+    this.Barres = barres;
+    // this._barre = new Array(this._positions.length).fill(null);
 
     if (chord !== null && !!tuning) {
       each(ChordForm.getChordForms(chord.Modifier), (f) => {
@@ -26,9 +29,9 @@ export class ChordVariation {
     return this._positions;
   }
 
-  get Barre(): number[] {
-    return this._barre;
-  }
+  // get Barre(): number[] {
+  //   return this._barre;
+  // }
 
   get ChordForm(): ChordForm {
     return this._chordForm;
@@ -61,7 +64,7 @@ export class ChordVariation {
         if (chordForm.isBarre()) {
           const barrePosition = this._positions[chordForm.Barre];
           if (chordForm.Barre <= i && barrePosition > 0) {
-            this._barre[i] = barrePosition;
+            // this._barre[i] = barrePosition;
           }
         }
 
@@ -70,6 +73,15 @@ export class ChordVariation {
 
     return matches;
   };
+
+  // private calcBarre() {
+  //   this._barre = new Array(this._positions.length).fill(null);
+
+  //   const barrePosition = this._positions[chordForm.Barre];
+  //   if (chordForm.Barre <= i && barrePosition > 0) {
+  //     this._barre[i] = barrePosition;
+  //   }
+  // }
 
   Equals = (chordVariation: ChordVariation): boolean => {
     let matches = true;

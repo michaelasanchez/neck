@@ -151,6 +151,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
             //
             new ChordVariation(
               v.Formation.Positions,
+              v.Formation.Barres,
               v.Chord,
               v.Tuning,
               CONVERT_VARIATION_TO_CHORD_FORM
