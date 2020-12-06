@@ -20,14 +20,23 @@ export interface IChordSlideInProps {
   uiOptions: UiOptions;
 }
 
+// Badge Root Note
 const notes = [
   Note.A(),
+  Note.B().Flat(),
   Note.B(),
+  Note.C().Flat(),
   Note.C(),
+  Note.C().Sharp(),
+  Note.D().Flat(),
   Note.D(),
+  Note.E().Flat(),
   Note.E(),
   Note.F(),
+  Note.F().Sharp(),
+  Note.G().Flat(),
   Note.G(),
+  Note.A().Flat(),
 ];
 
 const getChordModifierAbbreviation = (mod: ChordModifier): string => {
@@ -153,7 +162,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             key={i}
             active={i == modifier}
             onSelect={() => handleModifierUpdate(i)}
-            disabled={indexOf([0, 1, 3], i) < 0}
+            disabled={indexOf([0, 1, 3, 4, 7], i) < 0}  // TODO: this really shouldn't be here. DEBUG ONLY!
           >
             {getChordModifierLabel(i)}
           </Dropdown.Item>

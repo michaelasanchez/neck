@@ -29,7 +29,7 @@ export enum NoteSuffixLabel {
 }
 
 const SharpSymbol = '\u266f';
-const FlatSymbol = '\u266f';
+const FlatSymbol = '\u266d';
 
 export class Note {
 

@@ -12,11 +12,13 @@ namespace neck.Enums
             Major,
             Minor,
             Diminished,
-            MajorSeventh,
-            MinorSeventh,
-            DominantSeventh,
+            MajorSeven,
+            MinorSeven,
+            DominantSeven,
             Suspended,
             Augmented,
+            MajorSix,
+            MinorSix,
         }
     }
 }

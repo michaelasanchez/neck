@@ -50,7 +50,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
           <div className="string" key={s}>
             {times(numFrets, (f) => {
               const show = chord.Positions[s] == f + minPos - paddingTop;
-              const open = minPos == 0 && f == 0;
+              const open = f == 0 && minPos - paddingTop < 1;
               const mute = chord.Positions[s] == null && f === 0;
               return (
                 <div className={`fret${open ? ' open' : ''}`} key={f}>
