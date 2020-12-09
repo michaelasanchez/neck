@@ -1,24 +1,31 @@
 import { filter, findIndex, indexOf, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Accordion, Button, ButtonGroup, Collapse, Dropdown, DropdownButton, Form, FormControl, InputGroup } from 'react-bootstrap';
+import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import { ChordDiagram, SlideIn, UiOptions } from '.';
-import { Chord, ChordModifier, ChordVariation, Note } from '../../models';
-import { IAppOptions } from '../../shared';
+import {
+  Chord,
+  ChordModifier,
+  ChordVariation,
+  Note,
+  NoteValue,
+} from '../../models';
+import { IAppOptions, NoteUtils } from '../../shared';
 import { IndicatorsDisplayOptions } from '../Indicators';
+import { NoteSelection } from '../NoteSelection';
 
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
-
-const SlideInTitle = 'Chords';
-
 export interface IChordSlideInProps {
   setIndicatorsOptions: (update: Partial<IndicatorsDisplayOptions>) => void;
   setAppOptions: (update: Partial<IAppOptions>) => void;
   appOptions: IAppOptions;
   uiOptions: UiOptions;
 }
+
+// Badge Chord Modifier
+const modifiers = filter(ChordModifier, (m) => isNaN(m));
 
 // Badge Root Note
 const notes = [
@@ -95,8 +102,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     }
   }, [variations]);
 
-  const modifiers = filter(ChordModifier, (m) => isNaN(m));
-
   const rootNote = appOptions?.chord?.Root;
   const modifier = appOptions?.chord?.Modifier;
 
@@ -125,7 +130,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
       setAppOptions({
         chord: new Chord(
           updatedRoot || rootNote,
-          updatedModifier !== null ? updatedModifier : modifier
+          updatedModifier !== undefined ? updatedModifier : modifier
         ),
       });
     }
@@ -162,7 +167,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             key={i}
             active={i == modifier}
             onSelect={() => handleModifierUpdate(i)}
-            disabled={indexOf([0, 1, 3, 4, 7], i) < 0}  // TODO: this really shouldn't be here. DEBUG ONLY!
+            disabled={indexOf([0, 1, 3, 4, 7], i) < 0} // TODO: this really shouldn't be here. DEBUG ONLY!
           >
             {getChordModifierLabel(i)}
           </Dropdown.Item>
@@ -171,59 +176,30 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     </ButtonGroup>
   );
 
-  // const [open, setOpen] = useState(false);
+  console.log('WHAT WHAT WHAT', appOptions)
 
   return (
     <SlideIn
       className="chord"
-      title={<h2>{SlideInTitle}</h2>}
+      title={
+        <h2>
+          Chord{' '}
+          <span className="h6 text-muted">({variations?.length || 0})</span>
+        </h2>
+      }
       badge={headerBadge}
-      // header={
-      //   <>
-      //     <InputGroup size="sm">
-      //       <InputGroup.Prepend>
-      //         <InputGroup.Text id="inputGroup-sizing-sm">Range</InputGroup.Text>
-      //       </InputGroup.Prepend>
-      //       <FormControl />
-      //     </InputGroup>
-      //     <InputGroup size="sm">
-      //       <InputGroup.Prepend>
-      //         <InputGroup.Text id="inputGroup-sizing-sm">Offset</InputGroup.Text>
-      //       </InputGroup.Prepend>
-      //       <FormControl />
-      //     </InputGroup>
-      //     |
-      //     <InputGroup size="sm">
-      //       <InputGroup.Prepend>
-      //         <InputGroup.Text id="inputGroup-sizing-sm">Span</InputGroup.Text>
-      //       </InputGroup.Prepend>
-      //       <FormControl />
-      //     </InputGroup>
-      //   </>
-      // }
-      loading={!variations}
+      header={<NoteSelection notes={appOptions.chord.Tones} />}
+      loading={variations == null}
     >
-      {/* <div className="d-flex justify-content-end">
-        <Button onClick={() => setOpen(!open)} variant="link">
-          Options
-        </Button>
-      </div>
-      <Collapse in={open}>
-        <div>
-          <Form inline>
-            <Form.Label className="mx-2">Span</Form.Label>
-            <Form.Control />
-          </Form>
-        </div>
-      </Collapse> */}
       <div className="variations">
-        {map(variations, (v: ChordVariation, i: number) => (
+        {variations?.length > 0 ? map(variations, (v: ChordVariation, i: number) => (
           <ChordDiagram
             chordVariation={v}
             key={i}
             onClick={setIndicatorsOptions}
           />
-        ))}
+        )) :
+        <> Nope!</>}
       </div>
     </SlideIn>
   );

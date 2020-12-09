@@ -13,7 +13,6 @@ namespace neck.Models
 		public List<int?> Positions;
 
 		private List<int> _barres;
-		private List<int> _barreStarts;
 
 		[NotMapped]
 		public List<int> Barres
@@ -25,19 +24,7 @@ namespace neck.Models
 			}
 		}
 
-		[NotMapped]
-		public List<int> BarreStarts
-		{
-			get
-			{
-				if (_barreStarts == null) _barreStarts = calcBarreStarts();
-				return _barreStarts;
-			}
-		}
-
 		public ICollection<ChordVariation> ChordVariations;
-
-		public Formation() { }
 
 		public Formation(List<int?> positions)
 		{
@@ -58,15 +45,6 @@ namespace neck.Models
 			{
 				return barres;
 			}
-		}
-
-		private List<int> calcBarreStarts()
-		{
-			var barreStarts = new List<int>();
-
-
-
-			return barreStarts;
 		}
 	}
 }

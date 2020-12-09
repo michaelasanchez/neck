@@ -41,7 +41,7 @@ export class Note {
   private _degree: number;
 
   constructor(value: NoteValue = NoteValue.C, suffix: NoteSuffix = NoteSuffix.Natural) {
-    this._base = value % Note.NUM_NOTES;
+    this.Base = value % Note.NUM_NOTES;
     this.Suffix = suffix;
   }
 
@@ -65,7 +65,6 @@ export class Note {
   }
 
   get Label(): string {
-    // Cheap visual test
     return NoteValue[this._base] ? `${NoteValue[this._base]}${this.SuffixLabel(this._suffix)}` : 'ERROR';
   }
 

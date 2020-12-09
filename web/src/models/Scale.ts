@@ -104,13 +104,13 @@ export class Scale {
   }
 
   public containsNote = (note: Note): boolean => {
-    const scaleNotes = NoteUtils.toString(this._notes);
+    const scaleNotes = NoteUtils.NoteArrayToString(this._notes);
     return indexOf(scaleNotes, note.Label) >= 0;
   }
 
   public containsChord = (chord: Chord): boolean => {
-    const chordNotes = NoteUtils.toString(chord.Tones);
-    const keyNotes = NoteUtils.toString(this._notes);
+    const chordNotes = NoteUtils.NoteArrayToString(chord.Tones);
+    const keyNotes = NoteUtils.NoteArrayToString(this._notes);
 
     const found = map(chordNotes, n => indexOf(keyNotes, n) >= 0);
     return every(found);

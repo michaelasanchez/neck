@@ -58,11 +58,13 @@ export class Chord {
 
   private _tones: Note[];
 
+  private _scale: Scale;
+
   constructor(root: Note, mod: ChordModifier) {
     this._root = root;
     this._modifier = mod || ChordModifier.Major;
 
-    const scale = this._modifier === ChordModifier.Major
+    this._scale = this._modifier === ChordModifier.Major
       ? new Scale(root, Mode.Ionian())
       : new Scale(root, Mode.Aeolian());
 
@@ -70,7 +72,7 @@ export class Chord {
       ? [new Key(this._root).RelativeMajor]
       : [new Key(this._root)];
 
-    this._tones = calculatePitches(scale, this._modifier);
+    this._tones = calculatePitches(this._scale, this._modifier);
   }
 
   get Label(): string {

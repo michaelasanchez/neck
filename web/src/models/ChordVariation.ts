@@ -1,10 +1,15 @@
-import { each, min } from "lodash";
+import { each, map, min } from "lodash";
 
 import { Chord, ChordForm, Tuning } from ".";
+import { Note } from "./Note";
 
 export class ChordVariation {
 
   private _positions: number[];
+
+  public Pitches: number[];
+
+  public Chord: Chord;
 
   public Barres: number[];
   // private _barre: number[];
@@ -13,8 +18,13 @@ export class ChordVariation {
 
   constructor(positions: number[], barres: number[], chord?: Chord, tuning?: Tuning, convert: boolean = false) {
     this._positions = positions;
+    if (chord) this.Chord = chord;
     this.Barres = barres;
     // this._barre = new Array(this._positions.length).fill(null);
+
+    this.Pitches = map(tuning.Offsets, (o: number, i: number) => {
+      return (o + this.Positions[i]) % Note.NUM_NOTES;
+    });
 
     if (chord !== null && !!tuning) {
       each(ChordForm.getChordForms(chord.Modifier), (f) => {

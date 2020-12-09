@@ -14,10 +14,13 @@ namespace neck.Generators
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
 
+		private int ALLOWED_MUTES = 1;
+
 		// Returns a fret number based on a Note, tuning
 		//  offset and an optional minimum fret position
-		public int CalcNotePosition(Note note, int tuningOffset, int min = 0)
+		private int? calcNotePosition(Note note, int tuningOffset, int min = 0)
 		{
+			if (note == null) return null;
 			var pos = (note.Pitch - tuningOffset + Notes.Count) % Notes.Count;
 			while (pos < min) pos += Notes.Count;
 			return pos;
@@ -27,77 +30,6 @@ namespace neck.Generators
 		{
 			var pos = CalcNotePosition(note, tuning, offset);
 			return pos >= offset && pos <= offset + (span - 1);
-		}
-
-		public List<ChordVariation> GenerateRange(Chord chord, Tuning tuning, int start, int end, int fretSpan)
-		{
-			var variations = new List<ChordVariation>();
-
-			for (var i = start; i <= end - fretSpan; i++)
-			{
-				var newVariations = GenerateVariations(chord, tuning, i, fretSpan);
-
-				for (var j = 0; j < newVariations.Count; j++)
-				{
-					if (!containsVariation(variations, newVariations[j]))
-					{
-						variations.Add(newVariations[j]);
-					}
-				}
-				//variations.AddRange(newVariations);
-			}
-
-			return variations;
-		}
-
-		public List<ChordVariation> GenerateVariations(Chord chord, Tuning tuning, int fretOffset, int fretSpan)
-		{
-			if (fretOffset == 0 && VARIATION_SPAN_INCLUDES_OPEN == true) fretSpan++;
-
-			// Matches will contain a set of notes for each string (tuning offset)
-			//  Each note is a component of chord
-			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o, fretOffset, fretSpan)).ToList()).ToList();
-
-			// Calculate number of combinations from matched notes
-			var noteCounts = matches.Select(m => m.Count());
-			var numVariations = noteCounts.Aggregate((acc, count) => acc * count);
-
-			// Used to validate variation contains all chord tones
-			var toneCheck = chord.Tones.Select(n => false).ToList();
-
-			// Calculate variations
-			var variations = new List<ChordVariation>();
-			for (var v = 0; v < numVariations; v++)
-			{
-				var multiplier = 1;
-				var positions = noteCounts.Select((count, countIndex) =>
-				{
-					var prev = multiplier;
-					multiplier *= count;
-
-					var index = (v / prev) % count;
-
-					var note = matches[countIndex][index];
-
-					// Check tones have been included
-					var toneIndex = chord.Tones.IndexOf(chord.Tones.FirstOrDefault(n => n.Equals(note)));
-					toneCheck[toneIndex] = true;
-
-					return CalcNotePosition(note, tuning.Offsets[countIndex], fretOffset);
-				}).Cast<int?>().ToList();
-				// TODO: Eventually we'll want to get rid of this cast
-				//	in order to support chords that can ignore specific tunings
-
-				if (toneCheck.All(c => c))
-				{
-					variations.Add(new ChordVariation(positions, chord, tuning));
-				}
-
-				// Reset
-				toneCheck.ForEach(c => c = false);
-			}
-
-			return variations;
 		}
 
 		private bool containsVariation(List<ChordVariation> variations, ChordVariation newVariation)
@@ -117,6 +49,90 @@ namespace neck.Generators
 				if (matches) return true;
 			}
 			return false;
+		}
+
+		public List<ChordVariation> GenerateRange(Chord chord, Tuning tuning, int start, int end, int fretSpan)
+		{
+			var variations = new List<ChordVariation>();
+
+			for (var i = start; i <= end - fretSpan + 1; i++)
+			{
+				var newVariations = GenerateVariations(chord, tuning, i, fretSpan);
+
+				for (var j = 0; j < newVariations.Count; j++)
+				{
+					if (FILTER_DUPLICATE_VARIATIONS && !containsVariation(variations, newVariations[j]))
+					{
+						variations.Add(newVariations[j]);
+					}
+				}
+			}
+
+			return variations;
+		}
+
+		public List<ChordVariation> GenerateVariations(Chord chord, Tuning tuning, int fretOffset, int fretSpan)
+		{
+			if (fretOffset == 0 && VARIATION_SPAN_INCLUDES_OPEN == true) fretSpan++;
+
+			// Matches will contain a set of notes for each string (tuning offset)
+			//  Each note is a component of chord
+			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o, fretOffset, fretSpan)).ToList()).ToList();
+
+			// Calculate number of combinations from matched notes
+			var noteCounts = matches.Select(m => m.Count()).ToList();
+			var noMatches = noteCounts.Where(m => m == 0).Count();
+
+			// Add mute(s) if needed
+			if (noMatches > 0 && noMatches <= ALLOWED_MUTES)
+			{
+				var index = noteCounts.IndexOf(0);
+				noteCounts[index] = 1;
+			}
+
+			//
+			var numVariations = noteCounts.Aggregate((acc, count) => acc * count);
+
+			// Used to validate variation contains all chord tones
+			var toneCheck = chord.Tones.Select(n => false).ToList();
+
+			// Calculate variations
+			var variations = new List<ChordVariation>();
+			for (var v = 0; v < numVariations; v++)
+			{
+				var multiplier = 1;
+				var positions = noteCounts.Select((count, countIndex) =>
+				{
+					var prev = multiplier;
+					multiplier *= count;
+
+					var index = (v / prev) % count;
+
+					Note note = null;
+					if (matches[countIndex].Count() > 0)
+					{
+						note = matches[countIndex][index];
+
+						// Check tones have been included
+						var toneIndex = chord.Tones.IndexOf(chord.Tones.FirstOrDefault(n => n.Equals(note)));
+						toneCheck[toneIndex] = true;
+					}
+
+					return CalcNotePosition(note, tuning.Offsets[countIndex], fretOffset);
+				}).ToList();
+				// TODO: Eventually we'll want to get rid of this cast
+				//	in order to support chords that can ignore specific tunings
+
+				if (toneCheck.All(c => c))
+				{
+					variations.Add(new ChordVariation(positions, chord, tuning));
+				}
+
+				// Reset
+				toneCheck.ForEach(c => c = false);
+			}
+
+			return variations;
 		}
 	}
 }

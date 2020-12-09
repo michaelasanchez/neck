@@ -64,6 +64,7 @@ namespace neck.Models
 
 		private List<int> getDegrees(ChordModifier mod)
 		{
+			// TODO: Currently exist on front end
 			switch (mod)
 			{
 				case ChordModifier.Major:
@@ -72,11 +73,11 @@ namespace neck.Models
 					return new List<int> { 0, 2, 4 };
 				case ChordModifier.Diminished:
 					throw new Exception("Not implemented");
-				case ChordModifier.MajorSeven:
+				case ChordModifier.MajorSeventh:
 					return new List<int> { 0, 2, 4, 6 };
-				case ChordModifier.MinorSeven:
+				case ChordModifier.MinorSeventh:
 					return new List<int> { 0, 2, 4, 6 };
-				case ChordModifier.DominantSeven:
+				case ChordModifier.DominantSeventh:
 					throw new Exception("Not implemented");
 				case ChordModifier.Suspended:
 					throw new Exception("Not implemented");
@@ -89,12 +90,13 @@ namespace neck.Models
 
 		private List<Note> mapComponents(Note root, ChordModifier mod)
 		{
-			var scale = mod == ChordModifier.Minor || mod == ChordModifier.MinorSeven
+
+			// Degress mark a note's position in a scale
+			var degrees = getDegrees(mod);
+
+			var scale = mod == ChordModifier.Minor || mod == ChordModifier.MinorSeventh
 				? new Scale(root, Mode.Aeolian())
 				: new Scale(root, Mode.Ionian());
-
-			// Degress mark a notes position in a scale
-			var degrees = getDegrees(mod);
 			
 			// Components are the notes that compose a chord
 			var components = degrees

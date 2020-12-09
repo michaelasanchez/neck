@@ -79,7 +79,7 @@ const DefaultIndicatorsOptions = {
 const App: React.FunctionComponent<AppProps> = ({}) => {
   const { getCookie, setCookie } = useCookie();
 
-  const [options, setOptions] = useState<IAppOptions>();
+  const [appOptions, setAppOptions] = useState<IAppOptions>();
   const [
     indicatorsOptions,
     setIndicatorsOptions,
@@ -141,9 +141,9 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         chord,
         tuningId: tuning.Id,
         range: numFrets,
-        span: 4,
+        span: 4,  // TODO: This is her temporarily. DEBUG ONLY !!
       })
-      .then((response: any) => {
+      .then((response: any) => {  // TODO: any type here because chordVariation does not have formation on FE
         const newVariations: ChordVariation[] = [];
         //
         each(response, (v) => {
@@ -163,20 +163,20 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
   const handleSetOptions = (updated: Partial<IAppOptions>) => {
     const newOptions = {
-      ...options,
+      ...appOptions,
       ...updated,
     };
 
-    setOptions(newOptions);
+    setAppOptions(newOptions);
     setCookie('options', serializeOptionsCookie(newOptions));
 
     if (
       updated?.chord != null &&
-      options?.chord != null &&
-      (!updated.chord.Root.Equals(options.chord.Root) ||
-        updated.chord.Modifier != options.chord.Modifier)
+      appOptions?.chord != null &&
+      (!updated.chord.Root.Equals(appOptions.chord.Root) ||
+        updated.chord.Modifier != appOptions.chord.Modifier)
     ) {
-      loadUiOptions(options.numFrets, updated.chord, options.tuning);
+      loadUiOptions(appOptions.numFrets, updated.chord, appOptions.tuning);
     }
   };
 
@@ -196,18 +196,18 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     });
   };
 
-  if (options) {
+  if (appOptions) {
     return (
       <>
         <main ref={mainRef}>
-          <Backdrop options={options} />
+          <Backdrop options={appOptions} />
           <div className="neck-container">
-            <Neck options={options} />
+            <Neck options={appOptions} />
           </div>
           {SHOW_INDICATORS && (
             <div className="indicators-container">
               <Indicators
-                appOptions={options}
+                appOptions={appOptions}
                 displayOptions={indicatorsOptions}
                 mainRef={mainRef}
               />
@@ -215,9 +215,9 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
           )}
         </main>
         <Ui
-          appOptions={options}
+          appOptions={appOptions}
           indicatorsOptions={indicatorsOptions}
-          setOptions={handleSetOptions}
+          setAppOptions={handleSetOptions}
           setIndicatorsOptions={handleSetIndicatorsOptions}
           uiOptions={uiOptions}
         />

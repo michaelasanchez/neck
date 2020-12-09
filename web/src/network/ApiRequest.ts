@@ -3,7 +3,8 @@ import { BaseRequest } from "./BaseRequest";
 
 const DOMAIN_DEFAULT = 'https://localhost:5001';
 
-export type EntityType = 'ChordVariation' | 'Instrument' | 'Tuning';
+// Allowed types
+export type EntityType = 'Chord' | 'ChordVariation' | 'Instrument' | 'Tuning';
 
 export enum ApiAction { }
 

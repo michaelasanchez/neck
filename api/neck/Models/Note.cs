@@ -33,6 +33,7 @@ namespace neck.Models
 
 		public bool Equals(Note note)
 		{
+			if (note == null) return false;
 			return this.Base == note.Base && this.Suffix == note.Suffix;
 		}
 
@@ -69,6 +70,13 @@ namespace neck.Models
 		#region Calculate note intervals & accidentals
 		// TODO: Add half/whole step down?
 
+		public Note HalfStepDown()
+		{
+			int step = 0;
+
+			return new Note();
+		}
+
 		public Note HalfStepUp()
 		{
 			int step = 0;
@@ -99,7 +107,29 @@ namespace neck.Models
 				}
 			}
 
-			return new Note((NoteValue)(Pitch + step), nextSuffix);
+			// IF ANYTHING IS SERIOUSLY BROKEN THIS IS THE FIRST PLACE TO LOOk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111
+			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+			//return new Note((NoteValue)(Pitch + step), nextSuffix);
+			var nextValue = (int)(Pitch + step);
+			if (!Enum.IsDefined(typeof(NoteValue), nextValue))
+			{
+				nextValue = (int)(Base + step) % Notes.Count;
+				if (nextSuffix == NoteSuffix.Flat)
+				{
+					nextSuffix = NoteSuffix.DoubleFlat;
+				} else
+				{
+					nextSuffix = NoteSuffix.DoubleSharp;
+				}
+			}
+			return new Note((NoteValue)nextValue, nextSuffix);
+		}
+
+		public Note WholeStepDown()
+		{
+			int step = 0;
+
+			return new Note();
 		}
 
 		public Note WholeStepUp()
@@ -115,7 +145,14 @@ namespace neck.Models
 				}
 				else
 				{
-					step = 2;
+					if (Suffix == NoteSuffix.DoubleFlat)
+					{
+						step = 3;
+						nextSuffix = NoteSuffix.Flat;
+					} else
+					{
+						step = 2;
+					}
 				}
 			}
 			else
@@ -132,7 +169,20 @@ namespace neck.Models
 				}
 			}
 
-			return new Note((NoteValue)(Pitch + step), nextSuffix);
+			var nextValue = (int)(Pitch + step);
+			if (!Enum.IsDefined(typeof(NoteValue), nextValue))
+			{
+				nextValue = (int)(Base + step) % Notes.Count;
+				if (nextSuffix == NoteSuffix.Flat)
+				{
+					nextSuffix = NoteSuffix.DoubleFlat;
+				}
+				else
+				{
+					nextSuffix = NoteSuffix.DoubleSharp;
+				}
+			}
+			return new Note((NoteValue)nextValue, nextSuffix);
 		}
 		#endregion
 
