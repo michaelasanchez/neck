@@ -51,6 +51,11 @@ $diagrams-per-row: 4;
       }
     }
 
+    .header {
+      width: 50%;
+      align-self: flex-end;
+    }
+
     .contents {
       // TODO: figure out what can go in generic slide-in
       display: flex;

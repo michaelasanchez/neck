@@ -1,5 +1,6 @@
 import { filter, map } from 'lodash';
 import * as React from 'react';
+
 import { Note, NoteValue } from '../models';
 import { NoteUtils } from '../shared';
 
@@ -17,7 +18,7 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({ notes }) => {
         var result = filter(notes, n => n.Base == v);
         if (result.length == 1) {
           return (
-            <small className="font-weight-bold">{result[0].Label}</small>
+            <small key={i} className="font-weight-bold">{result[0].Label}</small>
           )
         }
 

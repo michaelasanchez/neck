@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using neck.Factories.Args;
 using neck.Generators;
 using neck.Interfaces;
 using neck.Models;
@@ -16,7 +17,7 @@ namespace neck.Controllers
 	{
 		private readonly ILogger<ChordVariationController> _logger;
 
-		private readonly ChordVariationGenerator _generator;
+		private ChordVariationFactory _factory;
 
 		private IRepository<Chord> _chordRepo;
 		private IRepository<Tuning> _tuningRepo;
@@ -24,14 +25,14 @@ namespace neck.Controllers
 		public ChordVariationController(
 			ILogger<ChordVariationController> logger,
 			IRepository<ChordVariation> repository,
-			IGenerator<ChordVariation> generator,
+			IFactory<ChordVariation, ChordVariationCreateArgs> factory,
 			IRepository<Chord> chordRepository,
 			IRepository<Tuning> tuningRepository
 		)
 			: base(repository)
 		{
 			_logger = logger;
-			_generator = (ChordVariationGenerator)generator;
+			_factory = (ChordVariationFactory)factory;
 
 			_chordRepo = chordRepository;
 			_tuningRepo = tuningRepository;
@@ -61,7 +62,7 @@ namespace neck.Controllers
 				return BadRequest("Span must be greater than zero");
 			}
 
-			return _generator.GenerateVariations(chord, tuning, offset, span);
+			return _factory.GenerateVariations(chord, tuning, offset, span);
 		}
 
 		[HttpPost("GenerateRange")]
@@ -88,7 +89,7 @@ namespace neck.Controllers
 			List<ChordVariation> variations;
 			try
 			{
-				variations = _generator.GenerateRange(chord, tuning, offset, range, span);
+				variations = _factory.GenerateRange(chord, tuning, offset, range, span);
 			}
 			catch (Exception ex)
 			{

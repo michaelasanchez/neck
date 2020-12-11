@@ -1,4 +1,5 @@
 ﻿using neck.Comparers;
+using neck.Factories.Args;
 using neck.Interfaces;
 using neck.Models;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace neck.Generators
 {
-	public class ChordVariationGenerator : GenericGenerator<ChordVariation>
+	public class ChordVariationFactory : IFactory<ChordVariation, ChordVariationCreateArgs>
 	{
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
@@ -28,7 +29,7 @@ namespace neck.Generators
 
 		private bool isNoteInRange(Note note, int tuning, int offset, int span)
 		{
-			var pos = CalcNotePosition(note, tuning, offset);
+			var pos = calcNotePosition(note, tuning, offset);
 			return pos >= offset && pos <= offset + (span - 1);
 		}
 
@@ -72,7 +73,14 @@ namespace neck.Generators
 		}
 
 		public List<ChordVariation> GenerateVariations(Chord chord, Tuning tuning, int fretOffset, int fretSpan)
+		//public List<ChordVariation> Create(ChordVariationCreateArgs args)
 		{
+			//// TODO: figure out where validation goes. It's in the controller now
+			//var chord = args.chord;
+			//var tuning = args.tuning;
+			//var fretOffset = args.fretOffset;
+			//var fretSpan = args.fretSpan;
+
 			if (fretOffset == 0 && VARIATION_SPAN_INCLUDES_OPEN == true) fretSpan++;
 
 			// Matches will contain a set of notes for each string (tuning offset)
@@ -118,7 +126,7 @@ namespace neck.Generators
 						toneCheck[toneIndex] = true;
 					}
 
-					return CalcNotePosition(note, tuning.Offsets[countIndex], fretOffset);
+					return calcNotePosition(note, tuning.Offsets[countIndex], fretOffset);
 				}).ToList();
 				// TODO: Eventually we'll want to get rid of this cast
 				//	in order to support chords that can ignore specific tunings

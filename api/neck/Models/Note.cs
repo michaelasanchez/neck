@@ -31,28 +31,16 @@ namespace neck.Models
 			Suffix = suffix;
 		}
 
-		public bool Equals(Note note)
-		{
-			if (note == null) return false;
-			return this.Base == note.Base && this.Suffix == note.Suffix;
-		}
-
 		public override bool Equals(object obj)
 		{
 			if (obj is Note note)
 			{
-				return Equals(note);
+				return this.Base == note.Base &&
+					this.Suffix == note.Suffix;
 			}
 
 			return false;
 		}
-
-		//public override bool Equals(object obj)
-		//{
-		//	var note = obj as Note;
-		//	return String.Equals(Base, note.Base)
-		//		&& String.Equals(Suffix, note.Suffix);
-		//}
 
 		private string SuffixSymbol(NoteSuffix suffix)
 		{
@@ -68,8 +56,8 @@ namespace neck.Models
 		}
 
 		#region Calculate note intervals & accidentals
-		// TODO: Add half/whole step down?
 
+		// TODO: Add half/whole step down?
 		public Note HalfStepDown()
 		{
 			int step = 0;

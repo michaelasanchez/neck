@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace neck.Interfaces
+namespace neck.Factories.Args
 {
-	public interface IGenerator<T>
+	public class GenericArgs
 	{
 	}
 }

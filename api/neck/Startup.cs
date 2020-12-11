@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using neck.Factories.Args;
 using neck.Generators;
 using neck.Interfaces;
 using neck.Models;
@@ -57,7 +58,7 @@ namespace neck
 			services.AddScoped(typeof(IRepository<Note>), typeof(NoteRepository));
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 
-			services.AddScoped(typeof(IGenerator<ChordVariation>), typeof(ChordVariationGenerator));
+			services.AddScoped(typeof(IFactory<ChordVariation, ChordVariationCreateArgs>), typeof(ChordVariationFactory));
 
 			services.AddDbContext<NeckContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("NeckDatabase")));
