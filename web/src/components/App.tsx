@@ -142,6 +142,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
+      // instrumentReq.then(instrumentResult => {
       const [chord, instrumentResult] = values;
 
       const instrument: Instrument = isArray(instrumentResult)
@@ -197,41 +198,50 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     };
 
     if (
+      appOptions?.chord &&
       updated?.chord &&
-      (!NoteUtils.NotesAreEqual(updated?.chord?.Root, appOptions?.chord?.Root) ||
-      updated.chord.Modifier != appOptions?.chord?.Modifier)
+      (!NoteUtils.NotesAreEqual(
+        updated?.chord?.Root,
+        appOptions?.chord?.Root
+      ) ||
+        updated.chord.Modifier != appOptions?.chord?.Modifier)
     ) {
       new ChordApi()
         .Quick(newOptions.chord.Root, newOptions.chord.Modifier)
         .then((chord) => {
-
-          new ChordVariationApi()
-            .GenerateRange({
-              chordId: chord.Id,
-              tuningId: newOptions.tuning.Id,
-              range: newOptions.instrument.NumFrets,
-            } as ChordVariationGenerateRangeParams)
-            .then((variations: any[]) => {
-              // TODO: constructor logic should probably move
-              const newVariations = map(
-                variations,
-                (v) =>
-                  new ChordVariation(
-                    v.Formation.Positions,
-                    v.Formation.Barres,
-                    v.Chord,
-                    v.Tuning
-                  )
-              );
-
-              newOptions.chord = chord;
-              newOptions.variations = newVariations;
-              finishSetOptions(newOptions);
-            });
+          newOptions.chord = chord;
+          reloadChordVariations(newOptions);
         });
+    } else if (!appOptions?.variations) {
+      reloadChordVariations(newOptions);
     } else {
       finishSetOptions(newOptions);
     }
+  };
+
+  const reloadChordVariations = (options: AppOptions) => {
+    new ChordVariationApi()
+      .GenerateRange({
+        chordId: options.chord.Id,
+        tuningId: options.tuning.Id,
+        range: options.instrument.NumFrets,
+      } as ChordVariationGenerateRangeParams)
+      .then((variations: any[]) => {
+        // TODO: constructor logic should probably move
+        const newVariations = map(
+          variations,
+          (v) =>
+            new ChordVariation(
+              v.Formation.Positions,
+              v.Formation.Barres,
+              v.Chord,
+              v.Tuning
+            )
+        );
+
+        options.variations = newVariations;
+        finishSetOptions(options);
+      });
   };
 
   const finishSetOptions = (newOptions: AppOptions) => {

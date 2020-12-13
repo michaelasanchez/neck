@@ -26,9 +26,9 @@ namespace neck.Controllers
 		}
 
 		[HttpPost("quick")]
-		public virtual async Task<ActionResult<Chord>> QuickChord(NoteValue value, NoteSuffix suffix, ChordModifier modifier)
+		public virtual async Task<ActionResult<Chord>> QuickChord(QuickChordArgs @params)
 		{
-			var note = new Note(value, suffix);
+			var note = new Note(@params.value, @params.suffix);
 
 			var noteResult = await _noteRepo.GetOrCreate(note);
 			if (!noteResult.Success)
@@ -36,7 +36,7 @@ namespace neck.Controllers
 				return BadRequest("Failed to get create note");
 			}
 
-			var chord = new Chord(noteResult.Result, modifier);
+			var chord = new Chord(noteResult.Result, @params.modifier);
 			var chordResult = await _chordRepo.Value.GetOrCreate(chord);
 			if (!chordResult.Success)
 			{
@@ -46,4 +46,12 @@ namespace neck.Controllers
 			return Ok(chordResult.Result);
 		}
 	}
+
+	public class QuickChordArgs
+	{
+		public NoteValue value;
+		public NoteSuffix suffix;
+		public ChordModifier modifier;
+	}
+
 }
