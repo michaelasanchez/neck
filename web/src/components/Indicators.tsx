@@ -1,31 +1,22 @@
-import { filter, findIndex, indexOf, map, times } from 'lodash';
+import { filter, indexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
-import { ChordVariation } from '../models';
-import { IAppOptions } from '../shared';
+import { AppOptions } from '../shared';
 
 export enum IndicatorsMode {
   Chord,
   // Scale,
 }
 
-export interface IndicatorsDisplayOptions {
-  mode: IndicatorsMode;
-  chord?: ChordVariation;
-  // scale?: Scale;
-}
-
 interface IndicatorsProps {
-  appOptions: IAppOptions;
-  displayOptions: IndicatorsDisplayOptions;
+  appOptions: AppOptions;
   mainRef: React.MutableRefObject<HTMLDivElement>;
 }
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
-  const { appOptions, displayOptions, mainRef } = props;
+  const { appOptions, mainRef } = props;
 
-  const { tuning, numFrets } = appOptions;
-  const { mode } = displayOptions;
+  const { chordVariation: variation, tuning, instrument } = appOptions;
 
   const firstIndicatorRef = useRef();
 
@@ -43,7 +34,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
       main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
-  }, [displayOptions.chord]);
+  }, [variation]);
 
   const renderIndicator = (
     fretNum: number,
@@ -62,7 +53,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
       >
         {show && (
           <div
-          className={`indicator${muted ? ' muted' : ''}`}
+            className={`indicator${muted ? ' muted' : ''}`}
             // className={`indicator${muted ? ' muted' : ''}${
             //   barre ? (barreStart ? ' barre start' : ' barre') : ''
             // }`}
@@ -73,25 +64,22 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   };
 
   let renderIndicators = false;
-  let chord = displayOptions.chord;
-
-  let barreStart: number;
 
   let firstFret: number;
 
-  if (chord != null) {
+  if (variation != null) {
     renderIndicators = true;
     // barreStart = findIndex(chord.Barre, (p) => p !== null);
 
-    const nonNullPositions = filter(chord.Positions, (p) => p !== null);
-    firstFret = indexOf(chord.Positions, Math.min(...nonNullPositions));
+    const nonNullPositions = filter(variation.Positions, (p) => p !== null);
+    firstFret = indexOf(variation.Positions, Math.min(...nonNullPositions));
   }
 
   return (
     <div className="indicators">
       {renderIndicators &&
         map(tuning.Offsets, (s: number, i: number) => {
-          const position = chord.Positions[i];
+          const position = variation.Positions[i];
 
           // const barre = chord.Barre[i];
           // const start = i === barreStart;
@@ -109,10 +97,10 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 // false,
                 (open || muted) && i == firstFret ? firstIndicatorRef : null
               )}
-              {times(numFrets, (f) => {
+              {times(instrument.NumFrets, (f) => {
                 const fretNum = f + 1;
                 // const isBarre = barre == fretNum;
-                const show = position === fretNum;// || isBarre;
+                const show = position === fretNum; // || isBarre;
                 return renderIndicator(
                   fretNum,
                   show,

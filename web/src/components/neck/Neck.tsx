@@ -4,18 +4,24 @@ import { useEffect, useState } from 'react';
 
 import { StringComponent } from '.';
 import { Key, Mode, Scale } from '../../models';
-import { IAppOptions, styles } from '../../shared';
+import { AppOptions, styles } from '../../shared';
+import { FretDisplayMode } from './Fret';
 
 export const ENABLE_NECK_ANIMATION = true;
 
+// const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
+
 export interface NeckProps {
-  options?: IAppOptions;
+  options?: AppOptions;
 }
 
 const getScale = (key: Key, mode: Mode) => new Scale(key.Tonic, mode);
 
 export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
-  const { key, tuning, mode, numFrets, markers, fretMode } = options;
+  // TODO: static
+  let fretDisplayMode = FretDisplayMode.Note;
+
+  const { key, tuning, mode, instrument } = options;
 
   const [scale, setScale] = useState<Scale>(getScale(key, mode));
   const [className, setClassName] = useState<string>();
@@ -45,8 +51,8 @@ export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
         {tuning && times(tuning.Offsets.length, (i) => (
           <StringComponent
             key={i}
-            fretmode={fretMode}
-            frets={numFrets}
+            fretmode={fretDisplayMode}
+            frets={instrument.NumFrets}
             offset={tuning.Offsets[i]}
             scale={scale}
           />

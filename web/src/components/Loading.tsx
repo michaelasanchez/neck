@@ -11,7 +11,7 @@ export interface IError {
 }
 
 interface LoadingProps {
-  errors?: any[];
+  errors?: IError[];
   loadingText?: string;
   showLoadingText?: boolean;
   variant?: bsVariant;

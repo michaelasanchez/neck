@@ -1,4 +1,5 @@
-﻿using neck.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using neck.Models;
 using System.Threading.Tasks;
 
 namespace neck.Repositories
@@ -10,9 +11,11 @@ namespace neck.Repositories
 		{
 		}
 
-		public override Task<Formation> Exists(Formation formation)
+		public async override Task<OperationResult<Formation>> Get(Formation formation)
 		{
-			return FirstOrDefaultAsync(f => f.Positions == formation.Positions);
+			var result = await DefaultIncludes()
+				.FirstOrDefaultAsync(f => f.Positions == formation.Positions);
+			return BuildGetOperationResult(result);
 		}
 
 	}

@@ -2,26 +2,16 @@ import { filter, findIndex, indexOf, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-
-import { ChordDiagram, SlideIn, UiOptions } from '.';
-import {
-  Chord,
-  ChordModifier,
-  ChordVariation,
-  Note,
-  NoteValue,
-} from '../../models';
-import { IAppOptions, NoteUtils } from '../../shared';
-import { IndicatorsDisplayOptions } from '../Indicators';
+import { ChordDiagram, SlideIn } from '.';
+import { Chord, ChordModifier, ChordVariation, Note } from '../../models';
+import { AppOptions } from '../../shared';
 import { NoteSelection } from '../NoteSelection';
 
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 export interface IChordSlideInProps {
-  setIndicatorsOptions: (update: Partial<IndicatorsDisplayOptions>) => void;
-  setAppOptions: (update: Partial<IAppOptions>) => void;
-  appOptions: IAppOptions;
-  uiOptions: UiOptions;
+  setAppOptions: (update: Partial<AppOptions>) => void;
+  appOptions: AppOptions;
 }
 
 // Badge Chord Modifier
@@ -85,28 +75,27 @@ const getChordModifierLabel = (mod: ChordModifier): string => {
 };
 
 export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
-  setIndicatorsOptions,
-  setAppOptions,
   appOptions,
-  uiOptions,
+  setAppOptions,
 }) => {
-  const [variations, setVariations] = useState<ChordVariation[]>();
+  const { chord, variations } = appOptions;
 
-  useEffect(() => {
-    if (uiOptions?.variations?.length) setVariations(uiOptions.variations);
-  }, [uiOptions?.variations]);
+  const setChordVariation = (variation: ChordVariation) =>
+    setAppOptions({ chordVariation: variation });
 
+  // TODO: this could probably occur after we first get
+  //  the new set of variations
   useEffect(() => {
-    if (variations) {
-      setIndicatorsOptions({ chord: variations[0] });
+    if (variations?.length > 0) {
+      setChordVariation(variations[0]);
     }
   }, [variations]);
 
-  const rootNote = appOptions?.chord?.Root;
-  const modifier = appOptions?.chord?.Modifier;
+  const rootNote = chord?.Root;
+  const modifier = chord?.Modifier;
 
   let selectedRootIndex = rootNote
-    ? findIndex(notes, (n) => rootNote.Equals(n))
+    ? findIndex(notes, (n) => rootNote.Base == n.Base && rootNote.Suffix == n.Suffix)
     : null;
 
   const handleRootUpdate = (root: Note) => handleChordUpdate(root);
@@ -176,8 +165,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     </ButtonGroup>
   );
 
-  console.log('WHAT WHAT WHAT', appOptions)
-
   return (
     <SlideIn
       className="chord"
@@ -188,18 +175,21 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
         </h2>
       }
       badge={headerBadge}
-      header={<NoteSelection notes={appOptions.chord.Tones} />}
+      header={<NoteSelection notes={chord.Tones} />}
       loading={variations == null}
     >
       <div className="variations">
-        {variations?.length > 0 ? map(variations, (v: ChordVariation, i: number) => (
-          <ChordDiagram
-            chordVariation={v}
-            key={i}
-            onClick={setIndicatorsOptions}
-          />
-        )) :
-        <> Nope!</>}
+        {variations?.length > 0 ? (
+          map(variations, (v: ChordVariation, i: number) => (
+            <ChordDiagram
+              chordVariation={v}
+              key={i}
+              setChordVariation={setChordVariation}
+            />
+          ))
+        ) : (
+          <> Nope!</>
+        )}
       </div>
     </SlideIn>
   );

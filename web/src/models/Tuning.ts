@@ -1,7 +1,7 @@
-import { ApiType } from ".";
+import { ApiEntity } from "../network";
 import { IOption } from "../shared";
 
-export class Tuning extends ApiType implements IOption {
+export class Tuning extends ApiEntity implements IOption {
   private _label: string;
   private _offsets: number[];
 

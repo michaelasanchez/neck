@@ -1,4 +1,4 @@
-import { ApiType, Chord, ChordModifier, Note, Tuning } from "../models";
+import { ApiEntity } from "./ApiEntity";
 import { BaseRequest } from "./BaseRequest";
 
 const DOMAIN_DEFAULT = 'https://localhost:5001';
@@ -8,7 +8,7 @@ export type EntityType = 'Chord' | 'ChordVariation' | 'Instrument' | 'Tuning';
 
 export enum ApiAction { }
 
-export class ApiRequest<TResult = ApiType> extends BaseRequest<TResult> {
+export class ApiRequest<TResult = ApiEntity> extends BaseRequest<TResult> {
 
   protected _domain: string;
 
@@ -21,7 +21,7 @@ export class ApiRequest<TResult = ApiType> extends BaseRequest<TResult> {
     this._domain = DOMAIN_DEFAULT;
     this._entityType = entityType;
     this._action = action;
-    
+
     this.Url = this.calcUrl();
   }
 

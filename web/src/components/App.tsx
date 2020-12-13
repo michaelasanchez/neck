@@ -1,18 +1,29 @@
-import { each } from 'lodash';
+import { isArray } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Chord, ChordVariation, Key, Mode, Note, Tuning } from '../models';
+import { IApiEntity } from '../interfaces/IApiEntity';
+import {
+  Chord,
+  ChordModifier,
+  Instrument,
+  Key,
+  Mode,
+  Note,
+  NoteSuffix,
+  NoteValue,
+  Tuning,
+} from '../models';
+import Cookie from '../models/Cookie';
+import { ApiRequest } from '../network';
 import { ChordApi } from '../network/ChordApi';
-import { ChordVariationApi } from '../network/ChordVariationApi';
 import { InstrumentApi } from '../network/InstrumentApi';
-import { AppOptions, IAppOptions } from '../shared';
-import { IndicatorsDisplayOptions, IndicatorsMode } from './Indicators';
-import { Loading } from './Loading';
+import { AppOptions } from '../shared';
+import { IndicatorsMode } from './Indicators';
+import { IError, Loading } from './Loading';
 import { Neck } from './neck';
-import { Ui, UiOptions } from './ui';
+import { Ui } from './ui';
 
 const USE_COOKIE = true;
 
@@ -20,13 +31,9 @@ const SHOW_INDICATORS = true;
 
 const CONVERT_VARIATION_TO_CHORD_FORM = false;
 
-export interface AppProps {
-  defaultKey?: Key;
-  defaultTuning?: Tuning;
-  defaultMode?: Mode;
-}
+export interface AppProps {}
 
-const parseOptionsCookie = (cookieString: string): IAppOptions => {
+const parseOptionsCookie = (cookieString: string): AppOptions => {
   let parsed = JSON.parse(cookieString);
 
   const rootNote = new Note(parsed.key._tonic.base, parsed.key._tonic.suffix);
@@ -40,7 +47,7 @@ const parseOptionsCookie = (cookieString: string): IAppOptions => {
   return parsed;
 };
 
-const serializeOptionsCookie = (options: IAppOptions): string => {
+const serializeOptionsCookie = (options: AppOptions): string => {
   const newOptions = { ...options };
 
   newOptions.chord = {
@@ -71,188 +78,178 @@ const DefaultIndicatorsOptions = {
 const App: React.FunctionComponent<AppProps> = ({}) => {
   const { getCookie, setCookie } = useCookie();
 
-  const [appOptions, setAppOptions] = useState<IAppOptions>();
-  const [
-    indicatorsOptions,
-    setIndicatorsOptions,
-  ] = useState<IndicatorsDisplayOptions>(DefaultIndicatorsOptions);
-  const [uiOptions, setUiOptions] = useState<UiOptions>();
+  const [appOptions, setAppOptions] = useState<AppOptions>();
+
+  const [errors, setErrors] = useState<IError[]>();
 
   const mainRef = useRef<HTMLDivElement>();
 
-  // // Init
+  // Init
   useEffect(() => {
     const saved = getCookie('options');
 
-    const options =
-      USE_COOKIE && !!saved.length
-        ? loadOptions(parseOptionsCookie(saved))
-        : loadDefault();
+    let cookie: Cookie;
+    if (!saved) {
+      cookie = Cookie.Default();
+    }
+
+    loadOptionsFromCookie(cookie);
+    // const options =
+    //   USE_COOKIE && !!saved.length
+    //     ? loadOptions(parseOptionsCookie(saved))
+    //     : loadDefault();
   }, []);
 
-  // const loadDefault = () => {
-  //   new InstrumentApi().GetAll().then((instruments) => {
-  //     // TODO: assume first for default
-  //     const instrument = instruments[0];
-  //     const tuning = instrument.DefaultTuning;
+  // FULL:
+  // chord            Default/Re-load from API
+  // instrument       Load from API
+  // key              Default
+  // mode             Default
+  // tuning           Load from API (instrument)
+  // variations       G?
+  const loadOptionsFromCookie = (cookie: Cookie) => {
+    console.log('COOKIE', cookie);
+    var requests: Promise<any>[] = [];
 
-  //     const options = AppOptions.Default();
+    // Always request chord
+    let chordReq: Promise<Chord>;
+    if (cookie.chordId) {
+      chordReq = new ChordApi().GetById(cookie.chordId);
+    } else {
+      // TODO: static
+      chordReq = new ChordApi().Quick(
+        NoteValue.C,
+        NoteSuffix.Natural,
+        ChordModifier.Major
+      );
+    }
+    requests.push(chordReq);
 
-  //     handleSetOptions({
-  //       ...options,
-  //       tuning,
-  //       tuningId: tuning.Id,
-  //       instrumentId: instrument.Id,
-  //     });
-  //   });
-  // };
+    let instrumentReq: Promise<Instrument | Instrument[]>;
+    if (cookie.instrumentId) {
+      instrumentReq = new InstrumentApi().GetById(cookie.instrumentId);
+    } else {
+      instrumentReq = new InstrumentApi().GetAll();
+    }
+    requests.push(instrumentReq);
 
-  // const loadOptions = (options: IAppOptions) => {
-  //   if (options.instrumentId) {
-  //     let instrumentRequest = new InstrumentApi().GetById(options.instrumentId);
-  //     let chordRequest = new ChordApi().Quick(
-  //       options.chord.Root.Base,
-  //       options.chord.Root.Suffix,
-  //       options.chord.Modifier
-  //     );
-  //     // .then((resp) => {
-  //     //   console.log('QUICK CHORD!!!!', resp);
-  //     // })
+    // TODO: figure out what this returns
+    Promise.all(requests).then((values: any[]) => {
+      const [chord, instrumentResult] = values;
 
-  //     Promise.all([instrumentRequest, chordRequest]).then(
-  //       ([instrument, beChord]) => {
-  //         // TODO: figure out default/saved tuning
-  //         const tuning = instrument.DefaultTuning;
+      const instrument: Instrument = isArray(instrumentResult)
+        ? instrumentResult[0]
+        : instrumentResult;
+      instrument.NumFrets = cookie.ui.numFrets;
 
-  //         // TODO: have to do this for the Equals fn. Things will get better..
-  //         const chord = new Chord(
-  //           new Note(beChord.Root.Base, beChord.Root.Suffix),
-  //           beChord.Modifier
-  //         );
+      // Create app options
+      const options = {
+        chord,
+        instrument,
+        tuning: instrument.DefaultTuning, // TODO: static
+        key: cookie.key,
+        mode: cookie.mode,
+      } as AppOptions;
 
-  //         handleSetOptions({
-  //           ...options,
-  //           chord,
-  //           tuning,
-  //           tuningId: tuning.Id,
-  //           instrumentId: instrument.Id,
-  //         });
-  //         loadUiOptions(options.numFrets, chord, tuning);
-  //       }
-  //     );
-  //   }
-  // };
+      const error = validateAppOptions(options);
+      if (!!error) {
+        setErrors([error]);
+      } else {
+        setAppOptions(options);
+      }
+    });
+  };
 
-  // const loadUiOptions = (numFrets: number, chord: Chord, tuning: Tuning) => {
-  //   new ChordVariationApi()
-  //     .GenerateRange({
-  //       chord,
-  //       tuningId: tuning.Id,
-  //       range: numFrets,
-  //       span: 4, // TODO: This is her temporarily. DEBUG ONLY !!
-  //     })
-  //     .then((response: any) => {
-  //       // TODO: any type here because chordVariation does not have formation on FE
-  //       const newVariations: ChordVariation[] = [];
-  //       //
-  //       each(response, (v) => {
-  //         newVariations.push(
-  //           //
-  //           new ChordVariation(
-  //             v.Formation.Positions,
-  //             v.Formation.Barres,
-  //             v.Chord,
-  //             v.Tuning,
-  //             CONVERT_VARIATION_TO_CHORD_FORM
-  //           )
-  //         );
-  //       });
-  //       handleSetUiOptions({ variations: newVariations });
-  //     });
-  // };
+  const validateAppOptions = (appOptions: AppOptions): IError => {
+    //
+    const checks = ['chord', 'instrument', 'tuning', 'key', 'mode'];
+    const missing: string[] = [];
 
-  // const handleSetOptions = (updated: Partial<IAppOptions>) => {
-  //   const newOptions = {
-  //     ...appOptions,
-  //     ...updated,
-  //   };
+    for (var c in checks) {
+      if (!appOptions[checks[c]]) missing.push(checks[c]);
+    }
 
-  //   if (
-  //     !!(updated?.chord) &&
-  //     !!(appOptions?.chord) &&
-  //     (!updated.chord.Root.Equals(appOptions.chord.Root) ||
-  //       updated.chord.Modifier != appOptions.chord.Modifier)
-  //   ) {
-  //     new ChordApi()
-  //       .Quick(
-  //         newOptions.chord.Root.Base,
-  //         newOptions.chord.Root.Suffix,
-  //         newOptions.chord.Modifier
-  //       )
-  //       .then((chord) => {
-  //         finishSetOptions(newOptions, true);
-  //       });
-  //   } else {
-  //     finishSetOptions(newOptions);
-  //   }
-  // };
+    if (missing.length > 0) {
+      return {
+        message: `Missing options: ${missing.join(', ')}`,
+      };
+    }
 
-  // const finishSetOptions = (
-  //   newOptions: IAppOptions,
-  //   reloadUiOptions: boolean = false
-  // ) => {
-  //   if (reloadUiOptions)
-  //     loadUiOptions(newOptions.numFrets, newOptions.chord, newOptions.tuning);
-  //   setAppOptions(newOptions);
-  //   setCookie('options', serializeOptionsCookie(newOptions));
-  // };
+    return null;
+  };
 
-  // const handleSetIndicatorsOptions = (
-  //   updated: Partial<IndicatorsDisplayOptions>
-  // ) => {
-  //   setIndicatorsOptions({
-  //     ...indicatorsOptions,
-  //     ...updated,
-  //   });
-  // };
+  const cookieFromAppOptions = (appOptions: AppOptions): Cookie => {
+    const cookie = new Cookie();
 
-  // const handleSetUiOptions = (updated: Partial<UiOptions>) => {
-  //   setUiOptions({
-  //     ...uiOptions,
-  //     ...updated,
-  //   });
-  // };
+    cookie.chordId = appOptions.chord.Id;
+    cookie.instrumentId = appOptions.instrument.Id;
+
+    return cookie;
+  };
+
+  const handleSetOptions = (updated: Partial<AppOptions>) => {
+    const newOptions = {
+      ...appOptions,
+      ...updated,
+    };
+
+    if (
+      !!updated?.chord &&
+      !!appOptions?.chord &&
+      (!updated.chord.Root.Equals(appOptions.chord.Root) ||
+        updated.chord.Modifier != appOptions.chord.Modifier)
+    ) {
+      new ChordApi()
+        .Quick(
+          newOptions.chord.Root.Base,
+          newOptions.chord.Root.Suffix,
+          newOptions.chord.Modifier
+        )
+        .then((chord) => {
+          finishSetOptions(newOptions, true);
+        });
+    } else {
+      finishSetOptions(newOptions);
+    }
+  };
+
+  const finishSetOptions = (
+    newOptions: AppOptions,
+    reloadUiOptions: boolean = false
+  ) => {
+    if (reloadUiOptions) {
+      // loadUiOptions(newOptions.numFrets, newOptions.chord, newOptions.tuning);
+    }
+    setAppOptions(newOptions);
+    // setCookie('options', serializeOptionsCookie(newOptions));
+  };
 
   if (appOptions) {
     return (
       <>
         <main ref={mainRef}>
+          {/* instrument, tuning */}
           <Backdrop options={appOptions} />
           <div className="neck-container">
+            {/* key, tuning, mode, instrument */}
             <Neck options={appOptions} />
           </div>
           {SHOW_INDICATORS && (
             <div className="indicators-container">
-              <Indicators
-                appOptions={appOptions}
-                displayOptions={indicatorsOptions}
-                mainRef={mainRef}
-              />
+              {/* chordVariation, tuning, instrument */}
+              {/* TODO: right now chordVariation is set in ChordSlideIn as an effect of variations updating */}
+              <Indicators appOptions={appOptions} mainRef={mainRef} />
             </div>
           )}
         </main>
-        <Ui
-          appOptions={appOptions}
-          indicatorsOptions={indicatorsOptions}
-          setAppOptions={handleSetOptions}
-          setIndicatorsOptions={handleSetIndicatorsOptions}
-          uiOptions={uiOptions}
-        />
+        {/* key, mode, tuning */}
+        {/* ChordSlideIn - chord, variations */}
+        <Ui appOptions={appOptions} setAppOptions={handleSetOptions} />
       </>
     );
   }
 
-  return <Loading />;
+  return <Loading errors={errors} />;
 };
 
 export default App;

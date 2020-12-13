@@ -1,14 +1,13 @@
 import { filter, map, max, min, times } from 'lodash';
 import * as React from 'react';
 import { ChordVariation, Note } from '../../models';
-import { IndicatorsDisplayOptions } from '../Indicators';
 
 export const MIN_NUM_FRETS_DEFAULT = 4;
 export const FRET_PADDING_DEFAULT = 1;
 
 export interface ChordDiagramProps {
   chordVariation: ChordVariation;
-  onClick: (options: Partial<IndicatorsDisplayOptions>) => void;
+  setChordVariation: (options: ChordVariation) => void;
 }
 
 enum BarreClass {
@@ -19,7 +18,7 @@ enum BarreClass {
 
 export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   chordVariation: variation,
-  onClick: handleClick,
+  setChordVariation: handleClick,
 }) => {
   const minPos = min(variation.Positions);
   const maxPos = max(variation.Positions);
@@ -67,10 +66,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   });
 
   return (
-    <div
-      className="diagram sm"
-      onClick={() => handleClick({ chord: variation })}
-    >
+    <div className="diagram sm" onClick={() => handleClick(variation)}>
       <div className="diagram-container">
         <span>{minPos != 0 && minPos}</span>
 

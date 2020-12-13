@@ -31,7 +31,7 @@ export class BaseRequest<TResult> {
   }
 
   private execute() {
-    const convert = this._baseOptions.convertToJson;
+    let convert = this._baseOptions.convertToJson;
 
     // TODO: should get ever have a body?
     const init = this._type != RequestType.Get && this._data ? {
@@ -42,6 +42,13 @@ export class BaseRequest<TResult> {
     } : null;
 
     return fetch(this._url, init)
+      .then((resp: Response) => {
+        if (!resp.ok) {
+          convert = false;
+          throw new Error(`Request failed: ${resp.url}`)
+        }
+        return resp;
+      })
       .then(response => convert ? response.json() : response)
       .then(response => {
         // console.log('base response', response);
@@ -49,8 +56,9 @@ export class BaseRequest<TResult> {
       })
       .catch(reason => {
         const message = reason?.message || 'Failed to fetch'
-        console.log('base error', reason);
-        console.log('base message', message);
+        console.error(message);
+        // console.log('base error', reason);
+        // console.log('base message', message);
       });
   }
 

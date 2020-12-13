@@ -1,9 +1,9 @@
-import { IOption } from "../shared/appOptions";
+import { IOption } from "../shared/AppOptions";
 
 export class Mode implements IOption {
 
-  private name: string;
-  private pattern: string;
+  public Label: string;
+  public pattern: string;
 
   static Ionian(): Mode {
     return new Mode('Ionian', 'wwhwwwh');
@@ -47,12 +47,8 @@ export class Mode implements IOption {
 
   // TODO: make this private
   constructor(name: string, stepPattern: string) {
-    this.name = name;
+    this.Label = name;
     this.pattern = stepPattern;
-  }
-
-  get Label(): string {
-    return this.name;
   }
 
   get Steps(): string {

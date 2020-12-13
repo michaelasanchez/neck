@@ -12,10 +12,11 @@ namespace neck.Repositories
 		{
 		}
 
-		public override Task<Tuning> Exists(Tuning tuning)
+		public async override Task<OperationResult<Tuning>> Get(Tuning tuning)
 		{
-			var result = _queryable.FirstOrDefault(t => t.Offsets == tuning.Offsets);
-			return Task.FromResult(result);
+			var result = await DefaultIncludes()
+				.FirstOrDefaultAsync(t => t.Offsets == tuning.Offsets);
+			return BuildGetOperationResult(result);
 		}
 
 	}

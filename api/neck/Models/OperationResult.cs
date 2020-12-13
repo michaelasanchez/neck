@@ -25,10 +25,10 @@ namespace neck.Models
 		{
 		}
 
-		public bool Success { get; private set; }
-		public TResult Result { get; private set; }
-		public string Message { get; private set; }
-		public Exception Exception { get; private set; }
+		public bool Success { get; set; }
+		public TResult Result { get; set; }
+		public string Message { get; set; }
+		public Exception Exception { get; set; }
 
 		public static OperationResult<TResult> CreateSuccess(TResult result)
 		{

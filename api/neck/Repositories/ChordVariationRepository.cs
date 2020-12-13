@@ -24,36 +24,36 @@ namespace neck.Repositories
 			_tuningRepo = new Lazy<IRepository<Tuning>>(tuningRepository);
 		}
 
-		public override async Task<OperationResult<int>> Insert(ChordVariation variation)
+		public override async Task<OperationResult<int>> Create(ChordVariation variation)
 		{
 			if (variation.Formation != null)
 			{
-				var formation = await _formationRepo.Value.Exists(variation.Formation);
-				if (formation != null)
+				var formationResult = await _formationRepo.Value.Get(variation.Formation);
+				if (formationResult.Success)
 				{
-					variation.Formation = formation;
+					variation.Formation = formationResult.Result;
 				}
 			}
 
 			if (variation?.Chord?.Root != null)
 			{
-				var chord = await _chordRepo.Value.Exists(variation.Chord);
-				if (chord != null)
+				var chordResult = await _chordRepo.Value.Get(variation.Chord);
+				if (chordResult.Success)
 				{
-					variation.Chord = chord;
+					variation.Chord = chordResult.Result;
 				}
 			}
 
 			if (variation.Tuning != null)
 			{
-				var tuning = await _tuningRepo.Value.Exists(variation.Tuning);
-				if (tuning != null)
+				var tuningResult = await _tuningRepo.Value.Get(variation.Tuning);
+				if (tuningResult.Success)
 				{
-					variation.Tuning = tuning;
+					variation.Tuning = tuningResult.Result;
 				}
 			}
 
-			return await base.Insert(variation);
+			return await base.Create(variation);
 		}
 	}
 }

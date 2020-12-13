@@ -62,6 +62,20 @@ namespace neck.Models
 		//
 		//	
 
+		// I        tonic
+		// ii       supertonic
+		// iii      mediant
+		// IV       subdominant
+		// V        dominant
+		// vi	      submediant
+		// viio     leading tone (#)
+		//            / subtonic (b)
+		//  / ♭VII
+
+		//  I   ii  iii IV  V   vi  viio
+		//  ----------------------------
+		//  C   Dm  Em  F   G   Am  Bdim
+
 		private List<int> getDegrees(ChordModifier mod)
 		{
 			// TODO: Currently exist on front end

@@ -1,6 +1,6 @@
 
 import { Mode, Note, Scale } from ".";
-import { IOption } from "../shared/appOptions";
+import { IOption } from "../shared/AppOptions";
 
 export enum KeyType {
   Major = 'Major',
@@ -9,54 +9,51 @@ export enum KeyType {
 
 export class Key implements IOption {
 
-  private _tonic: Note;
-  private _type: KeyType;
+  public Tonic: Note;
+  public Type: KeyType;
 
   private _scale: Scale;
 
   constructor(tonic: Note, type?: KeyType) {
-    this._tonic = tonic;
-    this._type = type || KeyType.Major;
+    this.Tonic = tonic;
+    this.Type = type || KeyType.Major;
   }
 
-  get Tonic(): Note { return this._tonic; }
-  set Tonic(value: Note) { this._tonic = value; };
-
   // TODO: this is weird
-  get Label(): string { return this._tonic.Label; }
-  set Label(value: string) { this._tonic.Label; }
+  get Label(): string { return this.Tonic.Label; }
+  set Label(value: string) { this.Tonic.Label; }
 
   get RelativeMajor(): Key {
-    if (this._type === KeyType.Minor) return null;
+    if (this.Type === KeyType.Minor) return null;
 
-    const scale = new Scale(this._tonic, Mode.Dorian());
+    const scale = new Scale(this.Tonic, Mode.Dorian());
     return new Key(scale.Notes[2]);
   }
 
   get RelativeMinor(): Key {
-    if (this._type === KeyType.Major) return null;
+    if (this.Type === KeyType.Major) return null;
 
-    const scale = new Scale(this._tonic, Mode.Ionian());
+    const scale = new Scale(this.Tonic, Mode.Ionian());
     return new Key(scale.Notes[5]);
   }
 
   public Sharp(): Key {
-    this._tonic = this._tonic.Sharp();
+    this.Tonic = this.Tonic.Sharp();
     return this;
   }
 
   public DoubleSharp(): Key {
-    this._tonic = this._tonic.DoubleSharp();
+    this.Tonic = this.Tonic.DoubleSharp();
     return this;
   }
 
   public Flat(): Key {
-    this._tonic = this._tonic.Flat();
+    this.Tonic = this.Tonic.Flat();
     return this;
   }
 
   public DoubleFlat(): Key {
-    this._tonic = this._tonic.DoubleFlat();
+    this.Tonic = this.Tonic.DoubleFlat();
     return this;
   }
 

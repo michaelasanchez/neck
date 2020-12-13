@@ -17,37 +17,61 @@ namespace neck.Repositories
 
 		protected DbSet<TEntity> _set;
 
-		protected IQueryable<TEntity> _queryable;
+		protected bool GetAllDefaultIncludes = false;
+
+		protected string DefaultSuccessMessage = $"{nameof(TEntity)} found";
+		protected string DefaultFailureMessage = $"Could not find {nameof(TEntity)}";
 
 		public GenericRepository(NeckContext context)
 		{
 			_context = context;
 			_set = _context.Set<TEntity>();
-			_queryable = _set.AsQueryable();
 		}
 
-		public virtual IQueryable<TEntity> DefaultIncludes() => _queryable;
+		public virtual IQueryable<TEntity> DefaultIncludes() => _set.AsQueryable();
 
-		public virtual Task<TEntity> GetByIdAsync(Guid? id)
+		public virtual async Task<OperationResult<TEntity>> GetByIdAsync(Guid? id)
 		{
-			return DefaultIncludes().FirstOrDefaultAsync(t => t.Id == id);
+			var result = await DefaultIncludes().FirstOrDefaultAsync(t => t.Id == id);
+			return BuildGetOperationResult(result);
 		}
 
-		// Default includes don't apply here
-		public virtual Task<IEnumerable<TEntity>> GetAll()
+		public virtual async Task<OperationResult<TEntity>> Get(TEntity entity)
 		{
-			return Task.FromResult(_set.AsEnumerable());
+			var result = await _set.FirstOrDefaultAsync(t => t.Id == entity.Id);
+			return BuildGetOperationResult(result);
 		}
 
-		public virtual async Task<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+		// Must override for default includes
+		public virtual Task<OperationResult<IEnumerable<TEntity>>> GetAll()
 		{
-			return await _set.FirstOrDefaultAsync(predicate);
+			var enumerable = GetAllDefaultIncludes
+				? BuildGetOperationResult(DefaultIncludes().AsEnumerable())
+				: BuildGetOperationResult(_set.AsEnumerable());
+			return Task.FromResult(enumerable);
 		}
 
-		public virtual async Task<OperationResult<int>> Insert(TEntity entity)
+		public virtual async Task<OperationResult<TEntity>> GetOrCreate(TEntity entity)
 		{
-			var exists = await Exists(entity);
-			if (exists != null)
+			var getResult = await Get(entity);
+			if (!getResult.Success)
+			{
+				var createResult = await Create(entity);
+				if (!createResult.Success)
+				{
+					return OperationResult<TEntity>.CreateFailure($"Failed to create {typeof(TEntity)}");
+				}
+
+				return BuildGetOperationResult(entity);
+			}
+
+			return BuildGetOperationResult(getResult.Result);
+		}
+
+		public virtual async Task<OperationResult<int>> Create(TEntity entity)
+		{
+			var result = await Get(entity);
+			if (result.Success)
 			{
 				return OperationResult<int>.CreateFailure($"{typeof(TEntity)} already exists");
 			}
@@ -83,11 +107,21 @@ namespace neck.Repositories
 			return OperationResult<int>.CreateSuccess(result);
 		}
 
-		public virtual Task<TEntity> Exists(TEntity entity)
+		public async Task<int> Count(Expression<Func<TEntity, bool>> predicate) => await _set.CountAsync(predicate);
+
+		#region protected
+
+		protected OperationResult<TResult> BuildGetOperationResult<TResult>(TResult entity)
 		{
-			return FirstOrDefaultAsync(t => t.Id == entity.Id);
+			var located = entity != null;
+			return new OperationResult<TResult>()
+			{
+				Message = located ? DefaultSuccessMessage : DefaultFailureMessage,
+				Result = entity,
+				Success = located
+			};
 		}
 
-		public async Task<int> Count(Expression<Func<TEntity, bool>> predicate) => await _set.CountAsync(predicate);
+		#endregion
 	}
 }

@@ -11,16 +11,13 @@ namespace neck.Repositories
 		public InstrumentRepository(NeckContext context)
 			: base(context)
 		{
+			// TODO: is there a better way to do this?
+			GetAllDefaultIncludes = true;
 		}
 
 		public override IQueryable<Instrument> DefaultIncludes()
 		{
-			return _queryable.Include(i => i.DefaultTuning);
-		}
-
-		public override Task<IEnumerable<Instrument>> GetAll()
-		{
-			return Task.FromResult(DefaultIncludes().AsEnumerable());
+			return _set.AsQueryable().Include(i => i.DefaultTuning);
 		}
 	}
 }

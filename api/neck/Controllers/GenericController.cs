@@ -17,24 +17,33 @@ namespace neck.Controllers
 		}
 
 		[HttpGet("all")]
-		public virtual async Task<ActionResult<IEnumerable<T>>> GetAll() => Ok(await _repository.GetAll());
+		public virtual async Task<ActionResult<IEnumerable<T>>> GetAll()
+		{
+			var result = await _repository.GetAll();
+			if (!result.Success)
+			{
+				return BadRequest();
+			}
+
+			return Ok(result.Result);
+		}
 
 		[HttpGet("{id:Guid}")]
 		public virtual async Task<ActionResult<T>> GetById(Guid id)
 		{
 			var result = await _repository.GetByIdAsync(id);
-			if (result == null)
+			if (!result.Success)
 			{
 				return NotFound();
 			}
 
-			return Ok(result);
+			return Ok(result.Result);
 		}
 
 		[HttpPost]
 		public virtual async Task<IActionResult> Insert(T entity)
 		{
-			var result = await _repository.Insert(entity);
+			var result = await _repository.Create(entity);
 
 			return result.Success ? Ok("All good") : BadRequest(result.Message);
 		}

@@ -41,8 +41,24 @@ namespace neck.Controllers
 		[HttpPost("Generate")]
 		public async Task<ActionResult<List<ChordVariation>>> Generate([FromBody] ChordVariationGenerateParams @params)
 		{
-			var chord = @params.chord ?? await _chordRepo.GetByIdAsync(@params.chordId);
-			var tuning = @params.tuning ?? await _tuningRepo.GetByIdAsync(@params.tuningId);
+			var chord = @params.chord;
+			if (chord == null)
+			{
+				var result = await _chordRepo.GetByIdAsync(@params.chordId);
+				if (result.Success)
+				{
+					chord = result.Result;
+				}
+			}
+			var tuning = @params.tuning;
+			if (tuning == null)
+			{
+				var result = await _tuningRepo.GetByIdAsync(@params.tuningId);
+				if (result.Success)
+				{
+					tuning = result.Result;
+				}
+			}
 
 			if (chord == null)
 			{
@@ -68,8 +84,24 @@ namespace neck.Controllers
 		[HttpPost("GenerateRange")]
 		public async Task<ActionResult<List<ChordVariation>>> GenerateRange([FromBody] ChordVariationGenerateRangeParams @params)
 		{
-			var chord = @params.chord ?? await _chordRepo.GetByIdAsync(@params.chordId);
-			var tuning = @params.tuning ?? await _tuningRepo.GetByIdAsync(@params.tuningId);
+			var chord = @params.chord;
+			if (chord == null)
+			{
+				var result = await _chordRepo.GetByIdAsync(@params.chordId);
+				if (result.Success)
+				{
+					chord = result.Result;
+				}
+			}
+			var tuning = @params.tuning;
+			if (tuning == null)
+			{
+				var result = await _tuningRepo.GetByIdAsync(@params.tuningId);
+				if (result.Success)
+				{
+					tuning = result.Result;
+				}
+			}
 
 			if (chord == null)
 			{

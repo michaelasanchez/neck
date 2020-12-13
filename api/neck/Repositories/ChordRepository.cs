@@ -15,17 +15,17 @@ namespace neck.Repositories
 
 		public override IQueryable<Chord> DefaultIncludes()
 		{
-			return _queryable.Include(c => c.Root);
+			return _set.AsQueryable().Include(c => c.Root);
 		}
 
-		public override Task<Chord> Exists(Chord chord)
+		public async override Task<OperationResult<Chord>> Get(Chord chord)
 		{
-			var result = DefaultIncludes()
-				.FirstOrDefault(c => c.Root.Base == chord.Root.Base
+			var result = await DefaultIncludes()
+				.FirstOrDefaultAsync(c => c.Root.Base == chord.Root.Base
 					&& c.Root.Suffix == chord.Root.Suffix
 					&& c.Modifier == chord.Modifier);
 
-			return Task.FromResult(result);
+			return BuildGetOperationResult(result);
 		}
 
 	}

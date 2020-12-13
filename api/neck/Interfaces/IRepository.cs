@@ -9,23 +9,21 @@ namespace neck.Interfaces
 {
     public interface IRepository<T>
     {
-        //public Task<T> Get(T entity);
+		public Task<OperationResult<T>> Get(T entity);
 
-        public Task<T> GetByIdAsync(Guid? id);
+		public Task<OperationResult<T>> GetByIdAsync(Guid? id);
 
-        public Task<IEnumerable<T>> GetAll();
+        public Task<OperationResult<IEnumerable<T>>> GetAll();
 
-        public Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
+        public Task<OperationResult<T>> GetOrCreate(T entity);
 
-        public Task<OperationResult<int>> Insert(T entity);
+        public Task<OperationResult<int>> Create(T entity);
 
         public Task<OperationResult<int>> Delete(T entity);
 
         public Task<OperationResult<int>> Update(T entity);
 
         public Task<OperationResult<int>> Save();
-
-        public Task<T> Exists(T entity);
 
         public Task<int> Count(Expression<Func<T, bool>> predicate);
     }

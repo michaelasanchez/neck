@@ -1,6 +1,7 @@
 import { filter, map } from "lodash";
 
 import { Key, Mode, Note, Scale } from ".";
+import { ApiEntity } from "../network/ApiEntity";
 
 export enum ChordModifier {
   Major,
@@ -28,77 +29,57 @@ export enum ChordModifier {
 //  ----------------------------
 //  C   Dm  Em  F   G   Am  Bdim
 
-const getPitches = (mod: ChordModifier): number[] => {
-  switch (mod) {
-    case ChordModifier.Major:
-      return [0, 2, 4];
-    // case ChordModifier.DominantSeventh:
-    //   return [0, 2, 4, 7];
-  }
+// const getPitches = (mod: ChordModifier): number[] => {
+//   switch (mod) {
+//     case ChordModifier.Major:
+//       return [0, 2, 4];
+//     // case ChordModifier.DominantSeventh:
+//     //   return [0, 2, 4, 7];
+//   }
 
-  return [];
-}
+//   return [];
+// }
 
-const calculatePitches = (scale: Scale, mod: ChordModifier): Note[] => {
-  return map(getPitches(mod), p => {
-    const degree = p % scale.Notes.length;
-    const noteResult = filter(scale.Notes, n => n.Degree == degree);
-    return noteResult[0];
-  });
-}
+// const calculatePitches = (scale: Scale, mod: ChordModifier): Note[] => {
+//   return map(getPitches(mod), p => {
+//     const degree = p % scale.Notes.length;
+//     const noteResult = filter(scale.Notes, n => n.Degree == degree);
+//     return noteResult[0];
+//   });
+// }
 
-export class Chord {
+export class Chord extends ApiEntity {
 
-  private _root: Note;
-  private _modifier: ChordModifier;
+  public Root: Note;
+  public Modifier: ChordModifier;
 
-  private _keys: Key[];
+  public Keys: Key[];
 
-  private _degree: number;
+  public Degree: number;
 
-  private _tones: Note[];
-
-  private _scale: Scale;
+  public Tones: Note[];
 
   constructor(root: Note, mod: ChordModifier) {
-    this._root = root;
-    this._modifier = mod || ChordModifier.Major;
+    super();
+    
+    this.Root = root;
+    this.Modifier = mod || ChordModifier.Major;
 
-    this._scale = this._modifier === ChordModifier.Major
-      ? new Scale(root, Mode.Ionian())
-      : new Scale(root, Mode.Aeolian());
-
-    this._keys = this._modifier === ChordModifier.Minor
-      ? [new Key(this._root).RelativeMajor]
-      : [new Key(this._root)];
-
-    this._tones = calculatePitches(this._scale, this._modifier);
+    this.Keys = this.Modifier === ChordModifier.Minor
+      ? [new Key(this.Root).RelativeMajor]
+      : [new Key(this.Root)];
   }
 
   get Label(): string {
-    return `${this._root.Label} ${Chord.getModifierLabel(this._modifier)}`
+    return `${this.Root.Label} ${Chord.getModifierLabel(this.Modifier)}`
   }
 
   get Abbreviated(): string {
-    return `${this._root.Label}${this._modifier}`;
+    return `${this.Root.Label}${this.Modifier}`;
   }
-
-  get Root(): Note { return this._root; }
-  set Root(value: Note) { this._root = value; }
-
-  get Modifier(): ChordModifier { return this._modifier; }
-  set Modifier(value: ChordModifier) { this._modifier = value; }
 
   get ModifierLabel(): string {
-    return Chord.getModifierLabel(this._modifier);
-  }
-
-  get Keys(): Key[] {
-    return this._keys;
-  }
-
-  get Tones(): Note[] {
-    return this._tones;
+    return Chord.getModifierLabel(this.Modifier);
   }
 
   // TODO: Figure out where these should go

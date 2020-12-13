@@ -1,4 +1,7 @@
-﻿using neck.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using neck.Enums;
+using neck.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Repositories
@@ -10,10 +13,11 @@ namespace neck.Repositories
 		{
 		}
 
-		public override Task<Note> Exists(Note note)
+		public async override Task<OperationResult<Note>> Get(Note note)
 		{
-			return FirstOrDefaultAsync(n => n.Base == note.Base && n.Suffix == note.Suffix);
+			var result = await DefaultIncludes()
+				.FirstOrDefaultAsync(n => n.Base == note.Base && n.Suffix == note.Suffix);
+			return BuildGetOperationResult(result);
 		}
-
 	}
 }
