@@ -7,7 +7,7 @@ class Cookie {
   key: Key; 
   mode: Mode;
 
-  ui: CookieUi;
+  neck: NeckOptions;
 
   static Default(): Cookie {
     return {
@@ -16,14 +16,14 @@ class Cookie {
 
       key: Key.C(),
       mode: Mode.Ionian(),
-      ui: {
-        numFrets: 20
+      neck: {
+        numFrets: 14
       }
     } as Cookie;
   }
 }
 
-class CookieUi {
+class NeckOptions {
   numFrets: number
 }
 

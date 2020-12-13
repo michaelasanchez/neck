@@ -2,7 +2,7 @@ import { times } from 'lodash';
 import * as React from 'react';
 import { styles } from '../../shared';
 
-export const FRET_NUMBERS_VISIBLE = [3, 5, 7, 9];
+export const FRET_NUMBERS_VISIBLE = [3, 5, 7, 9, 12];
 
 export enum FretNumbersMode {
   None = 0,

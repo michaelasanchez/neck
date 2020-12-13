@@ -71,6 +71,10 @@ $diagrams-per-row: 4;
         min-height: min-content;
         overflow-y: auto;
       }
+
+      &.loading {
+        justify-content: center;
+      }
     }
 
   }

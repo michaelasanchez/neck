@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { ChordDiagram, SlideIn } from '.';
 import { Chord, ChordModifier, ChordVariation, Note } from '../../models';
-import { AppOptions } from '../../shared';
+import { AppOptions, NoteUtils } from '../../shared';
 import { NoteSelection } from '../NoteSelection';
 
 export const FILTER_BY_CHORD_FORM = false;
@@ -95,7 +95,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   const modifier = chord?.Modifier;
 
   let selectedRootIndex = rootNote
-    ? findIndex(notes, (n) => rootNote.Base == n.Base && rootNote.Suffix == n.Suffix)
+    ? findIndex(notes, (n) => NoteUtils.NotesAreEqual(n, rootNote))
     : null;
 
   const handleRootUpdate = (root: Note) => handleChordUpdate(root);
@@ -106,7 +106,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     let update = false;
     let updatedRoot: Note, updatedModifier: ChordModifier;
 
-    if (!!root && !rootNote.Equals(root)) {
+    if (!!root && !NoteUtils.NotesAreEqual(rootNote, root)) {
       update = true;
       updatedRoot = root;
     }

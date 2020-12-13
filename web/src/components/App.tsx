@@ -1,4 +1,4 @@
-import { isArray } from 'lodash';
+import { filter, isArray, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Backdrop, Indicators } from '.';
@@ -7,6 +7,7 @@ import { IApiEntity } from '../interfaces/IApiEntity';
 import {
   Chord,
   ChordModifier,
+  ChordVariation,
   Instrument,
   Key,
   Mode,
@@ -16,10 +17,14 @@ import {
   Tuning,
 } from '../models';
 import Cookie from '../models/Cookie';
-import { ApiRequest } from '../network';
+import {
+  ApiRequest,
+  ChordVariationApi,
+  ChordVariationGenerateRangeParams,
+} from '../network';
 import { ChordApi } from '../network/ChordApi';
 import { InstrumentApi } from '../network/InstrumentApi';
-import { AppOptions } from '../shared';
+import { AppOptions, NoteUtils } from '../shared';
 import { IndicatorsMode } from './Indicators';
 import { IError, Loading } from './Loading';
 import { Neck } from './neck';
@@ -100,6 +105,9 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     //     : loadDefault();
   }, []);
 
+  // Chord & Variation refresh
+  useEffect(() => {}, [appOptions?.chord]);
+
   // FULL:
   // chord            Default/Re-load from API
   // instrument       Load from API
@@ -108,7 +116,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   // tuning           Load from API (instrument)
   // variations       G?
   const loadOptionsFromCookie = (cookie: Cookie) => {
-    console.log('COOKIE', cookie);
     var requests: Promise<any>[] = [];
 
     // Always request chord
@@ -117,7 +124,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       chordReq = new ChordApi().GetById(cookie.chordId);
     } else {
       // TODO: static
-      chordReq = new ChordApi().Quick(
+      chordReq = new ChordApi().QuickFromValues(
         NoteValue.C,
         NoteSuffix.Natural,
         ChordModifier.Major
@@ -140,7 +147,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       const instrument: Instrument = isArray(instrumentResult)
         ? instrumentResult[0]
         : instrumentResult;
-      instrument.NumFrets = cookie.ui.numFrets;
+      instrument.NumFrets = cookie.neck.numFrets;
 
       // Create app options
       const options = {
@@ -155,19 +162,15 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       if (!!error) {
         setErrors([error]);
       } else {
-        setAppOptions(options);
+        handleSetOptions(options);
       }
     });
   };
 
   const validateAppOptions = (appOptions: AppOptions): IError => {
     //
-    const checks = ['chord', 'instrument', 'tuning', 'key', 'mode'];
-    const missing: string[] = [];
-
-    for (var c in checks) {
-      if (!appOptions[checks[c]]) missing.push(checks[c]);
-    }
+    const required = ['chord', 'instrument', 'tuning', 'key', 'mode'];
+    const missing = filter(required, (r) => !appOptions[r]);
 
     if (missing.length > 0) {
       return {
@@ -194,32 +197,49 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     };
 
     if (
-      !!updated?.chord &&
-      !!appOptions?.chord &&
-      (!updated.chord.Root.Equals(appOptions.chord.Root) ||
-        updated.chord.Modifier != appOptions.chord.Modifier)
+      updated?.chord &&
+      (!NoteUtils.NotesAreEqual(updated?.chord?.Root, appOptions?.chord?.Root) ||
+      updated.chord.Modifier != appOptions?.chord?.Modifier)
     ) {
       new ChordApi()
-        .Quick(
-          newOptions.chord.Root.Base,
-          newOptions.chord.Root.Suffix,
-          newOptions.chord.Modifier
-        )
+        .Quick(newOptions.chord.Root, newOptions.chord.Modifier)
         .then((chord) => {
-          finishSetOptions(newOptions, true);
+
+          new ChordVariationApi()
+            .GenerateRange({
+              chordId: chord.Id,
+              tuningId: newOptions.tuning.Id,
+              range: newOptions.instrument.NumFrets,
+            } as ChordVariationGenerateRangeParams)
+            .then((variations: any[]) => {
+              // TODO: constructor logic should probably move
+              const newVariations = map(
+                variations,
+                (v) =>
+                  new ChordVariation(
+                    v.Formation.Positions,
+                    v.Formation.Barres,
+                    v.Chord,
+                    v.Tuning
+                  )
+              );
+
+              newOptions.chord = chord;
+              newOptions.variations = newVariations;
+              finishSetOptions(newOptions);
+            });
         });
     } else {
       finishSetOptions(newOptions);
     }
   };
 
-  const finishSetOptions = (
-    newOptions: AppOptions,
-    reloadUiOptions: boolean = false
-  ) => {
-    if (reloadUiOptions) {
-      // loadUiOptions(newOptions.numFrets, newOptions.chord, newOptions.tuning);
+  const finishSetOptions = (newOptions: AppOptions) => {
+    const error = validateAppOptions(newOptions);
+    if (error) {
+      debugger;
     }
+
     setAppOptions(newOptions);
     // setCookie('options', serializeOptionsCookie(newOptions));
   };

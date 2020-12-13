@@ -14,6 +14,7 @@ namespace neck.Models
 
         [JsonIgnore]
         public DateTimeOffset Created { get; set; }
+
         [JsonIgnore]
         public DateTimeOffset? Updated { get; set; }
     }

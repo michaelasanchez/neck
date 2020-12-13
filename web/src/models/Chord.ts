@@ -65,9 +65,9 @@ export class Chord extends ApiEntity {
     this.Root = root;
     this.Modifier = mod || ChordModifier.Major;
 
-    this.Keys = this.Modifier === ChordModifier.Minor
-      ? [new Key(this.Root).RelativeMajor]
-      : [new Key(this.Root)];
+    // this.Keys = this.Modifier === ChordModifier.Minor
+    //   ? [new Key(this.Root).RelativeMajor]
+    //   : [new Key(this.Root)];
   }
 
   get Label(): string {

@@ -42,7 +42,7 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
       <div className="badge">{badge}</div>
       <div className="title">{title}</div>
       {header && <div className="header">{header}</div>}
-      <div className="contents">
+      <div className={`contents${loading ? ' loading' : ''}`}>
         {loading ? (
           <Loading variant="secondary" showLoadingText={false} />
         ) : (

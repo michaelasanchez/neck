@@ -133,10 +133,6 @@ export class Note {
     return new this(NoteValue.G);
   }
 
-  public Equals(note: Note): boolean {
-    return this.Base == note.Base && this.Suffix == note.Suffix;
-  }
-
   public Natural(): Note {
     this._suffix = NoteSuffix.Natural;
     return this;
