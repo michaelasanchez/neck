@@ -66,18 +66,28 @@ $fret-marker-diameter: 12px;
 $fret-marker-width: $fret-marker-diameter;
 $fret-marker-height: $fret-marker-diameter;
 
+/* General Selector */
+$selector-border-color: rgba(135, 206, 235, .4);
+$selector-gradient-inner: rgba(135, 206, 235, 0);
+$selector-gradient-outer: rgba(135, 206, 235, .1);
+
+$selector-gradient-linear: linear-gradient($selector-gradient-outer, $selector-gradient-inner, $selector-gradient-outer) no-repeat;
+$selector-gradient-radial: radial-gradient(circle at right, $selector-gradient-inner, $selector-gradient-outer 70%) no-repeat;
+
 /* Indicators */
 $indicator-radius: 20px;
-$indicator-gradient-inner: rgba(135, 206, 235, 0);
-$indicator-gradient-outer: rgba(135, 206, 235, .1);
-$indicator-background: radial-gradient($indicator-gradient-inner, $indicator-gradient-outer 70%) no-repeat;
-$indicator-border-width: 4px;
-$indicator-border: $indicator-border-width solid rgba(135, 206, 235, .4);
+$indicator-background: radial-gradient($selector-gradient-inner, $selector-gradient-outer 70%) no-repeat;
+$indicator-border: 4px solid $selector-border-color;
 
 $indicator-muted-border: $indicator-border;
 $indicator-muted-diameter: 30px;
 
 $indicator-barre-diameter: 30px;
-$indicator-barre-background: linear-gradient($indicator-gradient-outer, $indicator-gradient-inner, $indicator-gradient-outer)  no-repeat;
-$indicator-barre-start-background: radial-gradient(circle at right, $indicator-gradient-inner, $indicator-gradient-outer 70%) no-repeat;
+$indicator-barre-background: $selector-gradient-linear;
+$indicator-barre-start-background: $selector-gradient-radial;
 $indicator-barre-start-offset: -15px;
+
+/* Chord Slide-In */
+$diagram-box-shadow: 0 2px 7px -2px #00000044;
+$diagram-outline-border: 2px solid $selector-border-color;
+$diagram-outline-border-radius: 6px;

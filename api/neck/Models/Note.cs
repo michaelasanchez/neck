@@ -18,7 +18,7 @@ namespace neck.Models
 		public string LongLabel => $"{Base} {Suffix}";
 
 		[NotMapped]
-		public int Pitch { get => ((int)Base + (int)Suffix) % Notes.Count; }
+		public int Pitch { get => ((int)Base + (int)Suffix + Notes.Count) % Notes.Count; }
 
 		[NotMapped]
 		public int? Degree;

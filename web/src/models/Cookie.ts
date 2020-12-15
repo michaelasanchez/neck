@@ -1,10 +1,10 @@
-import { Chord, ChordModifier, Key, Mode, Note } from ".";
+import { Key, Mode } from ".";
 
 class Cookie {
   chordId: string;
   instrumentId: string;
-  
-  key: Key; 
+
+  key: Key;
   mode: Mode;
 
   neck: NeckOptions;
@@ -23,7 +23,7 @@ class Cookie {
   }
 }
 
-class NeckOptions {
+export class NeckOptions {
   numFrets: number
 }
 

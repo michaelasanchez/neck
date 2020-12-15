@@ -38,44 +38,6 @@ const CONVERT_VARIATION_TO_CHORD_FORM = false;
 
 export interface AppProps {}
 
-const parseOptionsCookie = (cookieString: string): AppOptions => {
-  let parsed = JSON.parse(cookieString);
-
-  const rootNote = new Note(parsed.key._tonic.base, parsed.key._tonic.suffix);
-  const chordRoot = new Note(parsed.chord.Root.Base, parsed.chord.Root.Suffix);
-
-  parsed.chord = new Chord(chordRoot, parsed.chord.Modifier);
-  parsed.key = new Key(rootNote);
-  parsed.mode = new Mode(parsed.mode.name, parsed.mode.pattern);
-  parsed.tuning = new Tuning(parsed.tuning.Label, parsed.tuning.Offsets);
-
-  return parsed;
-};
-
-const serializeOptionsCookie = (options: AppOptions): string => {
-  const newOptions = { ...options };
-
-  newOptions.chord = {
-    Root: {
-      Base: options.chord.Root.Base,
-      Suffix: options.chord.Root.Suffix,
-    },
-    Modifier: options.chord.Modifier,
-  } as Chord;
-  // TODO: Fix this
-  // options.key = {
-  //   Tonic: {
-  //     Base: options.key.Tonic.Base,
-  //     Suffix: options.key.Tonic.Suffix,
-  //   }
-  // } as Key;
-  newOptions.tuning = {
-    Label: options.tuning.Label,
-    Offsets: newOptions.tuning.Offsets,
-  } as Tuning;
-  return JSON.stringify(newOptions);
-};
-
 const DefaultIndicatorsOptions = {
   mode: IndicatorsMode.Chord,
 };
@@ -93,7 +55,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   useEffect(() => {
     const saved = getCookie('options');
 
-    let cookie: Cookie;
+    let cookie = cookieFromCookieString(saved);
     if (!saved) {
       cookie = Cookie.Default();
     }
@@ -105,8 +67,9 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     //     : loadDefault();
   }, []);
 
-  // Chord & Variation refresh
-  useEffect(() => {}, [appOptions?.chord]);
+  const validCookie = (cookie: Cookie): boolean => {
+    return false;
+  };
 
   // FULL:
   // chord            Default/Re-load from API
@@ -119,16 +82,11 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     var requests: Promise<any>[] = [];
 
     // Always request chord
-    let chordReq: Promise<Chord>;
+    let chordReq: Promise<Chord | Chord[]>;
     if (cookie.chordId) {
       chordReq = new ChordApi().GetById(cookie.chordId);
     } else {
-      // TODO: static
-      chordReq = new ChordApi().QuickFromValues(
-        NoteValue.C,
-        NoteSuffix.Natural,
-        ChordModifier.Major
-      );
+      chordReq = new ChordApi().GetAll();
     }
     requests.push(chordReq);
 
@@ -142,8 +100,9 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
-      // instrumentReq.then(instrumentResult => {
-      const [chord, instrumentResult] = values;
+      const [chordResult, instrumentResult] = values;
+
+      const chord: Chord = isArray(chordResult) ? chordResult[0] : chordResult;
 
       const instrument: Instrument = isArray(instrumentResult)
         ? instrumentResult[0]
@@ -182,11 +141,26 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     return null;
   };
 
-  const cookieFromAppOptions = (appOptions: AppOptions): Cookie => {
+  const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
     const cookie = new Cookie();
 
     cookie.chordId = appOptions.chord.Id;
     cookie.instrumentId = appOptions.instrument.Id;
+    cookie.key = appOptions.key;
+    cookie.mode = appOptions.mode;
+    cookie.neck = {
+      numFrets: appOptions.instrument.NumFrets,
+    };
+
+    return JSON.stringify(cookie);
+  };
+
+  const cookieFromCookieString = (cookieString: string): Cookie => {
+    const cookie: Cookie = JSON.parse(cookieString);
+
+    const tonic = new Note(cookie.key.Tonic.Base, cookie.key.Tonic.Suffix);
+    cookie.key = new Key(tonic, cookie.key.Type);
+    cookie.mode = new Mode(cookie.mode.Label, cookie.mode.pattern);
 
     return cookie;
   };
@@ -206,40 +180,17 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       ) ||
         updated.chord.Modifier != appOptions?.chord?.Modifier)
     ) {
-      new ChordApi()
-        .Quick(newOptions.chord.Root, newOptions.chord.Modifier)
-        .then((chord) => {
-          newOptions.chord = chord;
-          reloadChordVariations(newOptions);
-        });
-    } else if (!appOptions?.variations) {
-      reloadChordVariations(newOptions);
+      reloadChord(newOptions);
     } else {
       finishSetOptions(newOptions);
     }
   };
 
-  const reloadChordVariations = (options: AppOptions) => {
-    new ChordVariationApi()
-      .GenerateRange({
-        chordId: options.chord.Id,
-        tuningId: options.tuning.Id,
-        range: options.instrument.NumFrets,
-      } as ChordVariationGenerateRangeParams)
-      .then((variations: any[]) => {
-        // TODO: constructor logic should probably move
-        const newVariations = map(
-          variations,
-          (v) =>
-            new ChordVariation(
-              v.Formation.Positions,
-              v.Formation.Barres,
-              v.Chord,
-              v.Tuning
-            )
-        );
-
-        options.variations = newVariations;
+  const reloadChord = (options: AppOptions) => {
+    new ChordApi()
+      .Quick(options.chord.Root, options.chord.Modifier)
+      .then((chord) => {
+        options.chord = chord;
         finishSetOptions(options);
       });
   };
@@ -251,7 +202,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     }
 
     setAppOptions(newOptions);
-    // setCookie('options', serializeOptionsCookie(newOptions));
+    setCookie('options', cookieStringFromAppOptions(newOptions));
   };
 
   if (appOptions) {

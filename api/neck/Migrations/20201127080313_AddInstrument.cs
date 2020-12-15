@@ -63,10 +63,39 @@ namespace neck.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.Sql(@"
+                DECLARE @noteId UNIQUEIDENTIFIER = NEWID();
                 DECLARE @instrumentId UNIQUEIDENTIFIER = NEWID();
                 DECLARE @tuningId UNIQUEIDENTIFIER = NEWID();
 
-                DECLARE @now DATETIMEOFFSET = SYSDATETIMEOFFSET()
+                DECLARE @now DATETIMEOFFSET = SYSDATETIMEOFFSET();
+
+                INSERT INTO Notes (
+                    Id,
+                    Base,
+                    Suffix,
+                    Created,
+                    Updated
+                ) VALUES (
+                    @noteId,
+                    0,
+                    0,
+                    @now,
+                    @now
+                )
+
+                INSERT INTO Chords (
+                    Id,
+                    RootId,
+                    Modifier,
+                    Created,
+                    Updated
+                ) VALUES (
+                    NEWID(),
+                    @noteId,
+                    0,
+                    @now,
+                    @now
+                )
 
                 INSERT INTO Instruments (
 	                Id,

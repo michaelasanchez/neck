@@ -3,7 +3,18 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { ChordDiagram, SlideIn } from '.';
-import { Chord, ChordModifier, ChordVariation, Note } from '../../models';
+import {
+  Chord,
+  ChordModifier,
+  ChordVariation,
+  Instrument,
+  Note,
+  Tuning,
+} from '../../models';
+import {
+  ChordVariationApi,
+  ChordVariationGenerateRangeParams,
+} from '../../network';
 import { AppOptions, NoteUtils } from '../../shared';
 import { NoteSelection } from '../NoteSelection';
 
@@ -78,18 +89,47 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   appOptions,
   setAppOptions,
 }) => {
-  const { chord, variations } = appOptions;
+  // Properties
+  const { chord, instrument, tuning } = appOptions;
 
-  const setChordVariation = (variation: ChordVariation) =>
-    setAppOptions({ chordVariation: variation });
+  // State
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [variations, setVariations] = useState<ChordVariation[]>();
 
-  // TODO: this could probably occur after we first get
-  //  the new set of variations
+  // Side Effects
   useEffect(() => {
-    if (variations?.length > 0) {
-      setChordVariation(variations[0]);
+    if (!!chord) {
+      reloadChordVariations();
     }
-  }, [variations]);
+  }, [appOptions?.chord]);
+
+  // Load
+  const reloadChordVariations = () => {
+    new ChordVariationApi()
+      .GenerateRange({
+        chordId: chord.Id,
+        tuningId: tuning.Id,
+        range: instrument.NumFrets,
+      } as ChordVariationGenerateRangeParams)
+      .then((variations: any[]) => {
+        // TODO: constructor logic should probably move
+        const newVariations = map(
+          variations,
+          (v) =>
+            new ChordVariation(
+              v.Formation.Positions,
+              v.Formation.Barres,
+              v.Chord,
+              v.Tuning
+            )
+        );
+
+        setVariations(newVariations);
+        if (newVariations.length) {
+          handleSetChordVariation(newVariations[0], 0);
+        }
+      });
+  };
 
   const rootNote = chord?.Root;
   const modifier = chord?.Modifier;
@@ -116,13 +156,21 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     }
 
     if (updatedRoot || updatedModifier !== null) {
-      setAppOptions({
-        chord: new Chord(
-          updatedRoot || rootNote,
-          updatedModifier !== undefined ? updatedModifier : modifier
-        ),
-      });
+      const chord = new Chord(
+        updatedRoot || rootNote,
+        updatedModifier !== undefined ? updatedModifier : modifier
+      );
+
+      setAppOptions({ chord });
     }
+  };
+
+  const handleSetChordVariation = (
+    variation: ChordVariation,
+    index: number
+  ) => {
+    setAppOptions({ chordVariation: variation });
+    setCurrentIndex(index);
   };
 
   const headerBadge = (
@@ -184,7 +232,8 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             <ChordDiagram
               chordVariation={v}
               key={i}
-              setChordVariation={setChordVariation}
+              setChordVariation={(v) => handleSetChordVariation(v, i)}
+              active={i == currentIndex}
             />
           ))
         ) : (

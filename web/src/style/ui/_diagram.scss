@@ -19,8 +19,36 @@ $diagram-dot-diameter: 16px;
 
 
 .diagram {
-  margin: 1em;
   cursor: pointer;
+  position: relative;
+
+  height: fit-content;
+  margin: 1em;
+
+  transition: 200ms transform;
+  transform: translateY(0);
+
+  .diagram-outline {
+    transition: 200ms opacity;
+    opacity: 0;
+  }
+
+  &.active {
+    transform: translateY(-3px);
+
+    .diagram-outline {
+      position: absolute;
+      height: calc(100% + 18px);
+      
+      opacity: 1;
+      top: -10px;
+      transform: translateY(0);
+
+      border: $diagram-outline-border;
+      border-radius: $diagram-outline-border-radius;
+      box-shadow: $diagram-box-shadow;
+    } 
+  }
 
   .diagram-container {
     position: relative;
@@ -149,12 +177,15 @@ $diagram-dot-diameter: 16px;
       }
     }
   }
-
+    
   .label-container {
-
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
   }
 
   &.md {
+    
     .diagram-container {
       > span {
         // padding-top: $diagram-fret-height / 2;
@@ -187,12 +218,10 @@ $diagram-dot-diameter: 16px;
   }
 
   &.sm {
+
     .diagram-container {
       > span {
-        // TODO: this is dependent and diagram padding
-        left: -2.5em;
         top: $diagram-fret-height / 3;
-        width: 2em;
         text-align: end;
 
         line-height: $diagram-fret-height / 3;
@@ -226,11 +255,8 @@ $diagram-dot-diameter: 16px;
         }
       }
     }
-    
+
     .label-container {
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
 
       span {
         font-size: .3em;

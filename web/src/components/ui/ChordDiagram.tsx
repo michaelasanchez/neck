@@ -8,6 +8,7 @@ export const FRET_PADDING_DEFAULT = 1;
 export interface ChordDiagramProps {
   chordVariation: ChordVariation;
   setChordVariation: (options: ChordVariation) => void;
+  active?: boolean;
 }
 
 enum BarreClass {
@@ -19,6 +20,7 @@ enum BarreClass {
 export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   chordVariation: variation,
   setChordVariation: handleClick,
+  active
 }) => {
   const minPos = min(variation.Positions);
   const maxPos = max(variation.Positions);
@@ -65,11 +67,28 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
     return null;
   });
 
-  return (
-    <div className="diagram sm" onClick={() => handleClick(variation)}>
-      <div className="diagram-container">
-        <span>{minPos != 0 && minPos}</span>
+  const offsetSpan = React.useRef();
+  let offsetWidth = 0;
+  
+  const current = offsetSpan.current as HTMLElement;
+  if (current) {
+    offsetWidth = current.offsetWidth;
+  }
+  const outlineStyle = {
+    width: `calc(100% + ${20 + offsetWidth}px)`,
+    left: -10 - offsetWidth
+  }
 
+  const spanStyle = {
+    left: -4 - offsetWidth
+  }
+
+  return (
+    <div className={`diagram sm${active ? ' active' : ''}`} onClick={() => handleClick(variation)}>
+      <div className="diagram-outline" style={outlineStyle}>
+      </div>
+      <div className="diagram-container">
+        <span ref={offsetSpan} style={spanStyle}>{minPos != 0 && minPos}</span>
         {times(variation.Positions.length, (s) => {
           const barreFret = variation.Positions[variation.Barres[0]];
 

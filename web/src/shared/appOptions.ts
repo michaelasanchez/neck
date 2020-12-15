@@ -9,8 +9,8 @@ export interface AppOptions {
   key: Key; 
   mode: Mode; // Options modal 
 
-  chordVariation?: ChordVariation;
-  variations?: ChordVariation[];
+  // Ui?
+  chordVariation?: ChordVariation;  // Indicators
 
   // Validation
   [key: string]: any

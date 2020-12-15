@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace neck.Repositories
 		public ChordRepository(NeckContext context)
 			: base(context)
 		{
+			GetAllDefaultIncludes = true;
 		}
 
 		public override IQueryable<Chord> DefaultIncludes()

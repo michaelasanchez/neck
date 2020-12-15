@@ -1,15 +1,4 @@
 const getCookie = (cname: string): string => {
-
-  return null;
-
-  console.log('Fake cookie loaded');
-  var fake = {
-    chordId:'',
-    instrumentId: ''
-  }
-
-  return JSON.stringify(fake);
-
   var name = cname + '=';
   var decodedCookie = decodeURIComponent(document.cookie);
   var ca = decodedCookie.split(';');
