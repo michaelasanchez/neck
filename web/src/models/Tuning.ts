@@ -1,4 +1,4 @@
-import { ApiEntity } from "../network";
+import { ApiEntity } from "../network/ApiEntity";
 import { IOption } from "../shared";
 
 export class Tuning extends ApiEntity implements IOption {

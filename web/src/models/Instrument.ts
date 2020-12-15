@@ -1,4 +1,4 @@
-import { ApiEntity } from "../network";
+import { ApiEntity } from "../network/ApiEntity";
 import { Formation } from "./Formation";
 import { Tuning } from "./Tuning";
 

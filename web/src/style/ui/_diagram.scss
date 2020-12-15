@@ -114,6 +114,7 @@ $diagram-dot-diameter: 16px;
             left: calc(50% + .5px);
 
             background: $diagram-dot-background-color;
+            // background: #00000044;
             border: $diagram-dot-border;
 
             height: $diagram-dot-diameter;
@@ -121,8 +122,9 @@ $diagram-dot-diameter: 16px;
             border-radius: $diagram-dot-diameter / 2;
 
             &.root {
-              border-radius: $diagram-dot-diameter / 3;
-              transform: rotate(45deg);
+              // background: $diagram-dot-background-color;
+              // background: #00000044;
+              border-radius: 1px;
             }
           }
 

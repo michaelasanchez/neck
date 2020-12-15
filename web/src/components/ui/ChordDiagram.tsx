@@ -1,6 +1,7 @@
 import { filter, map, max, min, times } from 'lodash';
 import * as React from 'react';
 import { ChordVariation, Note } from '../../models';
+import { NoteUtils } from '../../shared';
 
 export const MIN_NUM_FRETS_DEFAULT = 4;
 export const FRET_PADDING_DEFAULT = 1;
@@ -9,6 +10,13 @@ export interface ChordDiagramProps {
   chordVariation: ChordVariation;
   setChordVariation: (options: ChordVariation) => void;
   active?: boolean;
+  size?: ChordDiagramSize;
+}
+
+export enum ChordDiagramSize{
+  Small = 'sm',
+  Medium = 'md',
+  Normal = ''
 }
 
 enum BarreClass {
@@ -20,7 +28,8 @@ enum BarreClass {
 export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   chordVariation: variation,
   setChordVariation: handleClick,
-  active
+  active,
+  size = ChordDiagramSize.Small
 }) => {
   const minPos = min(variation.Positions);
   const maxPos = max(variation.Positions);
@@ -47,7 +56,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
         {barreClass !== null ? (
           <div className={`symbol barre ${barreClass}`}></div>
         ) : show ? (
-          <div className="symbol dot"></div>
+          <div className={`symbol dot${root ? ' root' : ''}`}></div>
         ) : (
           <></>
         )}
@@ -61,6 +70,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
     if (result.length) {
       var note = new Note(result[0].Base, result[0].Suffix);
+      chordRoots[i] = NoteUtils.NotesAreEqual(note, variation.Chord.Root);
       return note.Label;
     }
 
@@ -84,7 +94,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   }
 
   return (
-    <div className={`diagram sm${active ? ' active' : ''}`} onClick={() => handleClick(variation)}>
+    <div className={`diagram ${size}${active ? ' active' : ''}`} onClick={() => handleClick(variation)}>
       <div className="diagram-outline" style={outlineStyle}>
       </div>
       <div className="diagram-container">
@@ -98,7 +108,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
                 const show = variation.Positions[s] == f + minPos - paddingTop;
                 const open = f == 0 && minPos - paddingTop < 1;
                 const mute = variation.Positions[s] == null && f === 0;
-                const root = false;
+                const root = chordRoots[s];
 
                 // TODO: Supports single barre for now
                 let barre: BarreClass;
