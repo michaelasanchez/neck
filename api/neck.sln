@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "neck", "neck\neck.csproj", "{E34E494A-CBBB-42F1-90F9-9FE76D874835}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "neck.tests", "neck.tests\neck.tests.csproj", "{A8210C18-66BB-4288-ABB2-1E4C8292DC4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "neck.tests", "neck.tests\neck.tests.csproj", "{C93F8587-2AC8-4750-87E9-97C5949C2AFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{E34E494A-CBBB-42F1-90F9-9FE76D874835}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E34E494A-CBBB-42F1-90F9-9FE76D874835}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E34E494A-CBBB-42F1-90F9-9FE76D874835}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8210C18-66BB-4288-ABB2-1E4C8292DC4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8210C18-66BB-4288-ABB2-1E4C8292DC4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8210C18-66BB-4288-ABB2-1E4C8292DC4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8210C18-66BB-4288-ABB2-1E4C8292DC4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C93F8587-2AC8-4750-87E9-97C5949C2AFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C93F8587-2AC8-4750-87E9-97C5949C2AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C93F8587-2AC8-4750-87E9-97C5949C2AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C93F8587-2AC8-4750-87E9-97C5949C2AFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

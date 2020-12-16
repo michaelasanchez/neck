@@ -18,6 +18,9 @@ namespace neck.Models
 		public string LongLabel => $"{Base} {Suffix}";
 
 		[NotMapped]
+		public string PlainLabel => $"{Base}{SuffixPlainSymbol(Suffix)}";
+
+		[NotMapped]
 		public int Pitch { get => ((int)Base + (int)Suffix + Notes.Count) % Notes.Count; }
 
 		[NotMapped]
@@ -50,6 +53,19 @@ namespace neck.Models
 					return "\u266f";
 				case NoteSuffix.Flat:
 					return "\u266d";
+				default:
+					return string.Empty;
+			}
+		}
+
+		private string SuffixPlainSymbol(NoteSuffix suffix)
+		{
+			switch (suffix)
+			{
+				case NoteSuffix.Sharp:
+					return "#";
+				case NoteSuffix.Flat:
+					return "b";
 				default:
 					return string.Empty;
 			}
@@ -98,18 +114,18 @@ namespace neck.Models
 			// IF ANYTHING IS SERIOUSLY BROKEN THIS IS THE FIRST PLACE TO LOOk !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11111
 			// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
 			//return new Note((NoteValue)(Pitch + step), nextSuffix);
-			var nextValue = (int)(Pitch + step);
-			if (!Enum.IsDefined(typeof(NoteValue), nextValue))
-			{
-				nextValue = (int)(Base + step) % Notes.Count;
-				if (nextSuffix == NoteSuffix.Flat)
-				{
-					nextSuffix = NoteSuffix.DoubleFlat;
-				} else
-				{
-					nextSuffix = NoteSuffix.DoubleSharp;
-				}
-			}
+			var nextValue = (int)(Pitch + step) % Notes.Count;
+			//if (!Enum.IsDefined(typeof(NoteValue), nextValue))
+			//{
+			//	nextValue = (int)(Base + step) % Notes.Count;
+			//	if (nextSuffix == NoteSuffix.Flat)
+			//	{
+			//		nextSuffix = NoteSuffix.DoubleFlat;
+			//	} else
+			//	{
+			//		nextSuffix = NoteSuffix.DoubleSharp;
+			//	}
+			//}
 			return new Note((NoteValue)nextValue, nextSuffix);
 		}
 
@@ -157,19 +173,19 @@ namespace neck.Models
 				}
 			}
 
-			var nextValue = (int)(Pitch + step);
-			if (!Enum.IsDefined(typeof(NoteValue), nextValue))
-			{
-				nextValue = (int)(Base + step) % Notes.Count;
-				if (nextSuffix == NoteSuffix.Flat)
-				{
-					nextSuffix = NoteSuffix.DoubleFlat;
-				}
-				else
-				{
-					nextSuffix = NoteSuffix.DoubleSharp;
-				}
-			}
+			var nextValue = (int)(Pitch + step) % Notes.Count;
+			//if (!Enum.IsDefined(typeof(NoteValue), nextValue))
+			//{
+			//	nextValue = (int)(Base + step) % Notes.Count;
+			//	if (nextSuffix == NoteSuffix.Flat)
+			//	{
+			//		nextSuffix = NoteSuffix.DoubleFlat;
+			//	}
+			//	else
+			//	{
+			//		nextSuffix = NoteSuffix.DoubleSharp;
+			//	}
+			//}
 			return new Note((NoteValue)nextValue, nextSuffix);
 		}
 		#endregion
