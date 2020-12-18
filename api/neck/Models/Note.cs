@@ -51,8 +51,12 @@ namespace neck.Models
 			{
 				case NoteSuffix.Sharp:
 					return "\u266f";
+				case NoteSuffix.DoubleSharp:
+					return "\u266f\u266f";
 				case NoteSuffix.Flat:
 					return "\u266d";
+				case NoteSuffix.DoubleFlat:
+					return "\u266d\u266d";
 				default:
 					return string.Empty;
 			}
@@ -88,11 +92,14 @@ namespace neck.Models
 		public Note HalfStepUp()
 		{
 			int step = 1;
+
+			// gen value
+			var nextValue = (Pitch + step) % Notes.Count;
 			var nextSuffix = NoteSuffix.Natural;
 
-			if (Enum.IsDefined(typeof(NoteValue), (Pitch + step) % Notes.Count))
+			if (Enum.IsDefined(typeof(NoteValue), nextValue))
 			{
-				if (Pitch + 1 == (int)Base)
+				if (Suffix == NoteSuffix.Flat)
 				{
 					step = 2;
 					nextSuffix = NoteSuffix.Flat;
@@ -112,17 +119,19 @@ namespace neck.Models
 				}
 			}
 
-			var nextValue = (int)(Pitch + step) % Notes.Count;
+			// again
+			nextValue = (Pitch + step) % Notes.Count;
+
 			if (!Enum.IsDefined(typeof(NoteValue), nextValue))
 			{
 				nextValue = (int)(Base + step) % Notes.Count;
 				if (nextSuffix == NoteSuffix.Flat)
 				{
-					nextSuffix = NoteSuffix.DoubleFlat; // Bbb
+					nextSuffix = NoteSuffix.DoubleFlat;
 				}
 				else
 				{
-					nextSuffix = NoteSuffix.DoubleSharp;    // F##
+					nextSuffix = NoteSuffix.DoubleSharp;
 				}
 			}
 			return new Note((NoteValue)nextValue, nextSuffix);
@@ -146,8 +155,7 @@ namespace neck.Models
 			NoteSuffix nextSuffix = NoteSuffix.Natural;
 			if (Enum.IsDefined(typeof(NoteValue), (Pitch + step) % Notes.Count))
 			{
-				// Basically checking if it's a sharp. 
-				if ((Pitch - 1 + Notes.Count) % Notes.Count == (int)Base)
+				if (Suffix == NoteSuffix.Sharp)
 				{
 					step = 1;
 					nextSuffix = NoteSuffix.Sharp;
@@ -160,8 +168,7 @@ namespace neck.Models
 			}
 			else
 			{
-				// Basically checking if it's a flat...
-				if ((Pitch + 1) % Notes.Count == (int)Base)
+				if (Suffix == NoteSuffix.Flat)
 				{
 					step = 3;
 					nextSuffix = NoteSuffix.Flat;
