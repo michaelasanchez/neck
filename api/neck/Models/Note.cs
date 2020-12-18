@@ -107,7 +107,12 @@ namespace neck.Models
 			}
 			else
 			{
-				if (Pitch != (int)Base)
+				if (Suffix == NoteSuffix.Sharp)
+				{
+					nextSuffix = NoteSuffix.Sharp;
+					step = 0;
+				}
+				else if (Suffix == NoteSuffix.DoubleSharp)
 				{
 					nextSuffix = NoteSuffix.Sharp;
 					step = 0;
@@ -152,6 +157,7 @@ namespace neck.Models
 		public Note WholeStepUp()
 		{
 			var step = 2;
+			var calcFromBase = false;
 			NoteSuffix nextSuffix = NoteSuffix.Natural;
 			if (Enum.IsDefined(typeof(NoteValue), (Pitch + step) % Notes.Count))
 			{
@@ -164,6 +170,10 @@ namespace neck.Models
 				{
 					step = 3;
 					nextSuffix = NoteSuffix.Flat;
+				}
+				else if (Suffix == NoteSuffix.DoubleSharp)
+				{
+					calcFromBase = true;
 				}
 			}
 			else
@@ -181,7 +191,7 @@ namespace neck.Models
 			}
 
 			var nextValue = (int)(Pitch + step) % Notes.Count;
-			if (!Enum.IsDefined(typeof(NoteValue), nextValue))
+			if (!Enum.IsDefined(typeof(NoteValue), nextValue) || calcFromBase)
 			{
 				nextValue = (int)(Base + step) % Notes.Count;
 				if (nextSuffix == NoteSuffix.Flat)
@@ -191,15 +201,6 @@ namespace neck.Models
 				else
 				{
 					nextSuffix = NoteSuffix.DoubleSharp;
-				}
-			}
-			else
-			{
-				// This barely works for F## -> G## in the scale of A#
-				if (Suffix == NoteSuffix.DoubleSharp && (nextValue - (int)Base + Notes.Count) % Notes.Count > step)
-				{
-					nextValue = (int)(Base + step) % Notes.Count;
-					nextSuffix = Suffix;
 				}
 			}
 			return new Note((NoteValue)nextValue, nextSuffix);
