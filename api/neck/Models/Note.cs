@@ -101,18 +101,17 @@ namespace neck.Models
 			{
 				if (Suffix == NoteSuffix.Flat)
 				{
-					step = 2;
 					nextSuffix = NoteSuffix.Flat;
+					step = 2;
+				} else if (Suffix == NoteSuffix.DoubleSharp)
+				{
+					nextSuffix = NoteSuffix.Sharp;
+					step = 2;
 				}
 			}
 			else
 			{
-				if (Suffix == NoteSuffix.Sharp)
-				{
-					nextSuffix = NoteSuffix.Sharp;
-					step = 0;
-				}
-				else if (Suffix == NoteSuffix.DoubleSharp)
+				if (Suffix == NoteSuffix.Sharp || Suffix == NoteSuffix.DoubleSharp)
 				{
 					nextSuffix = NoteSuffix.Sharp;
 					step = 0;
@@ -133,10 +132,6 @@ namespace neck.Models
 				if (nextSuffix == NoteSuffix.Flat)
 				{
 					nextSuffix = NoteSuffix.DoubleFlat;
-				}
-				else
-				{
-					nextSuffix = NoteSuffix.DoubleSharp;
 				}
 			}
 			return new Note((NoteValue)nextValue, nextSuffix);
