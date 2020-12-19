@@ -15,7 +15,9 @@ namespace neck.Generators
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
 
-		private int ALLOWED_MUTES = 1;
+		private int ALLOWED_OUT_OF_SPAN = 5;
+		private int ALLOWED_MUTES = 5;
+		private int ALLOWED_OPEN = 5;
 
 		// Returns a fret number based on a Note, tuning
 		//  offset and an optional minimum fret position
@@ -27,10 +29,20 @@ namespace neck.Generators
 			return pos;
 		}
 
+		//private Note calcNoteFromPosition(Chord chord, int tuningOffset, int notePosition)
+		//{
+
+		//}
+
 		private bool isNoteInRange(Note note, int tuning, int offset, int span)
 		{
 			var pos = calcNotePosition(note, tuning, offset);
 			return pos >= offset && pos <= offset + (span - 1);
+		}
+
+		private bool containsNote(List<Note> noteList, Note note)
+		{
+			return noteList.FirstOrDefault(n => n.Equals(note)) != null;
 		}
 
 		private bool containsVariation(List<ChordVariation> variations, ChordVariation newVariation)
@@ -91,11 +103,30 @@ namespace neck.Generators
 			var noteCounts = matches.Select(m => m.Count()).ToList();
 			var noMatches = noteCounts.Where(m => m == 0).Count();
 
-			// Add mute(s) if needed
-			if (noMatches > 0 && noMatches <= ALLOWED_MUTES)
+			// Add mute & open notes
+			if (noMatches > 0 && noMatches <= ALLOWED_OUT_OF_SPAN)
 			{
-				var index = noteCounts.IndexOf(0);
-				noteCounts[index] = 1;
+				int min = 0, mutes = 0, open = 0;
+				for (var i = 0; i < noteCounts.Count && min < noteCounts.Count; i++)
+				{
+					if (mutes < ALLOWED_MUTES)
+					{
+						var index = noteCounts.IndexOf(0, min);
+						if (index >= 0)
+						{
+							min = index + 1;
+							noteCounts[index] = 1;
+							mutes++;
+						}
+					}
+					if (open < ALLOWED_OPEN)
+					{
+						//if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i], 0)))
+						//{
+
+						//}
+					}
+				}
 			}
 
 			//
@@ -128,8 +159,6 @@ namespace neck.Generators
 
 					return calcNotePosition(note, tuning.Offsets[countIndex], fretOffset);
 				}).ToList();
-				// TODO: Eventually we'll want to get rid of this cast
-				//	in order to support chords that can ignore specific tunings
 
 				if (toneCheck.All(c => c))
 				{

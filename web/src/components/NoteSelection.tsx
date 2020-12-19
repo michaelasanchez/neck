@@ -1,5 +1,6 @@
 import { each, filter, findIndex, map } from 'lodash';
 import * as React from 'react';
+import { useState } from 'react';
 import { Note, NoteValue } from '../models';
 import { NoteUtils } from '../shared';
 
@@ -10,16 +11,14 @@ export interface INoteSelectionProps {
 const naturalNoteValues = NoteUtils.NaturalNoteValues();
 
 export const NoteSelection: React.FC<INoteSelectionProps> = ({ notes }) => {
-  // TODO: this will blow up one day
+  const [selected, setSelected] = useState<number>(0);
+
   const root = notes[0];
   const rootIndex = findIndex(naturalNoteValues, (n) => n == root.Base);
 
-  // TODO: finish this
-  const selected = 0;
-
   return (
     <div className="note-selection">
-      Notes:{' '}
+      <label>Notes:</label>
       {map(naturalNoteValues, (v: NoteValue, i: number) => {
         const shifted =
           naturalNoteValues[
@@ -30,17 +29,17 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({ notes }) => {
         var result = filter(notes, (n: Note, i: number) => n.Base == shifted);
         if (result.length == 1) {
           return (
-            <small key={i} className={`font-weight-bold ${i == selected ? 'selected' : ''}`}>
+            <span
+              key={i}
+              className={`active ${i == selected ? 'selected' : ''}`}
+              onClick={() => setSelected(i)}
+            >
               {result[0].Label}
-            </small>
+            </span>
           );
         }
 
-        return (
-          <small className="font-weight-light `text-black-50" key={i}>
-            {NoteUtils.NoteValueToString(shifted)}
-          </small>
-        );
+        return <span key={i}>{NoteUtils.NoteValueToString(shifted)}</span>;
       })}
     </div>
   );

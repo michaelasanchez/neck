@@ -3,7 +3,7 @@
 // $debug-border-right: none; //1px solid red;
 // $debug-border-bottom: none; //1px solid red;
 
-$body-background-color:  #fafafa;
+$body-background-color: #fafafa;
 
 // $fretboard-background-color: #fff;
 
@@ -13,17 +13,14 @@ $body-background-color:  #fafafa;
 $white: #fff;
 
 // /* Fonts */
-$font-merriweather: "Merriweather", serif;
-
+$font-merriweather: 'Merriweather', serif;
 
 // /* Navbar */
 $navbar-height: 67.6px;
 
-
 // /* Options */
 $modal-margin-top: 15px;
 $modal-margin-bottom: $navbar-height + 15px;
-
 
 // /* Neck */
 $neck-padding-vertical: 100px;
@@ -34,7 +31,13 @@ $neck-width: 400px;
 $neck-box-shadow: 0 20px 30px -10px #00000022;
 
 /* Fretboard */
-$fretboard-background: linear-gradient(0deg, $body-background-color, #fff 10%, #fff 90%, $body-background-color);
+$fretboard-background: linear-gradient(
+  0deg,
+  $body-background-color,
+  #fff 10%,
+  #fff 90%,
+  $body-background-color
+);
 
 /* Fretboard Markers */
 $fretboard-marker-background-color: #f8f8f8;
@@ -55,7 +58,7 @@ $fret-open-font-weight: 700;
 // /* Fret Labels */
 $fret-label-color: #999;
 
-$fret-animation-length: .2s;
+$fret-animation-length: 0.2s;
 
 // /* Fret Markers */
 $fret-marker-background-color: #eee;
@@ -67,16 +70,30 @@ $fret-marker-width: $fret-marker-diameter;
 $fret-marker-height: $fret-marker-diameter;
 
 /* General Selector */
-$selector-border-color: rgba(135, 206, 235, .4);
+$selector-border-color: rgba(135, 206, 235, 0.4);
 $selector-gradient-inner: rgba(135, 206, 235, 0);
-$selector-gradient-outer: rgba(135, 206, 235, .1);
+$selector-gradient-outer: rgba(135, 206, 235, 0.1);
 
-$selector-gradient-linear: linear-gradient($selector-gradient-outer, $selector-gradient-inner, $selector-gradient-outer) no-repeat;
-$selector-gradient-radial: radial-gradient(circle at right, $selector-gradient-inner, $selector-gradient-outer 70%) no-repeat;
+$selector-gradient-linear: linear-gradient(
+    $selector-gradient-outer,
+    $selector-gradient-inner,
+    $selector-gradient-outer
+  )
+  no-repeat;
+$selector-gradient-radial: radial-gradient(
+    circle at right,
+    $selector-gradient-inner,
+    $selector-gradient-outer 70%
+  )
+  no-repeat;
 
 /* Indicators */
 $indicator-radius: 20px;
-$indicator-background: radial-gradient($selector-gradient-inner, $selector-gradient-outer 70%) no-repeat;
+$indicator-background: radial-gradient(
+    $selector-gradient-inner,
+    $selector-gradient-outer 70%
+  )
+  no-repeat;
 $indicator-border: 4px solid $selector-border-color;
 
 $indicator-muted-border: $indicator-border;

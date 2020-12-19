@@ -93,7 +93,6 @@ namespace neck.Models
 		{
 			int step = 1;
 
-			// gen value
 			var nextValue = (Pitch + step) % Notes.Count;
 			var nextSuffix = NoteSuffix.Natural;
 
@@ -103,7 +102,8 @@ namespace neck.Models
 				{
 					nextSuffix = NoteSuffix.Flat;
 					step = 2;
-				} else if (Suffix == NoteSuffix.DoubleSharp)
+				}
+				else if (Suffix == NoteSuffix.DoubleSharp)
 				{
 					nextSuffix = NoteSuffix.Sharp;
 					step = 2;
@@ -123,7 +123,6 @@ namespace neck.Models
 				}
 			}
 
-			// again
 			nextValue = (Pitch + step) % Notes.Count;
 
 			if (!Enum.IsDefined(typeof(NoteValue), nextValue))
@@ -180,6 +179,7 @@ namespace neck.Models
 				}
 				else
 				{
+					Debug.WriteLine(Suffix);
 					step = 1;
 					nextSuffix = NoteSuffix.Sharp;
 				}
@@ -193,7 +193,7 @@ namespace neck.Models
 				{
 					nextSuffix = NoteSuffix.DoubleFlat;
 				}
-				else
+				else if (nextSuffix == NoteSuffix.Sharp || nextSuffix == NoteSuffix.Natural)
 				{
 					nextSuffix = NoteSuffix.DoubleSharp;
 				}

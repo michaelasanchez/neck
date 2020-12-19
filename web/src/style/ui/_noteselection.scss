@@ -1,0 +1,33 @@
+$note-selection-selected-color: #444;
+
+.note-selection {
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
+  width: 50%;
+
+  label {
+    margin-right: .5em;
+  }
+
+  span {
+    font-size: 0.8em;
+    border-radius: 3px;
+    color: rgba(0, 0, 0, 0.5);
+    cursor: default;
+    font-weight: 300;
+    padding: 0 4px 1px;
+    transition: 400ms background-color, 200ms color;
+
+    &.active {
+      color: #000;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    &.selected {
+      background: $note-selection-selected-color;
+      color: #fff;
+    }
+  }
+}

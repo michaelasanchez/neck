@@ -1,22 +1,23 @@
-@import "vars";
-@import "mixins";
+@import 'vars';
+@import 'mixins';
 
-@import "fonts";
-@import "animation";
-@import "main";
+@import 'fonts';
+@import 'animation';
+@import 'main';
 
 /* Bootstrap overrides/add-ons */
-@import "overrides";
+@import 'overrides';
 
 /* Components */
-@import "ui/navbar";
-@import "ui/options";
-@import "ui/diagram";
-@import "ui/slider";
-@import "ui/slidein";
+@import 'ui/navbar';
+@import 'ui/options';
+@import 'ui/diagram';
+@import 'ui/slider';
+@import 'ui/slidein';
+@import 'ui/noteselection';
 
-@import "neck/neck";
-@import "neck/backdrop";
-@import "neck/indicators";
+@import 'neck/neck';
+@import 'neck/backdrop';
+@import 'neck/indicators';
 
-@import "left";
+@import 'left';

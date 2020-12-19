@@ -7,15 +7,15 @@ $diagrams-per-row: 4;
 
   display: flex;
   flex-direction: column;
-  
+
   max-height: 50%;
   min-height: 300px;
   min-width: 400px;
-  
+
   background: white;
   box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-    
+
   .title,
   .header {
     margin: 1em 1em 0;
@@ -39,7 +39,6 @@ $diagrams-per-row: 4;
   }
 
   &.chord {
-
     .badge {
       position: absolute;
       top: -10px;
@@ -47,23 +46,6 @@ $diagrams-per-row: 4;
 
       > .btn-group {
         box-shadow: -2px 6px 4px -2px rgba(0, 0, 0, 0.1);
-      }
-    }
-
-    .note-selection {
-      display: flex;
-      justify-content: space-around;
-      align-items: baseline;
-      width: 50%;
-
-      small {
-        &.selected {
-          background: #444;
-          color: #fff;
-          border-radius: 2px;
-          padding: 0 4px 2px;
-        }
-        // transition: 300ms color;
       }
     }
 
@@ -77,7 +59,7 @@ $diagrams-per-row: 4;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
-        
+
         min-height: min-content;
         overflow-y: auto;
         overflow-x: hidden;
@@ -87,6 +69,5 @@ $diagrams-per-row: 4;
         justify-content: center;
       }
     }
-
   }
 }
