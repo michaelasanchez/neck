@@ -84,7 +84,7 @@ namespace neck.Models
 		// TODO: Add half/whole step down?
 		public Note HalfStepDown()
 		{
-			int step = 0;
+			//int step = 0;
 
 			return new Note();
 		}
@@ -143,7 +143,7 @@ namespace neck.Models
 
 		public Note WholeStepDown()
 		{
-			int step = 0;
+			//int step = 0;
 
 			return new Note();
 		}

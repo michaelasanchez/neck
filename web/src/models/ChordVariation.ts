@@ -9,30 +9,19 @@ export class ChordVariation {
 
   public Pitches: number[];
 
-  public Chord: Chord;
-
   public Barres: number[];
   // private _barre: number[];
 
   private _chordForm: ChordForm;
 
-  constructor(positions: number[], barres: number[], chord?: Chord, tuning?: Tuning, convert: boolean = false) {
+  constructor(positions: number[], barres: number[], tuning?: Tuning) {
     this._positions = positions;
-    if (chord) this.Chord = chord;
     this.Barres = barres;
     // this._barre = new Array(this._positions.length).fill(null);
 
     this.Pitches = map(tuning.Offsets, (o: number, i: number) => {
       return (o + this.Positions[i]) % Note.NUM_NOTES;
     });
-
-    if (chord !== null && !!tuning) {
-      each(ChordForm.getChordForms(chord.Modifier), (f) => {
-        if (this.matchesChordForm(f, convert)) {
-          this._chordForm = f;
-        }
-      });
-    }
   }
 
   get Positions(): number[] {

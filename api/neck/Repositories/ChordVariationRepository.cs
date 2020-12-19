@@ -35,15 +35,6 @@ namespace neck.Repositories
 				}
 			}
 
-			if (variation?.Chord?.Root != null)
-			{
-				var chordResult = await _chordRepo.Value.Get(variation.Chord);
-				if (chordResult.Success)
-				{
-					variation.Chord = chordResult.Result;
-				}
-			}
-
 			if (variation.Tuning != null)
 			{
 				var tuningResult = await _tuningRepo.Value.Get(variation.Tuning);

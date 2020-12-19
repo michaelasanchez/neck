@@ -1,22 +1,23 @@
 import { filter, map, max, min, times } from 'lodash';
 import * as React from 'react';
-import { ChordVariation, Note } from '../../models';
+import { Chord, ChordVariation, Note } from '../../models';
 import { NoteUtils } from '../../shared';
 
 export const MIN_NUM_FRETS_DEFAULT = 4;
 export const FRET_PADDING_DEFAULT = 1;
 
 export interface ChordDiagramProps {
+  chord: Chord;
   chordVariation: ChordVariation;
   setChordVariation: (options: ChordVariation) => void;
   active?: boolean;
   size?: ChordDiagramSize;
 }
 
-export enum ChordDiagramSize{
+export enum ChordDiagramSize {
   Small = 'sm',
   Medium = 'md',
-  Normal = ''
+  Normal = '',
 }
 
 enum BarreClass {
@@ -26,10 +27,11 @@ enum BarreClass {
 }
 
 export const ChordDiagram: React.FC<ChordDiagramProps> = ({
+  chord: chord,
   chordVariation: variation,
   setChordVariation: handleClick,
   active,
-  size = ChordDiagramSize.Small
+  size = ChordDiagramSize.Small,
 }) => {
   const minPos = min(variation.Positions);
   const maxPos = max(variation.Positions);
@@ -66,11 +68,11 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
   const chordRoots = new Array(variation.Pitches.length);
   const noteLabels = map(variation.Pitches, (p: number, i: number) => {
-    const result = filter(variation.Chord.Tones, (t: any) => p == t.Pitch);
+    const result = filter(chord.Tones, (t: any) => p == t.Pitch);
 
     if (result.length) {
       var note = new Note(result[0].Base, result[0].Suffix);
-      chordRoots[i] = NoteUtils.NotesAreEqual(note, variation.Chord.Root);
+      chordRoots[i] = NoteUtils.NotesAreEqual(note, chord.Root);
       return note.Label;
     }
 
@@ -79,26 +81,30 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
   const offsetSpan = React.useRef();
   let offsetWidth = 0;
-  
+
   const current = offsetSpan.current as HTMLElement;
   if (current) {
     offsetWidth = current.offsetWidth;
   }
   const outlineStyle = {
     width: `calc(100% + ${20 + offsetWidth}px)`,
-    left: -10 - offsetWidth
-  }
+    left: -10 - offsetWidth,
+  };
 
   const spanStyle = {
-    left: -4 - offsetWidth
-  }
+    left: -4 - offsetWidth,
+  };
 
   return (
-    <div className={`diagram ${size}${active ? ' active' : ''}`} onClick={() => handleClick(variation)}>
-      <div className="diagram-outline" style={outlineStyle}>
-      </div>
+    <div
+      className={`diagram ${size}${active ? ' active' : ''}`}
+      onClick={() => handleClick(variation)}
+    >
+      <div className="diagram-outline" style={outlineStyle}></div>
       <div className="diagram-container">
-        <span ref={offsetSpan} style={spanStyle}>{minPos != 0 && minPos}</span>
+        <span ref={offsetSpan} style={spanStyle}>
+          {minPos != 0 && minPos}
+        </span>
         {times(variation.Positions.length, (s) => {
           const barreFret = variation.Positions[variation.Barres[0]];
 

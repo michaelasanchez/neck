@@ -162,7 +162,7 @@ namespace neck.Generators
 
 				if (toneCheck.All(c => c))
 				{
-					variations.Add(new ChordVariation(positions, chord, tuning));
+					variations.Add(new ChordVariation(positions, chord.Id, tuning));
 				}
 
 				// Reset

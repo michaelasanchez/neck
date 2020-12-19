@@ -13,20 +13,19 @@ namespace neck.Models
         public Formation Formation { get; set; }
 
         public Guid ChordId { get; set; }
-        
-        public Chord Chord { get; set; }
 
         public Guid TuningId { get; set; }
-             
+         
+        // TODO: remove
         public Tuning Tuning { get; set; }
 
         private ChordVariation() { }
 
-        public ChordVariation(List<int?> positions, Chord chord, Tuning tuning, string label = null)
+        public ChordVariation(List<int?> positions, Guid chordId, Tuning tuning, string label = null)
         {
-            Label = label ?? chord?.Label;
+            //Label = label ?? chord?.Label;
+            ChordId = chordId;
             Formation = new Formation(positions);
-            Chord = chord;
             Tuning = tuning;
         }
     }
