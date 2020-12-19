@@ -151,9 +151,14 @@ namespace neck.Models
 		public Note WholeStepUp()
 		{
 			var step = 2;
+
+			var nextValue = (Pitch + step) % Notes.Count;
+			var nextSuffix = NoteSuffix.Natural;
+
+			// TODO: get rid of this
 			var calcFromBase = false;
-			NoteSuffix nextSuffix = NoteSuffix.Natural;
-			if (Enum.IsDefined(typeof(NoteValue), (Pitch + step) % Notes.Count))
+
+			if (Enum.IsDefined(typeof(NoteValue), nextValue))
 			{
 				if (Suffix == NoteSuffix.Sharp)
 				{
@@ -185,7 +190,8 @@ namespace neck.Models
 				}
 			}
 
-			var nextValue = (int)(Pitch + step) % Notes.Count;
+			nextValue = (int)(Pitch + step) % Notes.Count;
+
 			if (!Enum.IsDefined(typeof(NoteValue), nextValue) || calcFromBase)
 			{
 				nextValue = (int)(Base + step) % Notes.Count;
