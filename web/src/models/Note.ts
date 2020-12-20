@@ -1,4 +1,5 @@
 import { isUndefined } from 'lodash';
+import { ScaleDegree } from '.';
 
 //  C           D           E     F           G           A           B   
 //        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb
@@ -13,6 +14,25 @@ export enum NoteValue {
   G = 7,
   A = 9,
   B = 11,
+}
+
+export enum NoteInterval
+{
+    Root = 0,
+    //PerfectUnison = 0,
+    MinorSecond = 1,
+    MajorSecond = 2,
+    MinorThird = 3,
+    MajorThird = 4,
+    PerfectFourth = 5,
+    DiminishedFifth = 6,
+    AugmentedFourth = 6,
+    PerfectFifth = 7,
+    MinorSixth = 8,
+    MajorSixth = 9,
+    MinorSeventh = 10,
+    MajorSeventh = 11,
+    PerfectOctave = 12
 }
 
 export enum NoteSuffix {
@@ -40,7 +60,9 @@ export class Note {
 
   public Pitch: number;
 
-  public Degree: number;
+  public Degree: ScaleDegree;
+
+  public Interval: NoteInterval;
 
   constructor(value: NoteValue = NoteValue.C, suffix: NoteSuffix = NoteSuffix.Natural) {
     this.Base = value % Note.NUM_NOTES;

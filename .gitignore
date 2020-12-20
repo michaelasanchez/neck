@@ -21,3 +21,5 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+
+*.png

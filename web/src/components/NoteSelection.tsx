@@ -13,13 +13,16 @@ const naturalNoteValues = NoteUtils.NaturalNoteValues();
 export const NoteSelection: React.FC<INoteSelectionProps> = ({ notes }) => {
   const [selected, setSelected] = useState<number>(0);
 
-  const root = notes[0];
-  const rootIndex = findIndex(naturalNoteValues, (n) => n == root.Base);
+  let rootIndex: number;
+  if (!!notes && notes.length > 0) {
+    console.log('NOTESLSKNSDLF', notes);
+    rootIndex = findIndex(naturalNoteValues, (n) => n == notes[0].Base);
+  }
 
   return (
     <div className="note-selection">
       <label>Notes:</label>
-      {map(naturalNoteValues, (v: NoteValue, i: number) => {
+      {rootIndex && map(naturalNoteValues, (v: NoteValue, i: number) => {
         const shifted =
           naturalNoteValues[
             (i + rootIndex + naturalNoteValues.length) %
@@ -32,7 +35,7 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({ notes }) => {
             <span
               key={i}
               className={`active ${i == selected ? 'selected' : ''}`}
-              onClick={() => setSelected(i)}
+              onClick={() => i == selected ? setSelected(null) : setSelected(i)}
             >
               {result[0].Label}
             </span>

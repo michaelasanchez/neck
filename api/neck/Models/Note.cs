@@ -23,8 +23,15 @@ namespace neck.Models
 		[NotMapped]
 		public int Pitch { get => ((int)Base + (int)Suffix + Notes.Count) % Notes.Count; }
 
+		// The difference in pitch between two notes,
+		//	one being the root note of a scale
 		[NotMapped]
-		public int? Degree;
+		public Interval? Interval;
+
+		// Refers to the position of a particular note
+		//	on a scale realtive to the tonic
+		[NotMapped]
+		public ScaleDegree? Degree;
 
 		public Note() { }
 

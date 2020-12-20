@@ -29,10 +29,14 @@ namespace neck.Generators
 			return pos;
 		}
 
-		//private Note calcNoteFromPosition(Chord chord, int tuningOffset, int notePosition)
-		//{
+		private Note calcNoteFromPosition(Chord chord, int tuningOffset, int notePosition)
+		{
+			var root = chord.Root;
 
-		//}
+
+
+			return root;
+		}
 
 		private bool isNoteInRange(Note note, int tuning, int offset, int span)
 		{
@@ -87,12 +91,6 @@ namespace neck.Generators
 		public List<ChordVariation> GenerateVariations(Chord chord, Tuning tuning, int fretOffset, int fretSpan)
 		//public List<ChordVariation> Create(ChordVariationCreateArgs args)
 		{
-			//// TODO: figure out where validation goes. It's in the controller now
-			//var chord = args.chord;
-			//var tuning = args.tuning;
-			//var fretOffset = args.fretOffset;
-			//var fretSpan = args.fretSpan;
-
 			if (fretOffset == 0 && VARIATION_SPAN_INCLUDES_OPEN == true) fretSpan++;
 
 			// Matches will contain a set of notes for each string (tuning offset)
@@ -109,7 +107,14 @@ namespace neck.Generators
 				int min = 0, mutes = 0, open = 0;
 				for (var i = 0; i < noteCounts.Count && min < noteCounts.Count; i++)
 				{
-					if (mutes < ALLOWED_MUTES)
+					if (open < ALLOWED_OPEN)
+					{
+						if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i], 0)))
+						{
+
+						}
+					}
+					else if (mutes < ALLOWED_MUTES)
 					{
 						var index = noteCounts.IndexOf(0, min);
 						if (index >= 0)
@@ -118,13 +123,6 @@ namespace neck.Generators
 							noteCounts[index] = 1;
 							mutes++;
 						}
-					}
-					if (open < ALLOWED_OPEN)
-					{
-						//if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i], 0)))
-						//{
-
-						//}
 					}
 				}
 			}

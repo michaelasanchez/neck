@@ -1,4 +1,5 @@
-﻿using System;
+﻿using neck.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +17,8 @@ namespace neck.Models
         public Scale(Note root, Mode mode)
         {
             _root = root;
-            _root.Degree = 0;
+            _root.Degree = ScaleDegree.Tonic;
+            _root.Interval = Interval.Root;
 
             _mode = mode;
             _notes = calcNotes(_root, _mode);
@@ -40,21 +42,31 @@ namespace neck.Models
             }
         }
 
-        public List<Note> Notes { get => _notes; }
+		public List<Note> Notes { get => _notes; }
 
-        private List<Note> calcNotes(Note root, Mode mode)
+		private List<Note> calcNotes(Note root, Mode mode)
         {
             var notes = new List<Note> { root };
 
             mode.Steps.ForEach(step =>
             {
-                var prevNote = notes.Last();
-                var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
-                nextNote.Degree = notes.Count;
+                var nextNote = calcNextNote(notes.Last(), step);
+
+                //
                 if (nextNote.Pitch != root.Pitch) notes.Add(nextNote);
             });
 
             return notes;
+        }
+
+        private Note calcNextNote(Note prevNote, Step step)
+        {
+            var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
+
+            nextNote.Degree = prevNote.Degree + 1;
+            nextNote.Interval = (Interval)((nextNote.Pitch - Root.Pitch + Models.Notes.Count) % Models.Notes.Count);
+
+            return nextNote;
         }
     }
 }

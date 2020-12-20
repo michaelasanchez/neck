@@ -26,6 +26,19 @@ export enum ScaleMode {
   Locrian = 'hwwhwww'
 }
 
+
+export enum ScaleDegree
+{
+  Tonic = 1,
+  Supertonic = 2,
+  Mediant = 3,
+  Subdominant = 4,
+  Dominant = 5,
+  Submediant = 6,
+  Subtonic = 7,		// in the natual minor scale
+  LeadingTone = 7,	// in the major scale
+}
+
 enum ScaleType {
   Chromatic = 12,
   Octatonic = 8,

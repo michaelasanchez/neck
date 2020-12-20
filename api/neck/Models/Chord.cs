@@ -1,8 +1,9 @@
-﻿using System;
+﻿using neck.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using static neck.Enums.ChordEnums;
 
 namespace neck.Models
@@ -76,59 +77,86 @@ namespace neck.Models
 		//  ----------------------------
 		//  C   Dm  Em  F   G   Am  Bdim
 
-		private List<int> getDegrees(ChordModifier mod)
+		private List<Interval> getIntervals(ChordModifier mod)
 		{
 			// TODO: Currently exist on front end
 			switch (mod)
 			{
 				case ChordModifier.Major:
-					return new List<int> { 0, 2, 4 };
+					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth };
 				case ChordModifier.Minor:
-					return new List<int> { 0, 2, 4 };
+					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth };
 				case ChordModifier.Diminished:
-					throw new Exception("Not implemented");
+					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.DiminishedFifth };
 				case ChordModifier.MajorSeventh:
-					return new List<int> { 0, 2, 4, 6 };
+					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MajorSeventh };
 				case ChordModifier.MinorSeventh:
-					return new List<int> { 0, 2, 4, 6 };
+					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth, Interval.MinorSeventh };
 				case ChordModifier.DominantSeventh:
-					throw new Exception("Not implemented");
+					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MinorSeventh };
 				case ChordModifier.Suspended:
 					throw new Exception("Not implemented");
 				case ChordModifier.Augmented:
-					return new List<int> { 0, 2, 4 };
+					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth };
+				case ChordModifier.AugmentedSeventh:
+					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth, Interval.MinorSeventh };
 				default:
 					return null;
 			}
 		}
 
-		private List<Note> mapComponents(Note root, ChordModifier mod)
+		private List<Note> mapComponents(Note root, ChordModifier modifier)
 		{
 
-			// Degress mark a note's position in a scale
-			var degrees = getDegrees(mod);
+			var intervals = getIntervals(modifier);
 
-			var scale = mod == ChordModifier.Minor || mod == ChordModifier.MinorSeventh
-				? new Scale(root, Mode.Aeolian())
-				: new Scale(root, Mode.Ionian());
-			
-			// Components are the notes that compose a chord
-			var components = degrees
-				.Select(d => scale.Notes.FirstOrDefault(n => n.Degree == d))
-				.ToList();
+			var scale = new Scale(root, getMode(modifier));
 
-			switch (mod)
+			List<Note> components;
+			if (modifier == ChordModifier.Augmented || modifier == ChordModifier.AugmentedSeventh)
 			{
-				case ChordModifier.Augmented:
-					var fifth = components.Last();
-					var index = components.IndexOf(fifth);
-					components[index] = fifth.HalfStepUp();
-					break;
-				case ChordModifier.Diminished:
-					break;
+				components = intervals
+					.Select(i =>
+					{
+						var note = scale.Notes.FirstOrDefault(n => n.Interval == i);
+						if (note == null)
+						{
+							var flat = scale.Notes.FirstOrDefault(n => n.Interval == i + 1);
+							if (flat != null && (flat.Interval == Interval.PerfectFifth || flat.Interval == Interval.MajorSeventh))
+							{
+								return new Note(flat.Base, NoteSuffix.Flat);
+							}
+							var sharp = scale.Notes.FirstOrDefault(n => n.Interval == i - 1);
+							if (sharp != null && (sharp.Interval == Interval.PerfectFifth || sharp.Interval == Interval.MajorSeventh))
+							{
+								return new Note(sharp.Base, NoteSuffix.Sharp);
+							}
+						}
+
+						return note;
+					})
+					.ToList();
+			}
+			else
+			{
+				components = intervals.Select(i => scale.Notes.FirstOrDefault(n => n.Interval == i)).ToList();
 			}
 
 			return components;
+		}
+
+		private Mode getMode(ChordModifier mod)
+		{
+			switch (mod)
+			{
+				case ChordModifier.Minor:
+				case ChordModifier.MinorSeventh:
+					return Mode.Aeolian();
+				case ChordModifier.DominantSeventh:
+					return Mode.Mixolydian();
+				default:
+					return Mode.Ionian();
+			}
 		}
 
 	}

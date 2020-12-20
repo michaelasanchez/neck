@@ -9,10 +9,12 @@ export enum ChordModifier {
   Diminished,
   MajorSeventh,
   MinorSeventh,
-  DominantSevent,
+  DominantSeventh,
   Suspended,
   Augmented,
-  // Extended,
+  AugmentedSeventh,
+  MajorSix,
+  MinorSix,
 }
 
 // I        tonic

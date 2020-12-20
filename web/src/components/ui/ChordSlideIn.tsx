@@ -59,10 +59,14 @@ const getChordModifierAbbreviation = (mod: ChordModifier): string => {
       return 'maj7';
     case ChordModifier.MinorSeventh:
       return 'min7';
+    case ChordModifier.DominantSeventh:
+      return '7';
     case ChordModifier.Suspended:
       return 'sus';
     case ChordModifier.Augmented:
       return 'aug';
+    case ChordModifier.AugmentedSeventh:
+      return 'aug7';
   }
 };
 
@@ -78,10 +82,14 @@ const getChordModifierLabel = (mod: ChordModifier): string => {
       return 'Major 7';
     case ChordModifier.MinorSeventh:
       return 'Minor 7';
+    case ChordModifier.DominantSeventh:
+      return '7';
     case ChordModifier.Suspended:
       return 'Suspended';
     case ChordModifier.Augmented:
       return 'Augmented';
+    case ChordModifier.AugmentedSeventh:
+      return 'Augmented 7';
   }
 };
 
@@ -119,7 +127,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             new ChordVariation(
               v.Formation.Positions,
               v.Formation.Barres,
-              v.Chord,
               v.Tuning
             )
         );
@@ -204,7 +211,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             key={i}
             active={i == modifier}
             onSelect={() => handleModifierUpdate(i)}
-            disabled={indexOf([0, 1, 3, 4, 7], i) < 0} // TODO: this really shouldn't be here. DEBUG ONLY!
+            disabled={indexOf([0, 1, 3, 4, 5, 7, 8], i) < 0} // TODO: manually filtering chord modifiers
           >
             {getChordModifierLabel(i)}
           </Dropdown.Item>
@@ -230,6 +237,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
         {variations?.length > 0 ? (
           map(variations, (v: ChordVariation, i: number) => (
             <ChordDiagram
+              chord={chord}
               chordVariation={v}
               key={i}
               setChordVariation={(v) => handleSetChordVariation(v, i)}
@@ -239,6 +247,11 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
         ) : (
           <> Nope!</>
         )}
+      </div>
+      <div className="footer text-secondary">
+        <small>{currentIndex != null ? currentIndex + 1 : '-'}</small>
+        <small style={{ padding: '0 .5em' }}>/</small>
+        <small>{variations?.length || '-'}</small>
       </div>
     </SlideIn>
   );

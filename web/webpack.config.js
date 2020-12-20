@@ -76,6 +76,10 @@ module.exports = function makeWebpackConfig() {
           }
         ]
       },
+      // {
+      //   test: /\.ico$/,
+      //   loader: 'file-loader'
+      // },
       // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
       {
         enforce: 'pre',
@@ -89,6 +93,7 @@ module.exports = function makeWebpackConfig() {
   config.plugins = [
     new HtmlWebpackPlugin({
       template: './src/public/index.html',
+      favicon: './src/public/favicon.ico',
       inject: 'body'
     }),
     new MiniCssExtractPlugin(),

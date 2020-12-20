@@ -38,6 +38,13 @@ $diagrams-per-row: 4;
     flex-grow: 1;
   }
 
+  .footer {
+    display: flex;
+    justify-content: center;
+
+    padding-top: .5em;
+  }
+
   &.chord {
     .badge {
       position: absolute;
@@ -54,6 +61,7 @@ $diagrams-per-row: 4;
       flex: 1;
       flex-direction: column;
       overflow: auto;
+      margin-bottom: .5em;
 
       .variations {
         display: flex;
