@@ -18,6 +18,10 @@ $diagram-dot-border: $diagram-symbol-border-width solid
   $diagram-symbol-border-color;
   $diagram-dot-diameter: 16px;
 
+$diagram-dot-color: darken($neck-primary, 20%);
+$diagram-dot-highlight-background-color: rgba($diagram-dot-color, 0.8);
+$diagram-dot-highlight-border-color: $diagram-dot-color;
+
 .diagram {
   cursor: pointer;
   position: relative;
@@ -110,6 +114,7 @@ $diagram-dot-border: $diagram-symbol-border-width solid
 
           &.dot {
             left: 50%;
+            transition: 300ms background-color, 300ms border-color;
 
             background: $diagram-dot-background-color;
             // background: #00000044;
@@ -118,6 +123,11 @@ $diagram-dot-border: $diagram-symbol-border-width solid
             height: $diagram-dot-diameter;
             width: $diagram-dot-diameter;
             border-radius: $diagram-dot-diameter / 2;
+
+            &.highlight {
+              background-color: $diagram-dot-highlight-background-color;
+              border-color: $diagram-dot-highlight-border-color;
+            }
 
             &.root {
               // background: $diagram-dot-background-color;

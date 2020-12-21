@@ -11,6 +11,12 @@ $body-background-color: #fafafa;
 
 // /* Colors */
 $white: #fff;
+$blue: rgb(135, 206, 235); //rgb(135, 206, 235);
+$green: rgb(135, 235, 197);
+$orange: rgb(241, 172, 42);
+
+/* Theme */
+$neck-primary: $blue;
 
 // /* Fonts */
 $font-merriweather: 'Merriweather', serif;
@@ -70,9 +76,9 @@ $fret-marker-width: $fret-marker-diameter;
 $fret-marker-height: $fret-marker-diameter;
 
 /* General Selector */
-$selector-border-color: rgba(135, 206, 235, 0.4);
-$selector-gradient-inner: rgba(135, 206, 235, 0);
-$selector-gradient-outer: rgba(135, 206, 235, 0.1);
+$selector-border-color: rgba($neck-primary, 0.4);
+$selector-gradient-inner: rgba($neck-primary, 0);
+$selector-gradient-outer: rgba($neck-primary, 0.1);
 
 $selector-gradient-linear: linear-gradient(
     $selector-gradient-outer,

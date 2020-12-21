@@ -1,6 +1,7 @@
 import { filter, map, max, min, times } from 'lodash';
 import * as React from 'react';
-import { Chord, ChordVariation, Note } from '../../models';
+
+import { Chord, ChordVariation, Note, NoteValue } from '../../models';
 import { NoteUtils } from '../../shared';
 
 export const MIN_NUM_FRETS_DEFAULT = 4;
@@ -11,6 +12,7 @@ export interface ChordDiagramProps {
   chordVariation: ChordVariation;
   setChordVariation: (options: ChordVariation) => void;
   active?: boolean;
+  highlighted?: NoteValue[];
   size?: ChordDiagramSize;
 }
 
@@ -31,6 +33,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   chordVariation: variation,
   setChordVariation: handleClick,
   active,
+  highlighted: highlightedNoteValues = [],
   size = ChordDiagramSize.Small,
 }) => {
   const minPos = min(variation.Positions);
@@ -46,6 +49,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
   const renderFretSymbols = (
     show: boolean,
+    highlight: boolean,
     root: boolean,
     open: boolean,
     mute: boolean,
@@ -55,10 +59,15 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
       <>
         {!open && <div className="symbol string"></div>}
         {mute && <div className="symbol mute"></div>}
-        {barreClass !== null ? (
+        {barreClass !== null && (
           <div className={`symbol barre ${barreClass}`}></div>
-        ) : show ? (
-          <div className={`symbol dot${root ? ' root' : ''}`}></div>
+        )}
+        {show ? (
+          <div
+            className={`symbol dot${root ? ' root' : ''}${
+              highlight ? ' highlight' : ''
+            }`}
+          ></div>
         ) : (
           <></>
         )}
@@ -67,12 +76,17 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   };
 
   const chordRoots = new Array(variation.Pitches.length);
+  const chordHighlighted = map(variation.Pitches, (p) => false);
   const noteLabels = map(variation.Pitches, (p: number, i: number) => {
     const result = filter(chord.Tones, (t: any) => p == t.Pitch);
 
     if (result.length) {
       var note = new Note(result[0].Base, result[0].Suffix);
+
       chordRoots[i] = NoteUtils.NotesAreEqual(note, chord.Root);
+      chordHighlighted[i] =
+        filter(highlightedNoteValues, (v) => v == note.Base).length > 0;
+
       return note.Label;
     }
 
@@ -136,7 +150,14 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
                 return (
                   <div className={`fret${open ? ' open' : ''}`} key={f}>
-                    {renderFretSymbols(show, root, open, mute, barre)}
+                    {renderFretSymbols(
+                      show,
+                      chordHighlighted[s],
+                      root,
+                      open,
+                      mute,
+                      barre
+                    )}
                   </div>
                 );
               })}

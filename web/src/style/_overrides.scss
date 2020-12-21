@@ -10,18 +10,28 @@ nav.fixed-bottom {
 }
 
 /* Dropdown */
-.dropdown-menu {
-  min-width: unset;
-  min-width: 100%;
-}
+.dropdown {
+  .dropdown-toggle {
+    &::after {
+      margin-left: 8px;
+    }
+  }
 
-.dropdown .dropdown-toggle {
-  &::after {
-    margin-left: 8px;
+  .dropdown-menu {
+    min-width: unset;
+    min-width: 100%;
+
+    .dropdown-item {
+      &.active {
+        background-color: $neck-primary;
+        color: #fff; //#414549;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, .4);
+      }
+    }
   }
 }
 
 /* Form */
 .form-check-input {
-  margin-top: .4rem;
+  margin-top: 0.4rem;
 }

@@ -1,4 +1,4 @@
-$note-selection-selected-color: #444;
+$note-selection-selected-color: darken($neck-primary, 20%); //#444;
 
 .note-selection {
   display: flex;
