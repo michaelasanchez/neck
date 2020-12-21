@@ -112,7 +112,8 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   // Side Effects
   useEffect(() => {
     if (!!chord) {
-      setSelected([chord.Root.Base]);
+      setSelected([]);
+      // setSelected([chord.Root.Base]);
       reloadChordVariations();
     }
   }, [appOptions?.chord]);
@@ -191,8 +192,13 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   };
 
   const handleSelectedUpdate = (value: NoteValue) => {
-    if (!ALLOW_MULTIPLE) setSelected([value]);
-    else {
+    if (!ALLOW_MULTIPLE) {
+      if (selected.length && selected[0] == value) {
+        setSelected([]);
+      } else {
+        setSelected([value]);
+      }
+    } else {
       if (filter(selected, (v) => v === value).length) {
         selected.splice(indexOf(selected, value), 1);
       } else {
