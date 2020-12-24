@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace neck.Interfaces
+namespace neck.Factories.Args
 {
-	public interface IFactory<T, TArgs>
+	public class ScaleVariationCreateArgs
 	{
-		//public IList<T> GenerateVariations(TArgs args);
 	}
 }

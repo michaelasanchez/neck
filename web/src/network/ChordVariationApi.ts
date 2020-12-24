@@ -26,6 +26,7 @@ export class ChordVariationApi extends ApiRequest<ChordVariation> {
   }
 
   private hack = (chord: Partial<Chord>): Chord => {
+    // debugger;
     return {
       Root: {
         Base: chord.Root.Base,

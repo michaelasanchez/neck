@@ -31,7 +31,7 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
     transform: `translateX(-${slideInWidth}px)`,
   };
 
-  const [show, setShow] = useState<boolean>(true);
+  const [show, setShow] = useState<boolean>(true); // TODO: constant
 
   return (
     <div

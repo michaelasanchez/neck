@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ChordSlideIn, Navbar, OptionsModal } from '.';
+
+import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
 import { Key, Mode, Tuning } from '../../models';
 import { AppOptions } from '../../shared';
 import { FretDisplayMode } from '../neck';
@@ -63,6 +64,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         />
       </div>
       <ChordSlideIn appOptions={appOptions} setAppOptions={setAppOptions} />
+      {/* <ScaleSlideIn /> */}
     </>
   );
 };

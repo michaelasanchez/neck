@@ -8,5 +8,6 @@ export * from './Key';
 export * from './Mode';
 export * from './Note';
 export * from './Scale';
+export * from './ScaleVariation';
 export * from './Tuning';
 

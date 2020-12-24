@@ -156,6 +156,8 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   };
 
   const cookieFromCookieString = (cookieString: string): Cookie => {
+    if (!cookieString) return null;
+
     const cookie: Cookie = JSON.parse(cookieString);
 
     const tonic = new Note(cookie.key.Tonic.Base, cookie.key.Tonic.Suffix);
@@ -209,22 +211,16 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     return (
       <>
         <main ref={mainRef}>
-          {/* instrument, tuning */}
           <Backdrop options={appOptions} />
           <div className="neck-container">
-            {/* key, tuning, mode, instrument */}
             <Neck options={appOptions} />
           </div>
           {SHOW_INDICATORS && (
             <div className="indicators-container">
-              {/* chordVariation, tuning, instrument */}
-              {/* TODO: right now chordVariation is set in ChordSlideIn as an effect of variations updating */}
               <Indicators appOptions={appOptions} mainRef={mainRef} />
             </div>
           )}
         </main>
-        {/* key, mode, tuning */}
-        {/* ChordSlideIn - chord, variations */}
         <Ui appOptions={appOptions} setAppOptions={handleSetOptions} />
       </>
     );
