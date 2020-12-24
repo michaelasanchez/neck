@@ -68,7 +68,17 @@ namespace neck.Controllers
 			{
 				return BadRequest("Chord root note is required");
 			}
-			if (tuning == null) return BadRequest("Tuning or tuningId is required");
+			if (tuning == null)
+			{
+				if (@params.tuningId == null)
+				{
+					return BadRequest("Tuning or tuningId is required");
+				}
+				else
+				{
+					return BadRequest("Tuning could not be found");
+				}
+			}
 
 			var offset = @params.offset ?? 0;
 			var span = @params.span ?? 4;
@@ -111,7 +121,17 @@ namespace neck.Controllers
 			{
 				return BadRequest("Chord root note is required");
 			}
-			if (tuning == null) return BadRequest("Tuning or tuningId is required");
+			if (tuning == null)
+			{
+				if (@params.tuningId == null)
+				{
+					return BadRequest("Tuning or tuningId is required");
+				}
+				else
+				{
+					return BadRequest("Tuning could not be found");
+				}
+			}
 
 			var offset = @params.offset ?? 0;
 			var span = @params.span ?? 4;

@@ -59,11 +59,11 @@ namespace neck.Models
 				case NoteSuffix.Sharp:
 					return "\u266f";
 				case NoteSuffix.DoubleSharp:
-					return "\u266f\u266f";
+					return "\ud834\udd2a";
 				case NoteSuffix.Flat:
 					return "\u266d";
 				case NoteSuffix.DoubleFlat:
-					return "\u266d\u266d";
+					return "\ud834\udd2b";
 				default:
 					return string.Empty;
 			}

@@ -51,8 +51,6 @@ namespace neck.Models
             mode.Steps.ForEach(step =>
             {
                 var nextNote = calcNextNote(notes.Last(), step);
-
-                //
                 if (nextNote.Pitch != root.Pitch) notes.Add(nextNote);
             });
 
@@ -64,9 +62,14 @@ namespace neck.Models
             var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
 
             nextNote.Degree = prevNote.Degree + 1;
-            nextNote.Interval = (Interval)((nextNote.Pitch - Root.Pitch + Models.Notes.Count) % Models.Notes.Count);
+            nextNote.Interval = calcInterval(nextNote.Pitch, Root.Pitch);
 
             return nextNote;
+        }
+
+        private Interval calcInterval(int pitch, int rootPitch)
+		{
+            return (Interval)((pitch - rootPitch + Models.Notes.Count) % Models.Notes.Count);
         }
     }
 }

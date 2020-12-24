@@ -8,8 +8,8 @@ namespace neck.Models
     {
         public string Label { get; set; }
 
-        public Guid FormationId { get; set;
-        }
+        public Guid FormationId { get; set; }
+
         public Formation Formation { get; set; }
 
         public Guid ChordId { get; set; }
