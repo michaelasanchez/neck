@@ -12,19 +12,12 @@ namespace neck.Factories
 {
 	public class ScaleVariationFactory : IFactory<ScaleVariation, ScaleVariationCreateArgs>
 	{
-		public ScaleVariation GenerateVariations(Scale scale, Tuning tuning, int offset, int span)
+		private List<List<Note>> mapFrets(Scale scale, Tuning tuning)
 		{
-			var variation = new ScaleVariation();
-			var positions = new List<List<Note>>();
-
+			var strings = new List<List<Note>>();
 			foreach (var o in tuning.Offsets)
 			{
-
-				// BROKEN
-				var frets = Enumerable.Repeat<Note>(null, span).ToList();
-
-				// GOTTA FIGURE OUT HOW TO INSTANTIATE A LIST OF NULLS !!
-
+				var frets = Enumerable.Repeat<Note>(null, Notes.Count).ToList();
 				foreach (var n in scale.Notes)
 				{
 					var mappedFret = Notes.Normalize(n.Pitch - o);
@@ -33,58 +26,51 @@ namespace neck.Factories
 						frets[mappedFret] = n;
 					}
 				}
-				positions.Add(frets);
+				strings.Add(frets);
 			};
+
+			return strings;
+		}
+
+		private List<List<Note>> initPositions(int numOffsets)
+		{
+			var positions = new List<List<Note>>();
+			for (var i = 0; i < numOffsets; i++)
+			{
+				positions.Add(new List<Note>());
+			}
+			return positions;
+		}
+
+		public ScaleVariation GenerateVariations(Scale scale, Tuning tuning, int offset, int span)
+		{
+			var variation = new ScaleVariation();
+			var positions = mapFrets(scale, tuning);
+
+			variation.Positions = initPositions(tuning.Offsets.Count);
 
 			var end = false;
 			int s = 0, f = 0;
-
-			variation.Positions = new List<List<Note>>();
-			for (var i = 0; i < tuning.Offsets.Count; i++) {
-				variation.Positions.Add(new List<Note>());
-			}
 
 			while (!end)
 			{
 				var note = positions[s][f];
 				variation.Positions[s].Add(note);
 
-				if (note != null)
+				if (note != null && s < tuning.Offsets.Count - 1)
 				{
-					if (s < tuning.Offsets.Count - 1)
+					var nextFretIndex = positions[s + 1].FindIndex(n => n != null);
+					var nextDegree = (ScaleDegree)(((int)note.Degree + 1) % (scale.Notes.Count + 1));
+
+					if (positions[s + 1][nextFretIndex].Degree == nextDegree)
 					{
-						var nextStringFretIndex = positions[s + 1].FindIndex(n => n != null);
-						if (positions[s + 1][nextStringFretIndex].Degree == (ScaleDegree)(((int)note.Degree + 1) % 8))
-						{
-							s++;
-							f = 0;
-						}
-						else
-						{
-							if (f < span - 1)
-							{
-								f++;
-							}
-							else if (s < tuning.Offsets.Count - 1)
-							{
-								s++;
-								f = 0;
-							} else
-							{
-								end = true;
-							}
-						}
-					}
-					else if (f < span - 1)
-					{
-						f++;
-					}
-					else
-					{
-						end = true;
+						s++;
+						f = 0;
+						continue;
 					}
 				}
-				else if (f < span - 1)
+
+				if (f < span - 1)
 				{
 					f++;
 				}
@@ -100,26 +86,6 @@ namespace neck.Factories
 			}
 
 			return variation;
-		}
-
-		private Tuple<int, int> incrementPosition(Tuple<int, int> stringFret, int span, int offsets)
-		{
-			var s = stringFret.Item1;
-			var f = stringFret.Item2;
-
-			if (f < span - 1)
-			{
-				return new Tuple<int, int>(s, f++);
-				f++;
-			}
-			else if (s < offsets)
-			{
-				return new Tuple<int, int>(s++, 0);
-			}
-			else
-			{
-				return null;
-			}
 		}
 
 		//  C           D           E     F           G           A           B   
