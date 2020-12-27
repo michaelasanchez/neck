@@ -31,7 +31,7 @@ namespace neck.Controllers
 		[HttpGet("{id:Guid}")]
 		public virtual async Task<ActionResult<T>> GetById(Guid id)
 		{
-			var result = await _repository.GetByIdAsync(id);
+			var result = await _repository.GetById(id);
 			if (!result.Success)
 			{
 				return NotFound();
@@ -45,7 +45,7 @@ namespace neck.Controllers
 		{
 			var result = await _repository.Create(entity);
 
-			return result.Success ? Ok("All good") : BadRequest(result.Message);
+			return result.Success ? Ok(result.Result) : BadRequest(result.Message);
 		}
 
 		//[HttpPatch]

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Models;
+using neck.Models.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;

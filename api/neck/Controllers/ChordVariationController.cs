@@ -44,7 +44,7 @@ namespace neck.Controllers
 			var chord = @params.chord;
 			if (chord == null)
 			{
-				var result = await _chordRepo.GetByIdAsync(@params.chordId);
+				var result = await _chordRepo.GetById(@params.chordId);
 				if (result.Success)
 				{
 					chord = result.Result;
@@ -53,7 +53,7 @@ namespace neck.Controllers
 			var tuning = @params.tuning;
 			if (tuning == null)
 			{
-				var result = await _tuningRepo.GetByIdAsync(@params.tuningId);
+				var result = await _tuningRepo.GetById(@params.tuningId);
 				if (result.Success)
 				{
 					tuning = result.Result;
@@ -97,7 +97,7 @@ namespace neck.Controllers
 			var chord = @params.chord;
 			if (chord == null)
 			{
-				var result = await _chordRepo.GetByIdAsync(@params.chordId);
+				var result = await _chordRepo.GetById(@params.chordId);
 				if (result.Success)
 				{
 					chord = result.Result;
@@ -106,7 +106,7 @@ namespace neck.Controllers
 			var tuning = @params.tuning;
 			if (tuning == null)
 			{
-				var result = await _tuningRepo.GetByIdAsync(@params.tuningId);
+				var result = await _tuningRepo.GetById(@params.tuningId);
 				if (result.Success)
 				{
 					tuning = result.Result;

@@ -33,7 +33,7 @@ namespace neck.Controllers
 			Tuning tuning = null; // = @params.tuning;
 			if (tuning == null)
 			{
-				var result = await _tuningRepo.GetByIdAsync(new Guid("6ED19AC7-49DF-47E3-ABB5-80ED7F6EB600")/*@params.tuningId*/);
+				var result = await _tuningRepo.GetById(new Guid("6ED19AC7-49DF-47E3-ABB5-80ED7F6EB600")/*@params.tuningId*/);
 				if (result.Success)
 				{
 					tuning = result.Result;

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using neck.Enums;
 using neck.Models;
-using System.Linq;
+using neck.Models.Results;
 using System.Threading.Tasks;
 
 namespace neck.Repositories

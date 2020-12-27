@@ -1,5 +1,6 @@
 ﻿using neck.Interfaces;
 using neck.Models;
+using neck.Models.Results;
 using System;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace neck.Repositories
 			_tuningRepo = new Lazy<IRepository<Tuning>>(tuningRepository);
 		}
 
-		public override async Task<OperationResult<int>> Create(ChordVariation variation)
+		public override async Task<OperationResult<ChordVariation>> Create(ChordVariation variation)
 		{
 			if (variation.Formation != null)
 			{

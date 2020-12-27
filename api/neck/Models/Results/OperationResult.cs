@@ -1,46 +1,35 @@
-﻿using System;
+﻿using neck.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace neck.Models
+namespace neck.Models.Results
 {
-	public interface IOperationResult
-	{
-		public bool Success { get; }
-		public string Message { get; }
-		public Exception Exception { get; }
-	}
 
-	public interface IOperationResult<TResult> : IOperationResult
-	{
-		public TResult Result { get; }
-	}
-
-	public class OperationResult<TResult> : IOperationResult<TResult>
+	public class OperationResult : IOperationResult
 	{
 		public OperationResult()
 		{
 		}
 
 		public bool Success { get; set; }
-		public TResult Result { get; set; }
 		public string Message { get; set; }
 		public Exception Exception { get; set; }
 
-		public static OperationResult<TResult> CreateSuccess(TResult result)
+		public static OperationResult CreateSuccess()
 		{
-			return new OperationResult<TResult> { Success = true, Result = result };
+			return new OperationResult { Success = true };
 		}
 
-		public static OperationResult<TResult> CreateFailure(string nonSuccessMessage)
+		public static OperationResult CreateFailure(string failureMessage)
 		{
-			return new OperationResult<TResult> { Success = false, Message = nonSuccessMessage };
+			return new OperationResult { Success = false, Message = failureMessage };
 		}
 
-		public static OperationResult<TResult> CreateFailure(Exception ex)
+		public static OperationResult CreateFailure(Exception ex)
 		{
 			var cur = ex;
 			var message = new StringBuilder(ex.Message);
@@ -51,7 +40,7 @@ namespace neck.Models
 				message.Append(String.Format("{1}{1}{0}", cur.Message, Environment.NewLine));
 			}
 
-			return new OperationResult<TResult>
+			return new OperationResult
 			{
 				Success = false,
 				Message = String.Format("{0}{1}{1}{2}", GetInnerMessages(ex), Environment.NewLine, ex.StackTrace),
