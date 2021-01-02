@@ -9,19 +9,19 @@ namespace neck.Enums
     {
         public enum ChordModifier
         {
-            Major,
-            Minor,
-            Diminished,
-            DiminishedSeventh,
-            MajorSeventh,
-            MinorSeventh,
-            DominantSeventh,
-            SuspendedFour,
-            SuspendedTwo,
             Augmented,
             AugmentedSeventh,
-            MajorSix,
-            MinorSix,
+            Diminished,
+            DiminishedSeventh,
+            DominantSeventh,
+            Major,
+            MajorSeventh,
+            MajorSixth,
+            MinorSeventh,
+            Minor,
+            MinorSixth,
+            SuspendedFour,
+            SuspendedTwo,
         }
     }
 }

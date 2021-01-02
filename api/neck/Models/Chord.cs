@@ -77,6 +77,7 @@ namespace neck.Models
 		//  ----------------------------
 		//  C   Dm  Em  F   G   Am  Bdim
 
+
 		private List<Interval> getIntervals(ChordModifier mod)
 		{
 			// TODO: Currently exist on front end
@@ -86,20 +87,28 @@ namespace neck.Models
 					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth };
 				case ChordModifier.Minor:
 					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth };
-				case ChordModifier.Diminished:
-					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.DiminishedFifth };
 				case ChordModifier.MajorSeventh:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MajorSeventh };
 				case ChordModifier.MinorSeventh:
 					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth, Interval.MinorSeventh };
 				case ChordModifier.DominantSeventh:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MinorSeventh };
-				case ChordModifier.SuspendedFour:
+				case ChordModifier.MajorSixth:
+					throw new Exception("Not implemented");
+				case ChordModifier.MinorSixth:
 					throw new Exception("Not implemented");
 				case ChordModifier.Augmented:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth };
 				case ChordModifier.AugmentedSeventh:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth, Interval.MinorSeventh };
+				case ChordModifier.Diminished:
+					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.DiminishedFifth };	// BROKEN
+				case ChordModifier.DiminishedSeventh:
+					throw new Exception("Not implemented");
+				case ChordModifier.SuspendedTwo:
+					throw new Exception("Not implemented");
+				case ChordModifier.SuspendedFour:
+					throw new Exception("Not implemented");
 				default:
 					return null;
 			}
