@@ -94,7 +94,7 @@ namespace neck.Models
 					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth, Interval.MinorSeventh };
 				case ChordModifier.DominantSeventh:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MinorSeventh };
-				case ChordModifier.Suspended:
+				case ChordModifier.SuspendedFour:
 					throw new Exception("Not implemented");
 				case ChordModifier.Augmented:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth };
@@ -151,11 +151,11 @@ namespace neck.Models
 			{
 				case ChordModifier.Minor:
 				case ChordModifier.MinorSeventh:
-					return Mode.Aeolian();
+					return new Mode(ModeType.Aeolian);
 				case ChordModifier.DominantSeventh:
-					return Mode.Mixolydian();
+					return new Mode(ModeType.Mixolydian);
 				default:
-					return Mode.Ionian();
+					return new Mode(ModeType.Ionian);
 			}
 		}
 

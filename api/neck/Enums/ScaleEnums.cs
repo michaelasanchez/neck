@@ -23,4 +23,12 @@ namespace neck.Enums
 		VI = 6,
 		VII = 7,
 	}
+
+	public enum ScaleType
+	{
+		Diatonic,
+		NaturalMinor,
+		Chromatic,
+		Pentatonic
+	}
 }

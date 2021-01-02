@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,12 +8,25 @@ namespace neck.Models
 {
 	public class ScaleVariation : DbEntity
 	{
-		public Guid ScaleId;
+		public Guid ScaleId { get; set; }
 
-		public Scale Scale;
+		[NotMapped]
+		public Scale Scale { get; set; }
 
-		public int Range;
+		public Guid TuningId { get; set; }
 
-		public List<List<Note>> Positions;
+		[NotMapped]
+		public Tuning Tuning { get; set; }
+
+		[NotMapped]
+		public List<List<Note>> Positions { get; set; }
+
+		public ScaleVariation() { }
+
+		public ScaleVariation(Scale scale, Tuning tuning)
+		{
+			Scale = scale;
+			Tuning = tuning;
+		}
 	}
 }

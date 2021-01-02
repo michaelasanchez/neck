@@ -1,75 +1,108 @@
 ﻿using neck.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Models
 {
-    public class Scale
-    {
-        private Note _root;
+	public class Scale : DbEntity
+	{
 
-        private Mode _mode;
+		private List<Note> _notes;
 
-        private List<Note> _notes;
+		// Pulic
+		public Guid RootId;
 
-        public Scale(Note root, Mode mode)
-        {
-            _root = root;
-            _root.Degree = ScaleDegree.Tonic;
-            _root.Interval = Interval.Root;
+		public Note Root { get; private set; }
 
-            _mode = mode;
-            _notes = calcNotes(_root, _mode);
-        }
+		public ScaleType Type { get; private set; }
 
-        public Note Root
-        {
-            get => _root;
-            set {
-                _root = value;
-                _notes = calcNotes(_root, _mode);
-            }
-        }
+		[NotMapped]
+		public Mode Mode { get; private set; }
 
-        public Mode Mode 
-        {
-            get => _mode;
-            set {
-                _mode = value;
-                _notes = calcNotes(_root, _mode);
-            }
-        }
+		[NotMapped]
+		public List<Note> Notes => _notes;
 
-		public List<Note> Notes { get => _notes; }
+		public Scale() { }
 
-		private List<Note> calcNotes(Note root, Mode mode)
-        {
-            var notes = new List<Note> { root };
-
-            mode.Steps.ForEach(step =>
-            {
-                var nextNote = calcNextNote(notes.Last(), step);
-                if (nextNote.Pitch != root.Pitch) notes.Add(nextNote);
-            });
-
-            return notes;
-        }
-
-        private Note calcNextNote(Note prevNote, Step step)
-        {
-            var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
-
-            nextNote.Degree = prevNote.Degree + 1;
-            nextNote.Interval = calcInterval(nextNote.Pitch, Root.Pitch);
-
-            return nextNote;
-        }
-
-        private Interval calcInterval(int pitch, int rootPitch)
+		public Scale(Note root, Mode mode)
 		{
-            return (Interval)((pitch - rootPitch + Models.Notes.Count) % Models.Notes.Count);
-        }
-    }
+			Root = root;
+
+			Mode = mode;
+
+			Type = ScaleType.Diatonic;
+
+			_notes = calcNotes(Root, Mode, Type);
+		}
+
+		public Scale(Note root, ScaleType type)
+		{
+			Root = root;
+
+			Type = type;
+
+			Mode = new Mode(getModeType(Type));
+
+			_notes = calcNotes(Root, Mode, Type);
+		}
+
+
+		#region Private Methods
+
+		private ModeType getModeType(ScaleType type)
+		{
+			switch (type)
+			{
+				case ScaleType.NaturalMinor:
+					return ModeType.Aeolian;
+				case ScaleType.Diatonic:
+				default:
+					return ModeType.Ionian;
+			}
+		}
+
+		private List<Note> calcNotes(Note root, Mode mode, ScaleType type)
+		{
+			if (root == null || mode == null) return null;
+
+			root.Degree = ScaleDegree.Tonic;
+			root.Interval = Interval.Root;
+
+			var notes = new List<Note> { root };
+
+			mode.Steps.ForEach(step =>
+			{
+				var nextNote = calcNextNote(notes.Last(), step);
+				if (nextNote.Pitch != root.Pitch) notes.Add(nextNote);
+			});
+
+			if (type == ScaleType.Pentatonic)
+			{
+				notes.RemoveAt(3);
+				notes.RemoveAt(5);
+			}
+
+			return notes;
+		}
+
+		private Note calcNextNote(Note prevNote, Step step)
+		{
+			var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
+
+			nextNote.Degree = prevNote.Degree + 1;
+			nextNote.Interval = calcInterval(nextNote.Pitch, Root.Pitch);
+
+			return nextNote;
+		}
+
+		private Interval calcInterval(int pitch, int rootPitch)
+		{
+			return (Interval)((pitch - rootPitch + Models.Notes.Count) % Models.Notes.Count);
+		}
+
+		#endregion
+	}
 }

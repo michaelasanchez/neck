@@ -1,27 +1,15 @@
-﻿using System;
+﻿using neck.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Models
 {
-    public enum Step
-    {
-        Half = 1,
-        Whole = 2
-    }
 
     public class Mode
     {
-        public string Label;
-
-        public List<Step> Steps;
-
-        Mode(string label, List<Step> steps)
-        {
-            Label = label;
-            Steps = steps;
-        }
+        private static List<Step> _intervals = new List<Step> { Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Whole, Step.Half };
 
         /*
          * 
@@ -35,41 +23,22 @@ namespace neck.Models
          * 
          */
 
-        // Major
-        public static Mode Ionian()
-        {
-            return new Mode("Ionian", new List<Step> { Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Whole, Step.Half });
-        }
+        public string Label;
 
-        public static Mode Dorian()
-        {
-            return new Mode("Dorian", new List<Step> { Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Whole, Step.Half, Step.Whole });
-        }
+        public ModeType Type;
 
-        public static Mode Phrygian()
-        {
-            return new Mode("Phrygian", new List<Step> { Step.Half, Step.Whole, Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole });
-        }
+        public List<Step> Steps;
 
-        public static Mode Lydian()
-        {
-            return new Mode("Lydian", new List<Step> { Step.Whole, Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Half });
-        }
+        public Mode(ModeType type)
+		{
+            Type = type;
+            Label = type.ToString();
+            Steps = calcSteps(type);
+		}
 
-        public static Mode Mixolydian()
-        {
-            return new Mode("Mixolydian", new List<Step> { Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Half, Step.Whole });
-        }
-
-        // Minor
-        public static Mode Aeolian()
-        {
-            return new Mode("Aeolian", new List<Step> { Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole });
-        }
-
-        public static Mode Locrian()
-        {
-            return new Mode("Locrian", new List<Step> { Step.Half, Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Whole });
-        }
+        private List<Step> calcSteps(ModeType type)
+		{
+            return  _intervals.Select((s, i) => _intervals[(i + (int)type) % _intervals.Count]).ToList();
+		}
     }
 }

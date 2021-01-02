@@ -17,6 +17,7 @@
     <Compile Remove="Interfaces\IInterval.cs" />
     <Compile Remove="Models\Intervals\AugmentedInterval.cs" />
     <Compile Remove="Models\Intervals\Interval.cs" />
+    <Compile Remove="UnitsOfWork\GetOrCreateUnitOfWork.cs" />
   </ItemGroup>
 
   <ItemGroup>

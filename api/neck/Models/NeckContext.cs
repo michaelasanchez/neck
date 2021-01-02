@@ -17,6 +17,8 @@ namespace neck.Models
 		public DbSet<Formation> Formations { get; set; }
 		public DbSet<Instrument> Instruments { get; set; }
 		public DbSet<Note> Notes { get; set; }
+		public DbSet<Scale> Scales { get; set; }
+		public DbSet<ScaleVariation> ScaleVariations { get; set; }
 		public DbSet<Tuning> Tunings { get; set; }
 
 		public NeckContext(DbContextOptions<NeckContext> options) : base(options) { }
@@ -54,6 +56,12 @@ namespace neck.Models
 			modelBuilder.Entity<Note>()
 				.HasIndex(n => new { n.Base, n.Suffix })
 				.IsUnique();
+
+			modelBuilder.Entity<Scale>(entity =>
+			{
+				entity.HasIndex(s => new { s.RootId, s.Type })
+					.IsUnique();
+			});
 
 			modelBuilder.Entity<Tuning>(entity =>
 			{

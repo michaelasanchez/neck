@@ -1,27 +1,11 @@
-import { filter, isArray, map } from 'lodash';
+import { filter, isArray } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
+
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { IApiEntity } from '../interfaces/IApiEntity';
-import {
-  Chord,
-  ChordModifier,
-  ChordVariation,
-  Instrument,
-  Key,
-  Mode,
-  Note,
-  NoteSuffix,
-  NoteValue,
-  Tuning,
-} from '../models';
+import { Chord, Instrument, Key, Mode, Note } from '../models';
 import Cookie from '../models/Cookie';
-import {
-  ApiRequest,
-  ChordVariationApi,
-  ChordVariationGenerateRangeParams,
-} from '../network';
 import { ChordApi } from '../network/ChordApi';
 import { InstrumentApi } from '../network/InstrumentApi';
 import { AppOptions, NoteUtils } from '../shared';

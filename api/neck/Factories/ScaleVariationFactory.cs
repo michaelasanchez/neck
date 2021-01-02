@@ -44,7 +44,7 @@ namespace neck.Factories
 
 		public ScaleVariation GenerateVariations(Scale scale, Tuning tuning, int offset, int span)
 		{
-			var variation = new ScaleVariation();
+			var variation = new ScaleVariation(scale, tuning);
 			var positions = mapFrets(scale, tuning);
 
 			variation.Positions = initPositions(tuning.Offsets.Count);

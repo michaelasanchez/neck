@@ -1,4 +1,5 @@
-﻿using neck.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using neck.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,13 @@ namespace neck.Repositories
 		public ScaleVariationRepository(NeckContext context)
 			: base(context)
 		{
+		}
+
+		public override IQueryable<ScaleVariation> DefaultIncludes()
+		{
+			return _set.AsQueryable()
+				.Include(v => v.Scale)
+				.Include(v => v.Tuning);
 		}
 	}
 }

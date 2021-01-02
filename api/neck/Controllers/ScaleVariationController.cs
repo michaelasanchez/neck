@@ -40,7 +40,10 @@ namespace neck.Controllers
 				}
 			}
 
-			return Ok(_factory.GenerateVariations(new Scale(new Note(Enums.NoteValue.C, Enums.NoteSuffix.Natural), Mode.Ionian()), tuning, 0, 5));
+			var note = new Note(Enums.NoteValue.C, Enums.NoteSuffix.Natural);
+			var scale = new Scale(note, Enums.ScaleType.Diatonic);
+
+			return Ok(_factory.GenerateVariations(scale, tuning, 0, 5));
 		}
 	}
 }
