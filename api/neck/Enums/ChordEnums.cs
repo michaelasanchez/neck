@@ -8,20 +8,20 @@ namespace neck.Enums
     public class ChordEnums
     {
         public enum ChordModifier
-        {
-            Augmented,
-            AugmentedSeventh,
-            Diminished,
-            DiminishedSeventh,
-            DominantSeventh,
-            Major,
-            MajorSeventh,
-            MajorSixth,
-            MinorSeventh,
-            Minor,
-            MinorSixth,
-            SuspendedFour,
-            SuspendedTwo,
-        }
+		{
+			Major,
+			Minor,
+			Diminished,
+			Augmented,
+			Sus2,
+			Sus4,
+			Major7,
+			Minor7,
+			Dominant7,
+			Diminished7,
+			Augmented7,
+			//MajorSixth,
+			//MinorSixth,
+		}
     }
 }

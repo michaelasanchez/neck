@@ -23,8 +23,8 @@ namespace neck.Repositories
 
 		protected string DefaultFailureMessage = "Operation failed";
 
-		protected string OldDefaultSuccessMessage = $"{nameof(TEntity)} found";
-		protected string OldDefaultFailureMessage = $"Could not find {nameof(TEntity)}";
+		protected string OldDefaultSuccessMessage = $"{typeof(TEntity)} found";
+		protected string OldDefaultFailureMessage = $"Could not find {typeof(TEntity)}";
 
 		public GenericRepository(NeckContext context)
 		{

@@ -7,14 +7,16 @@ export enum ChordModifier {
   Major,
   Minor,
   Diminished,
+  Augmented,
+  SuspendedSecond,
+  SuspendedFourth,
   MajorSeventh,
   MinorSeventh,
   DominantSeventh,
-  Suspended,
-  Augmented,
+  DiminishedSeventh,
   AugmentedSeventh,
-  MajorSix,
-  MinorSix,
+  // MajorSixth,
+  // MinorSixth,
 }
 
 // I        tonic
@@ -63,7 +65,7 @@ export class Chord extends ApiEntity {
 
   constructor(root: Note, mod: ChordModifier) {
     super();
-    
+
     this.Root = root;
     this.Modifier = mod || ChordModifier.Major;
 
@@ -85,21 +87,57 @@ export class Chord extends ApiEntity {
   }
 
   // TODO: Figure out where these should go
-  static getModifierLabel = (type: ChordModifier): any => {
-    switch (type) {
+  static getModifierLabel = (mod: ChordModifier): any => {
+    switch (mod) {
       case ChordModifier.Major:
         return 'Major';
       case ChordModifier.Minor:
         return 'Minor';
+      case ChordModifier.Diminished:
+        return 'Diminished';
+      case ChordModifier.Augmented:
+        return 'Augmented';
+      case ChordModifier.SuspendedSecond:
+        return 'Sus2';
+      case ChordModifier.SuspendedFourth:
+        return 'Sus4';
+      case ChordModifier.MajorSeventh:
+        return 'Major 7';
+      case ChordModifier.MinorSeventh:
+        return 'Minor 7';
+      case ChordModifier.DominantSeventh:
+        return 'Dominant 7';
+      case ChordModifier.DiminishedSeventh:
+        return 'Diminished 7';
+      case ChordModifier.AugmentedSeventh:
+        return 'Augmented 7';
     }
   }
 
-  static getModifierAbbreviation = (type: ChordModifier): any => {
-    switch (type) {
+  static getModifierAbbreviation = (mod: ChordModifier): any => {
+    switch (mod) {
       case ChordModifier.Major:
-        return '';
+        return 'maj';
       case ChordModifier.Minor:
-        return 'm';
+        return 'min';
+      case ChordModifier.Diminished:
+        return 'dim';
+      case ChordModifier.Augmented:
+        return 'aug';
+      case ChordModifier.SuspendedSecond:
+        return 'sus2';
+      case ChordModifier.SuspendedFourth:
+        return 'sus4';
+      case ChordModifier.MajorSeventh:
+        return 'maj7';
+      case ChordModifier.MinorSeventh:
+        return 'min7';
+      case ChordModifier.DominantSeventh:
+        return '7';
+      case ChordModifier.DiminishedSeventh:
+        return 'dim7';
+      case ChordModifier.AugmentedSeventh:
+        return 'aug7';
     }
   }
 }

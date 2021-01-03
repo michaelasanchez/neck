@@ -25,6 +25,7 @@ namespace neck.Controllers
 			_noteRepo = (NoteRepository)noteRepository;
 		}
 
+		// TODO: This really should just be get
 		[HttpPost("quick")]
 		public virtual async Task<ActionResult<Chord>> QuickChord(QuickChordArgs @params)
 		{

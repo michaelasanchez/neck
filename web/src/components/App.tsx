@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Chord, Instrument, Key, Mode, Note } from '../models';
+import { Chord, ChordModifier, Instrument, Key, Mode, Note, NoteSuffix, NoteValue } from '../models';
 import Cookie from '../models/Cookie';
 import { ChordApi } from '../network/ChordApi';
 import { InstrumentApi } from '../network/InstrumentApi';
@@ -66,13 +66,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     var requests: Promise<any>[] = [];
 
     // Always request chord
-    let chordReq: Promise<Chord | Chord[]>;
-    if (cookie.chordId) {
-      chordReq = new ChordApi().GetById(cookie.chordId);
-    } else {
-      chordReq = new ChordApi().GetAll();
-    }
-    requests.push(chordReq);
+    requests.push(loadChord(cookie.chordId));
 
     let instrumentReq: Promise<Instrument | Instrument[]>;
     if (cookie.instrumentId) {
@@ -85,6 +79,11 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
       const [chordResult, instrumentResult] = values;
+
+      if (!chordResult) {
+        delete cookie.chordId;
+        return loadOptionsFromCookie(cookie);
+      }
 
       const chord: Chord = isArray(chordResult) ? chordResult[0] : chordResult;
 
@@ -109,6 +108,19 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         handleSetOptions(options);
       }
     });
+  };
+
+  const loadChord = (chordId?: string): Promise<Chord> => {
+    if (chordId) {
+      return new ChordApi().GetById(chordId);
+    }
+
+    // TODO: static
+    return new ChordApi().QuickFromValues(
+      NoteValue.C,
+      NoteSuffix.Natural,
+      ChordModifier.Major
+    );
   };
 
   const validateAppOptions = (appOptions: AppOptions): IError => {

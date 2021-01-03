@@ -87,27 +87,23 @@ namespace neck.Models
 					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth };
 				case ChordModifier.Minor:
 					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth };
-				case ChordModifier.MajorSeventh:
-					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MajorSeventh };
-				case ChordModifier.MinorSeventh:
-					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth, Interval.MinorSeventh };
-				case ChordModifier.DominantSeventh:
-					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MinorSeventh };
-				case ChordModifier.MajorSixth:
-					throw new Exception("Not implemented");
-				case ChordModifier.MinorSixth:
-					throw new Exception("Not implemented");
+				case ChordModifier.Diminished:
+					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.DiminishedFifth }; // BROKEN
 				case ChordModifier.Augmented:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth };
-				case ChordModifier.AugmentedSeventh:
+				case ChordModifier.Sus2:
+					throw new Exception("Not implemented");
+				case ChordModifier.Sus4:
+					throw new Exception("Not implemented");
+				case ChordModifier.Major7:
+					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MajorSeventh };
+				case ChordModifier.Minor7:
+					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth, Interval.MinorSeventh };
+				case ChordModifier.Dominant7:
+					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MinorSeventh };
+				case ChordModifier.Diminished7:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth, Interval.MinorSeventh };
-				case ChordModifier.Diminished:
-					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.DiminishedFifth };	// BROKEN
-				case ChordModifier.DiminishedSeventh:
-					throw new Exception("Not implemented");
-				case ChordModifier.SuspendedTwo:
-					throw new Exception("Not implemented");
-				case ChordModifier.SuspendedFour:
+				case ChordModifier.Augmented7:
 					throw new Exception("Not implemented");
 				default:
 					return null;
@@ -122,7 +118,7 @@ namespace neck.Models
 			var scale = new Scale(root, getMode(modifier));
 
 			List<Note> components;
-			if (modifier == ChordModifier.Augmented || modifier == ChordModifier.AugmentedSeventh)
+			if (modifier == ChordModifier.Augmented || modifier == ChordModifier.Diminished7)
 			{
 				components = intervals
 					.Select(i =>
@@ -159,9 +155,9 @@ namespace neck.Models
 			switch (mod)
 			{
 				case ChordModifier.Minor:
-				case ChordModifier.MinorSeventh:
+				case ChordModifier.Minor7:
 					return new Mode(ModeType.Aeolian);
-				case ChordModifier.DominantSeventh:
+				case ChordModifier.Dominant7:
 					return new Mode(ModeType.Mixolydian);
 				default:
 					return new Mode(ModeType.Ionian);

@@ -41,52 +41,6 @@ const notes = [
   Note.A().Flat(),
 ];
 
-const getChordModifierAbbreviation = (mod: ChordModifier): string => {
-  switch (mod) {
-    case ChordModifier.Major:
-      return 'maj';
-    case ChordModifier.Minor:
-      return 'min';
-    case ChordModifier.Diminished:
-      return 'dim';
-    case ChordModifier.MajorSeventh:
-      return 'maj7';
-    case ChordModifier.MinorSeventh:
-      return 'min7';
-    case ChordModifier.DominantSeventh:
-      return '7';
-    case ChordModifier.Suspended:
-      return 'sus';
-    case ChordModifier.Augmented:
-      return 'aug';
-    case ChordModifier.AugmentedSeventh:
-      return 'aug7';
-  }
-};
-
-const getChordModifierLabel = (mod: ChordModifier): string => {
-  switch (mod) {
-    case ChordModifier.Major:
-      return 'Major';
-    case ChordModifier.Minor:
-      return 'Minor';
-    case ChordModifier.Diminished:
-      return 'Diminished';
-    case ChordModifier.MajorSeventh:
-      return 'Major 7';
-    case ChordModifier.MinorSeventh:
-      return 'Minor 7';
-    case ChordModifier.DominantSeventh:
-      return '7';
-    case ChordModifier.Suspended:
-      return 'Suspended';
-    case ChordModifier.Augmented:
-      return 'Augmented';
-    case ChordModifier.AugmentedSeventh:
-      return 'Augmented 7';
-  }
-};
-
 export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   appOptions,
   setAppOptions,
@@ -222,7 +176,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
       <DropdownButton
         variant="secondary"
         as={ButtonGroup}
-        title={getChordModifierAbbreviation(modifier)}
+        title={Chord.getModifierAbbreviation(modifier)}
         id="dropdown-modifier"
       >
         {map(modifiers, (m: string, i: number) => (
@@ -231,9 +185,9 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             key={i}
             active={i == modifier}
             onSelect={() => handleModifierUpdate(i)}
-            disabled={indexOf([0, 1, 3, 4, 5, 7, 8], i) < 0} // TODO: manually filtering chord modifiers
+            disabled={indexOf([0, 1, 3, 6, 7, 8, 9], i) < 0} // TODO: manually filtering chord modifiers
           >
-            {getChordModifierLabel(i)}
+            {Chord.getModifierLabel(i)}
           </Dropdown.Item>
         ))}
       </DropdownButton>
@@ -274,11 +228,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
         ) : (
           <> Nope!</>
         )}
-      </div>
-      <div className="footer text-secondary">
-        <small>{currentIndex != null ? currentIndex + 1 : '-'}</small>
-        <small style={{ padding: '0 .5em' }}>/</small>
-        <small>{variations?.length || '-'}</small>
       </div>
     </SlideIn>
   );

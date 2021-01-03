@@ -22,7 +22,7 @@ namespace neck.Controllers
 			var result = await _repository.GetAll();
 			if (!result.Success)
 			{
-				return BadRequest();
+				return BadRequest(result.Message);
 			}
 
 			return Ok(result.Result);
@@ -34,7 +34,7 @@ namespace neck.Controllers
 			var result = await _repository.GetById(id);
 			if (!result.Success)
 			{
-				return NotFound();
+				return NotFound(result.Message);
 			}
 
 			return Ok(result.Result);

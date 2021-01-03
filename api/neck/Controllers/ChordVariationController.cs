@@ -41,6 +41,11 @@ namespace neck.Controllers
 		[HttpPost("Generate")]
 		public async Task<ActionResult<List<ChordVariation>>> Generate([FromBody] ChordVariationGenerateParams @params)
 		{
+			if (@params.chord == null && @params.chordId == null)
+			{
+				return BadRequest("Chord or chordId is required");
+			}
+
 			var chord = @params.chord;
 			if (chord == null)
 			{
@@ -62,11 +67,11 @@ namespace neck.Controllers
 
 			if (chord == null)
 			{
-				return BadRequest("Chord or chordId is required");
+				return BadRequest("Chord note found");
 			}
 			else if (chord.Root == null)
 			{
-				return BadRequest("Chord root note is required");
+				return BadRequest("Chord missing root note");
 			}
 			if (tuning == null)
 			{
@@ -94,6 +99,11 @@ namespace neck.Controllers
 		[HttpPost("GenerateRange")]
 		public async Task<ActionResult<List<ChordVariation>>> GenerateRange([FromBody] ChordVariationGenerateRangeParams @params)
 		{
+			if (@params.chord == null && @params.chordId == null)
+			{
+				return BadRequest("Chord or chordId is required");
+			}
+
 			var chord = @params.chord;
 			if (chord == null)
 			{
@@ -115,11 +125,11 @@ namespace neck.Controllers
 
 			if (chord == null)
 			{
-				return BadRequest("Chord or chordId is required");
+				return BadRequest("Chord note found");
 			}
 			else if (chord.Root == null)
 			{
-				return BadRequest("Chord root note is required");
+				return BadRequest("Chord missing root note");
 			}
 			if (tuning == null)
 			{

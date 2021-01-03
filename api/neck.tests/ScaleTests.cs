@@ -24,10 +24,10 @@ namespace neck.tests
 		[InlineData(NoteValue.B, NoteSuffix.Natural, "B", "C#", "D#", "E", "F#", "G#", "A#")]
 		[InlineData(NoteValue.F, NoteSuffix.Sharp, "F#", "G#", "A#", "B", "C#", "D#", "E#")]
 		[InlineData(NoteValue.C, NoteSuffix.Sharp, "C#", "D#", "E#", "F#", "G#", "A#", "B#")]
-		public void Scale_Major(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
+		public void Major(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
 		{
 			var note = new Note(value, suffix);
-			var scale = new Scale(note, new Mode(ModeType.Ionian));
+			var scale = new Scale(note, ScaleType.Diatonic);
 
 			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
 		}
@@ -40,10 +40,10 @@ namespace neck.tests
 		[InlineData(NoteValue.E, NoteSuffix.DoubleFlat, "Ebb", "Fb", "Gb", "Abb", "Bbb", "Cb", "Db")]
 		[InlineData(NoteValue.B, NoteSuffix.DoubleFlat, "Bbb", "Cb", "Db", "Ebb", "Fb", "Gb", "Ab")]
 		[InlineData(NoteValue.F, NoteSuffix.Flat, "Fb", "Gb", "Ab", "Bbb", "Cb", "Db", "Eb")]
-		public void Scale_Theoretical_DoubleFlat(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
+		public void Theoretical_DoubleFlat(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
 		{
 			var note = new Note(value, suffix);
-			var scale = new Scale(note, new Mode(ModeType.Ionian));
+			var scale = new Scale(note, ScaleType.Diatonic);
 
 			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
 		}
@@ -56,10 +56,10 @@ namespace neck.tests
 		[InlineData(NoteValue.B, NoteSuffix.Sharp, "B#", "C##", "D##", "E#", "F##", "G##", "A##")]
 		[InlineData(NoteValue.F, NoteSuffix.DoubleSharp, "F##", "G##", "A##", "B#", "C##", "D##", "E##")]
 		[InlineData(NoteValue.C, NoteSuffix.DoubleSharp, "C##", "D##", "E##", "F##", "G##", "A##", "B##")]
-		public void Scale_Theoretical_DoubleSharp(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
+		public void Theoretical_DoubleSharp(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
 		{
 			var note = new Note(value, suffix);
-			var scale = new Scale(note, new Mode(ModeType.Ionian));
+			var scale = new Scale(note, ScaleType.Diatonic);
 
 			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
 		}
@@ -80,10 +80,10 @@ namespace neck.tests
 		[InlineData(NoteValue.G, NoteSuffix.Sharp, "G#", "A#", "B", "C#", "D#", "E", "F#")]
 		[InlineData(NoteValue.D, NoteSuffix.Sharp, "D#", "E#", "F#", "G#", "A#", "B", "C#")]
 		[InlineData(NoteValue.A, NoteSuffix.Sharp, "A#", "B#", "C#", "D#", "E#", "F#", "G#")]
-		public void Scale_Minor(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
+		public void Minor(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
 		{
 			var note = new Note(value, suffix);
-			var scale = new Scale(note, new Mode(ModeType.Aeolian));
+			var scale = new Scale(note, ScaleType.NaturalMinor);
 
 			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
 		}
@@ -103,7 +103,7 @@ namespace neck.tests
 		[InlineData(NoteValue.B, NoteSuffix.Natural, "B", "C#", "D#", "F#", "G#")]
 		[InlineData(NoteValue.F, NoteSuffix.Sharp, "F#", "G#", "A#", "C#", "D#")]
 		[InlineData(NoteValue.C, NoteSuffix.Sharp, "C#", "D#", "E#", "G#", "A#")]
-		public void Scale_Pentatonic(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
+		public void Pentatonic(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
 		{
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, ScaleType.Pentatonic);
