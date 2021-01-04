@@ -19,14 +19,15 @@ namespace neck.Models
 		public Tuning Tuning { get; set; }
 
 		[NotMapped]
-		public List<List<Note>> Positions { get; set; }
+		public List<List<int?>> Positions { get; set; }
 
 		public ScaleVariation() { }
 
-		public ScaleVariation(Scale scale, Tuning tuning)
+		public ScaleVariation(Scale scale, Tuning tuning, List<List<int?>> positions)
 		{
 			Scale = scale;
 			Tuning = tuning;
+			Positions = positions;
 		}
 	}
 }

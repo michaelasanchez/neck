@@ -42,7 +42,8 @@ export class BaseRequest<TResult> {
   private execute(type: RequestType, data?: {}) {
     let convert = this._baseOptions.convertToJson;
 
-    const options = data ? {
+    // TODO: Not really sure if anything other than post needs a body
+    const options = type != RequestType.Get ? {
       method: type,
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }

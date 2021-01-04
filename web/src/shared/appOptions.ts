@@ -1,4 +1,4 @@
-import { Chord, ChordModifier, ChordVariation, Instrument, Key, Mode, Note, Tuning } from "../models";
+import { Chord, ChordModifier, ChordVariation, Instrument, Key, Mode, Note, ScaleVariation, Tuning } from "../models";
 import { ApiEntity } from "../network";
 
 export interface AppOptions {
@@ -11,6 +11,7 @@ export interface AppOptions {
 
   // Ui?
   chordVariation?: ChordVariation;  // Indicators
+  scaleVariation?: ScaleVariation;
 
   // Validation
   [key: string]: any

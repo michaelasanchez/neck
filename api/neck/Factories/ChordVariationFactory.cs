@@ -19,55 +19,6 @@ namespace neck.Generators
 		private int ALLOWED_MUTES = 5;
 		private int ALLOWED_OPEN = 5;
 
-		// Returns a fret number based on a Note, tuning
-		//  offset and an optional minimum fret position
-		private int? calcNotePosition(Note note, int tuningOffset, int min = 0)
-		{
-			if (note == null) return null;
-			var pos = (note.Pitch - tuningOffset + Notes.Count) % Notes.Count;
-			while (pos < min) pos += Notes.Count;
-			return pos;
-		}
-
-		private Note calcNoteFromPosition(Chord chord, int tuningOffset, int notePosition)
-		{
-			var root = chord.Root;
-
-
-
-			return root;
-		}
-
-		private bool isNoteInRange(Note note, int tuning, int offset, int span)
-		{
-			var pos = calcNotePosition(note, tuning, offset);
-			return pos >= offset && pos <= offset + (span - 1);
-		}
-
-		private bool containsNote(List<Note> noteList, Note note)
-		{
-			return noteList.FirstOrDefault(n => n.Equals(note)) != null;
-		}
-
-		private bool containsVariation(List<ChordVariation> variations, ChordVariation newVariation)
-		{
-			for (var i = 0; i < variations.Count; i++)
-			{
-				var cur = variations[i];
-				var matches = true;
-				for (var j = 0; j < cur.Formation.Positions.Count; j++)
-				{
-					if (cur.Formation.Positions[j] != newVariation.Formation.Positions[j])
-					{
-						matches = false;
-						break;
-					}
-				}
-				if (matches) return true;
-			}
-			return false;
-		}
-
 		public List<ChordVariation> GenerateRange(Chord chord, Tuning tuning, int start, int end, int fretSpan)
 		{
 			var variations = new List<ChordVariation>();
@@ -111,7 +62,7 @@ namespace neck.Generators
 					{
 						if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i], 0)))
 						{
-
+							// TODO: FINISH
 						}
 					}
 					else if (mutes < ALLOWED_MUTES)
@@ -169,5 +120,60 @@ namespace neck.Generators
 
 			return variations;
 		}
+
+
+		#region Private Methods
+
+		// Returns a fret number based on a Note, tuning
+		//  offset and an optional minimum fret position
+		private int? calcNotePosition(Note note, int tuningOffset, int min = 0)
+		{
+			if (note == null) return null;
+			var pos = (note.Pitch - tuningOffset + Notes.Count) % Notes.Count;
+			while (pos < min) pos += Notes.Count;
+			return pos;
+		}
+
+		// Returns a note from a given offset/fret position
+		private Note calcNoteFromPosition(Chord chord, int tuningOffset, int notePosition)
+		{
+			var root = chord.Root;
+
+			// TODO: FINISH
+
+			return root;
+		}
+
+		private bool isNoteInRange(Note note, int tuning, int offset, int span)
+		{
+			var pos = calcNotePosition(note, tuning, offset);
+			return pos >= offset && pos <= offset + (span - 1);
+		}
+
+		private bool containsNote(List<Note> noteList, Note note)
+		{
+			return noteList.FirstOrDefault(n => n.Equals(note)) != null;
+		}
+
+		private bool containsVariation(List<ChordVariation> variations, ChordVariation newVariation)
+		{
+			for (var i = 0; i < variations.Count; i++)
+			{
+				var cur = variations[i];
+				var matches = true;
+				for (var j = 0; j < cur.Formation.Positions.Count; j++)
+				{
+					if (cur.Formation.Positions[j] != newVariation.Formation.Positions[j])
+					{
+						matches = false;
+						break;
+					}
+				}
+				if (matches) return true;
+			}
+			return false;
+		}
+
+		#endregion
 	}
 }

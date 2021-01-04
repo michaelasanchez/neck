@@ -43,7 +43,7 @@ namespace neck.Controllers
 			var note = new Note(Enums.NoteValue.C, Enums.NoteSuffix.Natural);
 			var scale = new Scale(note, Enums.ScaleType.Diatonic);
 
-			return Ok(_factory.GenerateVariations(scale, tuning, 0, 5));
+			return Ok(_factory.GenerateVariations(scale, tuning, 0, 6));
 		}
 	}
 }

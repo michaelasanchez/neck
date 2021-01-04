@@ -15,9 +15,6 @@ namespace neck.Models
 		public string Label => $"{Base}{SuffixSymbol(Suffix)}";
 
 		[NotMapped]
-		public string LongLabel => $"{Base} {Suffix}";
-
-		[NotMapped]
 		public string PlainLabel => $"{Base}{SuffixPlainSymbol(Suffix)}";
 
 		[NotMapped]

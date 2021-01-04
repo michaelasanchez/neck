@@ -31,4 +31,14 @@ namespace neck.Enums
 		Chromatic,
 		Pentatonic
 	}
+
+	// Used when generating scale variations
+	public enum ScaleDirection
+	{
+		Null,
+		NextFret,
+		NextString,
+		NextVariation,
+		End,
+	}
 }
