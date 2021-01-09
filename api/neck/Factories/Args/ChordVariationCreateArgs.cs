@@ -1,16 +1,16 @@
-﻿using neck.Models;
+﻿using neck.Interfaces;
+using neck.Models;
+using neck.Models.Results;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace neck.Factories.Args
 {
 	public class ChordVariationCreateArgs
 	{
+		public Guid? chordId;
+		public Guid? tuningId;
+
 		public Chord chord;
 		public Tuning tuning;
-		public int fretOffset;
-		public int fretSpan;
 	}
 }

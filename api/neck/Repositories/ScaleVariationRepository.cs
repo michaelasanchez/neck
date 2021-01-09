@@ -17,7 +17,7 @@ namespace neck.Repositories
 		public override IQueryable<ScaleVariation> DefaultIncludes()
 		{
 			return _set.AsQueryable()
-				.Include(v => v.Scale)
+				.Include(v => v.Base)
 				.Include(v => v.Tuning);
 		}
 	}

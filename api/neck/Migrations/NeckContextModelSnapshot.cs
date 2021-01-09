@@ -197,6 +197,9 @@ namespace neck.Migrations
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Label")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ScaleId")
                         .HasColumnType("uniqueidentifier");
 
@@ -207,6 +210,8 @@ namespace neck.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TuningId");
 
                     b.ToTable("ScaleVariations");
                 });
@@ -291,6 +296,17 @@ namespace neck.Migrations
                         .IsRequired();
 
                     b.Navigation("Root");
+                });
+
+            modelBuilder.Entity("neck.Models.ScaleVariation", b =>
+                {
+                    b.HasOne("neck.Models.Tuning", "Tuning")
+                        .WithMany()
+                        .HasForeignKey("TuningId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tuning");
                 });
 
             modelBuilder.Entity("neck.Models.Tuning", b =>

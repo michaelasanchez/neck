@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-	public interface IFactory<T>
+	interface IVariation<T>
 	{
-		//public IList<T> GenerateVariations(TArgs args);
+		string Label { get; set; }
+
+		Guid TuningId { get; set; }
+
+		T Base { get; set; }
 	}
 }

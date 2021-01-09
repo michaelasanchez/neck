@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using neck.Controllers.Args;
 using neck.Factories.Args;
 using neck.Generators;
 using neck.Interfaces;
@@ -25,7 +26,7 @@ namespace neck.Controllers
 		public ChordVariationController(
 			ILogger<ChordVariationController> logger,
 			IRepository<ChordVariation> repository,
-			IFactory<ChordVariation, ChordVariationCreateArgs> factory,
+			IFactory<ChordVariation> factory,
 			IRepository<Chord> chordRepository,
 			IRepository<Tuning> tuningRepository
 		)
@@ -39,119 +40,73 @@ namespace neck.Controllers
 		}
 
 		[HttpPost("Generate")]
-		public async Task<ActionResult<List<ChordVariation>>> Generate([FromBody] ChordVariationGenerateParams @params)
+		public async Task<ActionResult<List<ChordVariation>>> Generate([FromBody] ChordVariationGenerateArgs args)
 		{
-			if (@params.chord == null && @params.chordId == null)
+			var validateResult = args.Validate();
+			if (!validateResult.Success)
 			{
-				return BadRequest("Chord or chordId is required");
+				return BadRequest(validateResult.Message);
 			}
 
-			var chord = @params.chord;
+			var chord = args.chord;
 			if (chord == null)
 			{
-				var result = await _chordRepo.GetById(@params.chordId);
+				var result = await _chordRepo.GetById(args.chordId);
 				if (result.Success)
 				{
 					chord = result.Result;
 				}
 			}
-			var tuning = @params.tuning;
+			var tuning = args.tuning;
 			if (tuning == null)
 			{
-				var result = await _tuningRepo.GetById(@params.tuningId);
+				var result = await _tuningRepo.GetById(args.tuningId);
 				if (result.Success)
 				{
 					tuning = result.Result;
 				}
 			}
 
-			if (chord == null)
-			{
-				return BadRequest("Chord note found");
-			}
-			else if (chord.Root == null)
-			{
-				return BadRequest("Chord missing root note");
-			}
-			if (tuning == null)
-			{
-				if (@params.tuningId == null)
-				{
-					return BadRequest("Tuning or tuningId is required");
-				}
-				else
-				{
-					return BadRequest("Tuning could not be found");
-				}
-			}
-
-			var offset = @params.offset ?? 0;
-			var span = @params.span ?? 4;
-
-			if (span < 1)
-			{
-				return BadRequest("Span must be greater than zero");
-			}
-
-			return _factory.GenerateVariations(chord, tuning, offset, span);
+			return _factory.GenerateVariations(chord, tuning, (int)args.offset, (int)args.span);
 		}
 
 		[HttpPost("GenerateRange")]
-		public async Task<ActionResult<List<ChordVariation>>> GenerateRange([FromBody] ChordVariationGenerateRangeParams @params)
+		public async Task<ActionResult<List<ChordVariation>>> GenerateRange([FromBody] ChordVariationGenerateRangeArgs args)
 		{
-			if (@params.chord == null && @params.chordId == null)
+			var validateResult = args.Validate();
+			if (!validateResult.Success)
 			{
-				return BadRequest("Chord or chordId is required");
+				return BadRequest(validateResult.Message);
 			}
 
-			var chord = @params.chord;
+			var chord = args.chord;
 			if (chord == null)
 			{
-				var result = await _chordRepo.GetById(@params.chordId);
-				if (result.Success)
+				var result = await _chordRepo.GetById(args.chordId);
+				if (!result.Success)
 				{
-					chord = result.Result;
+					return BadRequest(result.Message);
 				}
+
+				chord = result.Result;
 			}
-			var tuning = @params.tuning;
+			var tuning = args.tuning;
 			if (tuning == null)
 			{
-				var result = await _tuningRepo.GetById(@params.tuningId);
-				if (result.Success)
+				var result = await _tuningRepo.GetById(args.tuningId);
+				if (!result.Success)
 				{
-					tuning = result.Result;
+					return BadRequest(result.Message);
 				}
-			}
 
-			if (chord == null)
-			{
-				return BadRequest("Chord note found");
+				tuning = result.Result;
 			}
-			else if (chord.Root == null)
-			{
-				return BadRequest("Chord missing root note");
-			}
-			if (tuning == null)
-			{
-				if (@params.tuningId == null)
-				{
-					return BadRequest("Tuning or tuningId is required");
-				}
-				else
-				{
-					return BadRequest("Tuning could not be found");
-				}
-			}
-
-			var offset = @params.offset ?? 0;
-			var span = @params.span ?? 4;
-			var range = @params.range ?? 12;
 
 			// TODO: Remove this eventually..
 			List<ChordVariation> variations;
 			try
 			{
-				variations = _factory.GenerateRange(chord, tuning, offset, range, span);
+				variations = _factory.GenerateRange(chord, tuning, (int)args.offset, (int)args.range, (int)args.span);
 			}
 			catch (Exception ex)
 			{
@@ -161,20 +116,5 @@ namespace neck.Controllers
 			// TODO: 
 			return Ok(variations);
 		}
-	}
-
-	public class ChordVariationGenerateParams
-	{
-		public Guid? chordId;
-		public Guid? tuningId;
-		public Chord chord;
-		public Tuning tuning;
-		public int? offset;
-		public int? span;
-	}
-
-	public class ChordVariationGenerateRangeParams : ChordVariationGenerateParams
-	{
-		public int? range;
 	}
 }

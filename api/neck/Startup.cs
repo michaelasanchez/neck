@@ -60,8 +60,8 @@ namespace neck
 			services.AddScoped(typeof(IRepository<ScaleVariation>), typeof(ScaleVariationRepository));
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 
-			services.AddScoped(typeof(IFactory<ChordVariation, ChordVariationCreateArgs>), typeof(ChordVariationFactory));
-			services.AddScoped(typeof(IFactory<ScaleVariation, ScaleVariationCreateArgs>), typeof(ScaleVariationFactory));
+			services.AddScoped(typeof(IFactory<ChordVariation>), typeof(ChordVariationFactory));
+			services.AddScoped(typeof(IFactory<ScaleVariation>), typeof(ScaleVariationFactory));
 
 			services.AddDbContext<NeckContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("NeckDatabase")));

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace neck.Generators
 {
-	public class ChordVariationFactory : IFactory<ChordVariation, ChordVariationCreateArgs>
+	public class ChordVariationFactory : IFactory<ChordVariation>
 	{
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
@@ -111,7 +111,7 @@ namespace neck.Generators
 
 				if (toneCheck.All(c => c))
 				{
-					variations.Add(new ChordVariation(positions, chord.Id, tuning));
+					variations.Add(new ChordVariation(chord.Id, tuning.Id, positions));
 				}
 
 				// Reset

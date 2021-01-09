@@ -6,17 +6,10 @@ using System.Threading.Tasks;
 
 namespace neck.Models
 {
-	public class ScaleVariation : DbEntity
+	public class ScaleVariation : Variation<Scale>
 	{
+		[ForeignKey("Base")]
 		public Guid ScaleId { get; set; }
-
-		[NotMapped]
-		public Scale Scale { get; set; }
-
-		public Guid TuningId { get; set; }
-
-		[NotMapped]
-		public Tuning Tuning { get; set; }
 
 		[NotMapped]
 		public List<List<int?>> Positions { get; set; }
@@ -25,7 +18,7 @@ namespace neck.Models
 
 		public ScaleVariation(Scale scale, Tuning tuning, List<List<int?>> positions)
 		{
-			Scale = scale;
+			Base = scale;
 			Tuning = tuning;
 			Positions = positions;
 		}

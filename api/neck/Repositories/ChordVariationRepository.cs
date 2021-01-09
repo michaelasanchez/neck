@@ -1,7 +1,9 @@
-﻿using neck.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using neck.Interfaces;
 using neck.Models;
 using neck.Models.Results;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Repositories
@@ -23,6 +25,13 @@ namespace neck.Repositories
 			_chordRepo = new Lazy<IRepository<Chord>>(chordRepository);
 			_formationRepo = new Lazy<IRepository<Formation>>(formationRepository);
 			_tuningRepo = new Lazy<IRepository<Tuning>>(tuningRepository);
+		}
+
+		public override IQueryable<ChordVariation> DefaultIncludes()
+		{
+			return _set.AsQueryable()
+				.Include(v => v.Base)
+				.Include(v => v.Tuning);
 		}
 
 		public override async Task<OperationResult<ChordVariation>> Create(ChordVariation variation)

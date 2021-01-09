@@ -63,8 +63,8 @@ export const Ui: React.FunctionComponent<UiProps> = ({
           setMode={(m: Mode) => setAppOptions({ mode: m })}
         />
       </div>
-      {/* <ChordSlideIn appOptions={appOptions} setAppOptions={setAppOptions} /> */}
-      <ScaleSlideIn setAppOptions={setAppOptions} />
+      <ChordSlideIn appOptions={appOptions} setAppOptions={setAppOptions} />
+      {/* <ScaleSlideIn setAppOptions={setAppOptions} /> */}
     </>
   );
 };

@@ -10,20 +10,15 @@ using System.Threading.Tasks;
 
 namespace neck.Factories
 {
-	public class ScaleVariationFactory : IFactory<ScaleVariation, ScaleVariationCreateArgs>
+	public class ScaleVariationFactory : IFactory<ScaleVariation>
 	{
 
 		public List<ScaleVariation> GenerateVariations(Scale scale, Tuning tuning, int offset, int span)
 		{
-			var variations = new List<ScaleVariation>();
-
 			var scalePositions = mapPositionSpan(scale, tuning, offset, span);
 			var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
 
-			var variationCounts = scaleDirections.Select(l => l.Count(d => d == ScaleDirection.NextVariation));
-			var numVariations = variationCounts.Where(c => c > 0).Aggregate((acc, count) => acc * count * 2);
-
-			var variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, 0, 0, new List<List<Note>>());
+			var variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, new List<List<Note>>());
 
 			return variationPositions.Select(p => new ScaleVariation(scale, tuning, p)).ToList();
 		}
@@ -111,7 +106,7 @@ namespace neck.Factories
 			return directions;
 		}
 
-		private new List<List<List<int?>>> calcVariationPositions(Scale scale, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, int oStart, int pStart, List<List<Note>> variationPositions)
+		private new List<List<List<int?>>> calcVariationPositions(Scale scale, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, List<List<Note>> variationPositions, int oStart = 0, int pStart = 0)
 		{
 			var variationTest = new List<List<List<int?>>>();
 
@@ -143,7 +138,7 @@ namespace neck.Factories
 					else if (direction == ScaleDirection.NextVariation)
 					{
 						var dup = variationPositions.Select(l => l.Select(n => n).ToList()).ToList();
-						variationTest = calcVariationPositions(scale, scaleDirections, scalePositions, o + 1, 0, dup);
+						variationTest = calcVariationPositions(scale, scaleDirections, scalePositions, dup, o + 1);
 					}
 				}
 			}
