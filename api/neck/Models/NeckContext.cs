@@ -2,6 +2,7 @@
 using neck.Comparers;
 using neck.Converters;
 using neck.Interfaces;
+using neck.Models.Variations;
 using System;
 using System.Linq;
 using System.Threading;

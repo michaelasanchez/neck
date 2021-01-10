@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Variations;
 
 namespace neck.Controllers
 {

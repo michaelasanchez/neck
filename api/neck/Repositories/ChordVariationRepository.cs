@@ -2,6 +2,7 @@
 using neck.Interfaces;
 using neck.Models;
 using neck.Models.Results;
+using neck.Models.Variations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace neck.Models
+namespace neck.Models.Variations
 {
 	public class ChordVariation : Variation<Chord>
     {

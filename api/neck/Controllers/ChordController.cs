@@ -39,6 +39,7 @@ namespace neck.Controllers
 
 			var chord = new Chord(noteResult.Result, @params.modifier);
 			var chordResult = await _chordRepo.Value.GetOrCreate(chord);
+
 			if (!chordResult.Success)
 			{
 				return BadRequest("Failed to create chord");

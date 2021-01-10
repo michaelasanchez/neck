@@ -1,6 +1,7 @@
 ﻿using neck.Enums;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Variations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

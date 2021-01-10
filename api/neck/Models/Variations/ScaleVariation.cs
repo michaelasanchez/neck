@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace neck.Models
+namespace neck.Models.Variations
 {
 	public class ScaleVariation : Variation<Scale>
 	{

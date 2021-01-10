@@ -2,6 +2,7 @@
 using neck.Interfaces.Args;
 using neck.Models;
 using neck.Models.Results;
+using neck.Repositories;
 using System;
 
 namespace neck.Controllers.Args
@@ -24,7 +25,7 @@ namespace neck.Controllers.Args
 		{
 			if (@base == null && baseId == null)
 			{
-				var cl = getClassFromType(typeof(TBase));
+				var cl = OperationResult.trimType(typeof(TBase));
 				return OperationResult.CreateFailure($"{cl} and {cl}Id cannot both be null");
 			}
 
@@ -47,12 +48,6 @@ namespace neck.Controllers.Args
 			span = span == null || span < 1 ? DefaultSpan : span;
 
 			return OperationResult.CreateSuccess();
-		}
-
-		private string getClassFromType(Type type)
-		{
-			var test = type.ToString().Split(".");
-			return test[test.Length - 1].ToLower();
 		}
 	}
 }

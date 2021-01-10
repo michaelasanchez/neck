@@ -9,6 +9,7 @@ using neck.Factories;
 using neck.Generators;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Variations;
 using neck.Repositories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
