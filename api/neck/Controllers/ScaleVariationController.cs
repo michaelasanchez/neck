@@ -1,39 +1,49 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using neck.Factories;
-using neck.Factories.Args;
 using neck.Interfaces;
 using neck.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Controllers
 {
+
 	[ApiController]
 	[Route("[controller]")]
-	public class ScaleVariationController : GenericController<ScaleVariation>
+	public class ScaleVariationController : VariationController<Scale, ScaleVariation>
 	{
+		private readonly ILogger<ScaleVariationController> _logger;
+
+		private IVariationFactory<Scale, ScaleVariation> _factory;
+
+		private IRepository<Scale> _baseRepo;
 		private IRepository<Tuning> _tuningRepo;
-		private ScaleVariationFactory _factory;
 
 		public ScaleVariationController(
+			ILogger<ScaleVariationController> logger,
+			IVariationFactory<Scale, ScaleVariation> factory,
 			IRepository<ScaleVariation> repository,
-			IRepository<Tuning> tuningRepo,
-			IFactory<ScaleVariation> factory)
-			: base(repository)
+			IRepository<Scale> baseRepository,
+			IRepository<Tuning> tuningRepository
+		)
+			: base(logger, factory, repository, baseRepository, tuningRepository)
 		{
-			_tuningRepo = tuningRepo;
-			_factory = (ScaleVariationFactory)factory;
+			_logger = logger;
+			_factory = factory;
+
+			_baseRepo = baseRepository;
+			_tuningRepo = tuningRepository;
 		}
 
-		[HttpPost("Generate")]
-		public async Task<ActionResult<List<ChordVariation>>> Generate(/*[FromBody] ChordVariationGenerateParams @params*/)
+		[HttpPost("Test")]
+		public async Task<ActionResult<List<ChordVariation>>> Test(/*[FromBody] ChordVariationGenerateParams @params*/)
 		{
 			Tuning tuning = null; // = @params.tuning;
 			if (tuning == null)
 			{
-				var result = await _tuningRepo.GetById(new Guid("6ED19AC7-49DF-47E3-ABB5-80ED7F6EB600")/*@params.tuningId*/);
+				var result = await _tuningRepo.GetById(new Guid("F8EBD6AE-B39F-4C4F-8CEB-94D3DE160A0B")/*@params.tuningId*/);
 				if (result.Success)
 				{
 					tuning = result.Result;

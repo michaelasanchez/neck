@@ -1,4 +1,5 @@
-﻿using System;
+﻿using neck.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,10 +17,11 @@ namespace neck.Models
 
 		public ScaleVariation() { }
 
-		public ScaleVariation(Scale scale, Tuning tuning, List<List<int?>> positions)
+		public ScaleVariation(Guid scaleId, Guid tuningId, List<List<int?>> positions)
 		{
-			Base = scale;
-			Tuning = tuning;
+			ScaleId = scaleId;
+			TuningId = tuningId;
+
 			Positions = positions;
 		}
 	}

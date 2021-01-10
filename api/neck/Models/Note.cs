@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using neck.Enums;
+using neck.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
-using neck.Enums;
 
 namespace neck.Models
 {
-	public class Note : DbEntity
+	public class Note : DbEntity, ILabelled
 	{
 		public NoteValue Base;
 		public NoteSuffix Suffix;

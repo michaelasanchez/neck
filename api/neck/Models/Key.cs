@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace neck.Models
 {
-
     public enum KeyType
     {
         Major,

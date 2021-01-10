@@ -1,4 +1,5 @@
 ﻿using neck.Enums;
+using neck.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace neck.Models
 {
-	public class Scale : DbEntity
+	public class Scale : DbEntity, ILabelled
 	{
-
 		private List<Note> _notes;
 
-		// Pulic
+		// Public
+		[NotMapped]
+		public string Label => $"{Root.Label} {Type} Scale";
+
 		public Guid RootId;
 
 		public Note Root { get; private set; }

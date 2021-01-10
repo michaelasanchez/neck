@@ -1,13 +1,12 @@
-﻿using neck.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-	public interface IFactory<T>
+	public interface ILabelled
 	{
-		//public IList<T> GenerateVariations(TArgs args);
+		string Label { get; }
 	}
 }

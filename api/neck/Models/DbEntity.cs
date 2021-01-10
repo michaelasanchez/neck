@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace neck.Models
 {
-    public class DbEntity : IDbEntity, IDatedEntity
+    public abstract class DbEntity : IDbEntity, IDatedEntity
     {
         [System.ComponentModel.DataAnnotations.Key]
         public Guid Id { get; set; }

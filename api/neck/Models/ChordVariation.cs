@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace neck.Models
 {
-	public class ChordVariation : Variation<Chord>, IVariation<Chord>
+	public class ChordVariation : Variation<Chord>
     {
         [ForeignKey("Base")]
         public Guid ChordId { get; set; }
@@ -16,14 +16,12 @@ namespace neck.Models
          
         private ChordVariation() { }
 
-        public ChordVariation(Guid chordId, Guid tuningId, List<int?> positions, string label = null)
+        public ChordVariation(Guid chordId, Guid tuningId, List<int?> positions)
         {
             ChordId = chordId;
             TuningId = tuningId;
 
             Formation = new Formation(positions);
-
-            //Label = label ?? chord?.Label;
         }
     }
 }

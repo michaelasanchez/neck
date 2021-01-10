@@ -8,17 +8,22 @@ using System.Threading.Tasks;
 
 namespace neck.Controllers.Args
 {
-	public class ChordVariationGenerateRangeArgs : ChordVariationGenerateArgs
+	public class ChordVariationGenerateArgs : VariationGenerateArgs<Chord>
 	{
-		public const int DefaultRange = 12;
-
-		public int? range;
-
 		public override IOperationResult Validate()
 		{
-			range = range == null || range < 1 ? DefaultRange : range;
+			var result = base.Validate();
+			if (!result.Success)
+			{
+				return result;
+			}
 
-			return base.Validate();
+			if (@base.Root == null)
+			{
+				return OperationResult.CreateFailure("Chord missing root note");
+			}
+
+			return OperationResult.CreateSuccess();
 		}
 	}
 }

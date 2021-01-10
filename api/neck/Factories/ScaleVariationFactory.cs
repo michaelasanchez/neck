@@ -1,26 +1,30 @@
 ﻿using neck.Enums;
-using neck.Factories.Args;
 using neck.Interfaces;
 using neck.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace neck.Factories
 {
-	public class ScaleVariationFactory : IFactory<ScaleVariation>
+	public class ScaleVariationFactory : IVariationFactory<Scale, ScaleVariation>
 	{
 
-		public List<ScaleVariation> GenerateVariations(Scale scale, Tuning tuning, int offset, int span)
+		public List<ScaleVariation> GenerateVariations(Scale @base, Tuning tuning, int offset, int span)
 		{
+			Scale scale = @base;
+
 			var scalePositions = mapPositionSpan(scale, tuning, offset, span);
 			var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
 
 			var variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, new List<List<Note>>());
 
-			return variationPositions.Select(p => new ScaleVariation(scale, tuning, p)).ToList();
+			return variationPositions.Select(p => new ScaleVariation(scale.Id, tuning.Id, p)).ToList();
+		}
+
+		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int fretOffset, int fretSpan, int range)
+		{
+			throw new NotImplementedException();
 		}
 
 		//  C           D           E     F           G           A           B   

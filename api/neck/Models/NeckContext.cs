@@ -32,8 +32,7 @@ namespace neck.Models
 				.IsUnique();
 
 			modelBuilder.Entity<ChordVariation>()
-				.HasIndex(c => new { c.Label, c.ChordId, c.FormationId, c.TuningId })
-				.IsUnique();
+				.Ignore(v => v.Base);
 
 			modelBuilder.Entity<Formation>(entity =>
 			{
@@ -62,6 +61,9 @@ namespace neck.Models
 				entity.HasIndex(s => new { s.RootId, s.Type })
 					.IsUnique();
 			});
+
+			modelBuilder.Entity<ScaleVariation>()
+				.Ignore(v => v.Base);
 
 			modelBuilder.Entity<Tuning>(entity =>
 			{

@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-	interface IVariation<T>
+	public interface IVariation<T> : IDbEntity, ILabelled
 	{
-		string Label { get; set; }
-
-		Guid TuningId { get; set; }
+		Tuning Tuning { get; set; }
 
 		T Base { get; set; }
 	}

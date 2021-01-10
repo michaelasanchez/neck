@@ -1,4 +1,5 @@
-﻿using System;
+﻿using neck.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace neck.Models
 {
-    public class Tuning : DbEntity
+    public class Tuning : DbEntity, ILabelled
     {
         public string Label { get; set; }
 

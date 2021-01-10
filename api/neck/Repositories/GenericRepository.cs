@@ -46,7 +46,6 @@ namespace neck.Repositories
 			return BuildGetOperationResult(result);
 		}
 
-		// Must override for default includes
 		public virtual Task<OperationResult<IEnumerable<TEntity>>> GetAll()
 		{
 			var enumerable = GetAllDefaultIncludes
