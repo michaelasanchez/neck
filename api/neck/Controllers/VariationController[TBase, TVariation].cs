@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using neck.Controllers.Args;
 using neck.Interfaces;
-using neck.Interfaces.Args;
-using neck.Models;
+using neck.Models.Results;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Controllers
@@ -20,14 +17,14 @@ namespace neck.Controllers
 		protected IVariationFactory<TBase, TVariation> _factory;
 
 		protected IRepository<TBase> _baseRepo;
-		protected IRepository<Tuning> _tuningRepo;
+		protected IRepository<Models.Tuning> _tuningRepo;
 
 		public VariationController(
 			ILogger<VariationController<TBase, TVariation>> logger,
 			IVariationFactory<TBase, TVariation> factory,
 			IRepository<TVariation> repository,
 			IRepository<TBase> baseRepository,
-			IRepository<Tuning> tuningRepository
+			IRepository<Models.Tuning> tuningRepository
 		)
 			: base(repository)
 		{
@@ -40,7 +37,7 @@ namespace neck.Controllers
 		}
 
 		[HttpPost("Generate")]
-		public async Task<ActionResult<List<ChordVariation>>> Generate([FromBody] VariationGenerateArgs<TBase> args)
+		public async Task<ActionResult<List<TBase>>> Generate([FromBody] VariationGenerateArgs<TBase> args)
 		{
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
@@ -48,37 +45,20 @@ namespace neck.Controllers
 				return BadRequest(validateResult.Message);
 			}
 
-			var @base = args.@base;
-			if (@base == null)
+			var baseResult = await locateBase(args);
+			if (!baseResult.Success)
 			{
-				var result = await _baseRepo.GetById(args.baseId);
-				if (!result.Success)
-				{
-					return BadRequest(result.Message);
-				}
-
-				@base = result.Result;
-			}
-			else
-			{
-				var result = await _baseRepo.GetOrCreate(args.@base);
-				if (result.Success)
-				{
-					@base = result.Result;
-				}
+				return BadRequest(baseResult.Message);
 			}
 
-			var tuning = args.tuning;
-			if (tuning == null)
-			{
-				var result = await _tuningRepo.GetById(args.tuningId);
-				if (!result.Success)
-				{
-					return BadRequest(result.Message);
-				}
+			var @base = baseResult.Result;
 
-				tuning = result.Result;
+			var tuningResult = await locateTuning(args);
+			if (!tuningResult.Success)
+			{
+				return BadRequest(tuningResult.Message);
 			}
+			var tuning = tuningResult.Result;
 
 			var variations = _factory.GenerateVariations(@base, tuning, (int)args.offset, (int)args.span);
 
@@ -86,7 +66,7 @@ namespace neck.Controllers
 		}
 
 		[HttpPost("GenerateRange")]
-		public async Task<ActionResult<List<ChordVariation>>> GenerateRange([FromBody] VariationGenerateRangeArgs<TBase> args)
+		public async Task<ActionResult<List<TBase>>> GenerateRange([FromBody] VariationGenerateRangeArgs<TBase> args)
 		{
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
@@ -94,36 +74,19 @@ namespace neck.Controllers
 				return BadRequest(validateResult.Message);
 			}
 
-			var @base = args.@base;
-			if (@base == null)
+			var baseResult = await locateBase(args);
+			if (!baseResult.Success)
 			{
-				var result = await _baseRepo.GetById(args.baseId);
-				if (!result.Success)
-				{
-					return BadRequest(result.Message);
-				}
-
-				@base = result.Result;
-			} else
-			{
-				var result = await _baseRepo.GetOrCreate(args.@base);
-				if (result.Success)
-				{
-					@base = result.Result;
-				}
+				return BadRequest(baseResult.Message);
 			}
+			var @base = baseResult.Result;
 
-			var tuning = args.tuning;
-			if (tuning == null)
+			var tuningResult = await locateTuning(args);
+			if (!tuningResult.Success)
 			{
-				var result = await _tuningRepo.GetById(args.tuningId);
-				if (!result.Success)
-				{
-					return BadRequest(result.Message);
-				}
-
-				tuning = result.Result;
+				return BadRequest(tuningResult.Message);
 			}
+			var tuning = tuningResult.Result;
 
 			// TODO: Remove this eventually..
 			List<TVariation> variations;
@@ -137,6 +100,61 @@ namespace neck.Controllers
 			}
 
 			return Ok(variations);
+		}
+
+		private async Task<OperationResult<TBase>> locateBase(VariationGenerateArgs<TBase> args)
+		{
+			var @base = args.@base;
+			if (@base == null)
+			{
+				var result = await _baseRepo.GetById(args.baseId);
+				if (!result.Success)
+				{
+					// TODO: Should we still check if @base exists?
+					return OperationResult<TBase>.CreateFailure(result.Message);
+				}
+
+				@base = result.Result;
+			}
+			else
+			{
+				var result = await _baseRepo.GetOrCreate(args.@base);
+				if (!result.Success)
+				{
+					return OperationResult<TBase>.CreateFailure("Failed to get/create chord");
+				}
+
+				@base = result.Result;
+			}
+
+			if (@base == null)
+			{
+				return OperationResult<TBase>.CreateFailure("Failed to locate chord");
+			}
+
+			return OperationResult<TBase>.CreateSuccess(@base);
+		}
+
+		private async Task<OperationResult<Models.Tuning>> locateTuning(VariationGenerateArgs<TBase> args)
+		{
+			var tuning = args.tuning;
+			if (tuning == null)
+			{
+				var result = await _tuningRepo.GetById(args.tuningId);
+				if (!result.Success)
+				{
+					return OperationResult<Models.Tuning>.CreateFailure($"Failed to locate tuning with id {args.tuningId}");
+				}
+
+				tuning = result.Result;
+			}
+
+			if (tuning == null)
+			{
+				return OperationResult<Models.Tuning>.CreateFailure("Failed to locate Tuning");
+			}
+
+			return OperationResult<Models.Tuning>.CreateSuccess(tuning);
 		}
 	}
 }

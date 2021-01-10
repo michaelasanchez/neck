@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Locators\" />
     <Folder Include="Models\Intervals\" />
     <Folder Include="Models\Variations\" />
   </ItemGroup>

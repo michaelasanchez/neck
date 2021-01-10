@@ -25,12 +25,22 @@ namespace neck.Controllers.Args
 			if (@base == null && baseId == null)
 			{
 				var cl = getClassFromType(typeof(TBase));
-				return OperationResult.CreateFailure($"{cl} or {cl}Id is required");
+				return OperationResult.CreateFailure($"{cl} and {cl}Id cannot both be null");
 			}
 
-			if (tuning == null && tuningId == null)
+			if (tuning == null)
 			{
-				return OperationResult.CreateFailure("tuning or tuningId is required");
+				if (tuningId == null)
+				{
+					return OperationResult.CreateFailure("Tuning and TuningId cannot both be null");
+				}
+			}
+			else
+			{
+				if (tuning.Offsets == null || tuning.Offsets.Count < 1)
+				{
+					return OperationResult.CreateFailure("Tuning offsets are missing");
+				}
 			}
 
 			offset = offset == null || offset < DefaultOffset ? 0 : offset;

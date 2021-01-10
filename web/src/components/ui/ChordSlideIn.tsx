@@ -67,11 +67,11 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   const reloadChordVariations = () => {
     new ChordVariationApi()
       .GenerateRange({
-        chordId: chord.Id,
+        baseId: chord.Id,
         tuningId: tuning.Id,
         range: instrument.NumFrets,
         // span: 9,
-      } as ChordVariationGenerateRangeParams)
+      })
       .then((variations: any[]) => {
         // TODO: constructor logic should probably move
         const newVariations = map(
@@ -80,7 +80,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             new ChordVariation(
               v.Formation.Positions,
               v.Formation.Barres,
-              v.Tuning
+              tuning
             )
         );
 

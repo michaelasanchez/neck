@@ -2,8 +2,8 @@ import { Scale, ScaleVariation, Tuning } from "../models";
 import { ApiRequest } from "./ApiRequest";
 
 export interface ScaleVariationGenerateParams {
-  chordId?: string;
-  chord?: Partial<Scale>;
+  baseId?: string;
+  base?: Partial<Scale>;
   tuningId?: string;
   tuning?: Partial<Tuning>;
   offset?: number;
@@ -16,7 +16,7 @@ export interface ScaleVariationGenerateRangeParams extends ScaleVariationGenerat
 
 enum ScaleVariationAction {
   Generate = 'Generate',
-  // GenerateRange = 'GenerateRange',
+  GenerateRange = 'GenerateRange',
 }
 
 export class ScaleVariationApi extends ApiRequest<ScaleVariation> {
@@ -29,12 +29,8 @@ export class ScaleVariationApi extends ApiRequest<ScaleVariation> {
     return super.Post(null, ScaleVariationAction.Generate) as Promise<ScaleVariation[]>;
   }
 
-  // GenerateRange(params: ScaleVariationGenerateRangeParams): Promise<ScaleVariation[]> {
-
-  //   // TODO: Figure out what is goin on here. Cheap fix for now
-  //   if (params.chord) params.chord = this.hack(params.chord);
-
-  //   return super.Post(params, ScaleVariationAction.GenerateRange) as Promise<ScaleVariation[]>;
-  // }
+  GenerateRange(params: ScaleVariationGenerateRangeParams): Promise<ScaleVariation[]> {
+    return super.Post(params, ScaleVariationAction.GenerateRange) as Promise<ScaleVariation[]>;
+  }
 
 }
