@@ -18,15 +18,29 @@ namespace neck.Models
 
 		public Guid RootId;
 
-		public Note Root { get; private set; }
+		public Note Root { get; set; }
 
-		public ScaleType Type { get; private set; }
+		public ScaleType Type { get; set; }
 
 		[NotMapped]
 		public Mode Mode { get; private set; }
 
 		[NotMapped]
-		public List<Note> Notes => _notes;
+		public List<Note> Notes
+		{
+			get
+			{
+				if (_notes == null && Root != null)
+				{
+					if (Mode == null)
+						Mode = new Mode(getModeType(Type));
+
+					_notes = calcNotes(Root, Mode, Type);
+				}
+
+				return _notes;
+			}
+		}
 
 		public Scale() { }
 

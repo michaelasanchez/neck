@@ -1,14 +1,11 @@
 ﻿using neck.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace neck.Models
 {
-    public class Tuning : DbEntity, ILabelled
+	public class Tuning : DbEntity, ILabelled
     {
         public string Label { get; set; }
 

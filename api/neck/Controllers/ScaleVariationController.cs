@@ -16,11 +16,6 @@ namespace neck.Controllers
 	{
 		private readonly ILogger<ScaleVariationController> _logger;
 
-		private IVariationFactory<Scale, ScaleVariation> _factory;
-
-		private IRepository<Scale> _baseRepo;
-		private IRepository<Tuning> _tuningRepo;
-
 		public ScaleVariationController(
 			ILogger<ScaleVariationController> logger,
 			IVariationFactory<Scale, ScaleVariation> factory,
@@ -31,10 +26,6 @@ namespace neck.Controllers
 			: base(logger, factory, repository, baseRepository, tuningRepository)
 		{
 			_logger = logger;
-			_factory = factory;
-
-			_baseRepo = baseRepository;
-			_tuningRepo = tuningRepository;
 		}
 
 		[HttpPost("Test")]

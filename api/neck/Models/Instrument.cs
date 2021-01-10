@@ -1,7 +1,7 @@
 ﻿using neck.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace neck.Models
 {

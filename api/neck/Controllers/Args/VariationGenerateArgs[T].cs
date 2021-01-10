@@ -24,18 +24,25 @@ namespace neck.Controllers.Args
 		{
 			if (@base == null && baseId == null)
 			{
-				return OperationResult.CreateFailure($"{typeof(TBase)} instance or id is required");
+				var cl = getClassFromType(typeof(TBase));
+				return OperationResult.CreateFailure($"{cl} or {cl}Id is required");
 			}
 
 			if (tuning == null && tuningId == null)
 			{
-				return OperationResult.CreateFailure("Tuning instance or id is required");
+				return OperationResult.CreateFailure("tuning or tuningId is required");
 			}
 
 			offset = offset == null || offset < DefaultOffset ? 0 : offset;
 			span = span == null || span < 1 ? DefaultSpan : span;
 
 			return OperationResult.CreateSuccess();
+		}
+
+		private string getClassFromType(Type type)
+		{
+			var test = type.ToString().Split(".");
+			return test[test.Length - 1].ToLower();
 		}
 	}
 }

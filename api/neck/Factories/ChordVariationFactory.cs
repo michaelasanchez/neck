@@ -16,11 +16,13 @@ namespace neck.Generators
 
 		public List<ChordVariation> GenerateVariations(Chord @base, Tuning tuning, int fretOffset, int fretSpan)
 		{
+			var chord = @base;
+
 			if (fretOffset == 0 && VARIATION_SPAN_INCLUDES_OPEN == true) fretSpan++;
 
 			// Matches will contain a set of notes for each string (tuning offset)
 			//  Each note is a component of chord
-			var matches = tuning.Offsets.Select(o => @base.Tones.Where(n => isNoteInRange(n, o, fretOffset, fretSpan)).ToList()).ToList();
+			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o, fretOffset, fretSpan)).ToList()).ToList();
 
 			// Calculate number of combinations from matched notes
 			var noteCounts = matches.Select(m => m.Count()).ToList();
@@ -34,7 +36,7 @@ namespace neck.Generators
 				{
 					if (open < ALLOWED_OPEN)
 					{
-						if (containsNote(@base.Tones, calcNoteFromPosition(@base, tuning.Offsets[i], 0)))
+						if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i], 0)))
 						{
 							// TODO: FINISH
 						}
@@ -56,7 +58,7 @@ namespace neck.Generators
 			var numVariations = noteCounts.Aggregate((acc, count) => acc * count);
 
 			// Used to validate variation contains all chord tones
-			var toneCheck = @base.Tones.Select(n => false).ToList();
+			var toneCheck = chord.Tones.Select(n => false).ToList();
 
 			// Calculate variations
 			var variations = new List<ChordVariation>();
@@ -76,7 +78,7 @@ namespace neck.Generators
 						note = matches[countIndex][index];
 
 						// Check tones have been included
-						var toneIndex = @base.Tones.IndexOf(@base.Tones.FirstOrDefault(n => n.Equals(note)));
+						var toneIndex = chord.Tones.IndexOf(chord.Tones.FirstOrDefault(n => n.Equals(note)));
 						toneCheck[toneIndex] = true;
 					}
 
@@ -85,7 +87,7 @@ namespace neck.Generators
 
 				if (toneCheck.All(c => c))
 				{
-					variations.Add(new ChordVariation(@base.Id, tuning.Id, positions));
+					variations.Add(new ChordVariation(chord, tuning.Id, positions));
 				}
 
 				// Reset

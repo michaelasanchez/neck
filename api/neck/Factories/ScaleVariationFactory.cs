@@ -19,7 +19,7 @@ namespace neck.Factories
 
 			var variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, new List<List<Note>>());
 
-			return variationPositions.Select(p => new ScaleVariation(scale.Id, tuning.Id, p)).ToList();
+			return variationPositions.Select(p => new ScaleVariation(scale, tuning.Id, p)).ToList();
 		}
 
 		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int fretOffset, int fretSpan, int range)
@@ -110,7 +110,7 @@ namespace neck.Factories
 			return directions;
 		}
 
-		private new List<List<List<int?>>> calcVariationPositions(Scale scale, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, List<List<Note>> variationPositions, int oStart = 0, int pStart = 0)
+		private List<List<List<int?>>> calcVariationPositions(Scale scale, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, List<List<Note>> variationPositions, int oStart = 0, int pStart = 0)
 		{
 			var variationTest = new List<List<List<int?>>>();
 

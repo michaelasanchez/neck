@@ -16,9 +16,11 @@ namespace neck.Models
          
         private ChordVariation() { }
 
-        public ChordVariation(Guid chordId, Guid tuningId, List<int?> positions)
+        public ChordVariation(Chord chord, Guid tuningId, List<int?> positions)
         {
-            ChordId = chordId;
+            ChordId = chord.Id;
+            Base = chord;
+
             TuningId = tuningId;
 
             Formation = new Formation(positions);

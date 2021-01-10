@@ -24,8 +24,6 @@ namespace neck.Models
 			}
 		}
 
-		public ICollection<ChordVariation> ChordVariations;
-
 		public Formation(List<int?> positions)
 		{
 			Positions = positions;

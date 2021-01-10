@@ -1,10 +1,7 @@
 ﻿using neck.Interfaces;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace neck.Models
 {
@@ -22,18 +19,5 @@ namespace neck.Models
 		[NotMapped]
 		[JsonIgnore]
 		public T Base { get; set; }
-
-		//protected Variation(Tuning tuning, string label = null)
-		//{
-		//	if (tuning != null)
-		//	{
-		//		Tuning = tuning;
-
-		//		if (tuning?.Id != null)
-		//		{
-		//			TuningId = tuning.Id;
-		//		}
-		//	}
-		//}
 	}
 }

@@ -40,11 +40,11 @@ namespace neck
 					});
 			});
 
-			services.AddControllers(); //.AddNewtonsoftJson(o =>
-			//{
-			//	o.SerializerSettings.ContractResolver = new DefaultContractResolver();
-			//	o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-			//});
+			services.AddControllers().AddNewtonsoftJson(o =>
+			{
+				o.SerializerSettings.ContractResolver = new DefaultContractResolver();
+				o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+			});
 
 			//services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 			//services.AddMvc()

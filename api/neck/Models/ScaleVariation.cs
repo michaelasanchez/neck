@@ -17,9 +17,11 @@ namespace neck.Models
 
 		public ScaleVariation() { }
 
-		public ScaleVariation(Guid scaleId, Guid tuningId, List<List<int?>> positions)
+		public ScaleVariation(Scale scale, Guid tuningId, List<List<int?>> positions)
 		{
-			ScaleId = scaleId;
+			ScaleId = scale.Id;
+			Base = scale;
+
 			TuningId = tuningId;
 
 			Positions = positions;

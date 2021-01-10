@@ -17,10 +17,10 @@ namespace neck.Controllers
 	{
 		private readonly ILogger<VariationController<TBase, TVariation>> _logger;
 
-		private IVariationFactory<TBase, TVariation> _factory;
+		protected IVariationFactory<TBase, TVariation> _factory;
 
-		private IRepository<TBase> _baseRepo;
-		private IRepository<Tuning> _tuningRepo;
+		protected IRepository<TBase> _baseRepo;
+		protected IRepository<Tuning> _tuningRepo;
 
 		public VariationController(
 			ILogger<VariationController<TBase, TVariation>> logger,
@@ -52,22 +52,37 @@ namespace neck.Controllers
 			if (@base == null)
 			{
 				var result = await _baseRepo.GetById(args.baseId);
+				if (!result.Success)
+				{
+					return BadRequest(result.Message);
+				}
+
+				@base = result.Result;
+			}
+			else
+			{
+				var result = await _baseRepo.GetOrCreate(args.@base);
 				if (result.Success)
 				{
 					@base = result.Result;
 				}
 			}
+
 			var tuning = args.tuning;
 			if (tuning == null)
 			{
 				var result = await _tuningRepo.GetById(args.tuningId);
-				if (result.Success)
+				if (!result.Success)
 				{
-					tuning = result.Result;
+					return BadRequest(result.Message);
 				}
+
+				tuning = result.Result;
 			}
 
-			return Ok(_factory.GenerateVariations(@base, tuning, (int)args.offset, (int)args.span));
+			var variations = _factory.GenerateVariations(@base, tuning, (int)args.offset, (int)args.span);
+
+			return Ok(variations);
 		}
 
 		[HttpPost("GenerateRange")]
@@ -89,6 +104,13 @@ namespace neck.Controllers
 				}
 
 				@base = result.Result;
+			} else
+			{
+				var result = await _baseRepo.GetOrCreate(args.@base);
+				if (result.Success)
+				{
+					@base = result.Result;
+				}
 			}
 
 			var tuning = args.tuning;
