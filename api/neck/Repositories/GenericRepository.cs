@@ -64,7 +64,7 @@ namespace neck.Repositories
 				var createResult = await Create(entity);
 				if (!createResult.Success)
 				{
-					return OperationResult<TEntity>.CreateFailure($"Failed to create {TrimType(typeof(TEntity))}");
+					return createResult;
 				}
 
 				return BuildGetOperationResult(createResult.Result);
@@ -87,7 +87,7 @@ namespace neck.Repositories
 			var saveResult = await Save();
 			if (!saveResult.Success)
 			{
-				return OperationResult<TEntity>.CreateFailure($"Failed to save {TrimType(typeof(TEntity))}");
+				return OperationResult<TEntity>.CreateFailure($"Failed to save {TrimType(typeof(TEntity))}: {saveResult.Message}");
 			}
 
 			return BuildEntityResult(entry.Entity, true);

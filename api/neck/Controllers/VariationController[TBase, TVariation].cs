@@ -111,7 +111,7 @@ namespace neck.Controllers
 				if (!result.Success)
 				{
 					// TODO: Should we still check if @base exists?
-					return OperationResult<TBase>.CreateFailure(result.Message);
+					return result;
 				}
 
 				@base = result.Result;
@@ -121,7 +121,7 @@ namespace neck.Controllers
 				var result = await _baseRepo.GetOrCreate(args.@base);
 				if (!result.Success)
 				{
-					return OperationResult<TBase>.CreateFailure("Failed to get/create chord");
+					return result;
 				}
 
 				@base = result.Result;

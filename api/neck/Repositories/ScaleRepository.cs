@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using neck.Interfaces;
 using neck.Models;
 using neck.Models.Results;
 using System;
@@ -10,9 +11,13 @@ namespace neck.Repositories
 {
 	public class ScaleRepository : GenericRepository<Scale>
 	{
-		public ScaleRepository(NeckContext context)
+		private Lazy<IRepository<Note>> _noteRepo;
+
+		public ScaleRepository(NeckContext context, IRepository<Note> noteRepo)
 			: base(context)
 		{
+			_noteRepo = new Lazy<IRepository<Note>>(noteRepo);
+
 			GetAllDefaultIncludes = true;
 		}
 
@@ -21,7 +26,7 @@ namespace neck.Repositories
 			return _set.AsQueryable().Include(s => s.Root);
 		}
 
-		public async override Task<OperationResult<Scale>> Get(Scale scale)
+		public override async Task<OperationResult<Scale>> Get(Scale scale)
 		{
 			var result = await DefaultIncludes()
 				.FirstOrDefaultAsync(s => s.Type == scale.Type
@@ -29,6 +34,22 @@ namespace neck.Repositories
 					&& s.Root.Suffix == scale.Root.Suffix);
 
 			return BuildGetOperationResult(result);
+		}
+
+		public override async Task<OperationResult<Scale>> Create(Scale scale)
+		{
+			if (scale.Root?.Id == null || scale.Root.Id == Guid.Empty)
+			{
+				var noteResult = await _noteRepo.Value.Get(scale.Root);
+				if (!noteResult.Success)
+				{
+					return OperationResult<Scale>.CreateFailure($"Failed to create Note:\n {noteResult.Message}");
+				}
+
+				scale.Root = noteResult.Result;
+			}
+
+			return await base.Create(scale);
 		}
 
 	}

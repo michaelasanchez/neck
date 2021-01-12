@@ -23,7 +23,7 @@ namespace neck.Models
 		public ScaleType Type { get; set; }
 
 		[NotMapped]
-		public Mode Mode { get; private set; }
+		public Mode Mode { get; set; }
 
 		[NotMapped]
 		public List<Note> Notes

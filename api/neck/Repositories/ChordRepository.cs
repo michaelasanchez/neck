@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using neck.Interfaces;
 using neck.Models;
 using neck.Models.Results;
 using System;
@@ -10,9 +11,13 @@ namespace neck.Repositories
 {
 	public class ChordRepository : GenericRepository<Chord>
 	{
-		public ChordRepository(NeckContext context)
+		private Lazy<IRepository<Note>> _noteRepo;
+
+		public ChordRepository(NeckContext context, IRepository<Note> noteRepo)
 			: base(context)
 		{
+			_noteRepo = new Lazy<IRepository<Note>>(noteRepo);
+
 			GetAllDefaultIncludes = true;
 		}
 
@@ -21,7 +26,7 @@ namespace neck.Repositories
 			return _set.AsQueryable().Include(c => c.Root);
 		}
 
-		public async override Task<OperationResult<Chord>> Get(Chord chord)
+		public override async Task<OperationResult<Chord>> Get(Chord chord)
 		{
 			var result = await DefaultIncludes()
 				.FirstOrDefaultAsync(c => c.Root.Base == chord.Root.Base
@@ -29,6 +34,22 @@ namespace neck.Repositories
 					&& c.Modifier == chord.Modifier);
 
 			return BuildGetOperationResult(result);
+		}
+
+		public override async Task<OperationResult<Chord>> Create(Chord chord)
+		{
+			if (chord?.Root?.Id == null)
+			{
+				var noteResult = await _noteRepo.Value.Get(chord.Root);
+				if (!noteResult.Success)
+				{
+					return OperationResult<Chord>.CreateFailure($"Failed to create Note:\n {noteResult.Message}");
+				}
+
+				chord.Root = noteResult.Result;
+			}
+
+			return await base.Create(chord);
 		}
 
 	}
