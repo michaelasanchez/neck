@@ -41,12 +41,10 @@ namespace neck.Repositories
 			if (scale.Root?.Id == null || scale.Root.Id == Guid.Empty)
 			{
 				var noteResult = await _noteRepo.Value.Get(scale.Root);
-				if (!noteResult.Success)
+				if (noteResult.Success)
 				{
-					return OperationResult<Scale>.CreateFailure($"Failed to create Note:\n {noteResult.Message}");
+					scale.Root = noteResult.Result;
 				}
-
-				scale.Root = noteResult.Result;
 			}
 
 			return await base.Create(scale);
