@@ -56,7 +56,7 @@ namespace neck.Models
 
 			modelBuilder.Entity<Scale>(entity =>
 			{
-				entity.HasIndex(s => new { s.RootId, s.Type })
+				entity.HasIndex(s => new { s.TonicId, s.Type })
 					.IsUnique();
 			});
 

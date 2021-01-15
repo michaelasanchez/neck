@@ -35,7 +35,7 @@ namespace neck.Models
 
 		public Note() { }
 
-		public Note(NoteValue value, NoteSuffix suffix = NoteSuffix.Natural, int octave = 4)
+		public Note(NoteValue value, NoteSuffix suffix = NoteSuffix.Natural, int? octave = null)
 		{
 			Base = value;
 			Suffix = suffix;

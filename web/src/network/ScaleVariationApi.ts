@@ -25,8 +25,8 @@ export class ScaleVariationApi extends ApiRequest<ScaleVariation> {
     super('ScaleVariation');
   }
 
-  Generate(): Promise<ScaleVariation[]> {
-    return super.Post(null, ScaleVariationAction.Generate) as Promise<ScaleVariation[]>;
+  Generate(params: ScaleVariationGenerateParams): Promise<ScaleVariation[]> {
+    return super.Post(params, ScaleVariationAction.Generate) as Promise<ScaleVariation[]>;
   }
 
   GenerateRange(params: ScaleVariationGenerateRangeParams): Promise<ScaleVariation[]> {

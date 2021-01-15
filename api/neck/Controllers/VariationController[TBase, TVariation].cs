@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace neck.Controllers
 {
-	public class VariationController<TBase, TVariation> : GenericController<TVariation>
+	public abstract class VariationController<TBase, TVariation> : GenericController<TVariation>
 		where TVariation : IVariation<TBase>
 	{
 		private readonly ILogger<VariationController<TBase, TVariation>> _logger;
@@ -96,11 +96,13 @@ namespace neck.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest($"An error occured while generating variations: {ex}");
+				return BadRequest($"An error occured while generating variations:\n\n{ex.Message}");
 			}
 
 			return Ok(variations);
 		}
+
+		#region Private Methods
 
 		private async Task<OperationResult<TBase>> locateBase(VariationGenerateArgs<TBase> args)
 		{
@@ -156,5 +158,7 @@ namespace neck.Controllers
 
 			return OperationResult<Models.Tuning>.CreateSuccess(tuning);
 		}
+
+		#endregion
 	}
 }

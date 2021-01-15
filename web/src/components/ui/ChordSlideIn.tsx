@@ -58,7 +58,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   useEffect(() => {
     if (!!chord) {
       setSelected([]);
-      // setSelected([chord.Root.Base]);
       reloadChordVariations();
     }
   }, [appOptions?.chord]);
@@ -67,7 +66,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   const reloadChordVariations = () => {
     new ChordVariationApi()
       .GenerateRange({
-        chordId: chord.Id,
+        baseId: chord.Id,
         tuningId: tuning.Id,
         range: instrument.NumFrets,
         // span: 9,

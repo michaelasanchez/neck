@@ -29,7 +29,7 @@ namespace neck.Controllers
 		}
 
 		[HttpPost("Test")]
-		public async Task<ActionResult<List<ChordVariation>>> Test(/*[FromBody] ChordVariationGenerateParams @params*/)
+		public async Task<ActionResult<List<ScaleVariation>>> Test(/*[FromBody] ChordVariationGenerateParams @params*/)
 		{
 			Tuning tuning = null; // = @params.tuning;
 			if (tuning == null)

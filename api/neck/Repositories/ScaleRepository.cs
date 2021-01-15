@@ -23,27 +23,27 @@ namespace neck.Repositories
 
 		public override IQueryable<Scale> DefaultIncludes()
 		{
-			return _set.AsQueryable().Include(s => s.Root);
+			return _set.AsQueryable().Include(s => s.Tonic);
 		}
 
 		public override async Task<OperationResult<Scale>> Get(Scale scale)
 		{
 			var result = await DefaultIncludes()
 				.FirstOrDefaultAsync(s => s.Type == scale.Type
-					&& s.Root.Base == scale.Root.Base
-					&& s.Root.Suffix == scale.Root.Suffix);
+					&& s.Tonic.Base == scale.Tonic.Base
+					&& s.Tonic.Suffix == scale.Tonic.Suffix);
 
 			return BuildGetOperationResult(result);
 		}
 
 		public override async Task<OperationResult<Scale>> Create(Scale scale)
 		{
-			if (scale.Root?.Id == null || scale.Root.Id == Guid.Empty)
+			if (scale.Tonic?.Id == null || scale.Tonic.Id == Guid.Empty)
 			{
-				var noteResult = await _noteRepo.Value.Get(scale.Root);
+				var noteResult = await _noteRepo.Value.Get(scale.Tonic);
 				if (noteResult.Success)
 				{
-					scale.Root = noteResult.Result;
+					scale.Tonic = noteResult.Result;
 				}
 			}
 

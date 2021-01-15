@@ -1,9 +1,9 @@
-import { Chord, ChordModifier, ChordVariation, Note, Tuning } from "../models";
+import { Chord, ChordVariation, Tuning } from "../models";
 import { ApiRequest } from "./ApiRequest";
 
 export interface ChordVariationGenerateParams {
-  chordId?: string;
-  chord?: Partial<Chord>;
+  baseId?: string;
+  base?: Partial<Chord>;
   tuningId?: string;
   tuning?: Partial<Tuning>;
   offset?: number;
@@ -19,17 +19,6 @@ enum ChordVariationAction {
   GenerateRange = 'GenerateRange',
 }
 
-export const modifyVariationParams = (params: ChordVariationGenerateParams | ChordVariationGenerateRangeParams) => {
-  var modified = {
-    ...params,
-    base: params.chord,
-    baseId: params.chordId,
-  }
-  delete modified.chord;
-  delete modified.chordId;
-  return modified;
-}
-
 export class ChordVariationApi extends ApiRequest<ChordVariation> {
 
   constructor() {
@@ -37,11 +26,11 @@ export class ChordVariationApi extends ApiRequest<ChordVariation> {
   }
 
   Generate(params: ChordVariationGenerateParams): Promise<ChordVariation[]> {
-    return super.Post(modifyVariationParams(params), ChordVariationAction.Generate) as Promise<ChordVariation[]>;
+    return super.Post(params, ChordVariationAction.Generate) as Promise<ChordVariation[]>;
   }
 
   GenerateRange(params: ChordVariationGenerateRangeParams): Promise<ChordVariation[]> {
-    return super.Post(modifyVariationParams(params), ChordVariationAction.GenerateRange) as Promise<ChordVariation[]>;
+    return super.Post(params, ChordVariationAction.GenerateRange) as Promise<ChordVariation[]>;
   }
 
 }

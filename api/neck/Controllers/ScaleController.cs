@@ -13,21 +13,21 @@ namespace neck.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
-	public class ChordController : GenericController<Chord>
+	public class ScaleController : GenericController<Scale>
 	{
+		// TODO: Replace this with note locator
 		private NoteRepository _noteRepo;
-		private Lazy<IRepository<Chord>> _chordRepo;
+		private Lazy<IRepository<Scale>> _scaleRepo;
 
-		public ChordController(IRepository<Chord> repository, IRepository<Note> noteRepository)
+		public ScaleController(IRepository<Scale> repository, IRepository<Note> noteRepository)
 			: base(repository)
 		{
-			_chordRepo = new Lazy<IRepository<Chord>>(repository);
+			_scaleRepo = new Lazy<IRepository<Scale>>(repository);
 			_noteRepo = (NoteRepository)noteRepository;
 		}
 
-		// TODO: This really should just be get
 		[HttpPost("byvalues")]
-		public virtual async Task<ActionResult<Chord>> GetByValues(QuickChordArgs @params)
+		public virtual async Task<ActionResult<Scale>> GetByValues(QuickScaleArgs @params)
 		{
 			var note = new Note(@params.value, @params.suffix);
 
@@ -37,23 +37,23 @@ namespace neck.Controllers
 				return BadRequest("Failed to get create note");
 			}
 
-			var chord = new Chord(noteResult.Result, @params.modifier);
-			var chordResult = await _chordRepo.Value.GetOrCreate(chord);
+			var scale = new Scale(noteResult.Result, @params.type);
+			var scaleResult = await _scaleRepo.Value.GetOrCreate(scale);
 
-			if (!chordResult.Success)
+			if (!scaleResult.Success)
 			{
 				return BadRequest("Failed to create chord");
 			}
 
-			return Ok(chordResult.Result);
+			return Ok(scaleResult.Result);
 		}
 	}
 
-	public class QuickChordArgs
+	public class QuickScaleArgs
 	{
 		public NoteValue value;
 		public NoteSuffix suffix;
-		public ChordModifier modifier;
+		public ScaleType type;
 	}
 
 }

@@ -145,12 +145,11 @@ namespace neck.Factories
 					{
 						var current = scalePositions[o][p];
 
-						var nextDegree = calcNextDegree(scale, (int)prevNote?.Degree);
 						var nextOctave = (int)scalePositions[o][0].Octave + p / Notes.Count;
 						//var nextOctave = prevNote.Pitch < current.Pitch ? prevNote.Octave : prevNote.Octave + 1;
 
 						if (prevNote == null ||
-							(current.Degree == nextDegree && current.Octave == nextOctave))
+							(current.Degree == calcNextDegree(scale, (int)prevNote?.Degree) && current.Octave == nextOctave))
 						{
 							note = current;
 							prevNote = note;

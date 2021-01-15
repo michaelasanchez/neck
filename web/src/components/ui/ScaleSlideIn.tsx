@@ -7,14 +7,20 @@ import { ScaleVariationApi } from '../../network/ScaleVariationApi';
 import { AppOptions } from '../../shared';
 
 export interface IScaleSlideInProps {
+  appOptions: AppOptions;
   setAppOptions: (updated: Partial<AppOptions>) => void;
 }
 
-export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
-  const { setAppOptions } = props;
+export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({ appOptions, setAppOptions }) => {
+  const { instrument, scale, tuning } = appOptions;
 
   useEffect(() => {
-    new ScaleVariationApi().Generate().then((variations: ScaleVariation[]) => {
+    new ScaleVariationApi().Generate({
+      baseId: scale.Id,
+      tuningId: tuning.Id,
+      span: 5,
+      // range: instrument.NumFrets,
+    }).then((variations: ScaleVariation[]) => {
       
       // DEBUG
       console.log(variations);
