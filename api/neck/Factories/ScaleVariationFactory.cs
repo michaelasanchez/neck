@@ -15,9 +15,18 @@ namespace neck.Factories
 		{
 			Scale scale = @base;
 
-			var scalePositions = mapNoteSpan(scale, tuning, offset, span);
-			var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
-			var variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, new List<List<Note>>());
+
+			var variationPositions = new List<List<List<int?>>>();
+			try
+			{
+				var scalePositions = mapNoteSpan(scale, tuning, offset, span);
+				var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
+				variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, new List<List<Note>>());
+			}
+			catch (Exception ex)
+			{
+				;
+			}
 
 			return variationPositions.Select(p => new ScaleVariation(scale, tuning.Id, p)).ToList();
 		}
@@ -38,7 +47,7 @@ namespace neck.Factories
 		{
 			// TODO: ScaleDegree is non-zero based. Should it be?
 			var nextDegree = (ScaleDegree)((currentDegree + 1) % (scale.Notes.Count + 1));
-			if ((int)nextDegree == 0) nextDegree++;
+			if (nextDegree == 0) nextDegree++;
 
 			return nextDegree;
 		}
@@ -51,11 +60,18 @@ namespace neck.Factories
 				var frets = Enumerable.Repeat<Note>(null, span).ToList();
 				for (var p = offset; p < offset + span; p++)
 				{
-					var pitch = Notes.Normalize(o + p);
+					var pitch = Notes.Normalize(o.Pitch + p);
+
 					var note = scale.Notes.FirstOrDefault(n => n.Pitch == pitch);
 					if (note != null)
 					{
-						frets[p - offset] = note;
+						var octave = (int)o.Octave + p / Notes.Count;
+
+						// TODO: Note.Copy();
+						var scaleNote = new Note(note.Base, note.Suffix, octave);
+						scaleNote.Degree = note.Degree;
+
+						frets[p - offset] = scaleNote;
 					}
 				}
 
@@ -128,7 +144,13 @@ namespace neck.Factories
 					if (direction != ScaleDirection.Null)
 					{
 						var current = scalePositions[o][p];
-						if (prevNote == null || current.Degree == calcNextDegree(scale, (int)prevNote.Degree))
+
+						var nextDegree = calcNextDegree(scale, (int)prevNote?.Degree);
+						var nextOctave = (int)scalePositions[o][0].Octave + p / Notes.Count;
+						//var nextOctave = prevNote.Pitch < current.Pitch ? prevNote.Octave : prevNote.Octave + 1;
+
+						if (prevNote == null ||
+							(current.Degree == nextDegree && current.Octave == nextOctave))
 						{
 							note = current;
 							prevNote = note;

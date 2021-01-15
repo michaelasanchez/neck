@@ -121,7 +121,7 @@ namespace neck.Migrations
                 ) VALUES (
                     @tuningId,
                     'Standard Tuning',
-                    '4,9,2,7,11,4',
+                    '(4 0 2),(9 0 2),(2 0 3),(7 0 3),(11 0 3),(4 0 4)',
                     @instrumentId,
                     @now,
                     @now

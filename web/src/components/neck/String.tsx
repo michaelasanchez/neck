@@ -1,18 +1,19 @@
 import { filter, times } from 'lodash';
 import * as React from 'react';
+
 import { Note, Scale } from '../../models';
 import { Fret, FretDisplayMode } from './Fret';
 
 export interface StringProps {
   fretmode: FretDisplayMode;
   frets: number;
-  offset: number;
+  offset: Note;
   scale: Scale;
 }
 
 // Note Value = root offset + string offset, then repeat for global notes
-const calcNote = (f: number, offset: number, scale: Scale) => {
-  let offsetNoteValue = (f + offset) % Note.NUM_NOTES;
+const calcNote = (f: number, offset: Note, scale: Scale) => {
+  let offsetNoteValue = (f + offset.Pitch) % Note.NUM_NOTES;
 
   // Check if Note exists for current fret number
   let note = filter(

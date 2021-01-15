@@ -12,6 +12,9 @@ namespace neck.Models
 		public NoteSuffix Suffix;
 
 		[NotMapped]
+		public int? Octave;
+
+		[NotMapped]
 		public string Label => $"{Base}{SuffixSymbol(Suffix)}";
 
 		[NotMapped]
@@ -32,10 +35,11 @@ namespace neck.Models
 
 		public Note() { }
 
-		public Note(NoteValue value, NoteSuffix suffix = NoteSuffix.Natural)
+		public Note(NoteValue value, NoteSuffix suffix = NoteSuffix.Natural, int octave = 4)
 		{
 			Base = value;
 			Suffix = suffix;
+			Octave = octave;
 		}
 
 		public override bool Equals(object obj)

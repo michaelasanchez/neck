@@ -23,7 +23,7 @@ namespace neck.Generators
 
 			// Matches will contain a set of notes for each string (tuning offset)
 			//  Each note is a component of chord
-			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o, fretOffset, fretSpan)).ToList()).ToList();
+			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o.Pitch, fretOffset, fretSpan)).ToList()).ToList();
 
 			// Calculate number of combinations from matched notes
 			var noteCounts = matches.Select(m => m.Count()).ToList();
@@ -37,7 +37,7 @@ namespace neck.Generators
 				{
 					if (open < ALLOWED_OPEN)
 					{
-						if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i], 0)))
+						if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i].Pitch, 0)))
 						{
 							// TODO: FINISH
 						}
@@ -83,7 +83,7 @@ namespace neck.Generators
 						toneCheck[toneIndex] = true;
 					}
 
-					return calcNotePosition(note, tuning.Offsets[countIndex], fretOffset);
+					return calcNotePosition(note, tuning.Offsets[countIndex].Pitch, fretOffset);
 				}).ToList();
 
 				if (toneCheck.All(c => c))
