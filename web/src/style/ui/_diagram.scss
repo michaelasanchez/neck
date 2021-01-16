@@ -1,30 +1,50 @@
-$diagram-string-border: 2px solid black;
+/* Container */
+$diagram-container-border-color: black;
+$diagram-container-open-border-color: black;
 
-$diagram-fret-border: 1px solid rgb(100, 100, 100); //rgb(200, 200, 200);
+/* String */
+$diagram-string-border: 2px solid rgb(75, 75, 75);
 
+/* Fret */
+$diagram-fret-border: 1px solid rgb(150, 150, 150);
 $diagram-fret-height: 30px;
-
 $diagram-fret-width: 25px;
 
+/* Symbol */
 $diagram-symbol-border-color: black;
 $diagram-symbol-border-width: 3px;
 
+/* Mute */
 $diagram-mute-border: $diagram-symbol-border-width solid
   $diagram-symbol-border-color;
 $diagram-mute-diameter: 20px;
 
+/* Dot */
 $diagram-dot-background-color: rgba(0, 0, 0, 0.7);
 $diagram-dot-border: $diagram-symbol-border-width solid
   $diagram-symbol-border-color;
 $diagram-dot-diameter: 16px;
-
 $diagram-dot-color: darken($neck-primary, 20%);
+
+/* Dot Highlight */
 $diagram-dot-highlight-background-color: rgba($diagram-dot-color, 0.8);
 $diagram-dot-highlight-border-color: $diagram-dot-color;
 
-/* UPDATED */
+/** Scalable **/
 $scale: 0.5;
+
 $open-fret-border-bottom: 8px;
+
+/* Label */
+$diagram-label-font-size: 2rem * $scale;
+$diagram-label-margin-top: .6rem * $scale;
+
+/* Outline */
+$diagram-outline-box-shadow: 0 2px 7px -2px #00000044;
+$diagram-outline-border-width: 6px;
+$diagram-outline-border: $diagram-outline-border-width * $scale solid
+  $selector-border-color;
+$diagram-outline-border-radius: 16px * $scale;
 
 .diagram {
   cursor: pointer;
@@ -54,8 +74,17 @@ $open-fret-border-bottom: 8px;
 
       border: $diagram-outline-border;
       border-radius: $diagram-outline-border-radius;
-      box-shadow: $diagram-box-shadow;
+      box-shadow: $diagram-outline-box-shadow;
     }
+  }
+
+  .label-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+
+    font-size: $diagram-label-font-size;
+    margin-top: $diagram-label-margin-top;
   }
 
   /** Mid-Fretboard **/
@@ -82,11 +111,11 @@ $open-fret-border-bottom: 8px;
         justify-content: center;
 
         &:first-child {
-          border-left: 1px solid black;
+          border-left: 1px solid $diagram-container-border-color;
         }
 
         &:last-child {
-          border-right: 1px solid black;
+          border-right: 1px solid $diagram-container-border-color;
         }
 
         > div {
@@ -107,26 +136,31 @@ $open-fret-border-bottom: 8px;
         flex: 1;
 
         &:first-child {
-          border-top: 1px solid black;
+          border-top: 1px solid $diagram-container-border-color;
+        }
+
+        &:last-child {
+          border-bottom-color: $diagram-container-border-color;
         }
       }
     }
 
-    /* Strings */
+    /* Symbols */
     .symbols {
       width: 100%;
       margin-left: -100%;
       display: flex;
+      justify-content: space-around;
 
       > div {
         display: flex;
         flex-direction: column;
-        flex: 1;
 
         > div {
           flex: 1;
           position: relative;
 
+          /* Note */
           .dot {
             position: absolute;
             top: 50%;
@@ -134,12 +168,14 @@ $open-fret-border-bottom: 8px;
             transform: translate(-50%, -50%);
 
             background: $diagram-dot-background-color;
-            border: $diagram-dot-border;
+            border: $diagram-symbol-border-width * $scale solid
+              $diagram-symbol-border-color;
 
             height: $diagram-dot-diameter * $scale;
             width: $diagram-dot-diameter * $scale;
             border-radius: $diagram-dot-diameter * $scale;
 
+            /* Root */
             &.root {
               border-radius: 1px;
               transform: translate(-50%, -50%) rotate(45deg) scale(0.9);
@@ -160,7 +196,7 @@ $open-fret-border-bottom: 8px;
           border-top: none;
         }
         > div:nth-child(2) {
-          border-top: $open-fret-border-bottom * $scale solid black;
+          border-top: $open-fret-border-bottom * $scale solid $diagram-container-open-border-color;
           margin-top: -($open-fret-border-bottom * $scale);
           height: ($diagram-fret-height + $open-fret-border-bottom) * $scale;
         }
@@ -171,6 +207,10 @@ $open-fret-border-bottom: 8px;
           > div:first-child {
             padding-bottom: $open-fret-border-bottom * $scale;
             margin-top: -($open-fret-border-bottom * $scale);
+
+            .dot {
+              background: none;
+            }
           }
         }
       }
@@ -180,7 +220,7 @@ $open-fret-border-bottom: 8px;
     &.first {
       .frets {
         > div:first-child {
-          border-top: $open-fret-border-bottom * $scale solid black;
+          border-top: $open-fret-border-bottom * $scale solid $diagram-container-open-border-color;
           margin-top: -($open-fret-border-bottom * $scale);
           height: ($diagram-fret-height + $open-fret-border-bottom) * $scale;
         }
@@ -312,12 +352,6 @@ $open-fret-border-bottom: 8px;
         }
       }
     }
-  }
-
-  .label-container {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
   }
 
   &.md {
