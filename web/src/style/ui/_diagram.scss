@@ -16,7 +16,7 @@ $diagram-mute-diameter: 20px;
 $diagram-dot-background-color: rgba(0, 0, 0, 0.7);
 $diagram-dot-border: $diagram-symbol-border-width solid
   $diagram-symbol-border-color;
-  $diagram-dot-diameter: 16px;
+$diagram-dot-diameter: 16px;
 
 $diagram-dot-color: darken($neck-primary, 20%);
 $diagram-dot-highlight-background-color: rgba($diagram-dot-color, 0.8);
@@ -56,12 +56,59 @@ $diagram-dot-highlight-border-color: $diagram-dot-color;
 
   .diagram-container {
     position: relative;
-    display: flex;
+    display: flex; /* required */
+    flex-flow: row nowrap; /* required */
+    width: fit-content;
 
     > span {
       position: absolute;
 
       line-height: $diagram-fret-height;
+    }
+
+    /* debug */
+    border: 1px solid red;
+    border-bottom: none;
+    // height: 80px;
+    // width: 60px;
+
+    $scale: .6;
+
+    .frets,
+    .strings {
+      box-sizing: border-box; /* required */
+      flex: none; /* required */
+    }
+
+    .frets {
+      background: #00880044;
+      
+      width: 100%;
+      margin-left: -100%;
+
+      > div {
+        border-bottom: 1px solid black;
+        height: $diagram-fret-height * $scale;
+        flex: 1;
+      }
+    }
+
+    .strings {
+      background: #88000044;
+
+      display: flex;
+      justify-content: space-around;
+
+      > div {
+        width: $diagram-fret-width  * $scale;
+        display: flex;
+        justify-content: center;
+
+        > div {
+          border-left: 1px solid black;
+          height: 100%;
+        }
+      }
     }
 
     > .string {

@@ -1,11 +1,11 @@
+import { map, times } from 'lodash';
 import * as React from 'react';
-
-import { NoteValue } from '../../../models';
 
 export const MIN_NUM_FRETS_DEFAULT = 4;
 export const FRET_PADDING_DEFAULT = 1;
 
 export interface DiagramProps {
+  calcMinMax?: () => { min: number, max: number };
   handleClick: () => void;
   active?: boolean;
   className?: string;
@@ -13,6 +13,9 @@ export interface DiagramProps {
   offset: number;
   diagramBody: JSX.Element;
   diagramLabel: JSX.Element;
+  yes?: boolean;
+  strings?: number;
+  frets?: number;
 }
 
 export enum DiagramSize {
@@ -22,6 +25,7 @@ export enum DiagramSize {
 }
 
 export const Diagram: React.FC<DiagramProps> = ({
+  calcMinMax,
   handleClick,
   active,
   className = '',
@@ -29,7 +33,12 @@ export const Diagram: React.FC<DiagramProps> = ({
   offset = 0,
   diagramBody,
   diagramLabel,
+  yes = false,
+  strings = 0,
+  frets = 0,
 }) => {
+  // const { min: minPos, max: maxPos } = calcMinMax();
+
   const offsetSpan = React.useRef();
   let offsetWidth = 0;
 
@@ -48,7 +57,7 @@ export const Diagram: React.FC<DiagramProps> = ({
 
   return (
     <div
-      className={`diagram ${size}${active ? ' active' : ''} ${className}`}
+      className={`diagram ${size} ${active && 'active'} ${className}`}
       onClick={handleClick}
     >
       <div className="diagram-outline" style={outlineStyle}></div>
@@ -57,7 +66,23 @@ export const Diagram: React.FC<DiagramProps> = ({
         <span ref={offsetSpan} style={spanStyle}>
           {offset != 0 && offset}
         </span>
-        {diagramBody}
+        {yes ? (
+          <>
+            <div className="strings">
+              {times(strings, s => (
+                <div key={s}><div></div></div>
+              ))}
+            </div>
+            <div className="frets">
+              {times(frets, f => (
+                <div key={f}></div>
+              ))}
+            </div>
+            {/* {diagramBody} */}
+          </>
+        ) : (
+          diagramBody
+        )}
       </div>
       <div className="label-container">{diagramLabel}</div>
     </div>

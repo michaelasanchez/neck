@@ -28,7 +28,7 @@ namespace neck.Factories
 				;
 			}
 
-			return variationPositions.Select(p => new ScaleVariation(scale, tuning.Id, p)).ToList();
+			return variationPositions.Select(p => new ScaleVariation(scale, tuning.Id, offset, p)).ToList();
 		}
 
 		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int fretOffset, int fretSpan, int range)

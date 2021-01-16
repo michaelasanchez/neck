@@ -4,17 +4,8 @@ import { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import { SlideIn } from '.';
-import {
-  Chord,
-  ChordModifier,
-  ChordVariation,
-  Note,
-  NoteValue,
-} from '../../models';
-import {
-  ChordVariationApi,
-  ChordVariationGenerateRangeParams,
-} from '../../network';
+import { Chord, ChordModifier, ChordVariation, Note, NoteValue } from '../../models';
+import { ChordVariationApi } from '../../network';
 import { AppOptions, NoteUtils } from '../../shared';
 import { NoteSelection } from '../NoteSelection';
 import { ChordDiagram } from './diagrams';
