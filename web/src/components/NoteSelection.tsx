@@ -42,7 +42,7 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
             return (
               <span
                 key={i}
-                className={`active ${currentSelected && 'selected'}`}
+                className={`active ${currentSelected ? 'selected' : ''}`}
                 onClick={() => setSelected(shiftedNoteValue)}
               >
                 {activeValue[0].Label}

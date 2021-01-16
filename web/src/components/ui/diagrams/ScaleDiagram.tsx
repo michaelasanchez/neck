@@ -1,7 +1,7 @@
 import { map, maxBy } from 'lodash';
 import * as React from 'react';
 
-import { Diagram } from '.';
+import { Diagram, DiagramSymbol } from '.';
 import { ScaleVariation } from '../../../models';
 
 export interface ScaleDiagramProps {
@@ -15,8 +15,24 @@ const calcMinMax = (
 ): { min: number; max: number } => {
   return {
     min: variation.Offset,
-    max: variation.Offset + maxBy(variation.Positions, (p) => p.length)[0],
+    max: variation.Offset + maxBy(variation.Positions, (p) => p.length).length,
   };
+};
+
+const mapSymbols = (
+  positions: Array<Array<number>>
+): Array<Array<DiagramSymbol>> => {
+  return map(positions, (s) =>
+    map(s, (f) => {
+      if (!!f) {
+        if (f === 1) {
+          return DiagramSymbol.Root;
+        }
+        return DiagramSymbol.Note;
+      }
+      return DiagramSymbol.Empty;
+    })
+  );
 };
 
 export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
@@ -54,10 +70,10 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
       diagramLabel={diagramLabel}
       calcMinMax={() => calcMinMax(variation)}
       handleClick={() => setVariation(variation)}
-      offset={variation.Offset}
-      yes={true}
+      flag={true}
       strings={variation.Positions.length}
       frets={maxPos - minPos}
+      symbols={mapSymbols(variation.Positions)}
     />
   );
 };

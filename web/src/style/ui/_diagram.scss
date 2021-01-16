@@ -22,6 +22,10 @@ $diagram-dot-color: darken($neck-primary, 20%);
 $diagram-dot-highlight-background-color: rgba($diagram-dot-color, 0.8);
 $diagram-dot-highlight-border-color: $diagram-dot-color;
 
+/* UPDATED */
+$scale: 0.5;
+$open-fret-border-bottom: 8px;
+
 .diagram {
   cursor: pointer;
   position: relative;
@@ -54,60 +58,133 @@ $diagram-dot-highlight-border-color: $diagram-dot-color;
     }
   }
 
+  /** Mid-Fretboard **/
   .diagram-container {
     position: relative;
-    display: flex; /* required */
-    flex-flow: row nowrap; /* required */
+    display: flex;
     width: fit-content;
 
+    /* Offset */
     > span {
       position: absolute;
 
       line-height: $diagram-fret-height;
     }
 
-    /* debug */
-    border: 1px solid red;
-    border-bottom: none;
-    // height: 80px;
-    // width: 60px;
-
-    $scale: .6;
-
-    .frets,
+    /* Strings */
     .strings {
-      box-sizing: border-box; /* required */
-      flex: none; /* required */
-    }
-
-    .frets {
-      background: #00880044;
-      
-      width: 100%;
-      margin-left: -100%;
-
-      > div {
-        border-bottom: 1px solid black;
-        height: $diagram-fret-height * $scale;
-        flex: 1;
-      }
-    }
-
-    .strings {
-      background: #88000044;
-
       display: flex;
       justify-content: space-around;
 
       > div {
-        width: $diagram-fret-width  * $scale;
+        width: $diagram-fret-width * $scale;
         display: flex;
         justify-content: center;
 
-        > div {
+        &:first-child {
           border-left: 1px solid black;
+        }
+
+        &:last-child {
+          border-right: 1px solid black;
+        }
+
+        > div {
+          border-left: $diagram-string-border;
           height: 100%;
         }
+      }
+    }
+
+    /* Frets */
+    .frets {
+      width: 100%;
+      margin-left: -100%;
+
+      > div {
+        border-bottom: $diagram-fret-border;
+        height: $diagram-fret-height * $scale;
+        flex: 1;
+
+        &:first-child {
+          border-top: 1px solid black;
+        }
+      }
+    }
+
+    /* Strings */
+    .symbols {
+      width: 100%;
+      margin-left: -100%;
+      display: flex;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+
+        > div {
+          flex: 1;
+          position: relative;
+
+          .dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            background: $diagram-dot-background-color;
+            border: $diagram-dot-border;
+
+            height: $diagram-dot-diameter * $scale;
+            width: $diagram-dot-diameter * $scale;
+            border-radius: $diagram-dot-diameter * $scale;
+
+            &.root {
+              border-radius: 1px;
+              transform: translate(-50%, -50%) rotate(45deg) scale(0.9);
+            }
+          }
+        }
+      }
+    }
+
+    /** Open Fretboard **/
+    &.open {
+      .strings {
+        margin-top: $diagram-fret-height * $scale;
+      }
+
+      .frets {
+        > div:first-child {
+          border-top: none;
+        }
+        > div:nth-child(2) {
+          border-top: $open-fret-border-bottom * $scale solid black;
+          margin-top: -($open-fret-border-bottom * $scale);
+          height: ($diagram-fret-height + $open-fret-border-bottom) * $scale;
+        }
+      }
+
+      .symbols {
+        > div {
+          > div:first-child {
+            padding-bottom: $open-fret-border-bottom * $scale;
+            margin-top: -($open-fret-border-bottom * $scale);
+          }
+        }
+      }
+    }
+
+    /** First Fret **/
+    &.first {
+      .frets {
+        > div:first-child {
+          border-top: $open-fret-border-bottom * $scale solid black;
+          margin-top: -($open-fret-border-bottom * $scale);
+          height: ($diagram-fret-height + $open-fret-border-bottom) * $scale;
+        }
+        // margin-top: -$diagram-fret-height * $scale;
       }
     }
 

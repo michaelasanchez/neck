@@ -45,6 +45,25 @@ $diagrams-per-row: 4;
     padding-top: .5em;
   }
 
+  .contents {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: auto;
+    margin-bottom: .5em;
+
+    .variations {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+
+      min-height: min-content;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+    }
+  }
+
   &.chord {
     .badge {
       position: absolute;
@@ -57,21 +76,6 @@ $diagrams-per-row: 4;
     }
 
     .contents {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      overflow: auto;
-      margin-bottom: .5em;
-
-      .variations {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-
-        min-height: min-content;
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
 
       &.loading {
         justify-content: center;

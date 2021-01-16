@@ -1,10 +1,10 @@
 import { filter, map, max, min, times } from 'lodash';
 import * as React from 'react';
 
-import { DiagramSize, FRET_PADDING_DEFAULT, MIN_NUM_FRETS_DEFAULT } from '.';
+import { DiagramSize, FRET_PADDING_SIZE } from '.';
 import { Chord, ChordVariation, Note, NoteValue } from '../../../models';
 import { NoteUtils } from '../../../shared';
-import { Diagram } from './Diagram';
+import { Diagram, MIN_NUM_FRETS } from './Diagram';
 
 export interface ChordDiagramProps {
   chord: Chord;
@@ -36,14 +36,14 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   size = DiagramSize.Small,
 }) => {
   const { min: minPos, max: maxPos } = calcMinMax(variation);
-  const paddingTop = (minPos == 0 ? 0 : 1) * FRET_PADDING_DEFAULT;
-  const paddingBottom = 1 * FRET_PADDING_DEFAULT;
+  const paddingTop = (minPos == 0 ? 0 : 1) * FRET_PADDING_SIZE;
+  const paddingBottom = 1 * FRET_PADDING_SIZE;
   const paddingTotal = paddingTop + paddingBottom;
 
   // 1 is inclusive
   const numFrets = max([
-    maxPos - minPos + 1 + FRET_PADDING_DEFAULT * paddingTotal,
-    MIN_NUM_FRETS_DEFAULT,
+    maxPos - minPos + 1 + FRET_PADDING_SIZE * paddingTotal,
+    MIN_NUM_FRETS,
   ]);
 
   const renderFretSymbols = (
@@ -152,12 +152,11 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
   return (
     <Diagram
-      // calcMinMax={() => calcMinMax(variation)}
+      calcMinMax={() => calcMinMax(variation)}
       handleClick={() => handleClick(variation)}
       active={active}
       className="chord"
       size={size}
-      offset={minPos}
       diagramBody={diagramBody}
       diagramLabel={diagramLabel}
     />

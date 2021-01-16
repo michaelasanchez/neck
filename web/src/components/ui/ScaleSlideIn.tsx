@@ -24,12 +24,12 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
 
   useEffect(() => {
     new ScaleVariationApi()
-      .Generate({
+      .GenerateRange({
         baseId: scale.Id,
         tuningId: tuning.Id,
         span: 5,
-        offset: 5
-        // range: instrument.NumFrets,
+        // offset: 5,
+        range: instrument.NumFrets,
       })
       .then((variations: ScaleVariation[]) => {
         console.log(variations);
@@ -51,14 +51,16 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
 
   return (
     <SlideIn className="scale" title={<h2>Scale </h2>} loading={false}>
-      {map(variations, (v, i) => (
-        <ScaleDiagram
-          key={i}
-          active={i == currentIndex}
-          variation={v}
-          setVariation={(v) => handleSetChordVariation(v, i)}
-        />
-      ))}
+      <div className="variations">
+        {map(variations, (v, i) => (
+          <ScaleDiagram
+            key={i}
+            active={i == currentIndex}
+            variation={v}
+            setVariation={(v) => handleSetChordVariation(v, i)}
+          />
+        ))}
+      </div>
     </SlideIn>
   );
 };
