@@ -13,17 +13,21 @@ namespace neck.Models.Variations
 		public Guid ScaleId { get; set; }
 
 		[NotMapped]
+		public int Offset { get; set; }
+
+		[NotMapped]
 		public List<List<int?>> Positions { get; set; }
 
 		public ScaleVariation() { }
 
-		public ScaleVariation(Scale scale, Guid tuningId, List<List<int?>> positions)
+		public ScaleVariation(Scale scale, Guid tuningId, int offset, List<List<int?>> positions)
 		{
 			ScaleId = scale.Id;
 			Base = scale;
 
 			TuningId = tuningId;
 
+			Offset = offset;
 			Positions = positions;
 		}
 	}

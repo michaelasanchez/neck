@@ -28,6 +28,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
         baseId: scale.Id,
         tuningId: tuning.Id,
         span: 5,
+        offset: 5
         // range: instrument.NumFrets,
       })
       .then((variations: ScaleVariation[]) => {
@@ -48,7 +49,6 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
     setCurrentIndex(index);
   };
 
-  console.log('yo', variations);
   return (
     <SlideIn className="scale" title={<h2>Scale </h2>} loading={false}>
       {map(variations, (v, i) => (
