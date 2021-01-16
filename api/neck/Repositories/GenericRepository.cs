@@ -23,8 +23,10 @@ namespace neck.Repositories
 
 		protected string DefaultFailureMessage = "Operation failed";
 
-		protected string OldDefaultSuccessMessage = $"{typeof(TEntity)} found";
-		protected string OldDefaultFailureMessage = $"Could not find {typeof(TEntity)}";
+		protected string OldDefaultSuccessMessage = $"{TrimType(typeof(TEntity))} found";
+		protected string OldDefaultFailureMessage = $"Could not find {TrimType(typeof(TEntity))}";
+
+		static Func<Type, string> TrimType = (Type type) => OperationResult.trimType(type);
 
 		public GenericRepository(NeckContext context)
 		{
@@ -46,7 +48,6 @@ namespace neck.Repositories
 			return BuildGetOperationResult(result);
 		}
 
-		// Must override for default includes
 		public virtual Task<OperationResult<IEnumerable<TEntity>>> GetAll()
 		{
 			var enumerable = GetAllDefaultIncludes
@@ -63,7 +64,7 @@ namespace neck.Repositories
 				var createResult = await Create(entity);
 				if (!createResult.Success)
 				{
-					return OperationResult<TEntity>.CreateFailure($"Failed to create {typeof(TEntity)}");
+					return createResult;
 				}
 
 				return BuildGetOperationResult(createResult.Result);
@@ -77,10 +78,18 @@ namespace neck.Repositories
 			var result = await Get(entity);
 			if (result.Success)
 			{
-				return OperationResult<TEntity>.CreateFailure($"{typeof(TEntity)} already exists");
+				return OperationResult<TEntity>.CreateFailure($"{TrimType(typeof(TEntity))} already exists");
 			}
 
 			var entry = await _set.AddAsync(entity);
+
+			// TODO: Figure out where to put this
+			var saveResult = await Save();
+			if (!saveResult.Success)
+			{
+				return OperationResult<TEntity>.CreateFailure($"Failed to save {TrimType(typeof(TEntity))}: {saveResult.Message}");
+			}
+
 			return BuildEntityResult(entry.Entity, true);
 		}
 
@@ -118,7 +127,6 @@ namespace neck.Repositories
 		}
 
 		public async Task<int> Count(Expression<Func<TEntity, bool>> predicate) => await _set.CountAsync(predicate);
-
 
 		#region Operation Results
 

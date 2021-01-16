@@ -1,8 +1,10 @@
-import { Chord, ChordModifier, ChordVariation, Instrument, Key, Mode, Note, ScaleVariation, Tuning } from "../models";
+import { Chord, ChordModifier, ChordVariation, Instrument, Key, Mode, Note, Scale, ScaleVariation, Tuning } from "../models";
 import { ApiEntity } from "../network";
 
 export interface AppOptions {
   chord: Chord;
+  scale: Scale;
+  
   instrument: Instrument;
   tuning: Tuning;
 

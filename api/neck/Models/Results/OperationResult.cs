@@ -61,5 +61,16 @@ namespace neck.Models.Results
 
 			return messages.ToString();
 		}
+
+		#region Utility
+
+		// TODO: Figure out where to put this
+		public static string trimType(Type type)
+		{
+			var test = type.ToString().Split(".");
+			return test[test.Length - 1].ToLower();
+		}
+
+		#endregion
 	}
 }

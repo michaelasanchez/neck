@@ -1,4 +1,3 @@
-export * from './ChordDiagram';
 export * from './ChordSlideIn';
 export * from './ScaleSlideIn';
 export * from './KeySlider';

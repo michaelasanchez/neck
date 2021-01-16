@@ -1,13 +1,12 @@
-﻿using System;
+﻿using neck.Enums;
+using neck.Interfaces;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace neck.Models
 {
-    public class Tuning : DbEntity
+	public class Tuning : DbEntity, ILabelled
     {
         public string Label { get; set; }
 
@@ -19,12 +18,11 @@ namespace neck.Models
         [JsonIgnore]
         public Instrument InstrumentDefault { get; set; }
 
-        // Offset from C (noteValue 0)
-        public List<int> Offsets;
+        public List<Note> Offsets;
 
         public Tuning() { }
 
-        public Tuning(string label, List<int> offsets)
+        public Tuning(string label, List<Note> offsets)
         {
             Label = label;
             Offsets = offsets;
@@ -32,7 +30,17 @@ namespace neck.Models
 
         public static Tuning Standard()
         {
-            return new Tuning("Standard", new List<int> { 4, 9, 2, 7, 11, 4 });
+            var offsets = new List<Note>
+            {
+                new Note(NoteValue.E, octave: 2),
+                new Note(NoteValue.A, octave: 2),
+                new Note(NoteValue.D, octave: 3),
+                new Note(NoteValue.G, octave: 3),
+                new Note(NoteValue.B, octave: 3),
+                new Note(NoteValue.E, octave: 4),
+            };
+
+            return new Tuning("Standard", offsets);
         }
     }
 }

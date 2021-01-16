@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace neck.Interfaces
 {
-	public interface IFactory<T, TArgs>
+	public interface IVariation<T> : IDbEntity, ILabelled
 	{
-		//public IList<T> GenerateVariations(TArgs args);
+		Tuning Tuning { get; set; }
+
+		T Base { get; set; }
 	}
 }

@@ -26,8 +26,8 @@ namespace neck.Controllers
 		}
 
 		// TODO: This really should just be get
-		[HttpPost("quick")]
-		public virtual async Task<ActionResult<Chord>> QuickChord(QuickChordArgs @params)
+		[HttpPost("byvalues")]
+		public virtual async Task<ActionResult<Chord>> GetByValues(QuickChordArgs @params)
 		{
 			var note = new Note(@params.value, @params.suffix);
 
@@ -39,6 +39,7 @@ namespace neck.Controllers
 
 			var chord = new Chord(noteResult.Result, @params.modifier);
 			var chordResult = await _chordRepo.Value.GetOrCreate(chord);
+
 			if (!chordResult.Success)
 			{
 				return BadRequest("Failed to create chord");

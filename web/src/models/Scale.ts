@@ -1,6 +1,7 @@
 import { each, every, filter, indexOf, last, map } from 'lodash';
 
 import { Chord } from '.';
+import { ApiEntity } from '../network';
 import { NoteUtils } from '../shared';
 import { Mode } from './mode';
 import { Note } from "./note";
@@ -27,8 +28,7 @@ export enum ScaleMode {
 }
 
 
-export enum ScaleDegree
-{
+export enum ScaleDegree {
   Tonic = 1,
   Supertonic = 2,
   Mediant = 3,
@@ -39,16 +39,11 @@ export enum ScaleDegree
   LeadingTone = 7,	// in the major scale
 }
 
-enum ScaleType {
-  Chromatic = 12,
-  Octatonic = 8,
-  Heptatonic = 7,
-  Hexatonic = 6,
-  Pentatonic = 5,
-  Tetratonic = 4,
-  Tritonic = 3,
-  Ditonic = 2,
-  Monotonic = 1,
+export enum ScaleType {
+  Diatonic,
+  NaturalMinor,
+  Chromatic,
+  Pentatonic
 }
 
 // Returns array of notes, starting with the root note
@@ -69,19 +64,22 @@ const calcNotes = (root: Note, mode: Mode): Note[] => {
   return notes;
 }
 
-export class Scale {
+export class Scale extends ApiEntity {
 
   private _tonic: Note;
 
   private _mode: Mode
 
   private _notes: Note[];
-  // private _type: ScaleType;
+
+  public Type: ScaleType;
 
   constructor(
     root: Note,
     mode: Mode
   ) {
+    super();
+
     this._tonic = root;
     this._tonic.Degree = 0;
 
@@ -102,10 +100,6 @@ export class Scale {
     this._tonic = updated;
     this._notes = calcNotes(this._tonic, this._mode);
   }
-
-  // get Type(): ScaleType {
-  //   return this._type;
-  // }
 
   get Mode(): Mode {
     return this._mode;

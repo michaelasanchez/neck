@@ -1,4 +1,5 @@
 ﻿using neck.Enums;
+using neck.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using static neck.Enums.ChordEnums;
 
 namespace neck.Models
 {
-	public class Chord : DbEntity
+	public class Chord : DbEntity, ILabelled
 	{
 		private List<Key> _keys;
 		private List<Note> _tones;
@@ -18,6 +19,7 @@ namespace neck.Models
 
 		public ChordModifier Modifier { get; set; }
 
+		[NotMapped]
 		public string Label => $"{Root?.Label} {Modifier}";
 
 		[NotMapped]

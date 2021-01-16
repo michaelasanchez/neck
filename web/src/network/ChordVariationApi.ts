@@ -1,9 +1,9 @@
-import { Chord, ChordModifier, ChordVariation, Note, Tuning } from "../models";
+import { Chord, ChordVariation, Tuning } from "../models";
 import { ApiRequest } from "./ApiRequest";
 
 export interface ChordVariationGenerateParams {
-  chordId?: string;
-  chord?: Partial<Chord>;
+  baseId?: string;
+  base?: Partial<Chord>;
   tuningId?: string;
   tuning?: Partial<Tuning>;
   offset?: number;
@@ -15,25 +15,14 @@ export interface ChordVariationGenerateRangeParams extends ChordVariationGenerat
 }
 
 enum ChordVariationAction {
-  Generate = 'Generate',
-  GenerateRange = 'GenerateRange',
+  Generate = 'generate',
+  GenerateRange = 'generaterange',
 }
 
 export class ChordVariationApi extends ApiRequest<ChordVariation> {
 
   constructor() {
-    super('ChordVariation');
-  }
-
-  private hack = (chord: Partial<Chord>): Chord => {
-    // debugger;
-    return {
-      Root: {
-        Base: chord.Root.Base,
-        Suffix: chord.Root.Suffix,
-      },
-      Modifier: chord.Modifier
-    } as Chord;
+    super('chordvariation');
   }
 
   Generate(params: ChordVariationGenerateParams): Promise<ChordVariation[]> {
@@ -41,10 +30,6 @@ export class ChordVariationApi extends ApiRequest<ChordVariation> {
   }
 
   GenerateRange(params: ChordVariationGenerateRangeParams): Promise<ChordVariation[]> {
-
-    // TODO: Figure out what is goin on here. Cheap fix for now
-    if (params.chord) params.chord = this.hack(params.chord);
-
     return super.Post(params, ChordVariationAction.GenerateRange) as Promise<ChordVariation[]>;
   }
 

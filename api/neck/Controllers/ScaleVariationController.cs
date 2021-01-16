@@ -1,39 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using neck.Factories;
-using neck.Factories.Args;
+using Microsoft.Extensions.Logging;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Variations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Controllers
 {
+
 	[ApiController]
 	[Route("[controller]")]
-	public class ScaleVariationController : GenericController<ScaleVariation>
+	public class ScaleVariationController : VariationController<Scale, ScaleVariation>
 	{
-		private IRepository<Tuning> _tuningRepo;
-		private ScaleVariationFactory _factory;
+		private readonly ILogger<ScaleVariationController> _logger;
 
 		public ScaleVariationController(
+			ILogger<ScaleVariationController> logger,
+			IVariationFactory<Scale, ScaleVariation> factory,
 			IRepository<ScaleVariation> repository,
-			IRepository<Tuning> tuningRepo,
-			IFactory<ScaleVariation, ScaleVariationCreateArgs> factory)
-			: base(repository)
+			IRepository<Scale> baseRepository,
+			IRepository<Tuning> tuningRepository
+		)
+			: base(logger, factory, repository, baseRepository, tuningRepository)
 		{
-			_tuningRepo = tuningRepo;
-			_factory = (ScaleVariationFactory)factory;
+			_logger = logger;
 		}
 
-		[HttpPost("Generate")]
-		public async Task<ActionResult<List<ChordVariation>>> Generate(/*[FromBody] ChordVariationGenerateParams @params*/)
+		[HttpPost("Test")]
+		public async Task<ActionResult<List<ScaleVariation>>> Test(/*[FromBody] ChordVariationGenerateParams @params*/)
 		{
 			Tuning tuning = null; // = @params.tuning;
 			if (tuning == null)
 			{
-				var result = await _tuningRepo.GetById(new Guid("6ED19AC7-49DF-47E3-ABB5-80ED7F6EB600")/*@params.tuningId*/);
+				var result = await _tuningRepo.GetById(new Guid("F8EBD6AE-B39F-4C4F-8CEB-94D3DE160A0B")/*@params.tuningId*/);
 				if (result.Success)
 				{
 					tuning = result.Result;
@@ -43,7 +44,7 @@ namespace neck.Controllers
 			var note = new Note(Enums.NoteValue.C, Enums.NoteSuffix.Natural);
 			var scale = new Scale(note, Enums.ScaleType.Diatonic);
 
-			return Ok(_factory.GenerateVariations(scale, tuning, 0, 6));
+			return Ok(_factory.GenerateVariations(scale, tuning, 3, 5));
 		}
 	}
 }

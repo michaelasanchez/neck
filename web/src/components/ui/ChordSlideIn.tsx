@@ -3,11 +3,21 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import { ChordDiagram, SlideIn } from '.';
-import { Chord, ChordModifier, ChordVariation, Note, NoteValue } from '../../models';
-import { ChordVariationApi, ChordVariationGenerateRangeParams } from '../../network';
+import { SlideIn } from '.';
+import {
+  Chord,
+  ChordModifier,
+  ChordVariation,
+  Note,
+  NoteValue,
+} from '../../models';
+import {
+  ChordVariationApi,
+  ChordVariationGenerateRangeParams,
+} from '../../network';
 import { AppOptions, NoteUtils } from '../../shared';
 import { NoteSelection } from '../NoteSelection';
+import { ChordDiagram } from './diagrams';
 
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
@@ -58,7 +68,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   useEffect(() => {
     if (!!chord) {
       setSelected([]);
-      // setSelected([chord.Root.Base]);
       reloadChordVariations();
     }
   }, [appOptions?.chord]);
@@ -67,11 +76,11 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   const reloadChordVariations = () => {
     new ChordVariationApi()
       .GenerateRange({
-        chordId: chord.Id,
+        baseId: chord.Id,
         tuningId: tuning.Id,
         range: instrument.NumFrets,
         // span: 9,
-      } as ChordVariationGenerateRangeParams)
+      })
       .then((variations: any[]) => {
         // TODO: constructor logic should probably move
         const newVariations = map(
@@ -80,7 +89,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             new ChordVariation(
               v.Formation.Positions,
               v.Formation.Barres,
-              v.Tuning
+              tuning
             )
         );
 

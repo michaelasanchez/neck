@@ -19,8 +19,8 @@ export class ChordVariation {
     this.Barres = barres;
     // this._barre = new Array(this._positions.length).fill(null);
 
-    this.Pitches = map(tuning.Offsets, (o: number, i: number) => {
-      return (o + this.Positions[i]) % Note.NUM_NOTES;
+    this.Pitches = map(tuning.Offsets, (o: Note, i: number) => {
+      return (o.Pitch + this.Positions[i]) % Note.NUM_NOTES;
     });
   }
 

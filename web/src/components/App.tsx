@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Chord, ChordModifier, Instrument, Key, Mode, Note, NoteSuffix, NoteValue } from '../models';
+import { Chord, ChordModifier, Instrument, Key, Mode, Note, NoteSuffix, NoteValue, Scale, ScaleType } from '../models';
 import Cookie from '../models/Cookie';
 import { ChordApi } from '../network/ChordApi';
 import { InstrumentApi } from '../network/InstrumentApi';
+import { ScaleApi } from '../network/ScaleApi';
 import { AppOptions, NoteUtils } from '../shared';
 import { IndicatorsMode } from './Indicators';
 import { IError, Loading } from './Loading';
@@ -54,20 +55,16 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     // Chord
     requests.push(loadChord(cookie.chordId));
 
+    // Scale
+    requests.push(loadScale());
+
     // Instrument / Tuning
     requests.push(loadInstrument(cookie?.instrumentId));
 
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
-      const [chordResult, instrumentResult] = values;
-
-      if (!chordResult) {
-        delete cookie.chordId;
-        return loadOptionsFromCookie(cookie);
-      }
-
-      const chord: Chord = isArray(chordResult) ? chordResult[0] : chordResult;
-
+      const [chord, scale, instrumentResult] = values;
+      
       const instrument: Instrument = isArray(instrumentResult)
         ? instrumentResult[0]
         : instrumentResult;
@@ -76,6 +73,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
       // Create app options
       const options = {
         chord,
+        scale,
         instrument,
         tuning: instrument.DefaultTuning,
         key: cookie.key,
@@ -98,17 +96,31 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     // TODO: static
     // Default chord - C Major
-    return new ChordApi().QuickFromValues(
+    return new ChordApi().LocateByValues(
       NoteValue.C,
       NoteSuffix.Natural,
       ChordModifier.Major
     );
   };
 
+  const loadScale = (scaleId?: string): Promise<Scale> => {
+    if (scaleId) {
+      return new ScaleApi().GetById(scaleId);
+    }
+
+    // TODO: static
+    // Default scale - C diatonic
+    return new ScaleApi().LocateByValues(
+      NoteValue.C,
+      NoteSuffix.Natural,
+      ScaleType.Diatonic,
+    );
+  };
+
   // TODO: Combine with loadChord by keeping track of chordIds?
   const reloadChord = (options: AppOptions) => {
     new ChordApi()
-      .Quick(options.chord.Root, options.chord.Modifier)
+      .Locate(options.chord)
       .then((chord) => {
         options.chord = chord;
         finishSetAppOptions(options);

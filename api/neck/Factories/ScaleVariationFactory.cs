@@ -1,31 +1,39 @@
 ﻿using neck.Enums;
-using neck.Factories.Args;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Variations;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace neck.Factories
 {
-	public class ScaleVariationFactory : IFactory<ScaleVariation, ScaleVariationCreateArgs>
+	public class ScaleVariationFactory : IVariationFactory<Scale, ScaleVariation>
 	{
 
-		public List<ScaleVariation> GenerateVariations(Scale scale, Tuning tuning, int offset, int span)
+		public List<ScaleVariation> GenerateVariations(Scale @base, Tuning tuning, int offset, int span)
 		{
-			var variations = new List<ScaleVariation>();
+			Scale scale = @base;
 
-			var scalePositions = mapPositionSpan(scale, tuning, offset, span);
-			var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
 
-			var variationCounts = scaleDirections.Select(l => l.Count(d => d == ScaleDirection.NextVariation));
-			var numVariations = variationCounts.Where(c => c > 0).Aggregate((acc, count) => acc * count * 2);
+			var variationPositions = new List<List<List<int?>>>();
+			try
+			{
+				var scalePositions = mapNoteSpan(scale, tuning, offset, span);
+				var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
+				variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, new List<List<Note>>());
+			}
+			catch (Exception ex)
+			{
+				;
+			}
 
-			var variationPositions = calcVariationPositions(scale, scaleDirections, scalePositions, 0, 0, new List<List<Note>>());
+			return variationPositions.Select(p => new ScaleVariation(scale, tuning.Id, p)).ToList();
+		}
 
-			return variationPositions.Select(p => new ScaleVariation(scale, tuning, p)).ToList();
+		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int fretOffset, int fretSpan, int range)
+		{
+			throw new NotImplementedException();
 		}
 
 		//  C           D           E     F           G           A           B   
@@ -37,12 +45,14 @@ namespace neck.Factories
 
 		private ScaleDegree calcNextDegree(Scale scale, int currentDegree)
 		{
+			// TODO: ScaleDegree is non-zero based. Should it be?
 			var nextDegree = (ScaleDegree)((currentDegree + 1) % (scale.Notes.Count + 1));
-			if ((int)nextDegree == 0) nextDegree++;
+			if (nextDegree == 0) nextDegree++;
+
 			return nextDegree;
 		}
 
-		private List<List<Note>> mapPositionSpan(Scale scale, Tuning tuning, int offset, int span)
+		private List<List<Note>> mapNoteSpan(Scale scale, Tuning tuning, int offset, int span)
 		{
 			var strings = new List<List<Note>>();
 			foreach (var o in tuning.Offsets)
@@ -50,11 +60,18 @@ namespace neck.Factories
 				var frets = Enumerable.Repeat<Note>(null, span).ToList();
 				for (var p = offset; p < offset + span; p++)
 				{
-					var pitch = Notes.Normalize(o + p);
+					var pitch = Notes.Normalize(o.Pitch + p);
+
 					var note = scale.Notes.FirstOrDefault(n => n.Pitch == pitch);
 					if (note != null)
 					{
-						frets[p - offset] = note;
+						var octave = (int)o.Octave + p / Notes.Count;
+
+						// TODO: Note.Copy();
+						var scaleNote = new Note(note.Base, note.Suffix, octave);
+						scaleNote.Degree = note.Degree;
+
+						frets[p - offset] = scaleNote;
 					}
 				}
 
@@ -82,7 +99,7 @@ namespace neck.Factories
 						nextDirection = ScaleDirection.End;
 
 						// Next note on current string
-						var currentStringIndex = scalePositions[o].FindIndex(n => n != null && n.Degree == nextDegree);
+						var currentStringIndex = scalePositions[o].FindIndex(p, n => n != null && n.Degree == nextDegree);
 						if (currentStringIndex > -1)
 						{
 							nextDirection = ScaleDirection.NextFret;
@@ -103,6 +120,7 @@ namespace neck.Factories
 
 					directions[o].Add(nextDirection);
 
+					// Break position loop. Continue offset loop
 					if (nextDirection == ScaleDirection.NextString ||
 						nextDirection == ScaleDirection.End) break;
 				}
@@ -111,11 +129,10 @@ namespace neck.Factories
 			return directions;
 		}
 
-		private new List<List<List<int?>>> calcVariationPositions(Scale scale, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, int oStart, int pStart, List<List<Note>> variationPositions)
+		private List<List<List<int?>>> calcVariationPositions(Scale scale, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, List<List<Note>> variationPositions, int oStart = 0, int pStart = 0, Note prevNote = null)
 		{
-			var variationTest = new List<List<List<int?>>>();
+			var variations = new List<List<List<int?>>>();
 
-			Note prevNote = null;
 			for (var o = oStart; o < scaleDirections.Count; o++)
 			{
 				variationPositions.Add(new List<Note>());
@@ -127,7 +144,12 @@ namespace neck.Factories
 					if (direction != ScaleDirection.Null)
 					{
 						var current = scalePositions[o][p];
-						if (prevNote == null || current.Degree == calcNextDegree(scale, (int)prevNote.Degree))
+
+						var nextOctave = (int)scalePositions[o][0].Octave + p / Notes.Count;
+						//var nextOctave = prevNote.Pitch < current.Pitch ? prevNote.Octave : prevNote.Octave + 1;
+
+						if (prevNote == null ||
+							(current.Degree == calcNextDegree(scale, (int)prevNote?.Degree) && current.Octave == nextOctave))
 						{
 							note = current;
 							prevNote = note;
@@ -142,16 +164,19 @@ namespace neck.Factories
 					}
 					else if (direction == ScaleDirection.NextVariation)
 					{
-						var dup = variationPositions.Select(l => l.Select(n => n).ToList()).ToList();
-						variationTest = calcVariationPositions(scale, scaleDirections, scalePositions, o + 1, 0, dup);
+						var positionsDup = variationPositions.Select(l => l.Select(n => n).ToList()).ToList();
+						var prevDup = new Note(prevNote.Base, prevNote.Suffix);
+						prevDup.Degree = prevNote.Degree;
+
+						variations.AddRange(calcVariationPositions(scale, scaleDirections, scalePositions, positionsDup, o + 1, 0, prevDup));
 					}
 				}
 			}
 
 			var positions = variationPositions.Select(s => s.Select(f => (int?)f?.Degree).ToList()).ToList();
-			variationTest.Add(positions);
+			variations.Add(positions);
 
-			return variationTest;
+			return variations;
 		}
 
 		#endregion

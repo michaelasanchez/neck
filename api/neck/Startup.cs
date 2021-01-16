@@ -6,14 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using neck.Factories;
-using neck.Factories.Args;
 using neck.Generators;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Variations;
 using neck.Repositories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using System.Text.Json;
 
 namespace neck
 {
@@ -57,11 +56,12 @@ namespace neck
 			services.AddScoped(typeof(IRepository<Formation>), typeof(FormationRepository));
 			services.AddScoped(typeof(IRepository<Instrument>), typeof(InstrumentRepository));
 			services.AddScoped(typeof(IRepository<Note>), typeof(NoteRepository));
+			services.AddScoped(typeof(IRepository<Scale>), typeof(ScaleRepository));
 			services.AddScoped(typeof(IRepository<ScaleVariation>), typeof(ScaleVariationRepository));
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 
-			services.AddScoped(typeof(IFactory<ChordVariation, ChordVariationCreateArgs>), typeof(ChordVariationFactory));
-			services.AddScoped(typeof(IFactory<ScaleVariation, ScaleVariationCreateArgs>), typeof(ScaleVariationFactory));
+			services.AddScoped(typeof(IVariationFactory<Chord, ChordVariation>), typeof(ChordVariationFactory));
+			services.AddScoped(typeof(IVariationFactory<Scale, ScaleVariation>), typeof(ScaleVariationFactory));
 
 			services.AddDbContext<NeckContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("NeckDatabase")));

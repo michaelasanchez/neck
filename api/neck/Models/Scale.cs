@@ -1,4 +1,6 @@
 ﻿using neck.Enums;
+using neck.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,23 +9,40 @@ using System.Threading.Tasks;
 
 namespace neck.Models
 {
-	public class Scale : DbEntity
+	public class Scale : DbEntity, ILabelled
 	{
-
 		private List<Note> _notes;
 
-		// Pulic
-		public Guid RootId;
+		// Public
+		[NotMapped]
+		public string Label => $"{Tonic.Label} {Type} Scale";
 
-		public Note Root { get; private set; }
+		public Guid TonicId;
 
-		public ScaleType Type { get; private set; }
+		public Note Tonic { get; set; }
+
+		public ScaleType Type { get; set; }
 
 		[NotMapped]
-		public Mode Mode { get; private set; }
+		[JsonIgnore]
+		public Mode Mode { get; set; }
 
 		[NotMapped]
-		public List<Note> Notes => _notes;
+		public List<Note> Notes
+		{
+			get
+			{
+				if (_notes == null && Tonic != null)
+				{
+					if (Mode == null)
+						Mode = new Mode(getModeType(Type));
+
+					_notes = calcNotes(Tonic, Mode, Type);
+				}
+
+				return _notes;
+			}
+		}
 
 		public Scale() { }
 
@@ -31,24 +50,24 @@ namespace neck.Models
 		//	Potentially need to add ScaleType enum values for modes
 		internal Scale(Note root, Mode mode)
 		{
-			Root = root;
+			Tonic = root;
 
 			Mode = mode;
 
 			Type = ScaleType.Diatonic;
 
-			_notes = calcNotes(Root, Mode, Type);
+			_notes = calcNotes(Tonic, Mode, Type);
 		}
 
 		public Scale(Note root, ScaleType type)
 		{
-			Root = root;
+			Tonic = root;
 
 			Type = type;
 
 			Mode = new Mode(getModeType(Type));
 
-			_notes = calcNotes(Root, Mode, Type);
+			_notes = calcNotes(Tonic, Mode, Type);
 		}
 
 
@@ -95,7 +114,7 @@ namespace neck.Models
 			var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
 
 			nextNote.Degree = prevNote.Degree + 1;
-			nextNote.Interval = calcInterval(nextNote.Pitch, Root.Pitch);
+			nextNote.Interval = calcInterval(nextNote.Pitch, Tonic.Pitch);
 
 			return nextNote;
 		}

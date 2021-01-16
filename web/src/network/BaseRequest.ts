@@ -42,8 +42,7 @@ export class BaseRequest<TResult> {
   private execute(type: RequestType, data?: {}) {
     let convert = this._baseOptions.convertToJson;
 
-    // TODO: Not really sure if anything other than post needs a body
-    const options = type != RequestType.Get ? {
+    const options = type === RequestType.Post ? {
       method: type,
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
@@ -75,10 +74,9 @@ export class BaseRequest<TResult> {
     return this.execute(RequestType.Post, data);
   }
 
-  // TODO: Not sure if this works
-  Delete(data?: {}): Promise<TResult> {
-    return this.execute(RequestType.Delete, data);
-  }
+  // Delete(data?: {}): Promise<TResult> {
+  //   return this.execute(RequestType.Delete, data);
+  // }
 
   // protected async executeAsync() {
   //   const convert = this._baseOptions.convertToJson;

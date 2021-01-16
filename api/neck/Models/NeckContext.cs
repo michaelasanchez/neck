@@ -2,6 +2,7 @@
 using neck.Comparers;
 using neck.Converters;
 using neck.Interfaces;
+using neck.Models.Variations;
 using System;
 using System.Linq;
 using System.Threading;
@@ -31,10 +32,6 @@ namespace neck.Models
 				.HasIndex(c => new { c.RootId, c.Modifier })
 				.IsUnique();
 
-			modelBuilder.Entity<ChordVariation>()
-				.HasIndex(c => new { c.Label, c.ChordId, c.FormationId, c.TuningId })
-				.IsUnique();
-
 			modelBuilder.Entity<Formation>(entity =>
 			{
 				entity.HasIndex(f => new { f.Positions })
@@ -59,7 +56,7 @@ namespace neck.Models
 
 			modelBuilder.Entity<Scale>(entity =>
 			{
-				entity.HasIndex(s => new { s.RootId, s.Type })
+				entity.HasIndex(s => new { s.TonicId, s.Type })
 					.IsUnique();
 			});
 

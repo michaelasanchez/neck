@@ -3,16 +3,16 @@ import { ApiRequest } from "./ApiRequest";
 
 export class ChordApi extends ApiRequest<Chord> {
   constructor() {
-    super('Chord');
+    super('chord');
   }
 
-  QuickFromValues = (value: NoteValue, suffix: NoteSuffix, modifier: ChordModifier): Promise<Chord> => {
-    this.Action = 'quick';
+  LocateByValues = (value: NoteValue, suffix: NoteSuffix, modifier: ChordModifier): Promise<Chord> => {
+    this.Action = 'byvalues';
     return super.Post({ value, suffix, modifier }) as Promise<Chord>;
   }
 
-  Quick = (note: Note, modifier: ChordModifier): Promise<Chord> => {
-    this.Action = 'quick';
-    return super.Post({ value: note.Base, suffix: note.Suffix, modifier }) as Promise<Chord>;
+  Locate = (chord: Chord): Promise<Chord> => {
+    this.Action = 'byvalues';
+    return super.Post({ value: chord.Root.Base, suffix: chord.Root.Suffix, modifier: chord.Modifier }) as Promise<Chord>;
   }
 }
