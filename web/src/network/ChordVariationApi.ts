@@ -15,14 +15,14 @@ export interface ChordVariationGenerateRangeParams extends ChordVariationGenerat
 }
 
 enum ChordVariationAction {
-  Generate = 'Generate',
-  GenerateRange = 'GenerateRange',
+  Generate = 'generate',
+  GenerateRange = 'generaterange',
 }
 
 export class ChordVariationApi extends ApiRequest<ChordVariation> {
 
   constructor() {
-    super('ChordVariation');
+    super('chordvariation');
   }
 
   Generate(params: ChordVariationGenerateParams): Promise<ChordVariation[]> {

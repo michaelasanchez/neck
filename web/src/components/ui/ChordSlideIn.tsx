@@ -3,11 +3,21 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import { ChordDiagram, SlideIn } from '.';
-import { Chord, ChordModifier, ChordVariation, Note, NoteValue } from '../../models';
-import { ChordVariationApi, ChordVariationGenerateRangeParams } from '../../network';
+import { SlideIn } from '.';
+import {
+  Chord,
+  ChordModifier,
+  ChordVariation,
+  Note,
+  NoteValue,
+} from '../../models';
+import {
+  ChordVariationApi,
+  ChordVariationGenerateRangeParams,
+} from '../../network';
 import { AppOptions, NoteUtils } from '../../shared';
 import { NoteSelection } from '../NoteSelection';
+import { ChordDiagram } from './diagrams';
 
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;

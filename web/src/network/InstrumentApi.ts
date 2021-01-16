@@ -3,6 +3,6 @@ import { ApiRequest } from "./ApiRequest";
 
 export class InstrumentApi extends ApiRequest<Instrument> {
   constructor() {
-    super('Instrument');
+    super('instrument');
   }
 }

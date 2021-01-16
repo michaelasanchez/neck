@@ -15,14 +15,14 @@ export interface ScaleVariationGenerateRangeParams extends ScaleVariationGenerat
 }
 
 enum ScaleVariationAction {
-  Generate = 'Generate',
-  GenerateRange = 'GenerateRange',
+  Generate = 'generate',
+  GenerateRange = 'generaterange',
 }
 
 export class ScaleVariationApi extends ApiRequest<ScaleVariation> {
 
   constructor() {
-    super('ScaleVariation');
+    super('scalevariation');
   }
 
   Generate(params: ScaleVariationGenerateParams): Promise<ScaleVariation[]> {

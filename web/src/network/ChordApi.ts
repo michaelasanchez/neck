@@ -3,7 +3,7 @@ import { ApiRequest } from "./ApiRequest";
 
 export class ChordApi extends ApiRequest<Chord> {
   constructor() {
-    super('Chord');
+    super('chord');
   }
 
   LocateByValues = (value: NoteValue, suffix: NoteSuffix, modifier: ChordModifier): Promise<Chord> => {

@@ -3,7 +3,7 @@ import { ApiRequest } from "./ApiRequest";
 
 export class ScaleApi extends ApiRequest<Scale> {
   constructor() {
-    super('Scale');
+    super('scale');
   }
 
   LocateByValues = (value: NoteValue, suffix: NoteSuffix, type: ScaleType): Promise<Scale> => {

@@ -3,6 +3,6 @@ import { ApiRequest } from "./ApiRequest";
 
 export class TuningApi extends ApiRequest<Tuning> {
   constructor() {
-    super('Tuning');
+    super('tuning');
   }
 }
