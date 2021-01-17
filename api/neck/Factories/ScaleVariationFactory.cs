@@ -16,24 +16,25 @@ namespace neck.Factories
 			Scale scale = @base;
 
 
-			var variationPositions = new List<List<List<int?>>>();
+			var scaleVariations = new List<ScaleVariation>();
 			try
 			{
 				var scalePositions = mapNoteSpan(scale, tuning, offset, span);
 				var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
-				variationPositions = calcVariationPositions(scale, tuning, scaleDirections, scalePositions, new List<List<Note>>());
+				scaleVariations = calcVariationPositions(scale, tuning, offset, scaleDirections, scalePositions, new List<List<Note>>());
 			}
 			catch (Exception ex)
 			{
 				;
 			}
 
-			return variationPositions.Select(p => new ScaleVariation(scale, tuning.Id, offset, p)).ToList();
+			return scaleVariations;
 		}
 
 		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int start, int end, int fretSpan)
 		{
 			var variations = new List<ScaleVariation>();
+			var variationStrings = new List<string>();
 
 			for (var i = start; i <= end - fretSpan + 1; i++)
 			{
@@ -41,10 +42,12 @@ namespace neck.Factories
 
 				for (var j = 0; j < newVariations.Count; j++)
 				{
-					//if (FILTER_DUPLICATE_VARIATIONS && !containsVariation(variations, newVariations[j]))
-					//{
-					variations.Add(newVariations[j]);
-					//}
+					var varString = variationString(newVariations[j]);
+					if (!variationStrings.Contains(varString))
+					{
+						variations.Add(newVariations[j]);
+						variationStrings.Add(varString);
+					}
 				}
 			}
 
@@ -57,6 +60,11 @@ namespace neck.Factories
 		//  0     1     2     3     4     5     6     7     8     9     10    11 
 
 		#region Private Methods
+
+		private string variationString(ScaleVariation variation)
+		{
+			return string.Join("", variation.Positions.Select(o => string.Join("", o.Select(p => p == null ? "0" : p.ToString()))));
+		}
 
 		private ScaleDegree calcNextDegree(Scale scale, int currentDegree)
 		{
@@ -80,7 +88,7 @@ namespace neck.Factories
 					var note = scale.Notes.FirstOrDefault(n => n.Pitch == pitch);
 					if (note != null)
 					{
-						var octave = (int)o.Octave + p / Notes.Count;
+						var octave = (int)o.Octave + (o.Pitch + p) / Notes.Count;
 
 						// TODO: Note.Copy();
 						var scaleNote = new Note(note.Base, note.Suffix, octave);
@@ -144,9 +152,9 @@ namespace neck.Factories
 			return directions;
 		}
 
-		private List<List<List<int?>>> calcVariationPositions(Scale scale, Tuning tuning, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, List<List<Note>> variationPositions, int oStart = 0, int pStart = 0, Note prevNote = null)
+		private List<ScaleVariation> calcVariationPositions(Scale scale, Tuning tuning, int offset, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, List<List<Note>> variationPositions, int oStart = 0, int pStart = 0, Note prevNote = null)
 		{
-			var variations = new List<List<List<int?>>>();
+			var variations = new List<ScaleVariation>();
 
 			for (var o = oStart; o < scaleDirections.Count; o++)
 			{
@@ -160,8 +168,7 @@ namespace neck.Factories
 					{
 						var current = scalePositions[o][p];
 
-						var nextOctave = tuning.Offsets[o].Octave + p / Notes.Count;
-						//var nextOctave = prevNote.Pitch < current.Pitch ? prevNote.Octave : prevNote.Octave + 1;
+						var nextOctave = tuning.Offsets[o].Octave + (tuning.Offsets[o].Pitch + offset + p) / Notes.Count;
 
 						if (prevNote == null ||
 							(current.Degree == calcNextDegree(scale, (int)prevNote?.Degree) && current.Octave == nextOctave))
@@ -190,7 +197,7 @@ namespace neck.Factories
 						var prevDup = new Note(prevNote.Base, prevNote.Suffix);
 						prevDup.Degree = prevNote.Degree;
 
-						variations.AddRange(calcVariationPositions(scale, tuning, scaleDirections, scalePositions, positionsDup, o + 1, 0, prevDup));
+						variations.AddRange(calcVariationPositions(scale, tuning, offset, scaleDirections, scalePositions, positionsDup, o + 1, 0, prevDup));
 					}
 				}
 
@@ -200,8 +207,31 @@ namespace neck.Factories
 				variationPositions.Add(notes);
 			}
 
+			// Map notes to lists of degrees & clean up
 			var positions = variationPositions.Select(s => s.Select(f => (int?)f?.Degree).ToList()).ToList();
-			variations.Add(positions);
+
+			var variation = new ScaleVariation(scale, tuning.Id, offset, positions);
+
+			if (positions.All(o => o[0] == null))
+			{
+				positions.ForEach(o =>
+				{
+					o.RemoveAt(0);
+				});
+
+				variation.Offset++;
+			}
+
+			if (positions.All(o => o.Last() == null))
+			{
+				positions.ForEach(o =>
+				{
+					o.RemoveAt(o.Count - 1);
+				});
+			}
+
+
+			variations.Add(variation);
 
 			return variations;
 		}

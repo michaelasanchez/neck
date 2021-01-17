@@ -1,6 +1,8 @@
 import { map, max, times } from 'lodash';
 import * as React from 'react';
 
+export const ALWAYS_SHOW_OFFSET = true;
+
 export const USE_FRET_PADDING = true;
 export const FRET_PADDING_SIZE = 1;
 export const NO_FRET_PADDING_AT_OR_BELOW = 1;
@@ -98,7 +100,7 @@ export const Diagram: React.FC<DiagramProps> = ({
         className={`diagram-container ${minPos < NO_FRET_PADDING_AT_OR_BELOW ? 'open' : ''} ${minPos === NO_FRET_PADDING_AT_OR_BELOW ? 'first' : ''}`}
       >
         <span ref={offsetSpan} style={spanStyle}>
-          {minPos > 1 && minPos}
+          {(minPos > 1 || ALWAYS_SHOW_OFFSET) && minPos}
         </span>
         {flag ? (
           <>

@@ -3,6 +3,8 @@ import { Scale } from ".";
 export class ScaleVariation {
   public ScaleId: string;
 
+  public Label: string;
+
   public Scale: Scale;
 
   public Offset: number;

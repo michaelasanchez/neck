@@ -60,6 +60,7 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
     </>
   );
 
+  // const diagramLabel = <>{variation.Label}</>;
   const diagramLabel = <>label</>;
 
   return (
