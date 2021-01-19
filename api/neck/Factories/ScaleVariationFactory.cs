@@ -4,6 +4,7 @@ using neck.Models;
 using neck.Models.Variations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace neck.Factories
@@ -15,20 +16,26 @@ namespace neck.Factories
 		{
 			Scale scale = @base;
 
+			List<List<List<ScaleDirection>>> test;
+			List<ScaleVariation> test2 = new List<ScaleVariation>();
 
 			var scaleVariations = new List<ScaleVariation>();
 			try
 			{
-				var scalePositions = mapNoteSpan(scale, tuning, offset, span);
-				var scaleDirections = mapScaleDirections(scalePositions, scale, offset, span);
-				scaleVariations = calcVariationPositions(scale, tuning, offset, scaleDirections, scalePositions, new List<List<Note>>());
+				var scaleNotes = mapScaleNotes(scale, tuning, offset, span);
+				var scaleDirections = mapScaleDirections(scaleNotes, scale, offset, span);
+
+				test = otherSide(new List<List<ScaleDirection>>(), scaleNotes, scale, tuning, offset, span);
+				test2 = itDependsOnThePuppet(scale, tuning, offset, test, scaleNotes);
+
+				scaleVariations = calcVariationPositions(scale, tuning, offset, scaleDirections, scaleNotes, new List<List<Note>>());
 			}
 			catch (Exception ex)
 			{
 				;
 			}
 
-			return scaleVariations;
+			return test2;
 		}
 
 		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int start, int end, int fretSpan)
@@ -75,7 +82,17 @@ namespace neck.Factories
 			return nextDegree;
 		}
 
-		private List<List<Note>> mapNoteSpan(Scale scale, Tuning tuning, int offset, int span)
+		// Works under the assumption that variations always directly follow
+		//	a scale's notes (from tonic to tonic)
+		private int calcNextOctave(Scale scale, Note note)
+		{
+			var currentOctave = (int)note.Octave;
+			var index = scale.Notes.FindIndex(n => Notes.Equals(note, n));
+
+			return index == scale.Notes.Count - 1 ? currentOctave + 1 : currentOctave;
+		}
+
+		private List<List<Note>> mapScaleNotes(Scale scale, Tuning tuning, int offset, int span)
 		{
 			var strings = new List<List<Note>>();
 			foreach (var o in tuning.Offsets)
@@ -152,9 +169,106 @@ namespace neck.Factories
 			return directions;
 		}
 
+		private List<List<List<ScaleDirection>>> otherSide(List<List<ScaleDirection>> directions, List<List<Note>> positions, Scale scale, Tuning tuning, int offset, int span, int oStart = 0, int pStart = 0)
+		{
+			var directionsList = new List<List<List<ScaleDirection>>>();
+
+			for (var o = oStart; o < positions.Count; o++)
+			{
+				directions.Add(new List<ScaleDirection>());
+				for (var p = pStart; p < span; p++)
+				{
+					ScaleDirection nextDirection = ScaleDirection.Null;
+
+					var note = positions[o][p];
+					if (note != null)
+					{
+						nextDirection = ScaleDirection.End;
+
+						var nextDegree = calcNextDegree(scale, (int)note.Degree);
+						var nextOctave = calcNextOctave(scale, note);
+						//var nextOctave = tuning.Offsets[o].Octave + (tuning.Offsets[o].Pitch + offset + p) / Notes.Count;
+
+						// Next note on current string
+						var currentStringIndex = positions[o].FindIndex(p, n => n != null && n.Degree == nextDegree && n.Octave == nextOctave);
+						if (currentStringIndex > -1)
+						{
+							Debug.WriteLine($"{nextOctave} {note.Octave} {positions[o][currentStringIndex].Octave}");
+							nextDirection = ScaleDirection.NextFret;
+						}
+
+						// First note on next string
+						if (o < positions.Count - 1)
+						{
+							var nextStringIndex = positions[o + 1].FindIndex(n => n != null && n.Degree == nextDegree && n.Octave == nextOctave);
+							if (nextStringIndex > -1)
+							{
+								if (nextDirection == ScaleDirection.NextFret)
+								{
+									var directionsDup = directions.Select(o => o.Select(p => p).ToList()).ToList();
+
+									while (directionsDup[o].Count < positions[o].Count)
+										directionsDup[o].Add(ScaleDirection.Null);
+
+									directionsList.AddRange(otherSide(directionsDup, positions, scale, tuning, offset, span, o + 1, 0));
+								}
+							}
+						}
+					}
+
+					directions[o].Add(nextDirection);
+
+					// Break position loop. Continue offset loop
+					if (nextDirection == ScaleDirection.NextString ||
+						nextDirection == ScaleDirection.End) break;
+				}
+			}
+
+			directionsList.Add(directions);
+
+			return directionsList;
+		}
+
+		private List<ScaleVariation> itDependsOnThePuppet(Scale scale, Tuning tuning, int offset, List<List<List<ScaleDirection>>> directions, List<List<Note>> scaleNotes)
+		{
+			var variations = directions.Select(v =>
+			{
+				var positions = v.Select((offsetList, offsetIndex) =>
+				{
+					Note prevNote = null;
+					return offsetList.Select((posList, posIndex) =>
+					{
+						var direction = v[offsetIndex][posIndex];
+
+						Note note = null;
+						if (direction != ScaleDirection.Null)
+						{
+							var current = scaleNotes[offsetIndex][posIndex];
+
+							var nextOctave = tuning.Offsets[offsetIndex].Octave + (tuning.Offsets[offsetIndex].Pitch + offset + posIndex) / Notes.Count;
+
+							if (prevNote == null ||
+								(current.Degree == calcNextDegree(scale, (int)prevNote?.Degree) && current.Octave == nextOctave))
+							{
+								note = current;
+								prevNote = note;
+							}
+						}
+
+						return note != null ? (int?)note.Degree : null;
+					}).ToList();
+				}).ToList();
+
+				return new ScaleVariation(scale, tuning.Id, offset, positions);
+			}).ToList();
+
+			return variations;
+		}
+
 		private List<ScaleVariation> calcVariationPositions(Scale scale, Tuning tuning, int offset, List<List<ScaleDirection>> scaleDirections, List<List<Note>> scalePositions, List<List<Note>> variationPositions, int oStart = 0, int pStart = 0, Note prevNote = null)
 		{
 			var variations = new List<ScaleVariation>();
+			var tonics = new List<ScalePosition>();
 
 			for (var o = oStart; o < scaleDirections.Count; o++)
 			{
@@ -167,6 +281,11 @@ namespace neck.Factories
 					if (direction != ScaleDirection.Null)
 					{
 						var current = scalePositions[o][p];
+
+						if (current.Degree == ScaleDegree.Tonic)
+						{
+							tonics.Add(new ScalePosition() { String = o, Fret = p });
+						}
 
 						var nextOctave = tuning.Offsets[o].Octave + (tuning.Offsets[o].Pitch + offset + p) / Notes.Count;
 
@@ -211,6 +330,7 @@ namespace neck.Factories
 			var positions = variationPositions.Select(s => s.Select(f => (int?)f?.Degree).ToList()).ToList();
 
 			var variation = new ScaleVariation(scale, tuning.Id, offset, positions);
+			variation.Tonics = tonics;
 
 			if (positions.All(o => o[0] == null))
 			{
