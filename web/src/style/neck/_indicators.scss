@@ -12,6 +12,17 @@
       height: $fret-height;
       @include flex-center;
 
+      // Easiest way to match neck fret
+      border-bottom: 1px solid transparent;
+
+      label {
+        margin-bottom: 0;
+        position: absolute;
+
+        color: white;
+        font-weight: bold;
+      }
+
       .indicator {
         background: $indicator-background;
         border-radius: 50%;
@@ -19,6 +30,48 @@
         width: $indicator-radius * 2;
         height: $indicator-radius * 2;
 
+        position: relative;
+
+        /* Root */
+        &.root {
+          border-radius: 9px;
+          transform: rotate(45deg);
+        }
+
+        /* Degree */
+        &.degree {
+          // background: rgba(82, 107, 45, .8);
+          box-shadow: 0 4px 6px -2px #00000044;
+
+          &.root {
+            box-shadow: 3px 3px 6px -2px #00000044;
+          }
+        }
+
+        $teals: #003020, #106030, #207040, #308050, #409060, #50a070, #60b080, #70c090, #80d0a0;
+        $oranges: #302000, #603010, #704020, #805030, #906040, #a07050, #b08060, #c09070, #d0a080;
+        $pinks: #300020, #601030, #702040, #803050, #904060, #a05070, #b06080, #c07090, #d080a0;
+
+        $blues: #002030, #103060, #204070, #305080, #406090, #5070a0, #6080b0, #7090c0, #80a0d0;
+        $greens: #203000, #306010, #407020, #508030, #609040, #70a050, #80b060, #90c070, #a0d080;
+        $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0, #a080d0;
+
+        /* Debug */
+        @for $i from 1 through 8 {
+          &.degree-#{$i} {
+            $color: mix(nth($blues, 2), nth($blues, 9), 100% * ($i / 8));
+            background: $color;
+            border-color: darken($color, 2%);
+          }
+        }
+
+        // @for $i from 1 through 7 {
+        //   &.degree-#{$i} {
+        //     background: nth($greens, $i + 2);
+        //   }
+        // }
+
+        /* Barre */
         &.barre {
           background: $indicator-barre-background;
           border-radius: 0;
@@ -67,6 +120,7 @@
           }
         }
 
+        /* Muted */
         &.muted {
           background: none;
           border: none;
@@ -89,6 +143,16 @@
           &::after {
             height: $indicator-muted-diameter;
           }
+        }
+      }
+
+      &.faded {
+
+        label {
+        }
+
+        .indicator {
+          opacity: .3;
         }
       }
     }

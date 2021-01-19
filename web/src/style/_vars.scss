@@ -15,8 +15,10 @@ $blue: rgb(135, 206, 235); //rgb(135, 206, 235);
 $green: rgb(135, 235, 197);
 $orange: rgb(241, 172, 42);
 
+$testin: rgb(82, 107, 45);
+
 /* Theme */
-$neck-primary: $blue;
+$neck-primary: $testin;
 
 // /* Fonts */
 $font-merriweather: 'Merriweather', serif;
@@ -75,7 +77,13 @@ $fret-marker-diameter: 12px;
 $fret-marker-width: $fret-marker-diameter;
 $fret-marker-height: $fret-marker-diameter;
 
-/* General Selector */
+/* Selectors */
+/* Includes:
+  - Indicators
+  - Slide-in Badges
+  - Note Selection
+  - Diagram outline
+*/
 $selector-border-color: rgba($neck-primary, 0.4);
 $selector-gradient-inner: rgba($neck-primary, 0);
 $selector-gradient-outer: rgba($neck-primary, 0.1);

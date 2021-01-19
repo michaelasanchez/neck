@@ -2,21 +2,29 @@ import { filter, indexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
 import { AppOptions } from '../shared';
+import { Indicator } from './ui';
 
 export enum IndicatorsMode {
   Chord,
-  // Scale,
+  Scale,
 }
 
 interface IndicatorsProps {
   appOptions: AppOptions;
   mainRef: React.MutableRefObject<HTMLDivElement>;
+  mode?: IndicatorsMode;
 }
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
-  const { appOptions, mainRef } = props;
+  const { appOptions, mainRef, mode = IndicatorsMode.Scale } = props;
 
-  const { chordVariation: variation, tuning, instrument } = appOptions;
+  const {
+    chordVariation,
+    scaleVariation,
+    scale,
+    tuning,
+    instrument,
+  } = appOptions;
 
   const firstIndicatorRef = useRef();
 
@@ -34,85 +42,117 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
       main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
-  }, [variation]);
+  }, [chordVariation]);
 
-  const renderIndicator = (
-    fretNum: number,
-    show: boolean = false,
-    muted: boolean = false,
-    // barre: boolean = false,
-    // barreStart: boolean = false,
-    firstRef?: React.MutableRefObject<HTMLDivElement>
-  ) => {
-    let props: any = firstRef ? { ref: firstRef } : {};
-    return (
-      <div
-        className={`fret${fretNum === 0 ? ' open' : ''}`}
-        key={fretNum}
-        {...props}
-      >
-        {show && (
-          <div
-            className={`indicator${muted ? ' muted' : ''}`}
-            // className={`indicator${muted ? ' muted' : ''}${
-            //   barre ? (barreStart ? ' barre start' : ' barre') : ''
-            // }`}
-          ></div>
-        )}
-      </div>
+  /* ChordVariation */
+  if (mode == IndicatorsMode.Chord && !!chordVariation) {
+    const nonNullPositions = filter(
+      chordVariation.Positions,
+      (p) => p !== null
     );
-  };
 
-  let renderIndicators = false;
+    let firstFret = indexOf(
+      chordVariation.Positions,
+      Math.min(...nonNullPositions)
+    );
 
-  let firstFret: number;
-
-  if (variation != null) {
-    renderIndicators = true;
-    // barreStart = findIndex(chord.Barre, (p) => p !== null);
-
-    const nonNullPositions = filter(variation.Positions, (p) => p !== null);
-    firstFret = indexOf(variation.Positions, Math.min(...nonNullPositions));
-  }
-
-  return (
-    <div className="indicators">
-      {renderIndicators &&
-        map(tuning.Offsets, (s: number, i: number) => {
-          const position = variation.Positions[i];
-
-          // const barre = chord.Barre[i];
-          // const start = i === barreStart;
+    return (
+      <div className="indicators">
+        {map(tuning.Offsets, (s: number, i: number) => {
+          const position = chordVariation.Positions[i];
 
           const open = position === 0;
           const muted = position === null;
 
           return (
             <div className="string" key={i}>
-              {renderIndicator(
-                0,
-                open || muted,
-                muted,
-                // false,
-                // false,
-                (open || muted) && i == firstFret ? firstIndicatorRef : null
-              )}
+              <Indicator
+                fretNum={0}
+                show={open || muted}
+                muted={muted}
+                firstRef={
+                  (open || muted) && i == firstFret ? firstIndicatorRef : null
+                }
+              />
               {times(instrument.NumFrets, (f) => {
                 const fretNum = f + 1;
-                // const isBarre = barre == fretNum;
-                const show = position === fretNum; // || isBarre;
-                return renderIndicator(
-                  fretNum,
-                  show,
-                  false,
-                  // isBarre,
-                  // start,
-                  show && i == firstFret ? firstIndicatorRef : null
+                const show = position === fretNum;
+                return (
+                  <Indicator
+                    fretNum={fretNum}
+                    show={show}
+                    firstRef={show && i == firstFret ? firstIndicatorRef : null}
+                  />
                 );
               })}
             </div>
           );
         })}
-    </div>
-  );
+      </div>
+    );
+  } else if (mode == IndicatorsMode.Scale && !!scaleVariation) {
+    /* ScaleVariation */
+    const fretStart = scaleVariation.Offset;
+    const fretEnd =
+      scaleVariation.Offset + scaleVariation.Positions[0].length - 1;
+
+    let scaleStarted = false;
+    let scaleEnded = false;
+
+    return (
+      <div className="indicators">
+        {map(tuning.Offsets, (s: number, i: number) => {
+          const positions = scaleVariation.Positions[i];
+          const open = scaleVariation.Offset === 0 && positions[0] !== null;
+
+          return (
+            <div className="string" key={i}>
+              {times(instrument.NumFrets + 1, (f) => {
+                let degree: number;
+                let label: string;
+
+                let show = false;
+                if (f >= fretStart && f <= fretEnd) {
+                  degree = positions[f - fretStart];
+
+                  if (degree) {
+                    label = scale.Notes[degree - 1].Label;
+                  }
+
+                  show = !!degree;
+                }
+
+                if (degree == 1) {
+                  if (!scaleStarted) {
+                    scaleStarted = true;
+                  } else {
+                    // TODO: Only accounts for single scale
+                    scaleEnded = true;
+                  }
+                }
+
+                return (
+                  <Indicator
+                    fretNum={f}
+                    show={show}
+                    key={f}
+                    degree={scaleEnded && degree === 1 ? degree + 7 : degree}
+                    root={degree === 1}
+                    label={label}
+                    fretClassName={
+                      (!scaleStarted || scaleEnded) && degree != 1
+                        ? 'faded'
+                        : null
+                    }
+                  />
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    );
+  } else {
+    return null;
+  }
 };

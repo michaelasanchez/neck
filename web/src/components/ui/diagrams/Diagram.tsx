@@ -1,7 +1,7 @@
 import { map, max, times } from 'lodash';
 import * as React from 'react';
 
-export const ALWAYS_SHOW_OFFSET = true;
+export const ALWAYS_SHOW_OFFSET = false;
 
 export const USE_FRET_PADDING = true;
 export const FRET_PADDING_SIZE = 1;

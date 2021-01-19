@@ -33,7 +33,8 @@ $diagram-dot-highlight-border-color: $diagram-dot-color;
 /** Scalable **/
 $scale: 0.35;
 
-$open-fret-border-bottom: 8px;
+/* Nut */
+$diagram-nut-border-width: 8px;
 
 /* Label */
 $diagram-label-font-size: 2rem * $scale;
@@ -196,17 +197,17 @@ $diagram-outline-border-radius: 16px * $scale;
           border-top: none;
         }
         > div:nth-child(2) {
-          border-top: $open-fret-border-bottom * $scale solid $diagram-container-open-border-color;
-          margin-top: -($open-fret-border-bottom * $scale);
-          height: ($diagram-fret-height + $open-fret-border-bottom) * $scale;
+          border-top: $diagram-nut-border-width * $scale solid $diagram-container-open-border-color;
+          margin-top: -($diagram-nut-border-width * $scale);
+          height: ($diagram-fret-height + $diagram-nut-border-width) * $scale;
         }
       }
 
       .symbols {
         > div {
           > div:first-child {
-            padding-bottom: $open-fret-border-bottom * $scale;
-            margin-top: -($open-fret-border-bottom * $scale);
+            padding-bottom: $diagram-nut-border-width * $scale;
+            margin-top: -($diagram-nut-border-width * $scale);
 
             .dot {
               background: none;
@@ -220,9 +221,9 @@ $diagram-outline-border-radius: 16px * $scale;
     &.first {
       .frets {
         > div:first-child {
-          border-top: $open-fret-border-bottom * $scale solid $diagram-container-open-border-color;
-          margin-top: -($open-fret-border-bottom * $scale);
-          height: ($diagram-fret-height + $open-fret-border-bottom) * $scale;
+          border-top: $diagram-nut-border-width * $scale solid $diagram-container-open-border-color;
+          margin-top: -($diagram-nut-border-width * $scale);
+          height: ($diagram-fret-height + $diagram-nut-border-width) * $scale;
         }
         // margin-top: -$diagram-fret-height * $scale;
       }

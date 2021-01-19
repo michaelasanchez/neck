@@ -32,7 +32,6 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
         range: instrument.NumFrets,
       })
       .then((variations: ScaleVariation[]) => {
-        console.log(variations);
         setVariations(variations);
 
         if (variations.length) setAppOptions({ scaleVariation: variations[0] });
