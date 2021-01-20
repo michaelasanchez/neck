@@ -1,4 +1,5 @@
-﻿using neck.Interfaces;
+﻿using neck.Enums;
+using neck.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,11 +17,14 @@ namespace neck.Models.Variations
 		public int Offset { get; set; }
 
 		[NotMapped]
-		public List<List<int?>> Positions { get; set; }
+		public List<List<ScaleDegree?>> Positions { get; set; }
+
+		[NotMapped]
+		public List<ScalePosition> Tonics { get; set; }
 
 		public ScaleVariation() { }
 
-		public ScaleVariation(Scale scale, Guid tuningId, int offset, List<List<int?>> positions)
+		public ScaleVariation(Scale scale, Guid tuningId, int offset, List<List<ScaleDegree?>> positions)
 		{
 			ScaleId = scale.Id;
 			Base = scale;
