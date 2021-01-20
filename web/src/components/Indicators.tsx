@@ -1,6 +1,7 @@
 import { filter, indexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
+import { Note } from '../models';
 import { AppOptions } from '../shared';
 import { Indicator } from './ui';
 
@@ -99,6 +100,16 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     let scaleStarted = false;
     let scaleEnded = false;
 
+    interface NoteMap {
+      [key: number]: Note;
+    }
+
+    let noteMap: NoteMap = {};
+    times(scale.Notes.length, n => {
+      let current = scale.Notes[n];
+      noteMap[current.Degree] = current;
+    });
+
     return (
       <div className="indicators">
         {map(tuning.Offsets, (s: number, i: number) => {
@@ -116,7 +127,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                   degree = positions[f - fretStart];
 
                   if (degree) {
-                    label = scale.Notes[degree - 1].Label;
+                    label = noteMap[degree].Label;
                   }
 
                   show = !!degree;

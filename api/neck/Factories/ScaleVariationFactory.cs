@@ -17,7 +17,9 @@ namespace neck.Factories
 			var noteSpan = mapNoteSpan(scale, tuning, offset, span);
 			var positions = generateDegreePositions(noteSpan, scale, offset, span, new List<List<ScaleDegree?>>());
 
-			return positions.Select(p => new ScaleVariation(scale, tuning.Id, offset, p)).ToList();
+			var variations = positions.Select(p => new ScaleVariation(scale, tuning.Id, offset, p)).ToList();
+
+			return adjustDegreePositions(variations);
 		}
 
 		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int start, int end, int fretSpan)
@@ -57,11 +59,10 @@ namespace neck.Factories
 
 		private ScaleDegree calcNextDegree(Scale scale, Note note)
 		{
-			// TODO: ScaleDegree is non-zero based. Should it be?
-			var nextDegree = (ScaleDegree)(((int)note.Degree + 1) % (scale.Notes.Count + 1));
-			if (nextDegree == 0) nextDegree++;
+			var index = scale.Notes.FindIndex(n => Equals(note, n));
+			var nextNote = scale.Notes[(index + 1) % (scale.Notes.Count)];
 
-			return nextDegree;
+			return (ScaleDegree)nextNote.Degree;
 		}
 
 		// Works under the assumption that variations always directly follow
@@ -69,7 +70,7 @@ namespace neck.Factories
 		private int calcNextOctave(Scale scale, Note note)
 		{
 			var currentOctave = (int)note.Octave;
-			var index = scale.Notes.FindIndex(n => Notes.Equals(note, n));
+			var index = scale.Notes.FindIndex(n => Equals(note, n));
 
 			return index == scale.Notes.Count - 1 ? currentOctave + 1 : currentOctave;
 		}
@@ -102,6 +103,7 @@ namespace neck.Factories
 
 		private List<List<List<ScaleDegree?>>> generateDegreePositions(List<List<Note>> noteSpan, Scale scale, int offset, int span, List<List<ScaleDegree?>> degrees = null, Note prevNote = null, int oStart = 0, int pStart = 0)
 		{
+			// ScaleVariation positions are essentially a fret map of degrees
 			var positions = new List<List<List<ScaleDegree?>>>();
 
 			for (var o = oStart; o < noteSpan.Count; o++)
@@ -164,6 +166,39 @@ namespace neck.Factories
 
 			return positions;
 		}
+
+		private List<ScaleVariation> adjustDegreePositions(List<ScaleVariation> variations)
+		{
+			var adjusted = variations.Select(v =>
+			{
+				var positions = v.Positions;
+
+				// Empty preceding fret rows
+				if (positions.All(o => o[0] == null))
+				{
+					positions.ForEach(o =>
+					{
+						o.RemoveAt(0);
+					});
+
+					v.Offset++;
+				}
+
+				// Empty subsequent fret rows
+				if (positions.All(o => o.Last() == null))
+				{
+					positions.ForEach(o =>
+					{
+						o.RemoveAt(o.Count - 1);
+					});
+				}
+
+				return v;
+			}).ToList();
+
+			return adjusted;
+		}
+
 		#endregion
 
 	}
