@@ -42,6 +42,14 @@ namespace neck.Models
 			Octave = octave;
 		}
 
+		public Note Copy()
+		{
+			var note = new Note(Base, Suffix, Octave);
+			note.Degree = Degree;
+			note.Interval = Interval;
+			return note;
+		}
+
 		public override bool Equals(object obj)
 		{
 			if (obj is Note note)

@@ -38,7 +38,6 @@ namespace neck.Enums
 		Null,
 		NextFret,
 		NextString,
-		NextVariation,
 		End,
 	}
 }
