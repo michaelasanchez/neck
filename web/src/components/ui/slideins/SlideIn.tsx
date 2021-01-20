@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { Loading } from '../Loading';
+import { Loading } from '../../Loading';
 
 export interface ISlideInProps {
   className?: string;
   title?: JSX.Element;
-  badge?: JSX.Element; // TODO: expecting ButtonGroup
+  badge?: JSX.Element;
   header?: JSX.Element;
   loading: boolean;
 }

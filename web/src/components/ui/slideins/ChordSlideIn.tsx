@@ -3,12 +3,12 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import { SlideIn } from '.';
-import { Chord, ChordModifier, ChordVariation, Note, NoteValue } from '../../models';
-import { ChordVariationApi } from '../../network';
-import { AppOptions, NoteUtils } from '../../shared';
-import { NoteSelection } from '../NoteSelection';
-import { ChordDiagram } from './diagrams';
+import { SlideIn } from '..';
+import { Chord, ChordModifier, ChordVariation, Note, NoteValue } from '../../../models';
+import { ChordVariationApi } from '../../../network';
+import { AppOptions, NoteUtils } from '../../../shared';
+import { NoteSelection } from '../../NoteSelection';
+import { ChordDiagram } from '../diagrams';
 
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
@@ -106,15 +106,12 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
 
   // State Updates
   const handleChordUpdate = (root?: Note, mod?: ChordModifier) => {
-    let update = false;
     let updatedRoot: Note, updatedModifier: ChordModifier;
 
-    if (!!root && !NoteUtils.NotesAreEqual(rootNote, root)) {
-      update = true;
+    if (!!root && !NoteUtils.NotesAreEqual(chord.Root, root)) {
       updatedRoot = root;
     }
     if (mod !== null && mod != modifier) {
-      update = true;
       updatedModifier = mod;
     }
 
@@ -185,7 +182,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
             key={i}
             active={i == modifier}
             onSelect={() => handleModifierUpdate(i)}
-            disabled={indexOf([0, 1, 3, 6, 7, 8, 9], i) < 0} // TODO: manually filtering chord modifiers
+            disabled={indexOf([2, 4, 5, 10], i) >= 0} // TODO: manually filtering chord modifiers
           >
             {Chord.getModifierLabel(i)}
           </Dropdown.Item>

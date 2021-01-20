@@ -113,7 +113,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     return new ScaleApi().LocateByValues(
       NoteValue.C,
       NoteSuffix.Natural,
-      ScaleType.Diatonic,
+      ScaleType.Pentatonic,
     );
   };
 
@@ -126,6 +126,16 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         finishSetAppOptions(options);
       });
   };
+
+  const reloadScale = (options: AppOptions) => {
+    console.log('CROPDUSTER', options);
+    new ScaleApi()
+    .Locate(options.scale)
+    .then((scale) => {
+      options.scale = scale;
+      finishSetAppOptions(options);
+    })
+  }
 
   const loadInstrument = (instrumentId?: string): Promise<Instrument | Instrument[]> => {
     if (instrumentId) {
@@ -167,6 +177,8 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         updated.chord.Modifier != appOptions?.chord?.Modifier)
     ) {
       reloadChord(newOptions);
+    } else if (appOptions?.scale && updated?.scale) {
+      reloadScale(newOptions);
     } else {
       finishSetAppOptions(newOptions);
     }

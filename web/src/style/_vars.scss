@@ -15,10 +15,8 @@ $blue: rgb(135, 206, 235); //rgb(135, 206, 235);
 $green: rgb(135, 235, 197);
 $orange: rgb(241, 172, 42);
 
-$testin: rgb(82, 107, 45);
-
 /* Theme */
-$neck-primary: $testin;
+$neck-primary: $blue;
 
 // /* Fonts */
 $font-merriweather: 'Merriweather', serif;
@@ -56,7 +54,7 @@ $fretboard-marker-width: $fretboard-marker-diameter;
 $fretboard-marker-height: $fretboard-marker-diameter;
 
 // /* Frets */
-$fret-height: 80px;
+$fret-height: 100px;
 $fret-border-bottom: 1px solid #ddd;
 
 $fret-open-height: $fret-height;

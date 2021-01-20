@@ -91,7 +91,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
         })}
       </div>
     );
-  } else if (mode == IndicatorsMode.Scale && !!scaleVariation) {
+  } else if (mode == IndicatorsMode.Scale && !!scaleVariation && scaleVariation.ScaleId == scale.Id) {
     /* ScaleVariation */
     const fretStart = scaleVariation.Offset;
     const fretEnd =

@@ -25,17 +25,9 @@ $diagrams-per-row: 4;
     }
   }
 
-  .contents {
-    margin: 1em;
-  }
-
   .header {
     display: flex;
     justify-content: flex-end;
-  }
-
-  .contents {
-    flex-grow: 1;
   }
 
   .footer {
@@ -45,11 +37,23 @@ $diagrams-per-row: 4;
     padding-top: .5em;
   }
 
+  .badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+
+    > .btn-group {
+      box-shadow: -2px 6px 4px -2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
   .contents {
     display: flex;
     flex: 1;
     flex-direction: column;
+    flex-grow: 1;
     overflow: auto;
+    margin: 1em;
     margin-bottom: .5em;
 
     .variations {
@@ -65,15 +69,6 @@ $diagrams-per-row: 4;
   }
 
   &.chord {
-    .badge {
-      position: absolute;
-      top: -10px;
-      right: -10px;
-
-      > .btn-group {
-        box-shadow: -2px 6px 4px -2px rgba(0, 0, 0, 0.1);
-      }
-    }
 
     .contents {
 
