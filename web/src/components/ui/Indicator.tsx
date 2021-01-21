@@ -25,7 +25,9 @@ export const Indicator: React.FC<IndicatorProps> = (props) => {
   let divProps: any = firstRef ? { ref: firstRef } : {};
   return (
     <div
-      className={`fret${fretNum === 0 ? ' open' : ''}${fretClassName ? ` ${fretClassName}` : ''}`}
+      className={`fret${fretNum === 0 ? ' open' : ''}${
+        fretClassName ? ` ${fretClassName}` : ''
+      }`}
       key={fretNum}
       {...divProps}
     >
@@ -34,13 +36,9 @@ export const Indicator: React.FC<IndicatorProps> = (props) => {
           <div
             className={`indicator${muted ? ' muted' : ''}${
               degree ? ` degree degree-${degree}` : ''
+              //   ${barre ? (barreStart ? ' barre start' : ' barre') : ''}
             }${root ? ' root' : ''}`}
-            // className={`indicator${muted ? ' muted' : ''}${
-            //   barre ? (barreStart ? ' barre start' : ' barre') : ''
-            // }`}
-          >
-            {/* {degree && <label>{degree == 8 ? 1 : degree}</label>} */}
-          </div>
+          ></div>
           {label && <label>{label}</label>}
         </>
       )}

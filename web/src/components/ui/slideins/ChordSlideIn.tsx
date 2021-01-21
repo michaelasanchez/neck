@@ -1,10 +1,14 @@
 import { filter, findIndex, indexOf, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-
-import { SlideIn } from '..';
-import { Chord, ChordModifier, ChordVariation, Note, NoteValue } from '../../../models';
+import { BadgeSlideIn } from '.';
+import {
+  Chord,
+  ChordModifier,
+  ChordVariation,
+  Note,
+  NoteValue,
+} from '../../../models';
 import { ChordVariationApi } from '../../../network';
 import { AppOptions, NoteUtils } from '../../../shared';
 import { NoteSelection } from '../../NoteSelection';
@@ -21,25 +25,27 @@ export interface IChordSlideInProps {
 }
 
 // Badge Chord Modifier
-const modifiers = filter(ChordModifier, (m) => isNaN(m));
+const modifiers = filter(ChordModifier, (m) => !isNaN(m));
 
 // Badge Root Note
 const notes = [
-  Note.A(),
-  Note.B().Flat(),
-  Note.B(),
-  Note.C().Flat(),
   Note.C(),
   Note.C().Sharp(),
-  Note.D().Flat(),
+  // Note.D().Flat(),
   Note.D(),
-  Note.E().Flat(),
+  Note.D().Sharp(),
+  // Note.E().Flat(),
   Note.E(),
   Note.F(),
   Note.F().Sharp(),
-  Note.G().Flat(),
+  // Note.G().Flat(),
   Note.G(),
-  Note.A().Flat(),
+  Note.G().Sharp(),
+  // Note.A().Flat(),
+  Note.A(),
+  Note.A().Sharp(),
+  // Note.B().Flat(),
+  Note.B(),
 ];
 
 export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
@@ -150,49 +156,8 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     }
   };
 
-  // Render
-  const headerBadge = (
-    <ButtonGroup size="lg">
-      <DropdownButton
-        variant="secondary"
-        as={ButtonGroup}
-        title={rootNote.Label}
-        id="dropdown-note"
-      >
-        {map(notes, (n: Note, i: number) => (
-          <Dropdown.Item
-            eventKey={i.toString()}
-            key={i}
-            active={i == selectedRootIndex}
-            onSelect={() => handleRootUpdate(n)}
-          >
-            {n.Label}
-          </Dropdown.Item>
-        ))}
-      </DropdownButton>
-      <DropdownButton
-        variant="secondary"
-        as={ButtonGroup}
-        title={Chord.getModifierAbbreviation(modifier)}
-        id="dropdown-modifier"
-      >
-        {map(modifiers, (m: string, i: number) => (
-          <Dropdown.Item
-            eventKey={i.toString()}
-            key={i}
-            active={i == modifier}
-            onSelect={() => handleModifierUpdate(i)}
-            disabled={indexOf([2, 4, 5, 10], i) >= 0} // TODO: manually filtering chord modifiers
-          >
-            {Chord.getModifierLabel(i)}
-          </Dropdown.Item>
-        ))}
-      </DropdownButton>
-    </ButtonGroup>
-  );
-
   return (
-    <SlideIn
+    <BadgeSlideIn
       className="chord"
       title={
         <h2>
@@ -200,7 +165,26 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
           <span className="h6 text-muted">({variations?.length || 0})</span>
         </h2>
       }
-      badge={headerBadge}
+      options={[
+        {
+          active: selectedRootIndex,
+          values: notes,
+          getLabel: (n: Note) => n.Label,
+          onUpdate: (n: Note) => handleRootUpdate(n),
+        },
+        {
+          active: chord.Modifier,
+          disabled: [
+            ChordModifier.Diminished,
+            ChordModifier.SuspendedSecond,
+            ChordModifier.SuspendedFourth,
+            ChordModifier.AugmentedSeventh,
+          ],
+          values: modifiers,
+          getLabel: (mod: ChordModifier) => Chord.getModifierAbbreviation(mod),
+          onUpdate: (mod: ChordModifier) => handleModifierUpdate(mod),
+        },
+      ]}
       header={
         <NoteSelection
           notes={chord.Tones}
@@ -226,6 +210,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
           <> Nope!</>
         )}
       </div>
-    </SlideIn>
+    </BadgeSlideIn>
   );
 };

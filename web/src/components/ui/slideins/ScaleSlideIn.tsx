@@ -5,6 +5,7 @@ import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { BadgeSlideIn } from '.';
 
 import { SlideIn } from '..';
+import { NoteSelection } from '../..';
 import { Note, Scale, ScaleType, ScaleVariation } from '../../../models';
 import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
 import { AppOptions, NoteUtils } from '../../../shared';
@@ -16,9 +17,9 @@ export interface IScaleSlideInProps {
 }
 
 // Badge ScaleType
-const types = filter(ScaleType, (m) => isNaN(m));
+const types = filter(ScaleType, (m) => !isNaN(m));
 
-// Badge Root Note
+// Badge Tonic Note
 const notes = [
   Note.A(),
   Note.B().Flat(),
@@ -35,7 +36,34 @@ const notes = [
   Note.G().Flat(),
   Note.G(),
   Note.A().Flat(),
+  // Note.C(),
+  // Note.C().Sharp(),
+  // Note.D().Flat(),
+  // Note.D(),
+  // Note.E().Flat(),
+  // Note.E(),
+  // Note.F(),
+  // Note.F().Sharp(),
+  // Note.G().Flat(),
+  // Note.G(),
+  // Note.A().Flat(),
+  // Note.A(),
+  // Note.B().Flat(),
+  // Note.B(),
 ];
+
+const getScaleTypeLabel = (type: ScaleType) => {
+  switch (type) {
+    case ScaleType.Diatonic:
+      return 'Major';
+    case ScaleType.NaturalMinor:
+      return 'Minor';
+    case ScaleType.Chromatic:
+      return 'Chromatic';
+    case ScaleType.Pentatonic:
+      return 'Pentatonic';
+  }
+};
 
 export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
   appOptions,
@@ -95,10 +123,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
 
     if (updatedTonic || updatedType) {
       const updated = {
-        Tonic: {
-          Base: updatedTonic?.Base || scale.Tonic.Base,
-          Suffix: updatedTonic?.Suffix || scale.Tonic.Suffix,
-        },
+        Tonic: updatedTonic || scale.Tonic,
         Type: updatedType || scale.Type,
       };
 
@@ -107,25 +132,37 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
     }
   };
 
+  console.log('GONE', notes, scale.Tonic);
+  let activeNoteIndex = findIndex(notes, (n) =>
+    NoteUtils.NotesAreEqual(n, scale.Tonic)
+  );
+  activeNoteIndex = activeNoteIndex >= 0 ? activeNoteIndex : null;
+  console.log('YUP', activeNoteIndex)
+
   return (
     <BadgeSlideIn
       className="scale"
       title={<h2>Scale</h2>}
       loading={loading}
+      header={
+        <NoteSelection
+          notes={scale.Notes}
+          selected={[]}
+          setSelected={() => {}}
+        />
+      }
       options={[
         {
-          active: findIndex(notes, (n) =>
-            NoteUtils.NotesAreEqual(n, scale.Tonic)
-          ),
+          active: activeNoteIndex,
           values: notes,
           getLabel: (note: Note) => note.Label,
           onUpdate: (note: Note) => handleNoteUpdate(note),
         },
         {
-          // @ts-ignore
-          active: findIndex(types, (t) => t == ScaleType[scale.Type]),
+          active: scale.Type,
+          disabled: [ScaleType.Chromatic],
           values: types,
-          getLabel: (type: ScaleType) => type.toString(),
+          getLabel: (type: ScaleType) => ScaleType[type],
           onUpdate: (type: ScaleType) => handleTypeUpdate(type),
         },
       ]}

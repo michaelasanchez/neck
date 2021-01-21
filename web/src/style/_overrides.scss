@@ -27,6 +27,9 @@ nav.fixed-bottom {
         color: #fff; //#414549;
         text-shadow: 1px 1px 4px rgba(0, 0, 0, .4);
       }
+      &.disabled {
+        color: lighten(#6c757d, 40%);
+      }
     }
   }
 }

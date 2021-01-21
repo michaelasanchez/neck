@@ -128,7 +128,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
   };
 
   const reloadScale = (options: AppOptions) => {
-    console.log('CROPDUSTER', options);
     new ScaleApi()
     .Locate(options.scale)
     .then((scale) => {

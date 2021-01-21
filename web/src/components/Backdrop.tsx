@@ -13,6 +13,8 @@ export interface BackdropProps {
   options?: AppOptions;
 }
 
+const fretHeight = 100;
+
 // TODO: temp from option switch over
 const markers = [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2, 0, 0];
 // markers: [0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 2], // ukulele
@@ -23,7 +25,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({
   const { instrument, tuning } = options;
 
   const neckStyles = {
-    height: (instrument?.NumFrets + 1) * 80 || 0,
+    height: (instrument?.NumFrets + 1) * fretHeight || 0,
     maxWidth: styles.neck.maxWidth,
   };
 
@@ -40,7 +42,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({
             <div
               className="string"
               key={i}
-              style={{ height: instrument.NumFrets * 80 }}
+              style={{ height: instrument.NumFrets * fretHeight }}
             ></div>
           );
         })}

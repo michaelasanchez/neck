@@ -56,10 +56,12 @@
         $greens: #203000, #306010, #407020, #508030, #609040, #70a050, #80b060, #90c070, #a0d080;
         $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0, #a080d0;
 
+        $colors: $blues;
+
         /* Debug */
         @for $i from 1 through 8 {
           &.degree-#{$i} {
-            $color: mix(nth($blues, 2), nth($blues, 9), 100% * ($i / 8));
+            $color: mix(nth($colors, 3), nth($colors, 8), 100% * ($i / 8));
             background: $color;
             border-color: darken($color, 2%);
           }

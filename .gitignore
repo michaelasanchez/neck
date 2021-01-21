@@ -22,4 +22,6 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
+*.csproj.user
+
 *.png

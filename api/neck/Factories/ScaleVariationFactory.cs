@@ -60,19 +60,21 @@ namespace neck.Factories
 		private ScaleDegree calcNextDegree(Scale scale, Note note)
 		{
 			var index = scale.Notes.FindIndex(n => Equals(note, n));
-			var nextNote = scale.Notes[(index + 1) % (scale.Notes.Count)];
+			var nextNote = scale.Notes[(index + 1) % scale.Notes.Count];
 
 			return (ScaleDegree)nextNote.Degree;
 		}
 
-		// Works under the assumption that variations always directly follow
-		//	a scale's notes (from tonic to tonic)
+		// Works under the assumption that a scales' interval
+		//	will never span more than one octave
 		private int calcNextOctave(Scale scale, Note note)
 		{
 			var currentOctave = (int)note.Octave;
-			var index = scale.Notes.FindIndex(n => Equals(note, n));
 
-			return index == scale.Notes.Count - 1 ? currentOctave + 1 : currentOctave;
+			var index = scale.Notes.FindIndex(n => Equals(note, n));
+			var nextNote = scale.Notes[(index + 1) % scale.Notes.Count];
+
+			return nextNote.Pitch > note.Pitch ? currentOctave : currentOctave + 1;
 		}
 
 		private List<List<Note>> mapNoteSpan(Scale scale, Tuning tuning, int offset, int span)

@@ -7,7 +7,7 @@ import { Key, Mode, Scale } from '../../models';
 import { AppOptions, styles } from '../../shared';
 import { FretDisplayMode } from './Fret';
 
-export const ENABLE_NECK_ANIMATION = true;
+export const ENABLE_NECK_ANIMATION = false;
 
 // const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
