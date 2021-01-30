@@ -179,7 +179,7 @@ $diagram-outline-border-radius: 16px * $scale;
 
             /* Root */
             &.root {
-              border-radius: 1px;
+              border-radius: 0;
               transform: translate(-50%, -50%) rotate(45deg) scale(0.9);
             }
           }

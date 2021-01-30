@@ -17,8 +17,6 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-const ALLOW_MULTIPLE = false;
-
 export interface IChordSlideInProps {
   setAppOptions: (update: Partial<AppOptions>) => void;
   appOptions: AppOptions;
@@ -76,10 +74,9 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
         baseId: chord.Id,
         tuningId: tuning.Id,
         range: instrument.NumFrets,
-        // span: 9,
       })
       .then((variations: any[]) => {
-        // TODO: constructor logic should probably move
+        // TODO: should not have to run this through a constructor
         const newVariations = map(
           variations,
           (v) =>
@@ -98,12 +95,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   };
 
   // Render State
-  const rootNote = chord?.Root;
   const modifier = chord?.Modifier;
-
-  let selectedRootIndex = rootNote
-    ? findIndex(notes, (n) => NoteUtils.NotesAreEqual(n, rootNote))
-    : null;
 
   // Header Badge Actions
   const handleRootUpdate = (root: Note) => handleChordUpdate(root);
@@ -122,12 +114,12 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     }
 
     if (updatedRoot || updatedModifier !== null) {
-      const chord = new Chord(
-        updatedRoot || rootNote,
+      const updated = new Chord(
+        updatedRoot || chord.Root,
         updatedModifier !== undefined ? updatedModifier : modifier
       );
 
-      setAppOptions({ chord });
+      setAppOptions({ chord: updated });
     }
   };
 
@@ -137,23 +129,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   ) => {
     setAppOptions({ chordVariation: variation });
     setCurrentIndex(index);
-  };
-
-  const handleSelectedUpdate = (value: NoteValue) => {
-    if (!ALLOW_MULTIPLE) {
-      if (selected.length && selected[0] == value) {
-        setSelected([]);
-      } else {
-        setSelected([value]);
-      }
-    } else {
-      if (filter(selected, (v) => v === value).length) {
-        selected.splice(indexOf(selected, value), 1);
-      } else {
-        selected.push(value);
-      }
-      setSelected([...selected]);
-    }
   };
 
   return (
@@ -167,20 +142,21 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
       }
       options={[
         {
-          active: selectedRootIndex,
+          active: chord.Root,
           values: notes,
+          valuesEqual: NoteUtils.NotesAreEqual,
           getLabel: (n: Note) => n.Label,
           onUpdate: (n: Note) => handleRootUpdate(n),
         },
         {
           active: chord.Modifier,
+          values: modifiers,
           disabled: [
             ChordModifier.Diminished,
             ChordModifier.SuspendedSecond,
             ChordModifier.SuspendedFourth,
             ChordModifier.AugmentedSeventh,
           ],
-          values: modifiers,
           getLabel: (mod: ChordModifier) => Chord.getModifierAbbreviation(mod),
           onUpdate: (mod: ChordModifier) => handleModifierUpdate(mod),
         },
@@ -189,7 +165,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
         <NoteSelection
           notes={chord.Tones}
           selected={selected}
-          setSelected={handleSelectedUpdate}
+          setSelected={setSelected}
         />
       }
       loading={variations == null}

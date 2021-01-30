@@ -5,10 +5,12 @@ import { useState } from 'react';
 import { Note, NoteValue } from '../models';
 import { NoteUtils } from '../shared';
 
+const ALLOW_MULTIPLE = true;
+
 export interface INoteSelectionProps {
   notes: Note[];
   selected: NoteValue[];
-  setSelected: (v: NoteValue) => void;
+  setSelected: (v: NoteValue[]) => void;
 }
 
 const naturalNoteValues = NoteUtils.NaturalNoteValues();
@@ -22,6 +24,24 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
   if (!!notes && notes.length > 0) {
     rootIndex = findIndex(naturalNoteValues, (n) => n == notes[0].Base);
   }
+
+  const handleSelectedUpdate = (value: NoteValue) => {
+    if (!ALLOW_MULTIPLE) {
+      if (selected.length && selected[0] == value) {
+        
+        setSelected([]);
+      } else {
+        setSelected([value]);
+      }
+    } else {
+      if (filter(selected, (v) => v === value).length) {
+        selected.splice(indexOf(selected, value), 1);
+      } else {
+        selected.push(value);
+      }
+      setSelected([...selected]);
+    }
+  };
 
   return (
     <div className="note-selection">
@@ -43,7 +63,7 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
               <span
                 key={i}
                 className={`active ${currentSelected ? 'selected' : ''}`}
-                onClick={() => setSelected(shiftedNoteValue)}
+                onClick={() => handleSelectedUpdate(shiftedNoteValue)}
               >
                 {activeValue[0].Label}
               </span>

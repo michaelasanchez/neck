@@ -8,7 +8,7 @@ interface BadgeSlideInProps extends ISlideInProps {
 }
 
 export interface IBadgeOption<T> {
-  active: number;
+  active: T;
   disabled?: T[];
   values: Array<T>;
   getLabel: (value: T) => string;
@@ -35,7 +35,7 @@ export const BadgeSlideIn: React.FC<BadgeSlideInProps> = (props) => {
             variant="secondary"
             as={ButtonGroup}
             key={i}
-            title={getButtonTitle(o.values[o.active])}
+            title={getButtonTitle(o.active)}
             id="dropdown-note"
           >
             {map(o.values, (n, i) => {

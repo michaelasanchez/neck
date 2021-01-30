@@ -4,7 +4,19 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Backdrop, Indicators } from '.';
 import { useCookie } from '../hooks/useCookie';
-import { Chord, ChordModifier, Instrument, Key, Mode, Note, NoteSuffix, NoteValue, Scale, ScaleType } from '../models';
+import {
+  Chord,
+  ChordModifier,
+  Instrument,
+  Key,
+  KeyType,
+  Mode,
+  Note,
+  NoteSuffix,
+  NoteValue,
+  Scale,
+  ScaleType,
+} from '../models';
 import Cookie from '../models/Cookie';
 import { ChordApi } from '../network/ChordApi';
 import { InstrumentApi } from '../network/InstrumentApi';

@@ -21,10 +21,6 @@ const types = filter(ScaleType, (m) => !isNaN(m));
 
 // Badge Tonic Note
 const notes = [
-  Note.A(),
-  Note.B().Flat(),
-  Note.B(),
-  Note.C().Flat(),
   Note.C(),
   Note.C().Sharp(),
   Note.D().Flat(),
@@ -36,20 +32,9 @@ const notes = [
   Note.G().Flat(),
   Note.G(),
   Note.A().Flat(),
-  // Note.C(),
-  // Note.C().Sharp(),
-  // Note.D().Flat(),
-  // Note.D(),
-  // Note.E().Flat(),
-  // Note.E(),
-  // Note.F(),
-  // Note.F().Sharp(),
-  // Note.G().Flat(),
-  // Note.G(),
-  // Note.A().Flat(),
-  // Note.A(),
-  // Note.B().Flat(),
-  // Note.B(),
+  Note.A(),
+  Note.B().Flat(),
+  Note.B(),
 ];
 
 const getScaleTypeLabel = (type: ScaleType) => {
@@ -117,7 +102,9 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
       updatedTonic = tonic;
     }
 
-    if (!!type && type !== scale.Type) {
+    console.log(type);
+
+    if (type !== null && type !== scale.Type) {
       updatedType = type;
     }
 
@@ -131,13 +118,6 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
       setAppOptions({ scale: (updated as any) as Scale });
     }
   };
-
-  console.log('GONE', notes, scale.Tonic);
-  let activeNoteIndex = findIndex(notes, (n) =>
-    NoteUtils.NotesAreEqual(n, scale.Tonic)
-  );
-  activeNoteIndex = activeNoteIndex >= 0 ? activeNoteIndex : null;
-  console.log('YUP', activeNoteIndex)
 
   return (
     <BadgeSlideIn
@@ -153,8 +133,9 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
       }
       options={[
         {
-          active: activeNoteIndex,
+          active: scale.Tonic,
           values: notes,
+          valuesEqual: NoteUtils.NotesAreEqual,
           getLabel: (note: Note) => note.Label,
           onUpdate: (note: Note) => handleNoteUpdate(note),
         },
@@ -162,7 +143,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
           active: scale.Type,
           disabled: [ScaleType.Chromatic],
           values: types,
-          getLabel: (type: ScaleType) => ScaleType[type],
+          getLabel: (type: ScaleType) => getScaleTypeLabel(type),
           onUpdate: (type: ScaleType) => handleTypeUpdate(type),
         },
       ]}
