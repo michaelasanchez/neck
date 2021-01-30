@@ -7,6 +7,11 @@ dist
 *.css
 *.css.map
 
+# Dev assets
+*.png
+
+appsettings.Development.json
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -23,5 +28,3 @@ msbuild.err
 msbuild.wrn
 
 *.csproj.user
-
-*.png

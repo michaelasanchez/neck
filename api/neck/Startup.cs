@@ -47,7 +47,6 @@ namespace neck
 				o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 			});
 
-			//services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 			//services.AddMvc()
 			//	.AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null);
 
