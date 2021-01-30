@@ -1,9 +1,12 @@
 /* Container */
-$diagram-container-border-color: black;
+$diagram-container-border-color: rgb(150, 150, 150);
+$diagram-container-border-width: 1px;
 $diagram-container-open-border-color: black;
 
 /* String */
-$diagram-string-border: 2px solid rgb(75, 75, 75);
+$diagram-string-color: rgb(75, 75, 75);
+$diagram-string-width: 1px;
+$diagram-string-border: $diagram-string-width solid $diagram-string-color;
 
 /* Fret */
 $diagram-fret-border: 1px solid rgb(150, 150, 150);
@@ -38,7 +41,7 @@ $diagram-nut-border-width: 8px;
 
 /* Label */
 $diagram-label-font-size: 2rem * $scale;
-$diagram-label-margin-top: .6rem * $scale;
+$diagram-label-margin-top: 0.6rem * $scale;
 
 /* Outline */
 $diagram-outline-box-shadow: 0 2px 7px -2px #00000044;
@@ -112,11 +115,13 @@ $diagram-outline-border-radius: 16px * $scale;
         justify-content: center;
 
         &:first-child {
-          border-left: 1px solid $diagram-container-border-color;
+          border-left: $diagram-container-border-width solid
+            $diagram-container-border-color;
         }
 
         &:last-child {
-          border-right: 1px solid $diagram-container-border-color;
+          border-right: $diagram-container-border-width solid
+            $diagram-container-border-color;
         }
 
         > div {
@@ -138,7 +143,8 @@ $diagram-outline-border-radius: 16px * $scale;
         flex: 1;
 
         &:first-child {
-          border-top: 1px solid $diagram-container-border-color;
+          border-top: $diagram-container-border-width solid
+            $diagram-container-border-color;
         }
 
         &:last-child {
@@ -198,7 +204,8 @@ $diagram-outline-border-radius: 16px * $scale;
           border-top: none;
         }
         > div:nth-child(2) {
-          border-top: $diagram-nut-border-width * $scale solid $diagram-container-open-border-color;
+          border-top: $diagram-nut-border-width * $scale solid
+            $diagram-container-open-border-color;
           margin-top: -($diagram-nut-border-width * $scale);
           height: ($diagram-fret-height + $diagram-nut-border-width) * $scale;
         }
@@ -222,7 +229,8 @@ $diagram-outline-border-radius: 16px * $scale;
     &.first {
       .frets {
         > div:first-child {
-          border-top: $diagram-nut-border-width * $scale solid $diagram-container-open-border-color;
+          border-top: $diagram-nut-border-width * $scale solid
+            $diagram-container-open-border-color;
           margin-top: -($diagram-nut-border-width * $scale);
           height: ($diagram-fret-height + $diagram-nut-border-width) * $scale;
         }
@@ -230,203 +238,203 @@ $diagram-outline-border-radius: 16px * $scale;
       }
     }
 
-    > .string {
-      .fret {
-        border-bottom: $diagram-fret-border;
-        height: $diagram-fret-height;
-        width: $diagram-fret-width;
+      > .string {
+        .fret {
+          border-bottom: $diagram-fret-border;
+          height: $diagram-fret-height;
+          width: $diagram-fret-width;
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
-        position: relative;
+          position: relative;
 
-        &:first-child {
-          border-top: $diagram-fret-border;
-        }
+          &:first-child {
+            border-top: $diagram-fret-border;
+          }
 
-        .symbol {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-
-          &.string {
-            border-left: $diagram-string-border;
-            height: 100%;
+          .symbol {
+            position: absolute;
+            top: 50%;
             left: 50%;
-          }
+            transform: translate(-50%, -50%);
 
-          &.mute {
-            &::before,
-            &::after {
-              content: '';
-              display: block;
-              background: $diagram-dot-background-color;
-              border: $diagram-mute-border;
-              height: $diagram-mute-diameter;
-              position: absolute;
-            }
-
-            &::before {
-              transform: translate(-50%, -50%) rotate(45deg);
-            }
-
-            &::after {
-              transform: translate(-50%, -50%) rotate(-45deg);
-            }
-          }
-
-          &.dot {
-            left: 50%;
-            transition: 300ms background-color, 300ms border-color;
-
-            background: $diagram-dot-background-color;
-            // background: #00000044;
-            border: $diagram-dot-border;
-
-            height: $diagram-dot-diameter;
-            width: $diagram-dot-diameter;
-            border-radius: $diagram-dot-diameter / 2;
-
-            &.highlight {
-              background-color: $diagram-dot-highlight-background-color;
-              border-color: $diagram-dot-highlight-border-color;
-            }
-
-            &.root {
-              // background: $diagram-dot-background-color;
-              // background: #00000044;
-
-              border-radius: 1px;
-              transform: translate(-50%, -50%) rotate(45deg);
-            }
-          }
-
-          &.barre {
-            background: #000;
-            height: 4px;
-            width: 160%; // TODO: hack. check other screen resolutions
-
-            &.start,
-            &.end {
-              width: 85%;
-            }
-
-            &.start {
-              width: 85%;
+            &.string {
+              border-left: $diagram-string-border;
+              height: 100%;
               left: 50%;
-              border-top-left-radius: 50%;
-              border-bottom-left-radius: 50%;
             }
 
-            &.end {
-              border-top-right-radius: 50%;
-              border-bottom-right-radius: 50%;
+            &.mute {
+              &::before,
+              &::after {
+                content: '';
+                display: block;
+                background: $diagram-dot-background-color;
+                border: $diagram-mute-border;
+                height: $diagram-mute-diameter;
+                position: absolute;
+              }
+
+              &::before {
+                transform: translate(-50%, -50%) rotate(45deg);
+              }
+
+              &::after {
+                transform: translate(-50%, -50%) rotate(-45deg);
+              }
+            }
+
+            &.dot {
+              left: 50%;
+              transition: 300ms background-color, 300ms border-color;
+
+              background: $diagram-dot-background-color;
+              // background: #00000044;
+              border: $diagram-dot-border;
+
+              height: $diagram-dot-diameter;
+              width: $diagram-dot-diameter;
+              border-radius: $diagram-dot-diameter / 2;
+
+              &.highlight {
+                background-color: $diagram-dot-highlight-background-color;
+                border-color: $diagram-dot-highlight-border-color;
+              }
+
+              &.root {
+                // background: $diagram-dot-background-color;
+                // background: #00000044;
+
+                border-radius: 1px;
+                transform: translate(-50%, -50%) rotate(45deg);
+              }
+            }
+
+            &.barre {
+              background: #000;
+              height: 4px;
+              width: 160%; // TODO: hack. check other screen resolutions
+
+              &.start,
+              &.end {
+                width: 85%;
+              }
+
+              &.start {
+                width: 85%;
+                left: 50%;
+                border-top-left-radius: 50%;
+                border-bottom-left-radius: 50%;
+              }
+
+              &.end {
+                border-top-right-radius: 50%;
+                border-bottom-right-radius: 50%;
+              }
+            }
+          }
+
+          &.open {
+            border-top: none;
+            border-bottom-color: black;
+            border-bottom-width: 3px;
+
+            .symbol {
+              &.dot {
+                background: none;
+                // background: rgba($diagram-dot-background-color, .5);
+              }
             }
           }
         }
 
-        &.open {
-          border-top: none;
-          border-bottom-color: black;
-          border-bottom-width: 3px;
+        &:first-of-type {
+          .fret:not(.open) {
+            border-left: $diagram-fret-border;
+          }
+        }
+
+        &:last-of-type {
+          .fret:not(.open) {
+            border-right: $diagram-fret-border;
+          }
+        }
+      }
+    }
+
+    &.md {
+      .diagram-container {
+        > span {
+          // padding-top: $diagram-fret-height / 2;
+          line-height: $diagram-fret-height / 2;
+          font-size: 0.7rem;
+        }
+
+        > .string .fret {
+          height: $diagram-fret-height / 2;
+          width: $diagram-fret-width / 2;
 
           .symbol {
             &.dot {
-              background: none;
-              // background: rgba($diagram-dot-background-color, .5);
+              height: 10px;
+              width: 10px;
+              border-width: 1.5px;
             }
-          }
-        }
-      }
 
-      &:first-of-type {
-        .fret:not(.open) {
-          border-left: $diagram-fret-border;
-        }
-      }
-
-      &:last-of-type {
-        .fret:not(.open) {
-          border-right: $diagram-fret-border;
-        }
-      }
-    }
-  }
-
-  &.md {
-    .diagram-container {
-      > span {
-        // padding-top: $diagram-fret-height / 2;
-        line-height: $diagram-fret-height / 2;
-        font-size: 0.7rem;
-      }
-
-      > .string .fret {
-        height: $diagram-fret-height / 2;
-        width: $diagram-fret-width / 2;
-
-        .symbol {
-          &.dot {
-            height: 10px;
-            width: 10px;
-            border-width: 1.5px;
-          }
-
-          &.mute {
-            &::before,
-            &::after {
-              border-width: 2px;
-              height: 12px;
+            &.mute {
+              &::before,
+              &::after {
+                border-width: 2px;
+                height: 12px;
+              }
             }
           }
         }
       }
     }
-  }
 
-  &.sm {
-    .diagram-container {
-      > span {
-        top: $diagram-fret-height / 3;
-        text-align: end;
+    &.sm {
+      .diagram-container {
+        > span {
+          top: $diagram-fret-height / 3;
+          text-align: end;
 
-        line-height: $diagram-fret-height / 3;
-        font-size: 0.6rem;
-      }
-
-      > .string .fret {
-        height: $diagram-fret-height / 3;
-        width: $diagram-fret-width / 3;
-
-        .symbol {
-          border-left-width: 1px;
-
-          &.dot {
-            height: 6px;
-            width: 6px;
-            border-width: 1px;
-          }
-
-          &.root {
-            height: 5.5px;
-            width: 5.5px;
-          }
-
-          &.mute {
-            &::before,
-            &::after {
-              border-width: 1px;
-              height: 8px;
-            }
-          }
+          line-height: $diagram-fret-height / 3;
+          font-size: 0.6rem;
         }
 
-        &.open {
-          border-bottom-width: 3px;
-        }
+            > .string .fret {
+              height: $diagram-fret-height / 3;
+              width: $diagram-fret-width / 3;
+
+              .symbol {
+                border-left-width: 1px;
+
+                &.dot {
+                  height: 6px;
+                  width: 6px;
+                  border-width: 1px;
+                }
+
+                &.root {
+                  height: 5.5px;
+                  width: 5.5px;
+                }
+
+                &.mute {
+                  &::before,
+                  &::after {
+                    border-width: 1px;
+                    height: 8px;
+                  }
+                }
+              }
+
+              &.open {
+                border-bottom-width: 3px;
+              }
       }
     }
 

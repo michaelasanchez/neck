@@ -4,11 +4,7 @@ $note-selection-selected-color: darken($neck-primary, 20%); //#444;
   display: flex;
   justify-content: space-around;
   align-items: baseline;
-  width: 50%;
-
-  label {
-    margin-right: .5em;
-  }
+  width: 35%;
 
   span {
     font-size: 0.8em;

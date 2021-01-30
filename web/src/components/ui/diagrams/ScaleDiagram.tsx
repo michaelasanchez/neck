@@ -1,7 +1,7 @@
 import { map, maxBy } from 'lodash';
 import * as React from 'react';
 
-import { Diagram, DiagramSymbol } from '.';
+import { Diagram, DiagramSpan, DiagramSymbol, DiagramSymbolMap } from '.';
 import { ScaleVariation } from '../../../models';
 
 export interface ScaleDiagramProps {
@@ -10,9 +10,9 @@ export interface ScaleDiagramProps {
   setVariation: (variation: ScaleVariation) => void;
 }
 
-const calcMinMax = (
+const calcSpan = (
   variation: ScaleVariation
-): { min: number; max: number } => {
+): DiagramSpan => {
   return {
     min: variation.Offset,
     max: variation.Offset + maxBy(variation.Positions, (p) => p.length).length,
@@ -21,7 +21,7 @@ const calcMinMax = (
 
 const mapSymbols = (
   positions: Array<Array<number>>
-): Array<Array<DiagramSymbol>> => {
+): DiagramSymbolMap => {
   return map(positions, (s) =>
     map(s, (f) => {
       if (!!f) {
@@ -40,7 +40,7 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   active,
   variation,
 }) => {
-  const { min: minPos, max: maxPos } = calcMinMax(variation);
+  const { min: minPos, max: maxPos } = calcSpan(variation);
 
   const renderFretSymbols = () => {
     return <div className="symbol string"></div>;
@@ -67,13 +67,9 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
     <Diagram
       active={active}
       className="scale"
-      diagramBody={diagramBody}
       diagramLabel={diagramLabel}
-      calcMinMax={() => calcMinMax(variation)}
       handleClick={() => setVariation(variation)}
-      flag={true}
-      strings={variation.Positions.length}
-      frets={maxPos - minPos}
+      span={calcSpan(variation)}
       symbols={mapSymbols(variation.Positions)}
     />
   );

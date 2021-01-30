@@ -76,7 +76,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
       const [chord, scale, instrumentResult] = values;
-      
+
       const instrument: Instrument = isArray(instrumentResult)
         ? instrumentResult[0]
         : instrumentResult;
@@ -125,38 +125,40 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     return new ScaleApi().LocateByValues(
       NoteValue.C,
       NoteSuffix.Natural,
-      ScaleType.Pentatonic,
+      ScaleType.Diatonic
     );
   };
 
   // TODO: Combine with loadChord by keeping track of chordIds?
   const reloadChord = (options: AppOptions) => {
-    new ChordApi()
-      .Locate(options.chord)
-      .then((chord) => {
-        options.chord = chord;
-        finishSetAppOptions(options);
-      });
+    new ChordApi().Locate(options.chord).then((chord) => {
+      options.chord = chord;
+      finishSetAppOptions(options);
+    });
   };
 
   const reloadScale = (options: AppOptions) => {
-    new ScaleApi()
-    .Locate(options.scale)
-    .then((scale) => {
+    new ScaleApi().Locate(options.scale).then((scale) => {
       options.scale = scale;
+      // TODO: Neck still depends on scales generated from Note
+      options.key = new Key(
+        new Note(scale.Tonic.Base, scale.Tonic.Suffix),
+        scale.Type == ScaleType.NaturalMinor ? KeyType.Minor : KeyType.Major
+      );
       finishSetAppOptions(options);
-    })
-  }
+    });
+  };
 
-  const loadInstrument = (instrumentId?: string): Promise<Instrument | Instrument[]> => {
+  const loadInstrument = (
+    instrumentId?: string
+  ): Promise<Instrument | Instrument[]> => {
     if (instrumentId) {
       return new InstrumentApi().GetById(instrumentId);
     }
 
     // TODO: there has to be a better way to provide a default
     return new InstrumentApi().GetAll();
-  }
-
+  };
 
   const validateAppOptions = (appOptions: AppOptions): IError => {
     //
@@ -204,7 +206,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     setAppOptions(newOptions);
     setCookie('options', cookieStringFromAppOptions(newOptions));
   };
-
 
   // TODO: Move to useNeckOptions
   const cookieStringFromAppOptions = (appOptions: AppOptions): string => {

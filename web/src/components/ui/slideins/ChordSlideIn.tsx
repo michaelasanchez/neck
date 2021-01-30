@@ -1,7 +1,7 @@
-import { filter, findIndex, indexOf, map } from 'lodash';
+import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { BadgeSlideIn } from '.';
+import { DropdownSlideIn } from '.';
 import {
   Chord,
   ChordModifier,
@@ -132,7 +132,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   };
 
   return (
-    <BadgeSlideIn
+    <DropdownSlideIn
       className="chord"
       title={
         <h2>
@@ -186,6 +186,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
           <> Nope!</>
         )}
       </div>
-    </BadgeSlideIn>
+    </DropdownSlideIn>
   );
 };

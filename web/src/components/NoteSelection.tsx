@@ -45,7 +45,6 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
 
   return (
     <div className="note-selection">
-      <label>Notes:</label>
       {rootIndex &&
         map(naturalNoteValues, (v: NoteValue, i: number) => {
           //

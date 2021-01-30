@@ -9,6 +9,7 @@ export interface ISlideInProps {
   badge?: JSX.Element;
   header?: JSX.Element;
   loading: boolean;
+  devYOffset?: number;
 }
 
 const slideInWidth = 340;
@@ -24,6 +25,7 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
   const slideInStyle = {
     ...slideInBaseStyle,
     transform: 'translateX(0)',
+    top: props.devYOffset || 100,
   };
 
   const slideOutStyle = {

@@ -1,17 +1,14 @@
-import { filter, findIndex, indexOf, map } from 'lodash';
+import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-import { BadgeSlideIn } from '.';
-
-import { SlideIn } from '..';
+import { DropdownSlideIn, ISlideInProps } from '.';
 import { NoteSelection } from '../..';
 import { Note, Scale, ScaleType, ScaleVariation } from '../../../models';
 import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
 import { AppOptions, NoteUtils } from '../../../shared';
-import { Diagram, ScaleDiagram } from '../diagrams';
+import { ScaleDiagram } from '../diagrams';
 
-export interface IScaleSlideInProps {
+export interface IScaleSlideInProps extends Pick<ISlideInProps, 'devYOffset'> {
   appOptions: AppOptions;
   setAppOptions: (updated: Partial<AppOptions>) => void;
 }
@@ -53,6 +50,7 @@ const getScaleTypeLabel = (type: ScaleType) => {
 export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
   appOptions,
   setAppOptions,
+  devYOffset,
 }) => {
   const { instrument, scale, tuning } = appOptions;
 
@@ -102,8 +100,6 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
       updatedTonic = tonic;
     }
 
-    console.log(type);
-
     if (type !== null && type !== scale.Type) {
       updatedType = type;
     }
@@ -120,7 +116,8 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
   };
 
   return (
-    <BadgeSlideIn
+    <DropdownSlideIn
+      devYOffset={devYOffset}
       className="scale"
       title={<h2>Scale</h2>}
       loading={loading}
@@ -158,6 +155,6 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
           />
         ))}
       </div>
-    </BadgeSlideIn>
+    </DropdownSlideIn>
   );
 };

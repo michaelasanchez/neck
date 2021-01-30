@@ -43,6 +43,10 @@ export const Ui: React.FunctionComponent<UiProps> = ({
     // setAppOptions({ fretMode: updated });
   };
 
+  // TODO: This renders three times
+  console.log('UI RENDER');
+  console.log('----------------------------------------------------------------------')
+
   return (
     <>
       <Navbar
@@ -63,8 +67,8 @@ export const Ui: React.FunctionComponent<UiProps> = ({
           setMode={(m: Mode) => setAppOptions({ mode: m })}
         />
       </div>
-      {/* <ChordSlideIn appOptions={appOptions} setAppOptions={setAppOptions} /> */}
-      <ScaleSlideIn appOptions={appOptions} setAppOptions={setAppOptions} />
+      <ChordSlideIn appOptions={appOptions} setAppOptions={setAppOptions} />
+      <ScaleSlideIn appOptions={appOptions} setAppOptions={setAppOptions} devYOffset={600} />
     </>
   );
 };

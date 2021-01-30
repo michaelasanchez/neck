@@ -3,11 +3,11 @@ import * as React from 'react';
 import { ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import { ISlideInProps, SlideIn } from '.';
 
-interface BadgeSlideInProps extends ISlideInProps {
-  options: IBadgeOption<any>[];
+interface DropdownSlideInProps extends ISlideInProps {
+  options: IDropdownOption<any>[];
 }
 
-export interface IBadgeOption<T> {
+export interface IDropdownOption<T> {
   active: T;
   disabled?: T[];
   values: Array<T>;
@@ -19,10 +19,8 @@ export interface IBadgeOption<T> {
 
 const defaultValuesEqual = (a: any, b: any): boolean => a === b;
 
-export const BadgeSlideIn: React.FC<BadgeSlideInProps> = (props) => {
+export const DropdownSlideIn: React.FC<DropdownSlideInProps> = (props) => {
   const { options } = props;
-
-  console.log('OPTIONS', options);
 
   const badge = (
     <ButtonGroup size="lg">
