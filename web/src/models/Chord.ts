@@ -94,23 +94,23 @@ export class Chord extends ApiEntity {
       case ChordModifier.Minor:
         return 'Minor';
       case ChordModifier.Diminished:
-        return 'Diminished';
+        return 'Dim';
       case ChordModifier.Augmented:
-        return 'Augmented';
+        return 'Aug';
       case ChordModifier.SuspendedSecond:
         return 'Sus2';
       case ChordModifier.SuspendedFourth:
         return 'Sus4';
       case ChordModifier.MajorSeventh:
-        return 'Major 7';
+        return 'Maj7';
       case ChordModifier.MinorSeventh:
-        return 'Minor 7';
+        return 'Min7';
       case ChordModifier.DominantSeventh:
-        return 'Dominant 7';
+        return '7';
       case ChordModifier.DiminishedSeventh:
-        return 'Diminished 7';
+        return 'Dim7';
       case ChordModifier.AugmentedSeventh:
-        return 'Augmented 7';
+        return 'Aug7';
     }
   }
 

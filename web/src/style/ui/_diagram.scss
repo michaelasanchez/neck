@@ -12,6 +12,7 @@ $diagram-string-border: $diagram-string-width solid $diagram-string-color;
 $diagram-fret-border: 1px solid rgb(150, 150, 150);
 $diagram-fret-height: 30px;
 $diagram-fret-width: 25px;
+$scale: 0.35;
 
 /* Symbol */
 $diagram-symbol-border-color: rgb(50, 50, 50);
@@ -24,13 +25,13 @@ $diagram-mute-diameter: 20px;
 
 /* Dot */
 $diagram-dot-background-color: rgb(50, 50, 50);
-$diagram-dot-border: $diagram-symbol-border-width solid
+$diagram-dot-border: $diagram-symbol-border-width * $scale solid
   $diagram-symbol-border-color;
 $diagram-dot-diameter: 16px;
 $diagram-dot-color: darken($neck-primary, 20%);
 
 /* Dot Highlight */
-$diagram-dot-highlight-background-color: rgba($diagram-dot-color, 0.8);
+$diagram-dot-highlight-background-color: $diagram-dot-color;
 $diagram-dot-highlight-border-color: $diagram-dot-color;
 
 /* Barre */
@@ -39,7 +40,7 @@ $diagram-barre-background-color: $diagram-dot-background-color;
 /****************/
 /*** Scalable ***/
 /****************/
-// $scale: 0.7;
+$scale: 0.7;
 $scale: 0.35;
 
 /* Nut */
@@ -95,6 +96,14 @@ $diagram-outline-border-radius: 16px * $scale;
 
     font-size: $diagram-label-font-size;
     margin-top: $diagram-label-margin-top;
+
+    span {
+      font-size: 0.3em;
+
+      &:empty {
+        width: 1em;
+      }
+    }
   }
 
   /** Mid-Fretboard **/
@@ -106,8 +115,11 @@ $diagram-outline-border-radius: 16px * $scale;
     /* Offset */
     > span {
       position: absolute;
+      top: $diagram-fret-height * $scale;
+      right: calc(100% + .2rem); // TODO: does not work perfectly with scale
 
-      line-height: $diagram-fret-height;
+      font-size: 1.4rem * $scale;
+      line-height: $diagram-fret-height * $scale;
     }
 
     /* Strings */
@@ -161,8 +173,10 @@ $diagram-outline-border-radius: 16px * $scale;
 
     /* Symbols */
     .symbols {
-      width: 100%;
-      margin-left: -100%;
+      // TODO: Look further into this. Suspect it's from layerying flex + absolute
+      width: 98%;
+      margin-left: -99%;
+
       display: flex;
       justify-content: space-around;
 
@@ -182,17 +196,22 @@ $diagram-outline-border-radius: 16px * $scale;
             transform: translate(-50%, -50%);
 
             background: $diagram-dot-background-color;
-            border: $diagram-symbol-border-width * $scale solid
-              $diagram-symbol-border-color;
 
             height: $diagram-dot-diameter * $scale;
             width: $diagram-dot-diameter * $scale;
             border-radius: $diagram-dot-diameter * $scale;
 
+            transition: background-color 300ms ease-out;
+
             /* Root */
             &.root {
               border-radius: 0;
               transform: translate(-50%, -50%) rotate(45deg) scale(0.9);
+            }
+
+            /* Highlighted */
+            &.highlight {
+              background: $diagram-dot-highlight-background-color;
             }
           }
         }
@@ -222,7 +241,6 @@ $diagram-outline-border-radius: 16px * $scale;
 
           &.barre {
             background: $diagram-barre-background-color;
-            border-radius: 1px;
             width: 100%;
             height: 30%;
           }
@@ -256,6 +274,7 @@ $diagram-outline-border-radius: 16px * $scale;
 
             .dot {
               background: none;
+              border: $diagram-dot-border;
             }
           }
         }
@@ -274,215 +293,8 @@ $diagram-outline-border-radius: 16px * $scale;
         // margin-top: -$diagram-fret-height * $scale;
       }
     }
-
-    > .string {
-      .fret {
-        border-bottom: $diagram-fret-border;
-        height: $diagram-fret-height;
-        width: $diagram-fret-width;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        position: relative;
-
-        &:first-child {
-          border-top: $diagram-fret-border;
-        }
-
-        .symbol {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-
-          &.string {
-            border-left: $diagram-string-border;
-            height: 100%;
-            left: 50%;
-          }
-
-          &.mute {
-            &::before,
-            &::after {
-              content: '';
-              display: block;
-              background: $diagram-dot-background-color;
-              border: $diagram-mute-border;
-              height: $diagram-mute-diameter;
-              position: absolute;
-            }
-
-            &::before {
-              transform: translate(-50%, -50%) rotate(45deg);
-            }
-
-            &::after {
-              transform: translate(-50%, -50%) rotate(-45deg);
-            }
-          }
-
-          &.dot {
-            left: 50%;
-            transition: 300ms background-color, 300ms border-color;
-
-            background: $diagram-dot-background-color;
-            // background: #00000044;
-            border: $diagram-dot-border;
-
-            height: $diagram-dot-diameter;
-            width: $diagram-dot-diameter;
-            border-radius: $diagram-dot-diameter / 2;
-
-            &.highlight {
-              background-color: $diagram-dot-highlight-background-color;
-              border-color: $diagram-dot-highlight-border-color;
-            }
-
-            &.root {
-              // background: $diagram-dot-background-color;
-              // background: #00000044;
-
-              border-radius: 1px;
-              transform: translate(-50%, -50%) rotate(45deg);
-            }
-          }
-
-          &.barre {
-            background: #000;
-            height: 4px;
-            width: 160%; // TODO: hack. check other screen resolutions
-
-            &.start,
-            &.end {
-              width: 85%;
-            }
-
-            &.start {
-              width: 85%;
-              left: 50%;
-              border-top-left-radius: 50%;
-              border-bottom-left-radius: 50%;
-            }
-
-            &.end {
-              border-top-right-radius: 50%;
-              border-bottom-right-radius: 50%;
-            }
-          }
-        }
-
-        &.open {
-          border-top: none;
-          border-bottom-color: black;
-          border-bottom-width: 3px;
-
-          .symbol {
-            &.dot {
-              background: none;
-              // background: rgba($diagram-dot-background-color, .5);
-            }
-          }
-        }
-      }
-
-      &:first-of-type {
-        .fret:not(.open) {
-          border-left: $diagram-fret-border;
-        }
-      }
-
-      &:last-of-type {
-        .fret:not(.open) {
-          border-right: $diagram-fret-border;
-        }
-      }
-    }
   }
 
-  &.md {
-    .diagram-container {
-      > span {
-        // padding-top: $diagram-fret-height / 2;
-        line-height: $diagram-fret-height / 2;
-        font-size: 0.7rem;
-      }
-
-      > .string .fret {
-        height: $diagram-fret-height / 2;
-        width: $diagram-fret-width / 2;
-
-        .symbol {
-          &.dot {
-            height: 10px;
-            width: 10px;
-            border-width: 1.5px;
-          }
-
-          &.mute {
-            &::before,
-            &::after {
-              border-width: 2px;
-              height: 12px;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  &.sm {
-    .diagram-container {
-      > span {
-        top: $diagram-fret-height / 3;
-        text-align: end;
-
-        line-height: $diagram-fret-height / 3;
-        font-size: 0.6rem;
-      }
-
-      > .string .fret {
-        height: $diagram-fret-height / 3;
-        width: $diagram-fret-width / 3;
-
-        .symbol {
-          border-left-width: 1px;
-
-          &.dot {
-            height: 6px;
-            width: 6px;
-            border-width: 1px;
-          }
-
-          &.root {
-            height: 5.5px;
-            width: 5.5px;
-          }
-
-          &.mute {
-            &::before,
-            &::after {
-              border-width: 1px;
-              height: 8px;
-            }
-          }
-        }
-
-        &.open {
-          border-bottom-width: 3px;
-        }
-      }
-    }
-
-    .label-container {
-      span {
-        font-size: 0.3em;
-
-        &:empty {
-          width: 1em;
-        }
-      }
-    }
+  .diagram-container {
   }
 }

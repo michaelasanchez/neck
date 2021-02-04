@@ -32,6 +32,8 @@ export enum DiagramSymbol {
   Empty,
   Note,
   Root,
+  Highlighted,
+  HighlightedRoot,
 }
 
 export type DiagramSymbolMap = Array<Array<DiagramSymbol>>;
@@ -42,15 +44,23 @@ const renderPadding = (amount: number) =>
   times(amount, (p) => <div key={p}></div>);
 
 const renderSymbol = (symbol: DiagramSymbol): React.ReactElement => {
-  switch (symbol) {
-    case DiagramSymbol.Note:
-      return <div className={`dot`}></div>;
-    case DiagramSymbol.Root:
-      return <div className={`dot root`}></div>;
-    case DiagramSymbol.Empty:
-    default:
-      return;
+  if (symbol === DiagramSymbol.Empty) return;
+
+  let symbolClass = 'dot';
+  if (
+    symbol === DiagramSymbol.Root ||
+    symbol === DiagramSymbol.HighlightedRoot
+  ) {
+    symbolClass += ' root';
   }
+  if (
+    symbol === DiagramSymbol.Highlighted ||
+    symbol === DiagramSymbol.HighlightedRoot
+  ) {
+    symbolClass += ' highlight';
+  }
+
+  return <div className={symbolClass}></div>;
 };
 
 const renderBarre = (
@@ -100,7 +110,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   };
 
   const spanStyle = {
-    left: -4 - offsetWidth,
+    transform: `translateX(${-offsetWidth})`,
   };
 
   return (
