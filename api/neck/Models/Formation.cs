@@ -12,10 +12,12 @@ namespace neck.Models
 		// Position from string nut or open note
 		public List<int?> Positions;
 
-		private List<int> _barres;
+		// List of frets that can be barred
+		//	ints correspond to beginning string index, if any
+		private List<int?> _barres;
 
 		[NotMapped]
-		public List<int> Barres
+		public List<int?> Barres
 		{
 			get
 			{
@@ -29,20 +31,19 @@ namespace neck.Models
 			Positions = positions;
 		}
 
-		private List<int> calcBarres()
+		private List<int?> calcBarres()
 		{
-			var barres = new List<int>();
-
+			// Single barre for now
 			var min = Positions.Min();
 			if (min > 0 && Positions.Count(p => p == min) > 1)
 			{
-				barres.Add(Positions.IndexOf(min));
+				var barres = Enumerable.Repeat<int?>(null, Positions.Max().Value - Positions.Min().Value + 1).ToList();
+				barres[min.Value - Positions.Min().Value] = Positions.IndexOf(min);
+
 				return barres;
 			}
-			else
-			{
-				return barres;
-			}
+
+			return null;
 		}
 	}
 }

@@ -55,10 +55,12 @@ $fretboard-marker-height: $fretboard-marker-diameter;
 
 // /* Frets */
 $fret-height: 100px;
-$fret-border-bottom: 1px solid #ddd;
+$fret-border-bottom-width: 1px;
+$fret-border-bottom: $fret-border-bottom-width solid #ddd;
 
 $fret-open-height: $fret-height;
-$fret-open-border-bottom: 2px solid #aaa;
+$fret-open-border-bottom-width: 2px;
+$fret-open-border-bottom: $fret-open-border-bottom-width solid #aaa;
 $fret-open-font-weight: 700;
 
 // /* Fret Labels */
@@ -106,7 +108,9 @@ $indicator-background: radial-gradient(
     $selector-gradient-outer 70%
   )
   no-repeat;
-$indicator-border: 4px solid $selector-border-color;
+
+$indicator-border-color: #fff; //$selector-border-color;
+$indicator-border: 4px solid $indicator-border-color;
 
 $indicator-muted-border: $indicator-border;
 $indicator-muted-diameter: 30px;

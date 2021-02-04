@@ -17,6 +17,7 @@ export interface DiagramProps {
   size?: DiagramSize;
   span: DiagramSpan;
   symbols: DiagramSymbolMap;
+  barres?: DiagramBarreMap;
 }
 
 export enum DiagramSize {
@@ -35,6 +36,32 @@ export enum DiagramSymbol {
 
 export type DiagramSymbolMap = Array<Array<DiagramSymbol>>;
 
+export type DiagramBarreMap = Array<number>;
+
+const renderPadding = (amount: number) =>
+  times(amount, (p) => <div key={p}></div>);
+
+const renderSymbol = (symbol: DiagramSymbol): React.ReactElement => {
+  switch (symbol) {
+    case DiagramSymbol.Note:
+      return <div className={`dot`}></div>;
+    case DiagramSymbol.Root:
+      return <div className={`dot root`}></div>;
+    case DiagramSymbol.Empty:
+    default:
+      return;
+  }
+};
+
+const renderBarre = (
+  numStrings: number,
+  startString: number
+): React.ReactElement[] => {
+  return times(numStrings + 1, (s) => {
+    return <div key={s} className={s > startString ? 'barre' : ''}></div>;
+  });
+};
+
 export const Diagram: React.FC<DiagramProps> = ({
   span,
   handleClick,
@@ -43,12 +70,11 @@ export const Diagram: React.FC<DiagramProps> = ({
   size = DiagramSize.Small,
   diagramLabel,
   symbols,
+  barres,
 }) => {
   /* Frets / Fret Padding */
-  const { min: minPos, max: maxPos } = span;
-
   const paddingTop =
-    (minPos <= NO_FRET_PADDING_AT_OR_BELOW ? 0 : USE_FRET_PADDING ? 1 : 0) *
+    (span.min <= NO_FRET_PADDING_AT_OR_BELOW ? 0 : USE_FRET_PADDING ? 1 : 0) *
     FRET_PADDING_SIZE;
   const paddingBottom = (USE_FRET_PADDING ? 1 : 0) * FRET_PADDING_SIZE;
   const paddingTotal = paddingTop + paddingBottom;
@@ -56,7 +82,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   /* Dimensions */
   const numStrings = symbols.length;
   const numFrets = max([
-    maxPos - minPos + FRET_PADDING_SIZE * paddingTotal,
+    span.max - span.min + FRET_PADDING_SIZE * paddingTotal,
     MIN_NUM_FRETS,
   ]);
 
@@ -77,18 +103,6 @@ export const Diagram: React.FC<DiagramProps> = ({
     left: -4 - offsetWidth,
   };
 
-  const renderSymbol = (symbol: DiagramSymbol): JSX.Element => {
-    switch (symbol) {
-      case DiagramSymbol.Note:
-        return <div className={`dot`}></div>;
-      case DiagramSymbol.Root:
-        return <div className={`dot root`}></div>;
-      case DiagramSymbol.Empty:
-      default:
-        return;
-    }
-  };
-
   return (
     <div
       className={`diagram ${size} ${active ? 'active' : ''} ${className}`}
@@ -98,11 +112,11 @@ export const Diagram: React.FC<DiagramProps> = ({
 
       <div
         className={`diagram-container ${
-          minPos < NO_FRET_PADDING_AT_OR_BELOW ? 'open' : ''
-        } ${minPos === NO_FRET_PADDING_AT_OR_BELOW ? 'first' : ''}`}
+          span.min < NO_FRET_PADDING_AT_OR_BELOW ? 'open' : ''
+        } ${span.min === NO_FRET_PADDING_AT_OR_BELOW ? 'first' : ''}`}
       >
         <span ref={offsetSpan} style={spanStyle}>
-          {(minPos > 1 || ALWAYS_SHOW_OFFSET) && minPos}
+          {(span.min > 1 || ALWAYS_SHOW_OFFSET) && span.min}
         </span>
         <>
           <div className="strings">
@@ -122,18 +136,24 @@ export const Diagram: React.FC<DiagramProps> = ({
           <div className="symbols">
             {map(symbols, (s, i) => (
               <div key={i}>
-                {times(paddingTop, (f) => (
-                  <div className="fret" key={f}></div>
-                ))}
+                {renderPadding(paddingTop)}
                 {map(s, (f, j) => (
                   <div key={j}>{renderSymbol(f)}</div>
                 ))}
-                {times(paddingBottom, (f) => (
-                  <div className="fret" key={f}></div>
-                ))}
+                {renderPadding(paddingBottom)}
               </div>
             ))}
           </div>
+
+          {barres && (
+            <div className="barres">
+              {renderPadding(paddingTop)}
+              {map(barres, (s, i) => (
+                <div key={i}>{s !== null && renderBarre(numStrings, s)}</div>
+              ))}
+              {renderPadding(paddingBottom)}
+            </div>
+          )}
         </>
       </div>
       <div className="label-container">{diagramLabel}</div>

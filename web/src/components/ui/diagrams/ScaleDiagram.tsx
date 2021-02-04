@@ -40,34 +40,12 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   active,
   variation,
 }) => {
-  const { min: minPos, max: maxPos } = calcSpan(variation);
-
-  const renderFretSymbols = () => {
-    return <div className="symbol string"></div>;
-  };
-
-  const diagramBody = (
-    <>
-      {map(variation.Positions, (s, i) => (
-        <div className="string" key={i}>
-          {map(s, (f, i) => (
-            <div className="fret" key={i}>
-              {renderFretSymbols()}
-            </div>
-          ))}
-        </div>
-      ))}
-    </>
-  );
-
-  // const diagramLabel = <>{variation.Label}</>;
-  const diagramLabel = <>label</>;
 
   return (
     <Diagram
       active={active}
       className="scale"
-      diagramLabel={diagramLabel}
+      diagramLabel={<>label</>}//{<>{variation.Label}</>}
       handleClick={() => setVariation(variation)}
       span={calcSpan(variation)}
       symbols={mapSymbols(variation.Positions)}

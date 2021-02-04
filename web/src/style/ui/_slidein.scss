@@ -34,7 +34,7 @@ $diagrams-per-row: 4;
     display: flex;
     justify-content: center;
 
-    padding-top: .5em;
+    padding-top: 0.5em;
   }
 
   .badge {
@@ -44,6 +44,18 @@ $diagrams-per-row: 4;
 
     > .btn-group {
       box-shadow: -2px 6px 4px -2px rgba(0, 0, 0, 0.1);
+
+      > .btn-group {
+        &:first-child button {
+          padding-right: 0.6rem;
+        }
+        &:last-child button {
+          padding-left: 0.6rem;
+        }
+      }
+      button::after {
+        // content: none;
+      }
     }
   }
 
@@ -54,7 +66,7 @@ $diagrams-per-row: 4;
     flex-grow: 1;
     overflow: auto;
     margin: 1em;
-    margin-bottom: .5em;
+    margin-bottom: 0.5em;
 
     .variations {
       display: flex;
@@ -69,9 +81,7 @@ $diagrams-per-row: 4;
   }
 
   &.chord {
-
     .contents {
-
       &.loading {
         justify-content: center;
       }

@@ -1,10 +1,9 @@
-import { filter, map, max, min, times } from 'lodash';
+import { each } from 'jquery';
+import { filter, indexOf, map, max, min, times } from 'lodash';
 import * as React from 'react';
-
-import { DiagramSize, FRET_PADDING_SIZE } from '.';
 import { Chord, ChordVariation, Note, NoteValue } from '../../../models';
 import { NoteUtils } from '../../../shared';
-import { Diagram, DiagramSpan, DiagramSymbol, MIN_NUM_FRETS } from './Diagram';
+import { Diagram, DiagramSize, DiagramSpan, DiagramSymbol } from './Diagram';
 
 export interface ChordDiagramProps {
   chord: Chord;
@@ -15,17 +14,31 @@ export interface ChordDiagramProps {
   size?: DiagramSize;
 }
 
-enum BarreClass {
-  Start = 'start',
-  Segment = '',
-  End = 'end',
-}
-
 const calcSpan = (variation: ChordVariation): DiagramSpan => {
   return {
     min: min(variation.Positions),
-    max: max(variation.Positions) + 1,
+    max: max(variation.Positions) + 1,  // TODO: this is the wrong fix & forces "padding" with incorrect max value
   };
+};
+
+const mapSymbols = (
+  span: DiagramSpan,
+  positions: Array<number>,
+  roots: Array<boolean>
+) => {
+  return map(positions, (s, i) => {
+    return times(span.max - span.min, (f) => {
+      const pos = f + span.min;
+
+      if (pos === s) {
+        if (roots[i]) {
+          return DiagramSymbol.Root;
+        }
+        return DiagramSymbol.Note;
+      }
+      return DiagramSymbol.Empty;
+    });
+  });
 };
 
 export const ChordDiagram: React.FC<ChordDiagramProps> = ({
@@ -36,9 +49,9 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   highlighted: highlightedNoteValues = [],
   size = DiagramSize.Small,
 }) => {
-  const { min: minPos, max: maxPos } = calcSpan(variation);
-  
-  const chordRoots = new Array(variation.Pitches.length);
+  const span = calcSpan(variation);
+
+  const chordRoots = new Array<boolean>(variation.Pitches.length);
   const chordHighlighted = map(variation.Pitches, (p) => false);
   const noteLabels = map(variation.Pitches, (p: number, i: number) => {
     const result = filter(chord.Tones, (t: any) => p == t.Pitch);
@@ -55,19 +68,6 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
     return null;
   });
-  
-  const mapSymbols = (positions: Array<number>, barres?: Array<number>) => {
-    return map(positions, (s, i) => {
-      return times(maxPos - minPos, (f) => {
-        const pos = f + minPos;
-
-        if (pos === s) {
-          return DiagramSymbol.Note;
-        }
-        return DiagramSymbol.Empty;
-      });
-    });
-  };
 
   const diagramLabel = (
     <>
@@ -84,8 +84,9 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
       diagramLabel={diagramLabel}
       handleClick={() => handleClick(variation)}
       size={size}
-      span={calcSpan(variation)}
-      symbols={mapSymbols(variation.Positions)}
+      span={span}
+      symbols={mapSymbols(span, variation.Positions, chordRoots)}
+      barres={variation.Barres}
     />
   );
 };

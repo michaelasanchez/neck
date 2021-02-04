@@ -13,7 +13,11 @@
       @include flex-center;
 
       // Easiest way to match neck fret
-      border-bottom: 1px solid transparent;
+      border-bottom: $fret-border-bottom-width solid transparent;
+
+      &.open {
+        border-bottom: $fret-open-border-bottom-width solid transparent;
+      }
 
       label {
         margin-bottom: 0;
@@ -63,7 +67,7 @@
           &.degree-#{$i} {
             $color: mix(nth($colors, 3), nth($colors, 8), 100% * ($i / 8));
             background: $color;
-            border-color: darken($color, 2%);
+            // border-color: darken($color, 2%);
           }
         }
 
