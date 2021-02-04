@@ -3,7 +3,7 @@ import { filter, indexOf, map, max, min, times } from 'lodash';
 import * as React from 'react';
 import { Chord, ChordVariation, Note, NoteValue } from '../../../models';
 import { NoteUtils } from '../../../shared';
-import { Diagram, DiagramSize, DiagramSpan, DiagramSymbol } from './Diagram';
+import { Diagram, DiagramSpan, DiagramSymbol } from './Diagram';
 
 export interface ChordDiagramProps {
   chord: Chord;
@@ -11,7 +11,6 @@ export interface ChordDiagramProps {
   setChordVariation: (options: ChordVariation) => void;
   active?: boolean;
   highlighted?: Note[];
-  size?: DiagramSize;
 }
 
 const calcSpan = (variation: ChordVariation): DiagramSpan => {
@@ -54,7 +53,6 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   setChordVariation: handleClick,
   active,
   highlighted: highlightedNotes = [],
-  size = DiagramSize.Small,
 }) => {
   const span = calcSpan(variation);
 

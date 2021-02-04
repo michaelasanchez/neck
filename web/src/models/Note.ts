@@ -47,10 +47,10 @@ export enum NoteSuffix {
 export enum NoteSuffixLabel {
   Sharp = '\u266f',
   Flat = '\u266d',
+  DoubleSharp = '\ud834\udd2a',
+  DoubleFlat = '\ud834\udd2b',
 }
 
-const SharpSymbol = '\u266f';
-const FlatSymbol = '\u266d';
 
 export class Note {
 
@@ -81,15 +81,15 @@ export class Note {
   private SuffixLabel(suffix: NoteSuffix, long = false) {
     switch (suffix) {
       case NoteSuffix.DoubleFlat:
-        return long ? 'Double Flat' : `${FlatSymbol}${FlatSymbol}`;
+        return long ? 'Double Flat' : `${NoteSuffixLabel.DoubleFlat }`;
       case NoteSuffix.Flat:
-        return long ? 'Flat' : `${FlatSymbol}`;
+        return long ? 'Flat' : `${NoteSuffixLabel.Flat}`;
       case NoteSuffix.Natural:
         return long ? 'Natural' : '';
       case NoteSuffix.Sharp:
-        return long ? 'Sharp' : `${SharpSymbol}`;
+        return long ? 'Sharp' : `${NoteSuffixLabel.Sharp}`;
       case NoteSuffix.DoubleSharp:
-        return long ? 'Double Sharp' : `${SharpSymbol}${SharpSymbol}`;
+        return long ? 'Double Sharp' : `${NoteSuffixLabel.DoubleSharp}`;
     }
   }
 

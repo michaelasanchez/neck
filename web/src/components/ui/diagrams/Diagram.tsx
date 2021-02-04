@@ -14,18 +14,10 @@ export interface DiagramProps {
   active?: boolean;
   className?: string;
   diagramLabel: JSX.Element;
-  size?: DiagramSize;
   span: DiagramSpan;
   symbols: DiagramSymbolMap;
   barres?: DiagramBarreMap;
 }
-
-export enum DiagramSize {
-  Small = 'sm',
-  Medium = 'md',
-  Normal = '',
-}
-
 export type DiagramSpan = { min: number; max: number };
 
 export enum DiagramSymbol {
@@ -77,7 +69,6 @@ export const Diagram: React.FC<DiagramProps> = ({
   handleClick,
   active,
   className = '',
-  size = DiagramSize.Small,
   diagramLabel,
   symbols,
   barres,
@@ -115,15 +106,15 @@ export const Diagram: React.FC<DiagramProps> = ({
 
   return (
     <div
-      className={`diagram ${size} ${active ? 'active' : ''} ${className}`}
+      className={`diagram${active ? ' active' : ''} ${className}`}
       onClick={handleClick}
     >
       <div className="diagram-outline" style={outlineStyle}></div>
 
       <div
-        className={`diagram-container ${
-          span.min < NO_FRET_PADDING_AT_OR_BELOW ? 'open' : ''
-        } ${span.min === NO_FRET_PADDING_AT_OR_BELOW ? 'first' : ''}`}
+        className={`diagram-container${
+          span.min < NO_FRET_PADDING_AT_OR_BELOW ? ' open' : ''
+        }${span.min > 0 && span.min <= 2 ? ' first' : ''}`}
       >
         <span ref={offsetSpan} style={spanStyle}>
           {(span.min > 1 || ALWAYS_SHOW_OFFSET) && span.min}

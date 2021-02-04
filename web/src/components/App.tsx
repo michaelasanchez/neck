@@ -182,12 +182,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
     if (
       appOptions?.chord &&
-      updated?.chord &&
-      (!NoteUtils.NotesAreEqual(
-        updated?.chord?.Root,
-        appOptions?.chord?.Root
-      ) ||
-        updated.chord.Modifier != appOptions?.chord?.Modifier)
+      updated?.chord
     ) {
       reloadChord(newOptions);
     } else if (appOptions?.scale && updated?.scale) {
