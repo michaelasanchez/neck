@@ -276,6 +276,10 @@ $diagram-outline-border-radius: 16px * $scale;
               background: none;
               border: $diagram-dot-border;
             }
+
+            &.highlight {
+              border: $diagram-dot-highlight-border-color;
+            }
           }
         }
       }

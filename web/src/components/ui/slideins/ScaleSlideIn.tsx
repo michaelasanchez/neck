@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { NoteSelection } from '../..';
-import { Note, Scale, ScaleType, ScaleVariation } from '../../../models';
+import { Note, NoteValue, Scale, ScaleType, ScaleVariation } from '../../../models';
 import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
 import { AppOptions, NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
@@ -57,6 +57,8 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [variations, setVariations] = useState<ScaleVariation[]>([]);
 
+  const [selected, setSelected] = useState<Note[]>();
+
   const [loading, setLoading] = useState<boolean>(true);
 
   const reloadScaleVariation = () => {
@@ -78,6 +80,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
 
   useEffect(() => {
     if (!!scale) {
+      setSelected([]);
       reloadScaleVariation();
     }
   }, [appOptions?.scale]);
@@ -124,8 +127,8 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
       header={
         <NoteSelection
           notes={scale.Notes}
-          selected={[]}
-          setSelected={() => {}}
+          selected={selected}
+          setSelected={setSelected}
         />
       }
       options={[
@@ -150,6 +153,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
           <ScaleDiagram
             key={i}
             active={i == currentIndex}
+            highlighted={selected}
             variation={v}
             setVariation={(v) => handleSetChordVariation(v, i)}
           />

@@ -57,7 +57,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [variations, setVariations] = useState<ChordVariation[]>();
 
-  const [selected, setSelected] = useState<NoteValue[]>();
+  const [selected, setSelected] = useState<Note[]>();
 
   // Side Effects
   useEffect(() => {

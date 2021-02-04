@@ -10,7 +10,7 @@ export interface ChordDiagramProps {
   chordVariation: ChordVariation;
   setChordVariation: (options: ChordVariation) => void;
   active?: boolean;
-  highlighted?: NoteValue[];
+  highlighted?: Note[];
   size?: DiagramSize;
 }
 
@@ -53,7 +53,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   chordVariation: variation,
   setChordVariation: handleClick,
   active,
-  highlighted: highlightedNoteValues = [],
+  highlighted: highlightedNotes = [],
   size = DiagramSize.Small,
 }) => {
   const span = calcSpan(variation);
@@ -69,7 +69,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
       chordRoots[i] = NoteUtils.NotesAreEqual(note, chord.Root);
       chordHighlighted[i] =
-        filter(highlightedNoteValues, (v) => v == note.Base).length > 0;
+        filter(highlightedNotes, (n) => n.Base === note.Base).length > 0;
 
       return note.Label;
     }

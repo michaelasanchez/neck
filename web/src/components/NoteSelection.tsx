@@ -1,4 +1,4 @@
-import { each, filter, findIndex, indexOf, map } from 'lodash';
+import { each, filter, findIndex, indexOf, keyBy, map } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -9,8 +9,8 @@ const ALLOW_MULTIPLE = true;
 
 export interface INoteSelectionProps {
   notes: Note[];
-  selected: NoteValue[];
-  setSelected: (v: NoteValue[]) => void;
+  selected: Note[];
+  setSelected: (v: Note[]) => void;
 }
 
 const naturalNoteValues = NoteUtils.NaturalNoteValues();
@@ -25,17 +25,17 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
     rootIndex = findIndex(naturalNoteValues, (n) => n == notes[0].Base);
   }
 
-  const handleSelectedUpdate = (value: NoteValue) => {
+  const handleSelectedUpdate = (value: Note) => {
     if (!ALLOW_MULTIPLE) {
-      if (selected.length && selected[0] == value) {
+      if (selected.length && selected[0].Base == value.Base) {
         
         setSelected([]);
       } else {
         setSelected([value]);
       }
     } else {
-      if (filter(selected, (v) => v === value).length) {
-        selected.splice(indexOf(selected, value), 1);
+      if (filter(selected, (v) => v.Base === value.Base).length) {
+        selected.splice(findIndex(selected, n => n.Base === value.Base), 1);
       } else {
         selected.push(value);
       }
@@ -54,15 +54,18 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
                 naturalNoteValues.length
             ];
 
-          const currentSelected = indexOf(selected, shiftedNoteValue) > -1;
+          const currentSelected = findIndex(selected, n => n.Base === shiftedNoteValue) > -1;
           const activeValue = filter(notes, (n) => n.Base == shiftedNoteValue);
+
+          // TODO:
+          if (activeValue.length > 1) debugger;
 
           if (activeValue.length == 1) {
             return (
               <span
                 key={i}
                 className={`active ${currentSelected ? 'selected' : ''}`}
-                onClick={() => handleSelectedUpdate(shiftedNoteValue)}
+                onClick={() => handleSelectedUpdate(activeValue[0])}
               >
                 {activeValue[0].Label}
               </span>
