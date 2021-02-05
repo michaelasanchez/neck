@@ -1,6 +1,7 @@
 import { filter, indexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
+import { useAppOptionsContext } from '..';
 import { Note } from '../models';
 import { AppOptions } from '../shared';
 import { Indicator } from './ui';
@@ -12,12 +13,13 @@ export enum IndicatorsMode {
 }
 
 interface IndicatorsProps {
-  appOptions: AppOptions;
   mainRef: React.MutableRefObject<HTMLDivElement>;
 }
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
-  const { appOptions, mainRef } = props;
+  const { appOptions } = useAppOptionsContext();
+
+  const { mainRef } = props;
 
   const {
     indicatorsMode: mode = IndicatorsMode.Chord,
@@ -49,9 +51,6 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
   /* ChordVariation */
   if (mode == IndicatorsMode.Chord && !!chordVariation) {
-
-    console.log(chord, chordVariation);
-
     const nonNullPositions = filter(
       chordVariation.Positions,
       (p) => p !== null
@@ -71,7 +70,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
           const muted = position === null;
 
           const pitch = chordVariation.Pitches[i];
-          const note = filter(chord.Tones, n => n.Pitch === pitch)[0];
+          const note = filter(chord.Tones, (n) => n.Pitch === pitch)[0];
 
           return (
             <div className="string" key={i}>
@@ -105,7 +104,12 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
         })}
       </div>
     );
-  } else if (mode == IndicatorsMode.Scale && !!scaleVariation && scaleVariation.ScaleId == scale.Id) {  // TODO: variation swap bug
+  } else if (
+    mode == IndicatorsMode.Scale &&
+    !!scaleVariation &&
+    scaleVariation.ScaleId == scale.Id
+  ) {
+    // TODO: variation swap bug
     /* ScaleVariation */
     const fretStart = scaleVariation.Offset;
     const fretEnd =
@@ -119,7 +123,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     }
 
     let noteMap: NoteMap = {};
-    times(scale.Notes.length, n => {
+    times(scale.Notes.length, (n) => {
       let current = scale.Notes[n];
       noteMap[current.Degree] = current;
     });

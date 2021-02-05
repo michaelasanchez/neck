@@ -1,5 +1,6 @@
 import { map } from 'lodash';
 import * as React from 'react';
+import { useAppOptionsContext } from '..';
 
 import { AppOptions, styles } from '../shared';
 import { FretMarkers, FretNumbers } from './neck';
@@ -10,7 +11,6 @@ export const ENABLE_NECK_NUMBERS = true;
 const ENABLE_STRINGS = false;
 
 export interface BackdropProps {
-  options?: AppOptions;
 }
 
 const fretHeight = 100;
@@ -19,10 +19,9 @@ const fretHeight = 100;
 const markers = [0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 2, 0, 0];
 // markers: [0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 2], // ukulele
 
-export const Backdrop: React.FunctionComponent<BackdropProps> = ({
-  options,
-}) => {
-  const { instrument, tuning } = options;
+export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
+  const { appOptions } = useAppOptionsContext();
+  const { instrument, tuning } = appOptions;
 
   const neckStyles = {
     height: (instrument?.NumFrets + 1) * fretHeight || 0,

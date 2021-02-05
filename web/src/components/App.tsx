@@ -2,6 +2,7 @@ import { filter, isArray } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Backdrop, Indicators } from '.';
+import { useAppOptionsContext } from '..';
 import { useNeckCookie } from '../hooks';
 import {
   Chord,
@@ -81,8 +82,7 @@ const loadInstrument = (
 
 const App: React.FunctionComponent<AppProps> = ({}) => {
   const { loading: cookieLoading, cookie, setCookie } = useNeckCookie();
-
-  const [appOptions, setAppOptions] = useState<AppOptions>();
+  const { appOptions, setAppOptions } = useAppOptionsContext();
 
   const [errors, setErrors] = useState<IError[]>();
 
@@ -186,17 +186,17 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     return (
       <>
         <main ref={mainRef}>
-          <Backdrop options={appOptions} />
+          <Backdrop />
           <div className="neck-container">
-            <Neck options={appOptions} />
+            <Neck />
           </div>
           {SHOW_INDICATORS && (
             <div className="indicators-container">
-              <Indicators appOptions={appOptions} mainRef={mainRef} />
+              <Indicators mainRef={mainRef} />
             </div>
           )}
         </main>
-        <Ui appOptions={appOptions} setAppOptions={handleSetAppOptions} />
+        <Ui />
       </>
     );
   }

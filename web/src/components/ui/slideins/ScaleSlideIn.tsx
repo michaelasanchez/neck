@@ -3,15 +3,13 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { NoteSelection } from '../..';
-import { Note, NoteValue, Scale, ScaleType, ScaleVariation } from '../../../models';
+import { useAppOptionsContext } from '../../..';
+import { Note, Scale, ScaleType, ScaleVariation } from '../../../models';
 import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
-import { AppOptions, NoteUtils } from '../../../shared';
+import { NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
 
-export interface IScaleSlideInProps extends Pick<ISlideInProps, 'devYOffset'> {
-  appOptions: AppOptions;
-  setAppOptions: (updated: Partial<AppOptions>) => void;
-}
+export interface IScaleSlideInProps extends Pick<ISlideInProps, 'devYOffset'> {}
 
 // Badge ScaleType
 const types = filter(ScaleType, (m) => !isNaN(m));
@@ -47,11 +45,9 @@ const getScaleTypeLabel = (type: ScaleType) => {
   }
 };
 
-export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
-  appOptions,
-  setAppOptions,
-  devYOffset,
-}) => {
+export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({ devYOffset }) => {
+  const { appOptions, setAppOptions } = useAppOptionsContext();
+
   const { instrument, scale, tuning } = appOptions;
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -62,14 +58,16 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   const reloadScaleVariation = () => {
+    const makesure = {
+      baseId: scale.Id,
+      tuningId: tuning.Id,
+      span: 5,
+      offset: 0,
+      range: instrument.NumFrets,
+    };
+
     new ScaleVariationApi()
-      .GenerateRange({
-        baseId: scale.Id,
-        tuningId: tuning.Id,
-        span: 5,
-        offset: 0,
-        range: instrument.NumFrets,
-      })
+      .GenerateRange(makesure)
       .then((variations: ScaleVariation[]) => {
         setVariations(variations);
         setLoading(false);

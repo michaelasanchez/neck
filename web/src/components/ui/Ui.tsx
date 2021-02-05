@@ -1,27 +1,22 @@
 import * as React from 'react';
 import { Button } from 'react-bootstrap';
-
 import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
+import { useAppOptionsContext } from '../..';
 import { Key, Mode, Tuning } from '../../models';
-import { AppOptions } from '../../shared';
-import { Indicators, IndicatorsMode } from '../Indicators';
+import { IndicatorsMode } from '../Indicators';
 import { FretDisplayMode } from '../neck';
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
-export interface UiProps {
-  appOptions: AppOptions;
-  setAppOptions: (options: Partial<AppOptions>) => void;
-}
+export interface UiProps {}
 
 export interface UiState {
   showOptions: boolean;
 }
 
-export const Ui: React.FunctionComponent<UiProps> = ({
-  appOptions,
-  setAppOptions,
-}) => {
+export const Ui: React.FunctionComponent<UiProps> = ({}) => {
+  const { appOptions, setAppOptions } = useAppOptionsContext();
+
   // TODO: static
   let fretDisplayMode: FretDisplayMode = FretDisplayMode.Note;
 
@@ -52,7 +47,10 @@ export const Ui: React.FunctionComponent<UiProps> = ({
   );
 
   const toggleIndicatorsMode = (mode: IndicatorsMode) => {
-    const nextMode = mode === IndicatorsMode.Chord ? IndicatorsMode.Scale : IndicatorsMode.Chord;
+    const nextMode =
+      mode === IndicatorsMode.Chord
+        ? IndicatorsMode.Scale
+        : IndicatorsMode.Chord;
     setAppOptions({ indicatorsMode: nextMode });
   };
 
@@ -100,8 +98,8 @@ export const Ui: React.FunctionComponent<UiProps> = ({
           setMode={(m: Mode) => setAppOptions({ mode: m })}
         />
       </div>
-      <ChordSlideIn appOptions={appOptions} setAppOptions={setAppOptions} />
-      <ScaleSlideIn appOptions={appOptions} setAppOptions={setAppOptions} devYOffset={600} />
+      <ScaleSlideIn devYOffset={600} />
+      <ChordSlideIn />
     </>
   );
 };

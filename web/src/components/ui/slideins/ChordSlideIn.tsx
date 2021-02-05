@@ -2,25 +2,17 @@ import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { DropdownSlideIn } from '.';
-import {
-  Chord,
-  ChordModifier,
-  ChordVariation,
-  Note,
-  NoteValue,
-} from '../../../models';
+import { useAppOptionsContext } from '../../..';
+import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
 import { ChordVariationApi } from '../../../network';
-import { AppOptions, NoteUtils } from '../../../shared';
+import { NoteUtils } from '../../../shared';
 import { NoteSelection } from '../../NoteSelection';
 import { ChordDiagram } from '../diagrams';
 
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps {
-  setAppOptions: (update: Partial<AppOptions>) => void;
-  appOptions: AppOptions;
-}
+export interface IChordSlideInProps {}
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));
@@ -46,10 +38,11 @@ const notes = [
   Note.B(),
 ];
 
-export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
-  appOptions,
-  setAppOptions,
-}) => {
+export const ChordSlideIn: React.FC<IChordSlideInProps> = () => {
+  const { appOptions, setAppOptions } = useAppOptionsContext();
+
+  console.log(appOptions);
+
   // Props
   const { chord, instrument, tuning } = appOptions;
 
@@ -127,6 +120,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
     variation: ChordVariation,
     index: number
   ) => {
+    console.log('i wonder', appOptions);
     setAppOptions({ chordVariation: variation });
     setCurrentIndex(index);
   };

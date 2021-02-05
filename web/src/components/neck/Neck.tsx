@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 
 import { StringComponent } from '.';
+import { useAppOptionsContext } from '../..';
 import { Key, Mode, Scale } from '../../models';
 import { AppOptions, styles } from '../../shared';
 import { FretDisplayMode } from './Fret';
@@ -11,17 +12,17 @@ export const ENABLE_NECK_ANIMATION = false;
 
 // const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
-export interface NeckProps {
-  options?: AppOptions;
-}
+export interface NeckProps {}
 
 const getScale = (key: Key, mode: Mode) => new Scale(key.Tonic, mode);
 
-export const Neck: React.FunctionComponent<NeckProps> = ({ options }) => {
+export const Neck: React.FunctionComponent<NeckProps> = () => {
   // TODO: static
   let fretDisplayMode = FretDisplayMode.Note;
+  
+  const { appOptions } = useAppOptionsContext();
 
-  const { key, tuning, mode, instrument } = options;
+  const { key, tuning, mode, instrument } = appOptions;
 
   const [scale, setScale] = useState<Scale>(getScale(key, mode));
   const [className, setClassName] = useState<string>();
