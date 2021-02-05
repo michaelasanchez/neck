@@ -49,6 +49,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
       <a className="navbar-brand" href="#">
         Neck
       </a>
+      
       <div className="navbar-nav">
         <form className="form-inline">
           <Button

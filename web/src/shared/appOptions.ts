@@ -1,6 +1,5 @@
 import { IndicatorsMode } from "../components";
-import { Chord, ChordModifier, ChordVariation, Instrument, Key, Mode, Note, Scale, ScaleVariation, Tuning } from "../models";
-import { ApiEntity } from "../network";
+import { Chord, ChordVariation, Instrument, Key, Mode, Scale, ScaleVariation, Tuning } from "../models";
 
 export interface AppOptions {
   chord: Chord;

@@ -103,14 +103,14 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({
       updatedTonic = tonic;
     }
 
-    if (type !== null && type !== scale.Type) {
+    if (type !== undefined && type !== scale.Type) {
       updatedType = type;
     }
 
-    if (updatedTonic || updatedType !== null) {
+    if (updatedTonic || updatedType !== undefined) {
       const updated = {
         Tonic: updatedTonic || scale.Tonic,
-        Type: updatedType !== null ? updatedType : scale.Type,
+        Type: updatedType !== undefined ? updatedType : scale.Type,
       };
 
       setLoading(true);

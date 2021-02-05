@@ -137,7 +137,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = ({
       title={
         <h2>
           Chord{' '}
-          <span className="h6 text-muted">({variations?.length || 0})</span>
+          {/* <span className="h6 text-muted">({variations?.length || 0})</span> */}
         </h2>
       }
       options={[

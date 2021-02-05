@@ -1,46 +1,86 @@
 import { filter, isArray } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-
 import { Backdrop, Indicators } from '.';
-import { useCookie } from '../hooks/useCookie';
+import { useNeckCookie } from '../hooks';
 import {
   Chord,
   ChordModifier,
+  Cookie,
   Instrument,
   Key,
   KeyType,
-  Mode,
   Note,
   NoteSuffix,
   NoteValue,
   Scale,
   ScaleType,
 } from '../models';
-import Cookie from '../models/Cookie';
-import { ChordApi } from '../network/ChordApi';
-import { InstrumentApi } from '../network/InstrumentApi';
-import { ScaleApi } from '../network/ScaleApi';
-import { AppOptions, NoteUtils } from '../shared';
-import { IndicatorsMode } from './Indicators';
+import { ChordApi, InstrumentApi, ScaleApi } from '../network';
+import { AppOptions } from '../shared';
 import { IError, Loading } from './Loading';
 import { Neck } from './neck';
 import { Ui } from './ui';
 
-const USE_COOKIE = true;
-
 const SHOW_INDICATORS = true;
-
-const CONVERT_VARIATION_TO_CHORD_FORM = false;
 
 export interface AppProps {}
 
-const DefaultIndicatorsOptions = {
-  mode: IndicatorsMode.Chord,
+const validateAppOptions = (appOptions: AppOptions): IError => {
+  //
+  const required = ['chord', 'instrument', 'tuning', 'key', 'mode'];
+  const missing = filter(required, (r) => !appOptions[r]);
+
+  if (missing.length > 0) {
+    return {
+      message: `Missing options: ${missing.join(', ')}`,
+    };
+  }
+
+  return null;
+};
+
+const loadChord = (chordId?: string): Promise<Chord> => {
+  if (chordId) {
+    return new ChordApi().GetById(chordId);
+  }
+
+  // TODO: static
+  // Default chord - C Major
+  return new ChordApi().LocateByValues(
+    NoteValue.C,
+    NoteSuffix.Natural,
+    ChordModifier.Major
+  );
+};
+
+const loadScale = (scaleId?: string): Promise<Scale> => {
+  if (scaleId) {
+    return new ScaleApi().GetById(scaleId);
+  }
+
+  // TODO: static
+  // Default scale - C diatonic
+  return new ScaleApi().LocateByValues(
+    NoteValue.C,
+    NoteSuffix.Natural,
+    ScaleType.Diatonic
+  );
+};
+
+const loadInstrument = (
+  instrumentId?: string
+): Promise<Instrument | Instrument[]> => {
+  if (instrumentId) {
+    return new InstrumentApi().GetById(instrumentId);
+  }
+
+  // TODO: there has to be a better way to provide a default
+  return new InstrumentApi().GetAll();
 };
 
 const App: React.FunctionComponent<AppProps> = ({}) => {
-  const { getCookie, setCookie } = useCookie();
+  const { loading: cookieLoading, cookie, setCookie } = useNeckCookie();
 
   const [appOptions, setAppOptions] = useState<AppOptions>();
 
@@ -50,15 +90,10 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
 
   // Init
   useEffect(() => {
-    const saved = getCookie('options');
-
-    let cookie = cookieFromCookieString(saved);
-    if (!saved) {
-      cookie = Cookie.Default();
+    if (!cookieLoading) {
+      loadOptionsFromCookie(cookie);
     }
-
-    loadOptionsFromCookie(cookie);
-  }, []);
+  }, [cookieLoading]);
 
   // Initial load
   const loadOptionsFromCookie = (cookie: Cookie) => {
@@ -68,7 +103,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     requests.push(loadChord(cookie.chordId));
 
     // Scale
-    requests.push(loadScale());
+    requests.push(loadScale(cookie.scaleId));
 
     // Instrument / Tuning
     requests.push(loadInstrument(cookie?.instrumentId));
@@ -90,6 +125,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         tuning: instrument.DefaultTuning,
         key: cookie.key,
         mode: cookie.mode,
+        indicatorsMode: cookie.indicatorsMode,
       } as AppOptions;
 
       const error = validateAppOptions(options);
@@ -99,34 +135,6 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
         handleSetAppOptions(options);
       }
     });
-  };
-
-  const loadChord = (chordId?: string): Promise<Chord> => {
-    if (chordId) {
-      return new ChordApi().GetById(chordId);
-    }
-
-    // TODO: static
-    // Default chord - C Major
-    return new ChordApi().LocateByValues(
-      NoteValue.C,
-      NoteSuffix.Natural,
-      ChordModifier.Major
-    );
-  };
-
-  const loadScale = (scaleId?: string): Promise<Scale> => {
-    if (scaleId) {
-      return new ScaleApi().GetById(scaleId);
-    }
-
-    // TODO: static
-    // Default scale - C diatonic
-    return new ScaleApi().LocateByValues(
-      NoteValue.C,
-      NoteSuffix.Natural,
-      ScaleType.Diatonic
-    );
   };
 
   // TODO: Combine with loadChord by keeping track of chordIds?
@@ -149,41 +157,13 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     });
   };
 
-  const loadInstrument = (
-    instrumentId?: string
-  ): Promise<Instrument | Instrument[]> => {
-    if (instrumentId) {
-      return new InstrumentApi().GetById(instrumentId);
-    }
-
-    // TODO: there has to be a better way to provide a default
-    return new InstrumentApi().GetAll();
-  };
-
-  const validateAppOptions = (appOptions: AppOptions): IError => {
-    //
-    const required = ['chord', 'instrument', 'tuning', 'key', 'mode'];
-    const missing = filter(required, (r) => !appOptions[r]);
-
-    if (missing.length > 0) {
-      return {
-        message: `Missing options: ${missing.join(', ')}`,
-      };
-    }
-
-    return null;
-  };
-
   const handleSetAppOptions = (updated: Partial<AppOptions>) => {
     const newOptions = {
       ...appOptions,
       ...updated,
     };
 
-    if (
-      appOptions?.chord &&
-      updated?.chord
-    ) {
+    if (appOptions?.chord && updated?.chord) {
       reloadChord(newOptions);
     } else if (appOptions?.scale && updated?.scale) {
       reloadScale(newOptions);
@@ -199,35 +179,7 @@ const App: React.FunctionComponent<AppProps> = ({}) => {
     }
 
     setAppOptions(newOptions);
-    setCookie('options', cookieStringFromAppOptions(newOptions));
-  };
-
-  // TODO: Move to useNeckOptions
-  const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
-    const cookie = new Cookie();
-
-    cookie.chordId = appOptions.chord.Id;
-    cookie.instrumentId = appOptions.instrument.Id;
-    cookie.key = appOptions.key;
-    cookie.mode = appOptions.mode;
-    cookie.neck = {
-      numFrets: appOptions.instrument.NumFrets,
-    };
-
-    return JSON.stringify(cookie);
-  };
-
-  // TODO: Move to useNeckOptions
-  const cookieFromCookieString = (cookieString: string): Cookie => {
-    if (!cookieString) return null;
-
-    const cookie: Cookie = JSON.parse(cookieString);
-
-    const tonic = new Note(cookie.key.Tonic.Base, cookie.key.Tonic.Suffix);
-    cookie.key = new Key(tonic, cookie.key.Type);
-    cookie.mode = new Mode(cookie.mode.Label, cookie.mode.pattern);
-
-    return cookie;
+    setCookie(newOptions);
   };
 
   if (appOptions) {

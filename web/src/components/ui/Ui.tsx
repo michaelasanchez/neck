@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { Button } from 'react-bootstrap';
 
 import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
 import { Key, Mode, Tuning } from '../../models';
 import { AppOptions } from '../../shared';
+import { Indicators, IndicatorsMode } from '../Indicators';
 import { FretDisplayMode } from '../neck';
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
@@ -45,7 +47,37 @@ export const Ui: React.FunctionComponent<UiProps> = ({
 
   // TODO: This renders three times
   console.log('UI RENDER');
-  console.log('----------------------------------------------------------------------')
+  console.log(
+    '----------------------------------------------------------------------'
+  );
+
+  const toggleIndicatorsMode = (mode: IndicatorsMode) => {
+    const nextMode = mode === IndicatorsMode.Chord ? IndicatorsMode.Scale : IndicatorsMode.Chord;
+    setAppOptions({ indicatorsMode: nextMode });
+  };
+
+  const renderModeSwitch = (mode: IndicatorsMode) => {
+    let label: string;
+    switch (mode) {
+      case IndicatorsMode.Chord:
+        label = 'Chord';
+        break;
+      case IndicatorsMode.Scale:
+        label = 'Scale';
+        break;
+      case IndicatorsMode.Search:
+        label = 'Search';
+        break;
+    }
+    return (
+      <Button
+        className="mode-switch"
+        onClick={() => toggleIndicatorsMode(mode)}
+      >
+        {label}
+      </Button>
+    );
+  };
 
   return (
     <>
@@ -57,6 +89,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({
         setKey={(k: Key) => setAppOptions({ key: k })}
         setFretDisplayMode={handleFretDisplayModeUpdate}
       />
+      {renderModeSwitch(appOptions.indicatorsMode)}
       <div className="modal-container">
         <OptionsModal
           showing={showOptions}

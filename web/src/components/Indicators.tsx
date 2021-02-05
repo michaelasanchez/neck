@@ -8,21 +8,23 @@ import { Indicator } from './ui';
 export enum IndicatorsMode {
   Chord,
   Scale,
+  Search,
 }
 
 interface IndicatorsProps {
   appOptions: AppOptions;
   mainRef: React.MutableRefObject<HTMLDivElement>;
-  mode?: IndicatorsMode;
 }
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
-  const { appOptions, mainRef, mode = IndicatorsMode.Scale } = props;
+  const { appOptions, mainRef } = props;
 
   const {
+    indicatorsMode: mode = IndicatorsMode.Chord,
+    chord,
     chordVariation,
-    scaleVariation,
     scale,
+    scaleVariation,
     tuning,
     instrument,
   } = appOptions;
@@ -47,6 +49,9 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
   /* ChordVariation */
   if (mode == IndicatorsMode.Chord && !!chordVariation) {
+
+    console.log(chord, chordVariation);
+
     const nonNullPositions = filter(
       chordVariation.Positions,
       (p) => p !== null
@@ -65,12 +70,18 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
           const open = position === 0;
           const muted = position === null;
 
+          const pitch = chordVariation.Pitches[i];
+          const note = filter(chord.Tones, n => n.Pitch === pitch)[0];
+
           return (
             <div className="string" key={i}>
               <Indicator
-                fretNum={0}
+                open={true}
                 show={open || muted}
                 muted={muted}
+                root={note.Degree === 1}
+                degree={note.Degree}
+                label={note.Label}
                 firstRef={
                   (open || muted) && i == firstFret ? firstIndicatorRef : null
                 }
@@ -80,8 +91,11 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 const show = position === fretNum;
                 return (
                   <Indicator
-                    fretNum={fretNum}
+                    key={f}
                     show={show}
+                    root={note.Degree === 1}
+                    label={note.Label}
+                    degree={note.Degree}
                     firstRef={show && i == firstFret ? firstIndicatorRef : null}
                   />
                 );
@@ -144,7 +158,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
                 return (
                   <Indicator
-                    fretNum={f}
+                    open={f === 0}
                     show={show}
                     key={f}
                     degree={scaleEnded && degree === 1 ? degree + 7 : degree}

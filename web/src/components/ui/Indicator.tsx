@@ -1,11 +1,11 @@
 import * as React from 'react';
 
 interface IndicatorProps {
-  fretNum: number;
   show: boolean;
   fretClassName?: string;
   degree?: number;
   label?: string;
+  open?: boolean;
   muted?: boolean;
   root?: boolean;
   firstRef?: React.MutableRefObject<HTMLDivElement>;
@@ -13,7 +13,7 @@ interface IndicatorProps {
 
 export const Indicator: React.FC<IndicatorProps> = (props) => {
   const {
-    fretNum,
+    open,
     show,
     fretClassName,
     degree,
@@ -25,10 +25,9 @@ export const Indicator: React.FC<IndicatorProps> = (props) => {
   let divProps: any = firstRef ? { ref: firstRef } : {};
   return (
     <div
-      className={`fret${fretNum === 0 ? ' open' : ''}${
+      className={`fret${open ? ' open' : ''}${
         fretClassName ? ` ${fretClassName}` : ''
       }`}
-      key={fretNum}
       {...divProps}
     >
       {show && (

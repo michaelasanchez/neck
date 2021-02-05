@@ -1,32 +1,62 @@
-// import Cookie from "../models/Cookie";
+import { useEffect, useState } from 'react';
+import { useCookie } from '.';
+import { Cookie, Key, Mode, Note } from '../models';
+import { AppOptions } from '../shared';
 
-// const getCookie = (): Cookie => {
-//   var name = cname + '=';
-//   var decodedCookie = decodeURIComponent(document.cookie);
-//   var ca = decodedCookie.split(';');
-//   for (var i = 0; i < ca.length; i++) {
-//     var c = ca[i];
-//     while (c.charAt(0) == ' ') {
-//       c = c.substring(1);
-//     }
-//     if (c.indexOf(name) == 0) {
-//       return c.substring(name.length, c.length);
-//     }
-//   }
-//   return '';
-// };
+const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
+  const cookie = new Cookie();
 
-// const setCookie = (cname: string, cvalue: string, exdays?: number) => {
-//   if (exdays) {
-//     var d = new Date();
-//     d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-//     var expires = 'expires=' + d.toUTCString();
-//   }
-//   document.cookie = `${cname}=${cvalue};${expires ? `${expires};` : ''}path=/`;
-// };
+  cookie.chordId = appOptions.chord.Id;
+  cookie.instrumentId = appOptions.instrument.Id;
+  cookie.key = appOptions.key;
+  cookie.mode = appOptions.mode;
+  cookie.neck = {
+    numFrets: appOptions.instrument.NumFrets,
+  };
+  cookie.scaleId = appOptions.scale.Id;
+  cookie.indicatorsMode = appOptions.indicatorsMode;
 
-// export const useCookie = () => {
+  return JSON.stringify(cookie);
+};
 
+const cookieFromCookieString = (cookieString: string): Cookie => {
+  if (!cookieString) return null;
 
-//   return { getCookie, setCookie };
-// };
+  const cookie: Cookie = JSON.parse(cookieString);
+
+  const tonic = new Note(cookie.key.Tonic.Base, cookie.key.Tonic.Suffix);
+  cookie.key = new Key(tonic, cookie.key.Type);
+  cookie.mode = new Mode(cookie.mode.Label, cookie.mode.pattern);
+
+  return cookie;
+};
+
+export const useNeckCookie = () => {
+  const { getCookie: getBaseCookie, setCookie: setBaseCookie } = useCookie();
+
+  const [cookie, setCookie] = useState<Cookie>();
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Init
+  useEffect(() => {
+    const saved = getBaseCookie('options');
+
+    let cookie = cookieFromCookieString(saved);
+    if (!saved) {
+      cookie = Cookie.Default();
+    }
+
+    setCookie(cookie);
+    setLoading(false);
+  }, []);
+
+  //
+  const handleSetCookie = (options: AppOptions) => {
+    const cookieString = cookieStringFromAppOptions(options);
+    const cookie = cookieFromCookieString(cookieString);
+    setCookie(cookie);
+    setBaseCookie('options', cookieString);
+  };
+
+  return { loading, cookie, setCookie: handleSetCookie };
+};
