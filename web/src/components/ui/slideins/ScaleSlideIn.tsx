@@ -53,7 +53,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const { collapse } = props;
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [variations, setVariations] = useState<ScaleVariation[]>([]);
+  const [variations, setVariations] = useState<ScaleVariation[]>();
 
   const [selected, setSelected] = useState<Note[]>();
 

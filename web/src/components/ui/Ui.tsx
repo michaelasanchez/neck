@@ -4,10 +4,11 @@ import { Button } from 'react-bootstrap';
 import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
 import { useAppOptionsContext } from '../..';
 import { Key, Mode, Tuning } from '../../models';
-import { Indicators, IndicatorsMode } from '../Indicators';
+import { IndicatorsMode } from '../Indicators';
 import { Loading } from '../Loading';
 import { FretDisplayMode } from '../neck';
-import { KeySlideIn, slideInDuration } from './slideins';
+import { slideInDuration } from './slideins';
+import Draggable from 'react-draggable';
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
@@ -79,7 +80,11 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         onClick={() => toggleIndicatorsMode(mode)}
         disabled={disabled}
       >
-        {disabled ? <Loading showLoadingText={false} variant={'light'} inline={true} /> : label}
+        {disabled ? (
+          <Loading showLoadingText={false} variant={'light'} inline={true} />
+        ) : (
+          label
+        )}
       </Button>
     );
   };
@@ -106,11 +111,13 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
             setMode={(m: Mode) => setAppOptions({ mode: m })}
           />
         </div>
-        <ScaleSlideIn
-          devYOffset={600}
-          collapse={indicatorsMode !== IndicatorsMode.Scale}
-        />
-        <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
+        <div className="slidein-container">
+          <ScaleSlideIn
+            devYOffset={600}
+            collapse={indicatorsMode !== IndicatorsMode.Scale}
+          />
+          <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
+        </div>
         {/* <KeySlideIn /> */}
       </div>
     </>

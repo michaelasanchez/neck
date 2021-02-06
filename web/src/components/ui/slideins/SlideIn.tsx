@@ -14,6 +14,7 @@ export interface ISlideInProps {
   devYOffset?: number;
 }
 
+// export const slideInDuration = 10000;
 export const slideInDuration = 600;
 
 // TODO: might need for resizing
@@ -35,21 +36,24 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
   const slideInRef = useRef();
 
   const [animationFlag, setAnimationFlag] = useState<boolean>(false);
+  const [transitionFlag, setTransitionFlag] = useState<boolean>(false);
 
   useEffect(() => {
     const current = slideInRef.current;
 
     if (animationFlag) {
+      if (!transitionFlag) setTransitionFlag(true);
+
       if (collapse) {
         $(current).addClass('out');
-        $('.contents', current).animate(
-          { maxHeight: 0 },
-          slideInDuration * 0.4
-        );
+        $('.contents', current)
+          .css({ maxHeight: 600 })
+          .animate({ maxHeight: 0 }, slideInDuration * 0.4);
       } else {
         $(current).addClass('in');
         $('.contents', current)
-          .delay(300)
+          .delay(slideInDuration * 0.5)
+          .css({ maxHeight: 0 })
           .animate({ maxHeight: 600 }, slideInDuration * 0.8);
       }
     } else {
@@ -59,14 +63,21 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
 
   return (
     <div
-      className={`slidein ${className} ${collapse ? ' collapsed' : ''}`}
+      className={`slidein ${className}${collapse ? ' collapsed' : ''}`}
       style={style}
       ref={slideInRef}
     >
       <div className="badge">{badge}</div>
       <div className="title">{title}</div>
       {header && <div className="header">{header}</div>}
-      <div className={`contents${loading ? ' loading' : ''}`}>
+      <div
+        className={`contents${loading ? ' loading' : ''}`}
+        style={
+          !transitionFlag && !collapse
+            ? { transition: `all ${slideInDuration * 0.5}ms ease-in-out` }
+            : null
+        }
+      >
         {loading ? (
           <Loading variant="secondary" showLoadingText={false} />
         ) : (
