@@ -8,8 +8,6 @@ $diagrams-per-row: 4;
   display: flex;
   flex-direction: column;
 
-  max-height: 50%;
-  min-height: 300px;
   min-width: 400px;
 
   background: white;
@@ -53,8 +51,79 @@ $diagrams-per-row: 4;
           padding-left: 0.6rem;
         }
       }
-      button::after {
-        // content: none;
+    }
+  }
+
+  $duration: 500ms;
+
+  $translate-in: translate(0px, 100px);
+  $translate-out: translate(-10px, 120px);
+  
+  $opacity-in: 1;
+  $opacity-out: 1;
+
+  @keyframes collapse-out {
+    0% {
+      opacity: $opacity-in;
+      transform: $translate-in;
+      z-index: 11;
+    }
+    50% {
+      opacity: $opacity-in;
+      transform: translate(0px, 20px);
+      z-index: 11;
+    }
+    55% {
+      z-index: 10;
+    }
+    100% {
+      opacity: $opacity-out;
+      transform: $translate-out;
+    }
+  }
+
+  @keyframes collapse-in {
+    0% {
+      opacity: $opacity-out;
+      transform: $translate-out;
+      z-index: 10;
+    }
+    50% {
+      opacity: $opacity-in;
+      transform: translate(-10px, 180px);
+      z-index: 10;
+    }
+    55% {
+      z-index: 11;
+    }
+    100% {
+      transform: $translate-in;
+    }
+  }
+
+  // transition: transform $duration ease;
+  -webkit-transition: -webkit-filter $duration ease-out, opacity $duration ease;//, transform $duration ease;
+  
+  opacity: $opacity-in;
+  transform: $translate-in;
+  z-index: 11;
+
+  animation: collapse-in $duration;
+
+  &.collapsed {
+    filter: blur(5px);
+
+    opacity: $opacity-out;
+    transform: $translate-out;
+    z-index: 10;
+
+    animation: collapse-out $duration;
+
+    .contents {
+      max-height: 0;
+      overflow: hidden;
+
+      .variations {
       }
     }
   }
@@ -68,13 +137,19 @@ $diagrams-per-row: 4;
     margin: 1em;
     margin-bottom: 0.5em;
 
+    // transition: max-height $duration ease-in 0s;
+    // max-height: 600px;
+      max-height: 0;
+
+
     .variations {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-around;
 
       min-height: min-content;
-      overflow-y: auto;
+      // overflow-y: auto;
+      overflow-y: hidden;
       overflow-x: hidden;
       scrollbar-width: thin;
     }

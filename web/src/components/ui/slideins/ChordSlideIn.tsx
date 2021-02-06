@@ -12,7 +12,7 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps extends Pick<ISlideInProps, 'show'> {}
+export interface IChordSlideInProps extends Pick<ISlideInProps, 'show' | 'collapse'> {}
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));
@@ -42,6 +42,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
 
   // Props
+  const { collapse } = props;
   const { chord, instrument, tuning } = appOptions;
 
   // State
@@ -52,11 +53,11 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
 
   // Side Effects
   useEffect(() => {
-    if (!!chord) {
+    if (!!chord && !collapse) {
       setSelected([]);
       reloadChordVariations();
     }
-  }, [appOptions?.chord]);
+  }, [chord, collapse]);
 
   // Load
   const reloadChordVariations = () => {

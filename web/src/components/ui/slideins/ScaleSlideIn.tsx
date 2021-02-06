@@ -10,7 +10,7 @@ import { NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
 
 export interface IScaleSlideInProps
-  extends Pick<ISlideInProps, 'devYOffset' | 'show'> {}
+  extends Pick<ISlideInProps, 'devYOffset' | 'show' | 'collapse'> {}
 
 // Badge ScaleType
 const types = filter(ScaleType, (m) => !isNaN(m));
@@ -50,6 +50,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
 
   const { instrument, scale, tuning } = appOptions;
+  const { collapse } = props;
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [variations, setVariations] = useState<ScaleVariation[]>([]);
@@ -59,16 +60,14 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(true);
 
   const reloadScaleVariation = () => {
-    const makesure = {
-      baseId: scale.Id,
-      tuningId: tuning.Id,
-      span: 5,
-      offset: 0,
-      range: instrument.NumFrets,
-    };
-
     new ScaleVariationApi()
-      .GenerateRange(makesure)
+      .GenerateRange({
+        baseId: scale.Id,
+        tuningId: tuning.Id,
+        span: 5,
+        offset: 0,
+        range: instrument.NumFrets,
+      })
       .then((variations: ScaleVariation[]) => {
         setVariations(variations);
         setLoading(false);
@@ -78,11 +77,11 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!!scale) {
+    if (!!scale && !collapse) {
       setSelected([]);
       reloadScaleVariation();
     }
-  }, [appOptions?.scale]);
+  }, [scale, collapse]);
 
   const handleSetChordVariation = (
     variation: ScaleVariation,

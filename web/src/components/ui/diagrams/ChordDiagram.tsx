@@ -1,7 +1,6 @@
-import { each } from 'jquery';
-import { filter, indexOf, map, max, min, times } from 'lodash';
+import { filter, map, max, min, times } from 'lodash';
 import * as React from 'react';
-import { Chord, ChordVariation, Note, NoteValue } from '../../../models';
+import { Chord, ChordVariation, Note } from '../../../models';
 import { NoteUtils } from '../../../shared';
 import { Diagram, DiagramSpan, DiagramSymbol } from './Diagram';
 

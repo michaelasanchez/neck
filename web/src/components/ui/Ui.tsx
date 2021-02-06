@@ -5,6 +5,7 @@ import { useAppOptionsContext } from '../..';
 import { Key, Mode, Tuning } from '../../models';
 import { Indicators, IndicatorsMode } from '../Indicators';
 import { FretDisplayMode } from '../neck';
+import { KeySlideIn } from './slideins';
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
@@ -92,8 +93,12 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
             setMode={(m: Mode) => setAppOptions({ mode: m })}
           />
         </div>
-        <ScaleSlideIn devYOffset={600} show={indicatorsMode === IndicatorsMode.Scale} />
-        <ChordSlideIn show={indicatorsMode === IndicatorsMode.Chord} />
+        <ScaleSlideIn
+          devYOffset={600}
+          collapse={indicatorsMode !== IndicatorsMode.Scale}
+        />
+        <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
+        {/* <KeySlideIn /> */}
       </div>
     </>
   );
