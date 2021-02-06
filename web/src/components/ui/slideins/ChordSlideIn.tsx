@@ -1,7 +1,7 @@
 import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { DropdownSlideIn } from '.';
+import { DropdownSlideIn, ISlideInProps } from '.';
 import { useAppOptionsContext } from '../../..';
 import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
 import { ChordVariationApi } from '../../../network';
@@ -12,7 +12,7 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps {}
+export interface IChordSlideInProps extends Pick<ISlideInProps, 'show'> {}
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));
@@ -38,7 +38,7 @@ const notes = [
   Note.B(),
 ];
 
-export const ChordSlideIn: React.FC<IChordSlideInProps> = () => {
+export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
 
   // Props
@@ -126,6 +126,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = () => {
 
   return (
     <DropdownSlideIn
+      {...props}
       className="chord"
       title={
         <h2>

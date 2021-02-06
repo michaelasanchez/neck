@@ -9,10 +9,11 @@ export interface ISlideInProps {
   badge?: JSX.Element;
   header?: JSX.Element;
   loading: boolean;
+  show?: boolean;
   devYOffset?: number;
 }
 
-const slideInWidth = 340;
+const slideInWidth = 400;
 
 const slideInBaseStyle = {
   maxWidth: slideInWidth,
@@ -20,20 +21,27 @@ const slideInBaseStyle = {
 };
 
 export const SlideIn: React.FC<ISlideInProps> = (props) => {
-  const { children, className, title, badge, header, loading } = props;
+  const {
+    children,
+    className,
+    title,
+    badge,
+    header,
+    loading,
+    show = false,
+  } = props;
 
   const slideInStyle = {
     ...slideInBaseStyle,
-    transform: 'translateX(0)',
+    transform: `translateX(0)`,
     top: props.devYOffset || 100,
   };
 
   const slideOutStyle = {
     ...slideInBaseStyle,
     transform: `translateX(-${slideInWidth}px)`,
+    top: props.devYOffset || 100,
   };
-
-  const [show, setShow] = useState<boolean>(true); // TODO: constant
 
   return (
     <div

@@ -2,7 +2,19 @@ import { filter, isArray } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
-import { Chord, ChordModifier, Cookie, Instrument, Key, KeyType, Note, NoteSuffix, NoteValue, Scale, ScaleType } from '../models';
+import {
+  Chord,
+  ChordModifier,
+  Cookie,
+  Instrument,
+  Key,
+  KeyType,
+  Note,
+  NoteSuffix,
+  NoteValue,
+  Scale,
+  ScaleType,
+} from '../models';
 import { ChordApi, InstrumentApi, ScaleApi } from '../network';
 import { AppOptions } from '../shared';
 
@@ -60,9 +72,11 @@ const loadInstrument = (
 };
 
 export const useAppOptions = () => {
-  const [appOptions, setAppOptions] = useState<AppOptions>();
   const { loading: cookieLoading, cookie, setCookie } = useNeckCookie();
 
+  const [appOptions, setAppOptions] = useState<AppOptions>();
+
+  const [loading, setLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<IError[]>();
 
   // Init
@@ -106,7 +120,9 @@ export const useAppOptions = () => {
         indicatorsMode: cookie.indicatorsMode,
       } as AppOptions;
 
+      // TODO: We should use handle here to do the loading
       setAppOptions(options);
+      setLoading(false);
     });
   };
 
@@ -127,7 +143,7 @@ export const useAppOptions = () => {
         new Note(scale.Tonic.Base, scale.Tonic.Suffix),
         scale.Type == ScaleType.NaturalMinor ? KeyType.Minor : KeyType.Major
       );
-      
+
       finishSetAppOptions(options);
     });
   };
@@ -148,17 +164,19 @@ export const useAppOptions = () => {
   };
 
   const finishSetAppOptions = (newOptions: AppOptions) => {
-    const error = validateAppOptions(newOptions);
-    if (error) {
+    const validationError = validateAppOptions(newOptions);
+    if (validationError) {
       debugger;
     }
-    if (!!error) {
-      setErrors([error]);
+
+    if (!!validationError) {
+      setErrors([validationError]);
     } else {
+      console.log();
       setAppOptions(newOptions);
       setCookie(newOptions);
     }
   };
 
-  return { appOptions, setAppOptions: handleSetAppOptions, errors };
+  return { appOptions, setAppOptions: handleSetAppOptions, errors, loading };
 };

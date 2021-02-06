@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
 import { useAppOptionsContext } from '../..';
 import { Key, Mode, Tuning } from '../../models';
-import { IndicatorsMode } from '../Indicators';
+import { Indicators, IndicatorsMode } from '../Indicators';
 import { FretDisplayMode } from '../neck';
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
@@ -20,7 +20,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   // TODO: static
   let fretDisplayMode: FretDisplayMode = FretDisplayMode.Note;
 
-  const { key, mode, tuning } = appOptions;
+  const { indicatorsMode, key, mode, tuning } = appOptions;
 
   const [showOptions, setShowOptions] = React.useState<boolean>(false);
 
@@ -69,6 +69,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
       </Button>
     );
   };
+  console.log(indicatorsMode === IndicatorsMode.Scale);
 
   return (
     <>
@@ -80,19 +81,21 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         setKey={(k: Key) => setAppOptions({ key: k })}
         setFretDisplayMode={handleFretDisplayModeUpdate}
       />
-      {renderModeSwitch(appOptions.indicatorsMode)}
-      <div className="modal-container">
-        <OptionsModal
-          showing={showOptions}
-          onHide={() => setShowOptions(false)}
-          tuning={tuning}
-          mode={mode}
-          setTuning={(t: Tuning) => setAppOptions({ tuning: t })}
-          setMode={(m: Mode) => setAppOptions({ mode: m })}
-        />
+      <div className="ui">
+        {renderModeSwitch(appOptions.indicatorsMode)}
+        <div className="modal-container">
+          <OptionsModal
+            showing={showOptions}
+            onHide={() => setShowOptions(false)}
+            tuning={tuning}
+            mode={mode}
+            setTuning={(t: Tuning) => setAppOptions({ tuning: t })}
+            setMode={(m: Mode) => setAppOptions({ mode: m })}
+          />
+        </div>
+        <ScaleSlideIn devYOffset={600} show={indicatorsMode === IndicatorsMode.Scale} />
+        <ChordSlideIn show={indicatorsMode === IndicatorsMode.Chord} />
       </div>
-      <ScaleSlideIn devYOffset={600} />
-      <ChordSlideIn />
     </>
   );
 };

@@ -11,11 +11,11 @@ const SHOW_INDICATORS = true;
 export interface AppProps {}
 
 const App: React.FunctionComponent<AppProps> = () => {
-  const { appOptions, errors } = useAppOptionsContext();
+  const { loading, errors } = useAppOptionsContext();
 
   const mainRef = useRef<HTMLDivElement>();
 
-  if (appOptions) {
+  if (!loading) {
     return (
       <>
         <main ref={mainRef}>

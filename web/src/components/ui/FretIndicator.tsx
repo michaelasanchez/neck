@@ -11,7 +11,7 @@ interface IndicatorProps {
   firstRef?: React.MutableRefObject<HTMLDivElement>;
 }
 
-export const Indicator: React.FC<IndicatorProps> = (props) => {
+export const FretIndicator: React.FC<IndicatorProps> = (props) => {
   const {
     open,
     show,

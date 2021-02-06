@@ -9,7 +9,8 @@ import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
 import { NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
 
-export interface IScaleSlideInProps extends Pick<ISlideInProps, 'devYOffset'> {}
+export interface IScaleSlideInProps
+  extends Pick<ISlideInProps, 'devYOffset' | 'show'> {}
 
 // Badge ScaleType
 const types = filter(ScaleType, (m) => !isNaN(m));
@@ -45,7 +46,7 @@ const getScaleTypeLabel = (type: ScaleType) => {
   }
 };
 
-export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({ devYOffset }) => {
+export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
 
   const { instrument, scale, tuning } = appOptions;
@@ -61,7 +62,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({ devYOffset }) => {
     const makesure = {
       baseId: scale.Id,
       tuningId: tuning.Id,
-      span: 7,
+      span: 5,
       offset: 0,
       range: instrument.NumFrets,
     };
@@ -119,7 +120,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({ devYOffset }) => {
 
   return (
     <DropdownSlideIn
-      devYOffset={devYOffset}
+      {...props}
       className="scale"
       title={<h2>Scale</h2>}
       loading={loading}

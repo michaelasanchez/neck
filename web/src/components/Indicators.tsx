@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useAppOptionsContext } from '..';
 import { Note } from '../models';
 import { AppOptions } from '../shared';
-import { Indicator } from './ui';
+import { FretIndicator } from './ui';
 
 export enum IndicatorsMode {
   Chord,
@@ -47,7 +47,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
       main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
-  }, [chordVariation]);
+  }, [chordVariation, scaleVariation, mode]);
 
   /* ChordVariation */
   if (
@@ -67,7 +67,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
     return (
       <div className="indicators">
-        {map(tuning.Offsets, (s: number, i: number) => {
+        {map(tuning.Offsets, (o: Note, i: number) => {
           const position = chordVariation.Positions[i];
 
           const open = position === 0;
@@ -78,7 +78,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
           return (
             <div className="string" key={i}>
-              <Indicator
+              <FretIndicator
                 open={true}
                 show={open || muted}
                 muted={muted}
@@ -93,7 +93,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 const fretNum = f + 1;
                 const show = position === fretNum;
                 return (
-                  <Indicator
+                  <FretIndicator
                     key={f}
                     show={show}
                     root={note.Degree === 1}
@@ -113,7 +113,6 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     !!scaleVariation &&
     scaleVariation.ScaleId == scale.Id
   ) {
-    // TODO: variation swap bug
     /* ScaleVariation */
     const fretStart = scaleVariation.Offset;
     const fretEnd =
@@ -134,7 +133,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
     return (
       <div className="indicators">
-        {map(tuning.Offsets, (s: number, i: number) => {
+        {map(tuning.Offsets, (o: Note, i: number) => {
           const positions = scaleVariation.Positions[i];
           const open = scaleVariation.Offset === 0 && positions[0] !== null;
 
@@ -165,7 +164,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 }
 
                 return (
-                  <Indicator
+                  <FretIndicator
                     open={f === 0}
                     show={show}
                     key={f}
@@ -177,6 +176,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                         ? 'faded'
                         : null
                     }
+                    firstRef={i === 0 && f === scaleVariation.Offset ? firstIndicatorRef : null}
                   />
                 );
               })}

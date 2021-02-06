@@ -45,7 +45,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
   };
 
   return (
-    <nav className="navbar navbar-expand fixed-bottom justify-content-between navbar-dark bg-dark">
+    <nav className="navbar navbar-dark bg-dark">
       <a className="navbar-brand" href="#">
         Neck
       </a>
