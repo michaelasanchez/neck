@@ -61,7 +61,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({ devYOffset }) => {
     const makesure = {
       baseId: scale.Id,
       tuningId: tuning.Id,
-      span: 5,
+      span: 7,
       offset: 0,
       range: instrument.NumFrets,
     };
@@ -107,12 +107,13 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = ({ devYOffset }) => {
 
     if (updatedTonic || updatedType !== undefined) {
       const updated = {
+        ...scale,
         Tonic: updatedTonic || scale.Tonic,
         Type: updatedType !== undefined ? updatedType : scale.Type,
       };
 
       setLoading(true);
-      setAppOptions({ scale: (updated as any) as Scale });
+      setAppOptions({ scale: updated as Scale });
     }
   };
 

@@ -37,14 +37,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         updated = FretDisplayMode.Degree;
         break;
     }
-    // setAppOptions({ fretMode: updated });
   };
-
-  // TODO: This renders three times
-  console.log('UI RENDER');
-  console.log(
-    '----------------------------------------------------------------------'
-  );
 
   const toggleIndicatorsMode = (mode: IndicatorsMode) => {
     const nextMode =

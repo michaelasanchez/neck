@@ -41,8 +41,6 @@ const notes = [
 export const ChordSlideIn: React.FC<IChordSlideInProps> = () => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
 
-  console.log(appOptions);
-
   // Props
   const { chord, instrument, tuning } = appOptions;
 
@@ -74,6 +72,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = () => {
           variations,
           (v) =>
             new ChordVariation(
+              chord.Id,
               v.Formation.Positions,
               v.Formation.Barres,
               tuning
@@ -107,12 +106,13 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = () => {
     }
 
     if (updatedRoot || updatedModifier !== null) {
-      const updated = new Chord(
-        updatedRoot || chord.Root,
-        updatedModifier !== undefined ? updatedModifier : modifier
-      );
+      const updated = {
+        ...chord,
+        Root: updatedRoot || chord.Root,
+        Modifier: updatedModifier !== undefined ? updatedModifier : modifier,
+      };
 
-      setAppOptions({ chord: updated });
+      setAppOptions({ chord: updated as Chord });
     }
   };
 
@@ -120,7 +120,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = () => {
     variation: ChordVariation,
     index: number
   ) => {
-    console.log('i wonder', appOptions);
     setAppOptions({ chordVariation: variation });
     setCurrentIndex(index);
   };

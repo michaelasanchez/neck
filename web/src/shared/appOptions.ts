@@ -13,6 +13,7 @@ export interface AppOptions {
 
   // Ui?
   indicatorsMode?: IndicatorsMode;
+
   chordVariation?: ChordVariation;  // Indicators
   scaleVariation?: ScaleVariation;
 

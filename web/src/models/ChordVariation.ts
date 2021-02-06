@@ -1,98 +1,35 @@
-import { each, map, min } from "lodash";
+import { map } from 'lodash';
+import { Tuning } from '.';
+import { Note } from './Note';
 
-import { Chord, ChordForm, Tuning } from ".";
-import { Note } from "./Note";
+export class Format {
+  public Barres: Array<number>;
+
+  public Positions: Array<number>;
+}
 
 export class ChordVariation {
+  public Positions: number[];
 
-  private _positions: number[];
+  public ChordId: string;
 
   public Pitches: number[];
 
   public Barres: number[];
-  // private _barre: number[];
 
-  private _chordForm: ChordForm;
+  constructor(
+    chordId: string,
+    positions: number[],
+    barres: number[],
+    tuning: Tuning
+  ) {
+    this.ChordId = chordId;
 
-  constructor(positions: number[], barres: number[], tuning?: Tuning) {
-    this._positions = positions;
+    this.Positions = positions;
     this.Barres = barres;
-    // this._barre = new Array(this._positions.length).fill(null);
 
     this.Pitches = map(tuning.Offsets, (o: Note, i: number) => {
       return (o.Pitch + this.Positions[i]) % Note.NUM_NOTES;
     });
-  }
-
-  get Positions(): number[] {
-    return this._positions;
-  }
-
-  // get Barre(): number[] {
-  //   return this._barre;
-  // }
-
-  get ChordForm(): ChordForm {
-    return this._chordForm;
-  }
-
-  hasChordForm = (): boolean => !!this._chordForm;
-
-  matchesChordForm = (
-    chordForm: ChordForm,
-    convert: boolean,
-  ): boolean => {
-    const start = min(this._positions);
-
-    let matches = true;
-    each(this._positions, (pos: number, i: number) => {
-      const formPosition = chordForm.Positions[i];
-      if (formPosition !== pos - start && formPosition !== null) {
-        matches = false;
-        return false; // break
-      }
-    });
-
-    if (matches && convert) {
-      each(chordForm.Positions, (p: number, i: number) => {
-
-        // Muted
-        if (p === null) this._positions[i] = null;
-
-        // Barre
-        if (chordForm.isBarre()) {
-          const barrePosition = this._positions[chordForm.Barre];
-          if (chordForm.Barre <= i && barrePosition > 0) {
-            // this._barre[i] = barrePosition;
-          }
-        }
-
-      });
-    }
-
-    return matches;
-  };
-
-  // private calcBarre() {
-  //   this._barre = new Array(this._positions.length).fill(null);
-
-  //   const barrePosition = this._positions[chordForm.Barre];
-  //   if (chordForm.Barre <= i && barrePosition > 0) {
-  //     this._barre[i] = barrePosition;
-  //   }
-  // }
-
-  Equals = (chordVariation: ChordVariation): boolean => {
-    let matches = true;
-
-    // TODO: Once ChordVariation can be unique we can simplify here
-    each(chordVariation.Positions, (pos: number, i: number) => {
-      if (pos !== this._positions[i]) {
-        matches = false;
-        return false;
-      }
-    });
-
-    return matches;
   }
 }

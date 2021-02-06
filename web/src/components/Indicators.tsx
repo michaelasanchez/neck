@@ -50,7 +50,11 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   }, [chordVariation]);
 
   /* ChordVariation */
-  if (mode == IndicatorsMode.Chord && !!chordVariation) {
+  if (
+    mode == IndicatorsMode.Chord &&
+    !!chordVariation &&
+    chordVariation.ChordId === chord.Id
+  ) {
     const nonNullPositions = filter(
       chordVariation.Positions,
       (p) => p !== null
