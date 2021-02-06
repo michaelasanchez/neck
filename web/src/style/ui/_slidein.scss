@@ -54,11 +54,11 @@ $diagrams-per-row: 4;
     }
   }
 
-  $duration: 500ms;
+  $duration: 600ms;
 
-  $translate-in: translate(0px, 100px);
-  $translate-out: translate(-10px, 120px);
-  
+  $translate-in: translate(0px, 100px) scale(1);
+  $translate-out: translate(0px, 120px) scale(0.8);
+
   $opacity-in: 1;
   $opacity-out: 1;
 
@@ -68,12 +68,12 @@ $diagrams-per-row: 4;
       transform: $translate-in;
       z-index: 11;
     }
-    50% {
+    40% {
       opacity: $opacity-in;
-      transform: translate(0px, 20px);
+      transform: translate(0px, 10px);
       z-index: 11;
     }
-    55% {
+    45% {
       z-index: 10;
     }
     100% {
@@ -88,12 +88,12 @@ $diagrams-per-row: 4;
       transform: $translate-out;
       z-index: 10;
     }
-    50% {
+    40% {
       opacity: $opacity-in;
-      transform: translate(-10px, 180px);
+      transform: translate(0px, 180px);
       z-index: 10;
     }
-    55% {
+    45% {
       z-index: 11;
     }
     100% {
@@ -101,14 +101,19 @@ $diagrams-per-row: 4;
     }
   }
 
-  // transition: transform $duration ease;
-  -webkit-transition: -webkit-filter $duration ease-out, opacity $duration ease;//, transform $duration ease;
-  
+  -webkit-transition: -webkit-filter $duration ease-out;
+
   opacity: $opacity-in;
   transform: $translate-in;
   z-index: 11;
 
-  animation: collapse-in $duration;
+  &.in {
+    animation: collapse-in $duration ease-in-out;
+  }
+
+  &.out {
+    animation: collapse-out $duration ease-in-out;
+  }
 
   &.collapsed {
     filter: blur(5px);
@@ -117,14 +122,9 @@ $diagrams-per-row: 4;
     transform: $translate-out;
     z-index: 10;
 
-    animation: collapse-out $duration;
-
     .contents {
       max-height: 0;
       overflow: hidden;
-
-      .variations {
-      }
     }
   }
 
@@ -137,10 +137,7 @@ $diagrams-per-row: 4;
     margin: 1em;
     margin-bottom: 0.5em;
 
-    // transition: max-height $duration ease-in 0s;
-    // max-height: 600px;
-      max-height: 0;
-
+    max-height: 600px;
 
     .variations {
       display: flex;
@@ -148,10 +145,10 @@ $diagrams-per-row: 4;
       justify-content: space-around;
 
       min-height: min-content;
+      overflow-x: hidden;
+
       // overflow-y: auto;
       overflow-y: hidden;
-      overflow-x: hidden;
-      scrollbar-width: thin;
     }
   }
 

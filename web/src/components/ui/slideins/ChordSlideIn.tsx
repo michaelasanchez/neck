@@ -12,7 +12,7 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps extends Pick<ISlideInProps, 'show' | 'collapse'> {}
+export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> {}
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));

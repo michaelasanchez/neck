@@ -1,11 +1,13 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
 import { useAppOptionsContext } from '../..';
 import { Key, Mode, Tuning } from '../../models';
 import { Indicators, IndicatorsMode } from '../Indicators';
+import { Loading } from '../Loading';
 import { FretDisplayMode } from '../neck';
-import { KeySlideIn } from './slideins';
+import { KeySlideIn, slideInDuration } from './slideins';
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
@@ -23,7 +25,9 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
 
   const { indicatorsMode, key, mode, tuning } = appOptions;
 
-  const [showOptions, setShowOptions] = React.useState<boolean>(false);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   const handleFretDisplayModeUpdate = (fretMode: FretDisplayMode) => {
     let updated: FretDisplayMode;
@@ -41,11 +45,19 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   };
 
   const toggleIndicatorsMode = (mode: IndicatorsMode) => {
+    setDisabled(true);
+    const timer = setTimeout(() => {
+      setDisabled(false);
+    }, slideInDuration);
     const nextMode =
       mode === IndicatorsMode.Chord
         ? IndicatorsMode.Scale
         : IndicatorsMode.Chord;
     setAppOptions({ indicatorsMode: nextMode });
+    return () => {
+      setDisabled(false);
+      clearTimeout(timer);
+    };
   };
 
   const renderModeSwitch = (mode: IndicatorsMode) => {
@@ -65,8 +77,9 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
       <Button
         className="mode-switch"
         onClick={() => toggleIndicatorsMode(mode)}
+        disabled={disabled}
       >
-        {label}
+        {disabled ? <Loading showLoadingText={false} variant={'light'} inline={true} /> : label}
       </Button>
     );
   };

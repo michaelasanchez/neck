@@ -10,7 +10,7 @@ import { NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
 
 export interface IScaleSlideInProps
-  extends Pick<ISlideInProps, 'devYOffset' | 'show' | 'collapse'> {}
+  extends Pick<ISlideInProps, 'devYOffset' | 'collapse'> {}
 
 // Badge ScaleType
 const types = filter(ScaleType, (m) => !isNaN(m));

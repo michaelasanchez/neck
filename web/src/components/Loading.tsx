@@ -4,7 +4,15 @@ import { Alert, Spinner } from 'react-bootstrap';
 
 const DEFAULT_LOADING_TEXT = 'Loading...';
 
-export type bsVariant = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
+export type bsVariant =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'danger'
+  | 'warning'
+  | 'info'
+  | 'light'
+  | 'dark';
 
 export interface IError {
   message: string;
@@ -14,6 +22,7 @@ interface LoadingProps {
   errors?: IError[];
   loadingText?: string;
   showLoadingText?: boolean;
+  inline?: boolean;
   variant?: bsVariant;
 }
 
@@ -21,6 +30,7 @@ export const Loading: React.FC<LoadingProps> = ({
   errors,
   loadingText,
   showLoadingText = true,
+  inline = false,
   variant = 'primary',
 }) => {
   const renderErrors = (errors: IError[]) => {
@@ -44,8 +54,15 @@ export const Loading: React.FC<LoadingProps> = ({
         renderErrors(errors)
       ) : (
         <>
-          <Spinner animation="border" variant={variant} className="m-3" />
-          {showLoadingText && <span>{loadingText || DEFAULT_LOADING_TEXT}</span>}
+          <Spinner
+            animation="border"
+            variant={variant}
+            className={inline ? 'm-1' : 'm-3'}
+            size={inline ? 'sm' : null}
+          />
+          {showLoadingText && (
+            <span>{loadingText || DEFAULT_LOADING_TEXT}</span>
+          )}
         </>
       )}
     </div>

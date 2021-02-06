@@ -10,16 +10,15 @@ export interface ISlideInProps {
   badge?: JSX.Element;
   header?: JSX.Element;
   loading: boolean;
-  show?: boolean;
   collapse?: boolean;
   devYOffset?: number;
 }
 
-const slideInWidth = 400;
+export const slideInDuration = 600;
 
-const slideInBaseStyle = {
-  maxWidth: slideInWidth,
-  // transition: '500ms transform',
+// TODO: might need for resizing
+const style = {
+  maxWidth: 400,
 };
 
 export const SlideIn: React.FC<ISlideInProps> = (props) => {
@@ -30,51 +29,39 @@ export const SlideIn: React.FC<ISlideInProps> = (props) => {
     badge,
     header,
     loading,
-    show = false,
     collapse = false,
   } = props;
 
   const slideInRef = useRef();
 
+  const [animationFlag, setAnimationFlag] = useState<boolean>(false);
+
   useEffect(() => {
     const current = slideInRef.current;
-    const test = $(current);
-    // if (!collapse) $(current).addClass('show');
-    // else $(current).removeClass('show');
 
-    const duration = 500;
-
-    if (collapse) {
-      $('.contents', current).animate({maxHeight: 0 }, duration * .4)
+    if (animationFlag) {
+      if (collapse) {
+        $(current).addClass('out');
+        $('.contents', current).animate(
+          { maxHeight: 0 },
+          slideInDuration * 0.4
+        );
+      } else {
+        $(current).addClass('in');
+        $('.contents', current)
+          .delay(300)
+          .animate({ maxHeight: 600 }, slideInDuration * 0.8);
+      }
     } else {
-      $('.contents', current).delay(300).animate({maxHeight: 600 }, duration * .8)
+      setAnimationFlag(true);
     }
-
   }, [collapse]);
-
-  const slideInStyle = {
-    ...slideInBaseStyle,
-    // transform: `translateX(0)`,
-    // transform: `translate(0px, 100px)`,
-    // top: 100, //props.devYOffset || 100,
-    // zIndex: 11
-  };
-
-  const slideOutStyle = {
-    ...slideInBaseStyle,
-    // transform: `translateX(-${slideInWidth}px)`,
-    // transform: `translate(-20px, 80px)`,
-    // left: -20,
-    // top: 80, //props.devYOffset || 100,
-    // zIndex: 10
-  };
 
   return (
     <div
       className={`slidein ${className} ${collapse ? ' collapsed' : ''}`}
-      style={!collapse ? slideInStyle : slideOutStyle}
+      style={style}
       ref={slideInRef}
-      // onClick={() => setShow(!show)}
     >
       <div className="badge">{badge}</div>
       <div className="title">{title}</div>
