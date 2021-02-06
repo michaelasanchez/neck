@@ -69,7 +69,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
       </Button>
     );
   };
-  console.log(indicatorsMode === IndicatorsMode.Scale);
 
   return (
     <>
