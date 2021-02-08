@@ -8,7 +8,7 @@ interface IndicatorProps {
   open?: boolean;
   muted?: boolean;
   root?: boolean;
-  firstRef?: React.MutableRefObject<HTMLDivElement>;
+  fretRef?: React.MutableRefObject<HTMLDivElement>;
 }
 
 export const FretIndicator: React.FC<IndicatorProps> = (props) => {
@@ -20,15 +20,15 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
     label,
     muted = false,
     root = false,
-    firstRef,
+    fretRef: ref,
   } = props;
-  let divProps: any = firstRef ? { ref: firstRef } : {};
+  let fretProps = ref ? { ref } : {};
   return (
     <div
       className={`fret${open ? ' open' : ''}${
         fretClassName ? ` ${fretClassName}` : ''
       }`}
-      {...divProps}
+      {...fretProps}
     >
       {show && (
         <>

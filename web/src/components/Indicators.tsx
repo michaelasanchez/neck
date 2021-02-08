@@ -32,20 +32,29 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   } = appOptions;
 
   const firstIndicatorRef = useRef();
+  const lastIndicatorRef = useRef();
 
   useEffect(() => {
     if (!!mainRef?.current && !!firstIndicatorRef?.current) {
       const first = firstIndicatorRef.current as HTMLDivElement;
+      const last = lastIndicatorRef.current as HTMLDivElement;
 
       const main = mainRef.current;
 
-      let scrollPosition = Math.max(0, first.offsetTop - 100);
-      scrollPosition = Math.min(
-        scrollPosition,
-        main.scrollHeight - main.clientHeight
-      );
+      const scrollPadding = 100;
 
-      main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+      const top = first.offsetTop - scrollPadding;
+      const bottom = last.offsetTop + last.offsetHeight + scrollPadding;
+
+      let scrollPosition;
+      if (top < main.scrollTop) {
+        scrollPosition = top;
+      } else if (bottom > main.scrollTop + main.offsetHeight) {
+        scrollPosition = bottom - main.offsetHeight;
+      }
+
+      if (scrollPosition !== undefined)
+        main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
   }, [chordVariation, scaleVariation, mode]);
 
@@ -63,6 +72,10 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     let firstFret = indexOf(
       chordVariation.Positions,
       Math.min(...nonNullPositions)
+    );
+    let lastFret = indexOf(
+      chordVariation.Positions,
+      Math.max(...nonNullPositions)
     );
 
     return (
@@ -85,13 +98,21 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 root={note.Degree === 1}
                 degree={note.Degree}
                 label={note.Label}
-                firstRef={
+                fretRef={
                   (open || muted) && i == firstFret ? firstIndicatorRef : null
                 }
               />
               {times(instrument.NumFrets, (f) => {
                 const fretNum = f + 1;
                 const show = position === fretNum;
+                const ref =
+                  show &&
+                  (i == firstFret
+                    ? firstIndicatorRef
+                    : i == lastFret
+                    ? lastIndicatorRef
+                    : null);
+
                 return (
                   <FretIndicator
                     key={f}
@@ -99,7 +120,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     root={note.Degree === 1}
                     label={note.Label}
                     degree={note.Degree}
-                    firstRef={show && i == firstFret ? firstIndicatorRef : null}
+                    fretRef={ref}
                   />
                 );
               })}
@@ -108,12 +129,13 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
         })}
       </div>
     );
+
+    /* ScaleVariation */
   } else if (
     mode == IndicatorsMode.Scale &&
     !!scaleVariation &&
     scaleVariation.ScaleId == scale.Id
   ) {
-    /* ScaleVariation */
     const fretStart = scaleVariation.Offset;
     const fretEnd =
       scaleVariation.Offset + scaleVariation.Positions[0].length - 1;
@@ -176,7 +198,13 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                         ? 'faded'
                         : null
                     }
-                    firstRef={i === 0 && f === scaleVariation.Offset ? firstIndicatorRef : null}
+                    fretRef={
+                      i === 0 && f === fretStart
+                        ? firstIndicatorRef
+                        : i === tuning.Offsets.length - 1 && f === fretEnd
+                        ? lastIndicatorRef
+                        : null
+                    }
                   />
                 );
               })}
