@@ -1,4 +1,4 @@
-import { filter, map, max, min, times } from 'lodash';
+import { filter, indexOf, lastIndexOf, map, max, min, times } from 'lodash';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { Chord, ChordVariation, Note } from '../../../models';
@@ -44,6 +44,17 @@ const mapSymbols = (
       }
       return DiagramSymbol.Empty;
     });
+  });
+};
+
+const mapBarres = (barres: Array<number>, positions: Array<number>) => {
+  return map(barres, (i) => {
+    if (i === null) return null;
+    const barreFret = positions[i];
+    const start = indexOf(positions, barreFret);
+    const end = lastIndexOf(positions, barreFret);
+    
+    return map(positions, (p, i) => i > start && i <= end);
   });
 };
 
@@ -95,7 +106,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
       handleClick={() => handleClick(variation)}
       span={span}
       symbols={renderSymbols()}
-      barres={variation.Barres}
+      barres={mapBarres(variation.Barres, variation.Positions)}
     />
   );
 };

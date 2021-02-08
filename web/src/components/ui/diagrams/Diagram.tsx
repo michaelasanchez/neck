@@ -30,7 +30,7 @@ export enum DiagramSymbol {
 
 export type DiagramSymbolMap = Array<Array<DiagramSymbol>>;
 
-export type DiagramBarreMap = Array<number>;
+export type DiagramBarreMap = Array<Array<boolean>>;
 
 const renderPadding = (amount: number) =>
   times(amount, (p) => <div key={p}></div>);
@@ -55,13 +55,8 @@ const renderSymbol = (symbol: DiagramSymbol): React.ReactElement => {
   return <div className={symbolClass}></div>;
 };
 
-const renderBarre = (
-  numStrings: number,
-  startString: number
-): React.ReactElement[] => {
-  return times(numStrings + 1, (s) => {
-    return <div key={s} className={s > startString ? 'barre' : ''}></div>;
-  });
+const renderBarre = (barre: Array<boolean>): React.ReactElement[] => {
+  return times(barre.length + 1, i => <div key={i} className={i < barre.length && barre[i] ? 'barre' : ''}></div>);
 };
 
 export const Diagram: React.FC<DiagramProps> = ({
@@ -150,7 +145,7 @@ export const Diagram: React.FC<DiagramProps> = ({
             <div className="barres">
               {renderPadding(paddingTop)}
               {map(barres, (s, i) => (
-                <div key={i}>{s !== null && renderBarre(numStrings, s)}</div>
+                <div key={i}>{s !== null && renderBarre(s)}</div>
               ))}
               {renderPadding(paddingBottom)}
             </div>
