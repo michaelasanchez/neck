@@ -100,22 +100,3 @@ $selector-gradient-radial: radial-gradient(
     $selector-gradient-outer 70%
   )
   no-repeat;
-
-/* Indicators */
-$indicator-radius: 20px;
-$indicator-background: radial-gradient(
-    $selector-gradient-inner,
-    $selector-gradient-outer 70%
-  )
-  no-repeat;
-
-$indicator-border-color: #fff; //$selector-border-color;
-$indicator-border: 4px solid $indicator-border-color;
-
-$indicator-muted-border: $indicator-border;
-$indicator-muted-diameter: 30px;
-
-$indicator-barre-diameter: 30px;
-$indicator-barre-background: $selector-gradient-linear;
-$indicator-barre-start-background: $selector-gradient-radial;
-$indicator-barre-start-offset: -15px;

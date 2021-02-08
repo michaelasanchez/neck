@@ -1,4 +1,4 @@
-import { filter, indexOf, map, times } from 'lodash';
+import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
 import { useAppOptionsContext } from '..';
@@ -69,14 +69,29 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
       (p) => p !== null
     );
 
-    let firstFret = indexOf(
+    let firstFretIndex = indexOf(
       chordVariation.Positions,
       Math.min(...nonNullPositions)
     );
-    let lastFret = indexOf(
+    let lastFretIndex = indexOf(
       chordVariation.Positions,
       Math.max(...nonNullPositions)
     );
+
+    // TODO: supports single barre only
+    let barre: number[] = null, barreFret: number;
+    if (chordVariation.Barres) {
+      barreFret = chordVariation.Positions[chordVariation.Barres[0]];
+      const firstBarreIndex = indexOf(
+        chordVariation.Positions,
+        barreFret
+      );
+      const lastBarreIndex = lastIndexOf(
+        chordVariation.Positions,
+        barreFret
+      );
+      barre = [firstBarreIndex, lastBarreIndex];
+    }
 
     return (
       <div className="indicators">
@@ -99,7 +114,9 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 degree={note.Degree}
                 label={note.Label}
                 fretRef={
-                  (open || muted) && i == firstFret ? firstIndicatorRef : null
+                  (open || muted) && i == firstFretIndex
+                    ? firstIndicatorRef
+                    : null
                 }
               />
               {times(instrument.NumFrets, (f) => {
@@ -107,9 +124,9 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 const show = position === fretNum;
                 const ref =
                   show &&
-                  (i == firstFret
+                  (i == firstFretIndex
                     ? firstIndicatorRef
-                    : i == lastFret
+                    : i == lastFretIndex
                     ? lastIndicatorRef
                     : null);
 
@@ -121,6 +138,8 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     label={note.Label}
                     degree={note.Degree}
                     fretRef={ref}
+                    barre={barre && f + 1 === barreFret && i >= barre[0] && i <= barre[1]}
+                    barreClass={barre && f + 1 === barreFret && (i === barre[0] ? 'start' : i === barre[1] ? 'end' : null)}
                   />
                 );
               })}
@@ -193,7 +212,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     degree={scaleEnded && degree === 1 ? degree + 7 : degree}
                     root={degree === 1}
                     label={label}
-                    fretClassName={
+                    fretClass={
                       (!scaleStarted || scaleEnded) && degree != 1
                         ? 'faded'
                         : null
