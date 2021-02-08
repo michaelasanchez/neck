@@ -1,6 +1,6 @@
 import { filter, map } from 'lodash';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { useAppOptionsContext } from '../../..';
 import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
@@ -51,13 +51,23 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
 
   const [selected, setSelected] = useState<Note[]>();
 
+  const [loading, setLoading] = useState<boolean>(!collapse);
+
   // Side Effects
   useEffect(() => {
     if (!!chord && !collapse) {
       setSelected([]);
       reloadChordVariations();
     }
-  }, [chord, collapse]);
+  }, [chord]);
+
+  useEffect(() => {
+    if (!variations && !collapse && !loading) {
+      setSelected([]);
+      reloadChordVariations();
+    }
+  }, [collapse]);
+  // }, [chord, collapse]);
 
   // Load
   const reloadChordVariations = () => {
@@ -123,7 +133,25 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   ) => {
     setAppOptions({ chordVariation: variation });
     setCurrentIndex(index);
+    setLoading(false);
   };
+  
+  const renderVariations = useCallback(() => {
+    return variations?.length > 0 ? (
+      map(variations, (v: ChordVariation, i: number) => (
+        <ChordDiagram
+          active={i == currentIndex}
+          chord={chord}
+          chordVariation={v}
+          highlighted={selected}
+          key={i}
+          setChordVariation={(v) => handleSetChordVariation(v, i)}
+        />
+      ))
+    ) : (
+      <> Nope!</>
+    );
+  }, [variations, currentIndex, selected]);
 
   return (
     <DropdownSlideIn
@@ -165,22 +193,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       }
       loading={variations == null}
     >
-      <div className="variations">
-        {variations?.length > 0 ? (
-          map(variations, (v: ChordVariation, i: number) => (
-            <ChordDiagram
-              active={i == currentIndex}
-              chord={chord}
-              chordVariation={v}
-              highlighted={selected}
-              key={i}
-              setChordVariation={(v) => handleSetChordVariation(v, i)}
-            />
-          ))
-        ) : (
-          <> Nope!</>
-        )}
-      </div>
+      <div className="variations">{renderVariations()}</div>
     </DropdownSlideIn>
   );
 };

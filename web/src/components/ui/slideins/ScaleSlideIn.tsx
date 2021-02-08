@@ -1,6 +1,6 @@
 import { filter, map } from 'lodash';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { NoteSelection } from '../..';
 import { useAppOptionsContext } from '../../..';
@@ -57,7 +57,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
 
   const [selected, setSelected] = useState<Note[]>();
 
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(!collapse);
 
   const reloadScaleVariation = () => {
     new ScaleVariationApi()
@@ -81,7 +81,15 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
       setSelected([]);
       reloadScaleVariation();
     }
-  }, [scale, collapse]);
+  }, [scale]);
+
+  useEffect(() => {
+    if (!variations && !collapse && !loading) {
+      setSelected([]);
+      reloadScaleVariation();
+    }
+  }, [collapse]);
+  // }, [scale, collapse]);
 
   const handleSetChordVariation = (
     variation: ScaleVariation,
@@ -112,10 +120,23 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         Type: updatedType !== undefined ? updatedType : scale.Type,
       };
 
-      setLoading(true);
       setAppOptions({ scale: updated as Scale });
+      setLoading(false);
     }
+    
   };
+
+  const renderVariations = useCallback(() => {
+    return map(variations, (v, i) => (
+      <ScaleDiagram
+        key={i}
+        active={i == currentIndex}
+        highlighted={selected}
+        variation={v}
+        setVariation={(v) => handleSetChordVariation(v, i)}
+      />
+    ));
+  }, [variations, currentIndex, selected]);
 
   return (
     <DropdownSlideIn
@@ -147,17 +168,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         },
       ]}
     >
-      <div className="variations">
-        {map(variations, (v, i) => (
-          <ScaleDiagram
-            key={i}
-            active={i == currentIndex}
-            highlighted={selected}
-            variation={v}
-            setVariation={(v) => handleSetChordVariation(v, i)}
-          />
-        ))}
-      </div>
+      <div className="variations">{renderVariations()}</div>
     </DropdownSlideIn>
   );
 };

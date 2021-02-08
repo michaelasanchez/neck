@@ -8,7 +8,8 @@ import { IndicatorsMode } from '../Indicators';
 import { Loading } from '../Loading';
 import { FretDisplayMode } from '../neck';
 import { slideInDuration } from './slideins';
-import Draggable from 'react-draggable';
+
+import Draggable, { DraggableCore } from 'react-draggable'; // Both at the same time
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
@@ -111,13 +112,15 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
             setMode={(m: Mode) => setAppOptions({ mode: m })}
           />
         </div>
-        <div className="slidein-container">
-          <ScaleSlideIn
-            devYOffset={600}
-            collapse={indicatorsMode !== IndicatorsMode.Scale}
-          />
-          <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
-        </div>
+        <Draggable>
+          <div className="slidein-container">
+            <ScaleSlideIn
+              devYOffset={600}
+              collapse={indicatorsMode !== IndicatorsMode.Scale}
+            />
+            <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
+          </div>
+        </Draggable>
         {/* <KeySlideIn /> */}
       </div>
     </>

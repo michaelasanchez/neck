@@ -172,11 +172,9 @@ export const useAppOptions = () => {
     if (!!validationError) {
       setErrors([validationError]);
     } else {
-      console.log();
       setAppOptions(newOptions);
       setCookie(newOptions);
     }
   };
-
   return { appOptions, setAppOptions: handleSetAppOptions, errors, loading };
 };

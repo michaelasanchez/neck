@@ -1,5 +1,6 @@
 import { findIndex, map, maxBy } from 'lodash';
 import * as React from 'react';
+import { useCallback } from 'react';
 
 import { Diagram, DiagramSpan, DiagramSymbol, DiagramSymbolMap } from '.';
 import { Note, NoteValue, ScaleVariation } from '../../../models';
@@ -44,6 +45,10 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   highlighted,
   variation,
 }) => {
+  const renderSymbols = useCallback(() => {
+    return mapSymbols(variation.Positions, highlighted);
+  }, [variation, highlighted]);
+
   return (
     <Diagram
       active={active}
@@ -51,7 +56,7 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
       diagramLabel={<>label</>} //{<>{variation.Label}</>}
       handleClick={() => setVariation(variation)}
       span={calcSpan(variation)}
-      symbols={mapSymbols(variation.Positions, highlighted)}
+      symbols={renderSymbols()}
     />
   );
 };

@@ -1,5 +1,6 @@
 import { filter, map, max, min, times } from 'lodash';
 import * as React from 'react';
+import { useCallback } from 'react';
 import { Chord, ChordVariation, Note } from '../../../models';
 import { NoteUtils } from '../../../shared';
 import { Diagram, DiagramSpan, DiagramSymbol } from './Diagram';
@@ -82,6 +83,10 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
     </>
   );
 
+  const renderSymbols = useCallback(() => {
+    return mapSymbols(span, variation.Positions, chordRoots, chordHighlighted);
+  }, [variation, highlightedNotes]);
+
   return (
     <Diagram
       active={active}
@@ -89,12 +94,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
       diagramLabel={diagramLabel}
       handleClick={() => handleClick(variation)}
       span={span}
-      symbols={mapSymbols(
-        span,
-        variation.Positions,
-        chordRoots,
-        chordHighlighted
-      )}
+      symbols={renderSymbols()}
       barres={variation.Barres}
     />
   );

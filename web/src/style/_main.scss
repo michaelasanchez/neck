@@ -5,6 +5,10 @@ main,
   height: 100%;
 }
 
+html {
+  overflow: hidden;
+}
+
 body {
   background: $body-background-color;
 }
@@ -37,7 +41,5 @@ main > [class$=container] {
 
 .neck,
 .indicators {
-  
-
   font-family: $neck-font-family;
 }
