@@ -1,9 +1,10 @@
 $diagrams-per-row: 4;
 
+
 .slidein {
   position: absolute;
+  top: 500px;
   left: 20px;
-  top: 200px;
 
   display: flex;
   flex-direction: column;

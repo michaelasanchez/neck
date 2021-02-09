@@ -30,6 +30,11 @@ namespace neck.tests
 			var scale = new Scale(note, ScaleType.Diatonic);
 
 			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+
+			for (int i = 1; i <= scale.Notes.Count; i++)
+			{
+				Assert.Equal((ScaleDegree)i, scale.Notes[i - 1].Degree);
+			}
 		}
 
 		[Theory]
@@ -86,6 +91,11 @@ namespace neck.tests
 			var scale = new Scale(note, ScaleType.NaturalMinor);
 
 			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+
+			for (int i = 1; i <= scale.Notes.Count; i++)
+			{
+				Assert.Equal((ScaleDegree)i, scale.Notes[i - 1].Degree);
+			}
 		}
 		[Theory]
 		[InlineData(NoteValue.C, NoteSuffix.Flat, "Cb", "Db", "Eb", "Gb", "Ab")]

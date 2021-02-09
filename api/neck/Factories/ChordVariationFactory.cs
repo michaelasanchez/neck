@@ -81,6 +81,9 @@ namespace neck.Generators
 						// Check tones have been included
 						var toneIndex = chord.Tones.IndexOf(chord.Tones.FirstOrDefault(n => n.Equals(note)));
 						toneCheck[toneIndex] = true;
+
+						// Mute first string if not root
+						if (countIndex == 0 && chord.Root.Base != note.Base) return null;
 					}
 
 					return calcNotePosition(note, tuning.Offsets[countIndex].Pitch, fretOffset);

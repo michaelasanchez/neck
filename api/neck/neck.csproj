@@ -5,21 +5,7 @@
     <UserSecretsId>5d68bcb5-4796-4f5f-8f09-e5022d02c9df</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Generator\**" />
-    <Content Remove="Generator\**" />
-    <EmbeddedResource Remove="Generator\**" />
-    <None Remove="Generator\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Interfaces\IInterval.cs" />
-    <Compile Remove="Models\Intervals\AugmentedInterval.cs" />
-    <Compile Remove="Models\Intervals\Interval.cs" />
-    <Compile Remove="UnitsOfWork\GetOrCreateUnitOfWork.cs" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
@@ -42,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Locators\" />
-    <Folder Include="Models\Intervals\" />
     <Folder Include="Models\Variations\" />
   </ItemGroup>
 

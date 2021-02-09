@@ -6,11 +6,13 @@ $indicator-background: radial-gradient(
   )
   no-repeat;
 
+$indicator-border-width: 4px;
 $indicator-border-color: #fff; //$selector-border-color;
-$indicator-border: 4px solid $indicator-border-color;
+$indicator-border: $indicator-border-width solid $indicator-border-color;
 
 $indicator-muted-border: $indicator-border;
-$indicator-muted-diameter: 30px;
+$indicator-muted-length: 46px;
+$indicator-muted-width: 14px;
 
 $indicator-barre-diameter: 18px;
 $indicator-barre-background: $selector-gradient-linear;
@@ -63,28 +65,25 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
 
       /* Indicator */
       .indicator {
-        background: $indicator-background;
         border-radius: 50%;
         border: $indicator-border;
         width: $indicator-radius * 2;
         height: $indicator-radius * 2;
+
+        background: $indicator-background;
+        box-shadow: 0 4px 6px -2px #00000044;
 
         position: relative;
 
         /* Root */
         &.root {
           border-radius: 9px;
+          box-shadow: 3px 3px 6px -2px #00000044;
           transform: rotate(45deg);
         }
 
         /* Degree */
         &.degree {
-          // background: rgba(82, 107, 45, .8);
-          box-shadow: 0 4px 6px -2px #00000044;
-
-          &.root {
-            box-shadow: 3px 3px 6px -2px #00000044;
-          }
         }
 
         $colors: $blues;
@@ -105,20 +104,51 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
           height: auto;
           width: auto;
 
-          &::before,
-          &::after {
-            border: $indicator-muted-border;
+          // All layers
+          > div::before,
+          > div::after {
             content: '';
             position: absolute;
             transform: translate(-50%, -50%) rotate(45deg);
           }
 
-          &::before {
-            width: $indicator-muted-diameter;
+          > div::before {
+            height: $indicator-muted-width;
+            width: $indicator-muted-length;
+          }
+          > div::after {
+            height: $indicator-muted-length;
+            width: $indicator-muted-width;
           }
 
-          &::after {
-            height: $indicator-muted-diameter;
+          // Box-shadow
+          > div:first-child::before,
+          > div:first-child::after {
+            box-shadow: 3px 3px 6px -2px #00000044;
+            border-radius: 4px;
+          }
+
+          // Border
+          > div:nth-child(2)::before,
+          > div:nth-child(2)::after {
+            background: $indicator-border-color;
+            border: $indicator-muted-border;
+            border-radius: 4px;
+          }
+
+          // Interior fill
+          > div:last-child::before,
+          > div:last-child::after {
+            background: nth($colors, 7);
+            border-radius: 2px;
+          }
+          > div:last-child::before {
+            height: $indicator-muted-width - ($indicator-border-width * 2);
+            width: $indicator-muted-length - ($indicator-border-width * 2);
+          }
+          > div:last-child::after {
+            height: $indicator-muted-length - ($indicator-border-width * 2);
+            width: $indicator-muted-width - ($indicator-border-width * 2);
           }
         }
       }
@@ -135,7 +165,7 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
       position: absolute;
       height: $indicator-barre-diameter;
       width: 100%;
-      background: linear-gradient(nth($blues, 6), nth($blues, 5));
+      background: linear-gradient(nth($blues, 8), nth($blues, 7));
 
       &.start {
         left: 50%;

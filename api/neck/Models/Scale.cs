@@ -113,6 +113,7 @@ namespace neck.Models
 		{
 			var nextNote = step == Step.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
 
+			//nextNote.Degree = (ScaleDegree)(((int)prevNote.Degree - 1) % Enum.GetNames(typeof(ScaleDegree)).Length + 1);
 			nextNote.Degree = prevNote.Degree + 1;
 			nextNote.Interval = calcInterval(nextNote.Pitch, Tonic.Pitch);
 

@@ -48,7 +48,15 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
               degree ? ` degree degree-${degree}` : ''
               //   ${barre ? (barreStart ? ' barre start' : ' barre') : ''}
             }${root ? ' root' : ''}`}
-          ></div>
+          >
+            {muted && (
+              <>
+                <div></div>
+                <div></div>
+                <div></div>
+              </>
+            )}
+          </div>
           {label && <label>{label}</label>}
         </>
       )}

@@ -45,7 +45,7 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
 
   return (
     <div className="note-selection">
-      {rootIndex &&
+      {rootIndex > -1 &&
         map(naturalNoteValues, (v: NoteValue, i: number) => {
           //
           const shiftedNoteValue =

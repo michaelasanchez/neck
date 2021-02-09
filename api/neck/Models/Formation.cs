@@ -39,6 +39,8 @@ namespace neck.Models
 			{
 				var barres = Enumerable.Repeat<int?>(null, Positions.Max().Value - Positions.Min().Value + 1).ToList();
 				barres[min.Value - Positions.Min().Value] = Positions.IndexOf(min);
+				//barres[min.Value - Positions.Min().Value] = new List<int> { Positions.IndexOf(min), Positions.LastIndexOf(min) };
+
 
 				return barres;
 			}

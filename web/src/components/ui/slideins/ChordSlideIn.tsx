@@ -176,9 +176,9 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
           values: modifiers,
           disabled: [
             ChordModifier.Diminished,
+            ChordModifier.DiminishedSeventh,
             ChordModifier.SuspendedSecond,
             ChordModifier.SuspendedFourth,
-            ChordModifier.AugmentedSeventh,
           ],
           getLabel: (mod: ChordModifier) => Chord.getModifierLabel(mod),
           onUpdate: (mod: ChordModifier) => handleModifierUpdate(mod),

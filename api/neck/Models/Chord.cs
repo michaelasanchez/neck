@@ -103,9 +103,9 @@ namespace neck.Models
 					return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth, Interval.MinorSeventh };
 				case ChordModifier.Dominant7:
 					return new List<Interval> { Interval.Root, Interval.MajorThird, Interval.PerfectFifth, Interval.MinorSeventh };
-				case ChordModifier.Diminished7:
-					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth, Interval.MinorSeventh };
 				case ChordModifier.Augmented7:
+					return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth, Interval.MinorSeventh };
+				case ChordModifier.Diminished7:
 					throw new Exception("Not implemented");
 				default:
 					return null;
@@ -120,23 +120,32 @@ namespace neck.Models
 			var scale = new Scale(root, getMode(modifier));
 
 			List<Note> components;
-			if (modifier == ChordModifier.Augmented || modifier == ChordModifier.Diminished7)
+			if (modifier == ChordModifier.Augmented || modifier == ChordModifier.Augmented7)
 			{
 				components = intervals
 					.Select(i =>
 					{
 						var note = scale.Notes.FirstOrDefault(n => n.Interval == i);
+						Note adjustedNote = null;
 						if (note == null)
 						{
 							var flat = scale.Notes.FirstOrDefault(n => n.Interval == i + 1);
 							if (flat != null && (flat.Interval == Interval.PerfectFifth || flat.Interval == Interval.MajorSeventh))
 							{
-								return new Note(flat.Base, NoteSuffix.Flat);
+								adjustedNote = new Note(flat.Base, NoteSuffix.Flat);
 							}
+
 							var sharp = scale.Notes.FirstOrDefault(n => n.Interval == i - 1);
 							if (sharp != null && (sharp.Interval == Interval.PerfectFifth || sharp.Interval == Interval.MajorSeventh))
 							{
-								return new Note(sharp.Base, NoteSuffix.Sharp);
+								adjustedNote = new Note(sharp.Base, NoteSuffix.Sharp);
+							}
+
+							if (adjustedNote != null)
+							{
+								var degreeNote = scale.Notes.FirstOrDefault(n => n.Base == adjustedNote.Base);
+								adjustedNote.Degree = degreeNote.Degree;
+								note = adjustedNote;
 							}
 						}
 
