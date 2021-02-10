@@ -20,6 +20,7 @@ export type DiagramSpan = { min: number; max: number };
 
 export enum DiagramSymbol {
   Empty,
+  Mute,
   Note,
   Root,
   Highlighted,
@@ -36,7 +37,8 @@ const renderPadding = (amount: number) =>
 const renderSymbol = (symbol: DiagramSymbol): React.ReactElement => {
   if (symbol === DiagramSymbol.Empty) return;
 
-  let symbolClass = 'dot';
+  let symbolClass = symbol === DiagramSymbol.Mute ? 'mute' : 'dot';
+
   if (
     symbol === DiagramSymbol.Root ||
     symbol === DiagramSymbol.HighlightedRoot
@@ -54,7 +56,9 @@ const renderSymbol = (symbol: DiagramSymbol): React.ReactElement => {
 };
 
 const renderBarre = (barre: Array<boolean>): React.ReactElement[] => {
-  return times(barre.length + 1, i => <div key={i} className={i < barre.length && barre[i] ? 'barre' : ''}></div>);
+  return times(barre.length + 1, (i) => (
+    <div key={i} className={i < barre.length && barre[i] ? 'barre' : ''}></div>
+  ));
 };
 
 export const Diagram: React.FC<DiagramProps> = ({

@@ -215,6 +215,35 @@ $diagram-outline-border-radius: 16px * $scale;
               background: $diagram-dot-highlight-background-color;
             }
           }
+
+          /* Mute */
+          $mute-symbol-length: 7px;
+          $mute-symbol-width: 1px;
+          $mute-symbol-offset-y: 4.5px;
+
+          .mute {
+            transform: rotate(45deg) translate($mute-symbol-offset-y, $mute-symbol-offset-y);
+
+            &::before,
+            &::after {
+              background: #000;
+              content: '';
+              position: absolute;
+            }
+
+            &::before {
+              height: $mute-symbol-length;
+              width: $mute-symbol-width;
+              top: -$mute-symbol-length / 2;
+              left: -$mute-symbol-width / 2;
+            }
+            &::after {
+              height: $mute-symbol-width;
+              width: $mute-symbol-length;
+              top: -$mute-symbol-width / 2;
+              left: -$mute-symbol-length / 2;
+            }
+          }
         }
       }
     }

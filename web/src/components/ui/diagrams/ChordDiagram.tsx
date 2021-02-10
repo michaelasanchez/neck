@@ -26,10 +26,14 @@ const mapSymbols = (
   roots: Array<boolean>,
   highlighted: Array<boolean>
 ) => {
+  console.log('pos', positions);
   return map(positions, (s, i) => {
     return times(span.max - span.min, (f) => {
       const pos = f + span.min;
 
+      if (s === null && pos === 0) {
+        return DiagramSymbol.Mute;
+      }
       if (pos === s) {
         if (roots[i]) {
           if (highlighted[i]) {

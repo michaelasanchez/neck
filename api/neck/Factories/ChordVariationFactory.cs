@@ -8,8 +8,10 @@ namespace neck.Generators
 {
 	public class ChordVariationFactory : IVariationFactory<Chord, ChordVariation>
 	{
-		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
+		private bool FILTER_INVERSIONS = true;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
+
+		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
 
 		private int ALLOWED_OUT_OF_SPAN = 5;
 		private int ALLOWED_MUTES = 5;
@@ -61,9 +63,6 @@ namespace neck.Generators
 			// Used to validate variation contains all chord tones
 			int? rootFlag = null;
 
-			// Debug
-			var discarded = 0;
-
 			// Calculate variations
 			var variations = new List<ChordVariation>();
 			for (var v = 0; v < numVariations; v++)
@@ -92,7 +91,7 @@ namespace neck.Generators
 					return note;
 				}).ToList();
 
-				if (rootFlag != null & rootFlag > 0)
+				if (FILTER_INVERSIONS && rootFlag != null & rootFlag > 0)
 				{
 					for (var i = 0; i < rootFlag; i++)
 					{
@@ -115,10 +114,6 @@ namespace neck.Generators
 				if (toneCheck.All(c => c == true))
 				{
 					variations.Add(new ChordVariation(chord, tuning.Id, positions));
-				}
-				else
-				{
-					discarded++;
 				}
 			}
 
