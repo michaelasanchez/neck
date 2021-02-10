@@ -85,7 +85,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
     return null;
   });
-
+  
   const diagramLabel = (
     <>
       {map(noteLabels, (p: string, i: number) => (

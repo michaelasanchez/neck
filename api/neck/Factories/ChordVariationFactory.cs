@@ -59,14 +59,18 @@ namespace neck.Generators
 			var numVariations = noteCounts.Aggregate((acc, count) => acc * count);
 
 			// Used to validate variation contains all chord tones
-			var toneCheck = chord.Tones.Select(n => false).ToList();
+			int? rootFlag = null;
+
+			// Debug
+			var discarded = 0;
 
 			// Calculate variations
 			var variations = new List<ChordVariation>();
 			for (var v = 0; v < numVariations; v++)
 			{
+
 				var multiplier = 1;
-				var positions = noteCounts.Select((count, countIndex) =>
+				var notes = noteCounts.Select((count, countIndex) =>
 				{
 					var prev = multiplier;
 					multiplier *= count;
@@ -78,24 +82,44 @@ namespace neck.Generators
 					{
 						note = matches[countIndex][index];
 
-						// Check tones have been included
-						var toneIndex = chord.Tones.IndexOf(chord.Tones.FirstOrDefault(n => n.Equals(note)));
-						toneCheck[toneIndex] = true;
-
 						// Mute first string if not root
-						if (countIndex == 0 && chord.Root.Base != note.Base) return null;
+						if (rootFlag == null && chord.Root.Base == note.Base)
+						{
+							rootFlag = countIndex;
+						}
 					}
 
-					return calcNotePosition(note, tuning.Offsets[countIndex].Pitch, fretOffset);
+					return note;
 				}).ToList();
 
-				if (toneCheck.All(c => c))
+				if (rootFlag != null & rootFlag > 0)
+				{
+					for (var i = 0; i < rootFlag; i++)
+					{
+						notes[i] = null;
+					}
+				}
+
+				var toneCheck = chord.Tones.Select(n => false).ToList();
+				var positions = notes.Select((n, i) =>
+				{
+					if (n != null)
+					{
+						var toneIndex = chord.Tones.IndexOf(chord.Tones.FirstOrDefault(z => z.Equals(n)));
+						toneCheck[toneIndex] = true;
+					}
+
+					return calcNotePosition(n, tuning.Offsets[i].Pitch, fretOffset);
+				}).ToList();
+
+				if (toneCheck.All(c => c == true))
 				{
 					variations.Add(new ChordVariation(chord, tuning.Id, positions));
 				}
-
-				// Reset
-				toneCheck.ForEach(c => c = false);
+				else
+				{
+					discarded++;
+				}
 			}
 
 			return variations;

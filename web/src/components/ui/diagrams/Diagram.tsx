@@ -7,8 +7,6 @@ export const USE_FRET_PADDING = true;
 export const FRET_PADDING_SIZE = 1;
 export const NO_FRET_PADDING_AT_OR_BELOW = 1;
 
-export const MIN_NUM_FRETS = 4;
-
 export interface DiagramProps {
   handleClick: () => void;
   active?: boolean;
@@ -77,10 +75,7 @@ export const Diagram: React.FC<DiagramProps> = ({
 
   /* Dimensions */
   const numStrings = symbols.length;
-  const numFrets = max([
-    span.max - span.min + FRET_PADDING_SIZE * paddingTotal,
-    MIN_NUM_FRETS,
-  ]);
+  const numFrets = span.max - span.min + FRET_PADDING_SIZE * paddingTotal;
 
   /* Outline & Fret Offset Label */
   const offsetSpan = React.useRef();

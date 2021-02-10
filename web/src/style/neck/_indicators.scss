@@ -1,18 +1,18 @@
 /* Indicators */
-$indicator-radius: 20px;
+$indicator-diameter: 40px;
 $indicator-background: radial-gradient(
     $selector-gradient-inner,
     $selector-gradient-outer 70%
   )
   no-repeat;
 
-$indicator-border-width: 4px;
+$indicator-border-width: 3px;
 $indicator-border-color: #fff; //$selector-border-color;
 $indicator-border: $indicator-border-width solid $indicator-border-color;
 
 $indicator-muted-border: $indicator-border;
 $indicator-muted-length: 46px;
-$indicator-muted-width: 14px;
+$indicator-muted-width: 12px;
 
 $indicator-barre-diameter: 18px;
 $indicator-barre-background: $selector-gradient-linear;
@@ -65,21 +65,22 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
 
       /* Indicator */
       .indicator {
-        border-radius: 50%;
-        border: $indicator-border;
-        width: $indicator-radius * 2;
-        height: $indicator-radius * 2;
+        position: relative;
+        width: $indicator-diameter;
+        height: $indicator-diameter;
 
         background: $indicator-background;
+        border: $indicator-border;
+        border-radius: 50%;
         box-shadow: 0 4px 6px -2px #00000044;
-
-        position: relative;
 
         /* Root */
         &.root {
           border-radius: 9px;
           box-shadow: 3px 3px 6px -2px #00000044;
           transform: rotate(45deg);
+          width: $indicator-diameter - 2px;
+          height: $indicator-diameter - 2px;
         }
 
         /* Degree */
@@ -104,6 +105,8 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
           height: auto;
           width: auto;
 
+          opacity: 0.6;
+
           // All layers
           > div::before,
           > div::after {
@@ -124,7 +127,7 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
           // Box-shadow
           > div:first-child::before,
           > div:first-child::after {
-            box-shadow: 3px 3px 6px -2px #00000044;
+            box-shadow: 3px 3px 6px -2px #00000066;
             border-radius: 4px;
           }
 
