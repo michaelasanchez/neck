@@ -8,14 +8,15 @@ namespace neck.Generators
 {
 	public class ChordVariationFactory : IVariationFactory<Chord, ChordVariation>
 	{
+		private bool ENFORCE_CHORD_TONES = true;
+
+		private bool INSERT_OPEN_NOTES = true;
+		private bool INSERT_MUTED_NOTES = true;
+
 		private bool FILTER_INVERSIONS = true;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
 
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
-
-		private int ALLOWED_OUT_OF_SPAN = 5;
-		private int ALLOWED_MUTES = 5;
-		private int ALLOWED_OPEN = 5;
 
 		public List<ChordVariation> GenerateVariations(Chord @base, Tuning tuning, int fretOffset, int fretSpan)
 		{
@@ -29,30 +30,27 @@ namespace neck.Generators
 
 			// Calculate number of combinations from matched notes
 			var noteCounts = matches.Select(m => m.Count()).ToList();
-			var noMatches = noteCounts.Where(m => m == 0).Count();
 
-			// Add mute & open notes
-			if (noMatches > 0 && noMatches <= ALLOWED_OUT_OF_SPAN)
+			// Attempt to fill spans with no note matches
+			if (noteCounts.Where(m => m == 0).Count() > 0)
 			{
-				int min = 0, mutes = 0, open = 0;
-				for (var i = 0; i < noteCounts.Count && min < noteCounts.Count; i++)
+				for (var i = 0; i < noteCounts.Count; i++)
 				{
-					if (open < ALLOWED_OPEN)
+					if (noteCounts[i] == 0)
 					{
-						if (containsNote(chord.Tones, calcNoteFromPosition(chord, tuning.Offsets[i].Pitch, 0)))
+						// Add open note if it fits in our chord
+						if (INSERT_OPEN_NOTES && containsNote(chord.Tones, tuning.Offsets[i]))
 						{
-							// TODO: FINISH
+							matches[i] = new List<Note> { tuning.Offsets[i].Copy() };
+							noteCounts[i] = 1;
 						}
-					}
-					else if (mutes < ALLOWED_MUTES)
-					{
-						var index = noteCounts.IndexOf(0, min);
-						if (index >= 0)
+						else if (INSERT_MUTED_NOTES)
 						{
-							min = index + 1;
-							noteCounts[index] = 1;
-							mutes++;
+							noteCounts[i] = 1;
 						}
+
+						// Need this for open & forced mutes
+						noteCounts[i] = 1;
 					}
 				}
 			}
@@ -108,12 +106,12 @@ namespace neck.Generators
 						toneCheck[toneIndex] = true;
 					}
 
-					return calcNotePosition(n, tuning.Offsets[i].Pitch, fretOffset);
+					return calcNotePosition(n, tuning.Offsets[i].Pitch, fretOffset, fretSpan);
 				}).ToList();
 
-				if (toneCheck.All(c => c == true))
+				if (ENFORCE_CHORD_TONES && toneCheck.All(c => c == true))
 				{
-					variations.Add(new ChordVariation(chord, tuning.Id, positions));
+					variations.Add(new ChordVariation(chord, tuning.Id, fretOffset, positions));
 				}
 			}
 
@@ -130,7 +128,12 @@ namespace neck.Generators
 
 				for (var j = 0; j < newVariations.Count; j++)
 				{
-					if (FILTER_DUPLICATE_VARIATIONS && !containsVariation(variations, newVariations[j]))
+					var isDuplicate = containsVariation(variations, newVariations[j]);
+					if (FILTER_DUPLICATE_VARIATIONS && !isDuplicate)
+					{
+						variations.Add(newVariations[j]);
+					}
+					else if (!isDuplicate)
 					{
 						variations.Add(newVariations[j]);
 					}
@@ -145,22 +148,13 @@ namespace neck.Generators
 
 		// Returns a fret number based on a Note, tuning
 		//  offset and an optional minimum fret position
-		private int? calcNotePosition(Note note, int tuningOffset, int min = 0)
+		private int? calcNotePosition(Note note, int tuningOffset, int min = 0, int? span = null)
 		{
 			if (note == null) return null;
 			var pos = (note.Pitch - tuningOffset + Notes.Count) % Notes.Count;
 			while (pos < min) pos += Notes.Count;
+			while (span != null && pos > min + span - 1) pos -= Notes.Count;
 			return pos;
-		}
-
-		// Returns a note from a given offset/fret position
-		private Note calcNoteFromPosition(Chord chord, int tuningOffset, int notePosition)
-		{
-			var root = chord.Root;
-
-			// TODO: FINISH
-
-			return root;
 		}
 
 		private bool isNoteInRange(Note note, int tuning, int offset, int span)
