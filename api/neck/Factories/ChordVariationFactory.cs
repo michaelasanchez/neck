@@ -58,9 +58,6 @@ namespace neck.Generators
 			//
 			var numVariations = noteCounts.Aggregate((acc, count) => acc * count);
 
-			// Used to validate variation contains all chord tones
-			int? rootFlag = null;
-
 			// Calculate variations
 			var variations = new List<ChordVariation>();
 			for (var v = 0; v < numVariations; v++)
@@ -78,21 +75,16 @@ namespace neck.Generators
 					if (matches[countIndex].Count() > 0)
 					{
 						note = matches[countIndex][index];
-
-						// Mute first string if not root
-						if (rootFlag == null && chord.Root.Base == note.Base)
-						{
-							rootFlag = countIndex;
-						}
 					}
 
 					return note;
 				}).ToList();
 
-				if (FILTER_INVERSIONS && rootFlag != null & rootFlag > 0)
+				if (FILTER_INVERSIONS)
 				{
-					for (var i = 0; i < rootFlag; i++)
+					for (int i = 0; i < notes.Count; i++)
 					{
+						if (notes[i] != null && notes[i].Base == chord.Root.Base) break;
 						notes[i] = null;
 					}
 				}
@@ -109,7 +101,7 @@ namespace neck.Generators
 					return calcNotePosition(n, tuning.Offsets[i].Pitch, fretOffset, fretSpan);
 				}).ToList();
 
-				if (ENFORCE_CHORD_TONES && toneCheck.All(c => c == true))
+				if (!ENFORCE_CHORD_TONES || toneCheck.All(c => c == true))
 				{
 					variations.Add(new ChordVariation(chord, tuning.Id, fretOffset, positions));
 				}

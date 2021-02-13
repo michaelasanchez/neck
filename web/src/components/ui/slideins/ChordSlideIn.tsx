@@ -67,7 +67,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       reloadChordVariations();
     }
   }, [collapse]);
-  // }, [chord, collapse]);
 
   // Load
   const reloadChordVariations = () => {
@@ -75,6 +74,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       .GenerateRange({
         baseId: chord.Id,
         tuningId: tuning.Id,
+        // offset: 8,
         range: instrument.NumFrets,
       })
       .then((variations: any[]) => {
@@ -84,6 +84,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
           (v) =>
             new ChordVariation(
               chord.Id,
+              v.Offset,
               v.Formation.Positions,
               v.Formation.Barres,
               tuning

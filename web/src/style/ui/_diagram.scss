@@ -219,7 +219,7 @@ $diagram-outline-border-radius: 16px * $scale;
           /* Mute */
           $mute-symbol-length: 7px;
           $mute-symbol-width: 1px;
-          $mute-symbol-offset-y: 4.5px;
+          $mute-symbol-offset-y: 4px;
 
           .mute {
             transform: rotate(45deg) translate($mute-symbol-offset-y, $mute-symbol-offset-y);
@@ -305,6 +305,12 @@ $diagram-outline-border-radius: 16px * $scale;
             .dot {
               background: none;
               border: $diagram-dot-border;
+
+              transform: translate(-50%, -60%);
+
+              &.root {
+                transform: translate(-50%, -60%) rotate(45deg) scale(0.9);
+              }
             }
 
             &.highlight {

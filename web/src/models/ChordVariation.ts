@@ -9,6 +9,8 @@ export class Format {
 }
 
 export class ChordVariation {
+  public Offset: number;
+
   public Positions: number[];
 
   public ChordId: string;
@@ -19,12 +21,15 @@ export class ChordVariation {
 
   constructor(
     chordId: string,
+    offset: number,
     positions: number[],
     barres: number[],
     tuning: Tuning
   ) {
     this.ChordId = chordId;
 
+    this.Offset = offset;
+    
     this.Positions = positions;
     this.Barres = barres;
 

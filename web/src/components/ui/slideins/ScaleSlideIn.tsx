@@ -89,7 +89,6 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
       reloadScaleVariation();
     }
   }, [collapse]);
-  // }, [scale, collapse]);
 
   const handleSetChordVariation = (
     variation: ScaleVariation,
@@ -123,7 +122,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
       setAppOptions({ scale: updated as Scale });
       setLoading(false);
     }
-    
+
   };
 
   const renderVariations = useCallback(() => {

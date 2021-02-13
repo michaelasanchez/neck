@@ -14,8 +14,10 @@ export interface DiagramProps {
   diagramLabel: JSX.Element;
   span: DiagramSpan;
   symbols: DiagramSymbolMap;
+  header?: DiagramHeaderMap;
   barres?: DiagramBarreMap;
 }
+
 export type DiagramSpan = { min: number; max: number };
 
 export enum DiagramSymbol {
@@ -26,6 +28,8 @@ export enum DiagramSymbol {
   Highlighted,
   HighlightedRoot,
 }
+
+export type DiagramHeaderMap = Array<DiagramSymbol>;
 
 export type DiagramSymbolMap = Array<Array<DiagramSymbol>>;
 
@@ -68,6 +72,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   className = '',
   diagramLabel,
   symbols,
+  header,
   barres,
 }) => {
   /* Frets / Fret Padding */
@@ -97,6 +102,12 @@ export const Diagram: React.FC<DiagramProps> = ({
   const spanStyle = {
     transform: `translateX(${-offsetWidth})`,
   };
+
+  const renderSymbolsBody = () => {
+
+  }
+
+  // console.log('symbols', symbols)
 
   return (
     <div

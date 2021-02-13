@@ -19,25 +19,39 @@ const calcSpan = (variation: ScaleVariation): DiagramSpan => {
   };
 };
 
+const renderSymbol = (fretNum: number, highlighted: boolean): DiagramSymbol => {
+  if (!!fretNum) {
+    if (highlighted) {
+      return fretNum === 1
+        ? DiagramSymbol.HighlightedRoot
+        : DiagramSymbol.Highlighted;
+    }
+
+    return fretNum === 1 ? DiagramSymbol.Root : DiagramSymbol.Note;
+  }
+  return DiagramSymbol.Empty;
+};
+
 const mapSymbols = (
   positions: Array<Array<number>>,
   highlighted: Array<Note>
 ): DiagramSymbolMap => {
   return map(positions, (s) =>
-    map(s, (f) => {
-      if (!!f) {
-        if (findIndex(highlighted, (n) => n.Degree === f) > -1) {
-          return f === 1
-            ? DiagramSymbol.HighlightedRoot
-            : DiagramSymbol.Highlighted;
-        }
-
-        return f === 1 ? DiagramSymbol.Root : DiagramSymbol.Note;
-      }
-      return DiagramSymbol.Empty;
-    })
+    map(s, (f) =>
+      renderSymbol(f, findIndex(highlighted, (n) => n.Degree === f) > -1)
+    )
   );
 };
+
+const mapSymbolsAgain = (
+  positions: Array<Array<number>>,
+  highlighted: Array<Note>
+): DiagramSymbolMap =>
+  map(positions, (s) =>
+    map(s, (f) =>
+      renderSymbol(f, findIndex(highlighted, (n) => n.Degree === f) > -1)
+    )
+  );
 
 export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   setVariation,

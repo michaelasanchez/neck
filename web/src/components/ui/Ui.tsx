@@ -7,7 +7,7 @@ import { Key, Mode, Tuning } from '../../models';
 import { IndicatorsMode } from '../Indicators';
 import { Loading } from '../Loading';
 import { FretDisplayMode } from '../neck';
-import { slideInDuration } from './slideins';
+import { KeySlideIn, slideInDuration } from './slideins';
 
 import Draggable, { DraggableCore } from 'react-draggable'; // Both at the same time
 

@@ -15,9 +15,48 @@ export interface ChordDiagramProps {
 
 const calcSpan = (variation: ChordVariation): DiagramSpan => {
   return {
+    // min: variation.Offset,
     min: min(variation.Positions),
     max: max(variation.Positions) + 1, // TODO: this is the wrong fix & forces "padding" with incorrect max value
   };
+};
+
+const calcDiagramSymbol = (
+  note: boolean,
+  root: boolean,
+  highlighted: boolean
+): DiagramSymbol => {
+  if (note) {
+    if (root) {
+      if (highlighted) {
+        return DiagramSymbol.HighlightedRoot;
+      }
+      return DiagramSymbol.Root;
+    }
+    if (highlighted) {
+      return DiagramSymbol.Highlighted;
+    }
+    return DiagramSymbol.Note;
+  }
+  return DiagramSymbol.Empty;
+};
+
+const mapHeader = (
+  positions: Array<number>,
+  roots: Array<boolean>,
+  highlighted: Array<boolean>
+) => {
+  const containsOpen = indexOf(positions, 0) > -1;
+  const containsMuted = indexOf(positions, null) > -1;
+
+  if (!containsOpen && containsMuted) return null;
+
+  return map(positions, (s, i) => {
+    if (s === null) {
+      return DiagramSymbol.Mute;
+    }
+    return calcDiagramSymbol(s === 0, roots[i], highlighted[i]);
+  });
 };
 
 const mapSymbols = (
@@ -26,29 +65,38 @@ const mapSymbols = (
   roots: Array<boolean>,
   highlighted: Array<boolean>
 ) => {
-  console.log('pos', positions);
   return map(positions, (s, i) => {
     return times(span.max - span.min, (f) => {
       const pos = f + span.min;
 
-      if (s === null && pos === 0) {
+      // TODO: this goes away soon
+      if (s === null && pos === span.min) {
         return DiagramSymbol.Mute;
       }
-      if (pos === s) {
-        if (roots[i]) {
-          if (highlighted[i]) {
-            return DiagramSymbol.HighlightedRoot;
-          }
-          return DiagramSymbol.Root;
-        }
-        if (highlighted[i]) {
-          return DiagramSymbol.Highlighted;
-        }
-        return DiagramSymbol.Note;
-      }
-      return DiagramSymbol.Empty;
+
+      return calcDiagramSymbol(pos === s, roots[i], highlighted[i]);
     });
   });
+};
+
+const mapSymbolsAgain = (
+  span: DiagramSpan,
+  positions: Array<number>,
+  roots: Array<boolean>,
+  highlighted: Array<boolean>
+) => {
+  return times(span.max - span.min, (f) =>
+    times(positions.length, (i) => {
+      const s = positions[i];
+      const pos = f + span.min;
+
+      if (s === null && pos === span.min) {
+        return DiagramSymbol.Mute;
+      }
+
+      return calcDiagramSymbol(pos === s, roots[i], highlighted[i]);
+    })
+  );
 };
 
 const mapBarres = (barres: Array<number>, positions: Array<number>) => {
@@ -57,7 +105,7 @@ const mapBarres = (barres: Array<number>, positions: Array<number>) => {
     const barreFret = positions[i];
     const start = indexOf(positions, barreFret);
     const end = lastIndexOf(positions, barreFret);
-    
+
     return map(positions, (p, i) => i > start && i <= end);
   });
 };
@@ -89,7 +137,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
 
     return null;
   });
-  
+
   const diagramLabel = (
     <>
       {map(noteLabels, (p: string, i: number) => (
@@ -99,7 +147,20 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   );
 
   const renderSymbols = useCallback(() => {
-    return mapSymbols(span, variation.Positions, chordRoots, chordHighlighted);
+    const works = mapSymbols(
+      span,
+      variation.Positions,
+      chordRoots,
+      chordHighlighted
+    );
+    const hoping = mapSymbolsAgain(
+      span,
+      variation.Positions,
+      chordRoots,
+      chordHighlighted
+    );
+    console.log(works, hoping);
+    return works;
   }, [variation, highlightedNotes]);
 
   return (
@@ -110,6 +171,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
       handleClick={() => handleClick(variation)}
       span={span}
       symbols={renderSymbols()}
+      header={mapHeader(variation.Positions, chordRoots, chordHighlighted)}
       barres={mapBarres(variation.Barres, variation.Positions)}
     />
   );
