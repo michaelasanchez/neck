@@ -115,7 +115,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         <Draggable>
           <div className="slidein-container">
             <ScaleSlideIn
-              devYOffset={600}
+              devYOffset={0}
               collapse={indicatorsMode !== IndicatorsMode.Scale}
             />
             <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />

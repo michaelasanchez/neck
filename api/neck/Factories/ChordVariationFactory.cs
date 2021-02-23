@@ -89,6 +89,8 @@ namespace neck.Generators
 					}
 				}
 
+				// Ensure notes contain all chord tones &
+				//	map to positions
 				var toneCheck = chord.Tones.Select(n => false).ToList();
 				var positions = notes.Select((n, i) =>
 				{
@@ -101,9 +103,10 @@ namespace neck.Generators
 					return calcNotePosition(n, tuning.Offsets[i].Pitch, fretOffset, fretSpan);
 				}).ToList();
 
+				// Validate & add variation
 				if (!ENFORCE_CHORD_TONES || toneCheck.All(c => c == true))
 				{
-					variations.Add(new ChordVariation(chord, tuning.Id, fretOffset, positions));
+					variations.Add(new ChordVariation(chord, tuning.Id, positions.Min().Value, positions));
 				}
 			}
 
@@ -143,9 +146,15 @@ namespace neck.Generators
 		private int? calcNotePosition(Note note, int tuningOffset, int min = 0, int? span = null)
 		{
 			if (note == null) return null;
+
+			// Calculate absolute position (withing first "octave")
 			var pos = (note.Pitch - tuningOffset + Notes.Count) % Notes.Count;
+
+			// Correct min
 			while (pos < min) pos += Notes.Count;
+			// Correct max
 			while (span != null && pos > min + span - 1) pos -= Notes.Count;
+
 			return pos;
 		}
 

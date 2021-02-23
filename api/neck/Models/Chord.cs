@@ -79,7 +79,6 @@ namespace neck.Models
 		//  ----------------------------
 		//  C   Dm  Em  F   G   Am  Bdim
 
-
 		private List<Interval> getIntervals(ChordModifier mod)
 		{
 			// TODO: Currently exist on front end

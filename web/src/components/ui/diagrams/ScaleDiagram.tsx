@@ -1,4 +1,4 @@
-import { findIndex, map, maxBy } from 'lodash';
+import { findIndex, map, maxBy, times } from 'lodash';
 import * as React from 'react';
 import { useCallback } from 'react';
 
@@ -33,26 +33,21 @@ const renderSymbol = (fretNum: number, highlighted: boolean): DiagramSymbol => {
 };
 
 const mapSymbols = (
+  span: DiagramSpan,
   positions: Array<Array<number>>,
   highlighted: Array<Note>
 ): DiagramSymbolMap => {
-  return map(positions, (s) =>
-    map(s, (f) =>
-      renderSymbol(f, findIndex(highlighted, (n) => n.Degree === f) > -1)
-    )
+  return times(span.max - span.min, (f) =>
+    times(positions.length, (i) => {
+      const degree = positions[i][f];
+
+      return renderSymbol(
+        degree,
+        findIndex(highlighted, (n) => n.Degree === degree) > -1
+      );
+    })
   );
 };
-
-const mapSymbolsAgain = (
-  positions: Array<Array<number>>,
-  highlighted: Array<Note>
-): DiagramSymbolMap =>
-  map(positions, (s) =>
-    map(s, (f) =>
-      renderSymbol(f, findIndex(highlighted, (n) => n.Degree === f) > -1)
-    )
-  );
-
 export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   setVariation,
   active,
@@ -60,7 +55,11 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   variation,
 }) => {
   const renderSymbols = useCallback(() => {
-    return mapSymbols(variation.Positions, highlighted);
+    return mapSymbols(
+      calcSpan(variation),
+      variation.Positions,
+      highlighted
+    );
   }, [variation, highlighted]);
 
   return (

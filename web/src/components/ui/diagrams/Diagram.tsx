@@ -78,13 +78,13 @@ export const Diagram: React.FC<DiagramProps> = ({
   /* Frets / Fret Padding */
   const paddingTop =
     (span.min <= NO_FRET_PADDING_AT_OR_BELOW ? 0 : USE_FRET_PADDING ? 1 : 0) *
-    FRET_PADDING_SIZE;
+      FRET_PADDING_SIZE;
   const paddingBottom = (USE_FRET_PADDING ? 1 : 0) * FRET_PADDING_SIZE;
   const paddingTotal = paddingTop + paddingBottom;
 
   /* Dimensions */
-  const numStrings = symbols.length;
-  const numFrets = span.max - span.min + FRET_PADDING_SIZE * paddingTotal;
+  const numStrings = symbols[0].length;
+  const numFrets = span.max - span.min + FRET_PADDING_SIZE * paddingTotal - (span.min === 0 ? 1 : 0);
 
   /* Outline & Fret Offset Label */
   const offsetSpan = React.useRef();
@@ -103,15 +103,13 @@ export const Diagram: React.FC<DiagramProps> = ({
     transform: `translateX(${-offsetWidth})`,
   };
 
-  const renderSymbolsBody = () => {
-
-  }
-
-  // console.log('symbols', symbols)
+  React.useEffect(() => {
+    console.log(symbols, header, barres)
+  }, [symbols, header, barres]);
 
   return (
     <div
-      className={`diagram${active ? ' active' : ''} ${className}`}
+      className={`diagram ${className}${active ? ' active' : ''}`}
       onClick={handleClick}
     >
       <div className="diagram-outline" style={outlineStyle}></div>
@@ -119,7 +117,9 @@ export const Diagram: React.FC<DiagramProps> = ({
       <div
         className={`diagram-container${
           span.min < NO_FRET_PADDING_AT_OR_BELOW ? ' open' : ''
-        }${span.min > 0 && span.min <= 2 ? ' first' : ''}`}
+        }${span.min > 0 && span.min <= 2 ? ' first' : ''}${
+          header ? ' with-header' : ''
+        }`}
       >
         <span ref={offsetSpan} style={spanStyle}>
           {(span.min > 1 || ALWAYS_SHOW_OFFSET) && span.min}
@@ -134,25 +134,34 @@ export const Diagram: React.FC<DiagramProps> = ({
           </div>
 
           <div className="frets">
+            {header && <div className="header"></div>}
             {times(numFrets, (f) => (
               <div key={f}></div>
             ))}
           </div>
 
           <div className="symbols">
+            {header && (
+              <div className="header">
+                {map(header, (s, i) => (
+                  <div key={i}>{renderSymbol(s)}</div>
+                ))}
+              </div>
+            )}
+            {renderPadding(paddingTop)}
             {map(symbols, (s, i) => (
               <div key={i}>
-                {renderPadding(paddingTop)}
                 {map(s, (f, j) => (
                   <div key={j}>{renderSymbol(f)}</div>
                 ))}
-                {renderPadding(paddingBottom)}
               </div>
             ))}
+            {renderPadding(paddingBottom)}
           </div>
 
-          {barres && (
+          {barres && barres.length > 0 && (
             <div className="barres">
+              {header && <div className="header"></div>}
               {renderPadding(paddingTop)}
               {map(barres, (s, i) => (
                 <div key={i}>{s !== null && renderBarre(s)}</div>

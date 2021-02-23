@@ -15,8 +15,7 @@ export interface ChordDiagramProps {
 
 const calcSpan = (variation: ChordVariation): DiagramSpan => {
   return {
-    // min: variation.Offset,
-    min: min(variation.Positions),
+    min: variation.Offset,
     max: max(variation.Positions) + 1, // TODO: this is the wrong fix & forces "padding" with incorrect max value
   };
 };
@@ -49,7 +48,7 @@ const mapHeader = (
   const containsOpen = indexOf(positions, 0) > -1;
   const containsMuted = indexOf(positions, null) > -1;
 
-  if (!containsOpen && containsMuted) return null;
+  if (!containsOpen && !containsMuted) return null;
 
   return map(positions, (s, i) => {
     if (s === null) {
@@ -65,34 +64,18 @@ const mapSymbols = (
   roots: Array<boolean>,
   highlighted: Array<boolean>
 ) => {
-  return map(positions, (s, i) => {
-    return times(span.max - span.min, (f) => {
-      const pos = f + span.min;
-
-      // TODO: this goes away soon
-      if (s === null && pos === span.min) {
-        return DiagramSymbol.Mute;
-      }
-
-      return calcDiagramSymbol(pos === s, roots[i], highlighted[i]);
-    });
-  });
-};
-
-const mapSymbolsAgain = (
-  span: DiagramSpan,
-  positions: Array<number>,
-  roots: Array<boolean>,
-  highlighted: Array<boolean>
-) => {
-  return times(span.max - span.min, (f) =>
+  const symbolOffset = span.min === 0 ? 1 : 0;
+  return times(span.max - span.min - symbolOffset, (f) =>
     times(positions.length, (i) => {
       const s = positions[i];
-      const pos = f + span.min;
+      const pos = f + span.min + symbolOffset;
 
-      if (s === null && pos === span.min) {
-        return DiagramSymbol.Mute;
+      if (s === null) {
+        return DiagramSymbol.Empty;
       }
+      // if (s === null && pos === span.min) {
+      //   return DiagramSymbol.Mute;
+      // }
 
       return calcDiagramSymbol(pos === s, roots[i], highlighted[i]);
     })
@@ -147,21 +130,10 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
   );
 
   const renderSymbols = useCallback(() => {
-    const works = mapSymbols(
-      span,
-      variation.Positions,
-      chordRoots,
-      chordHighlighted
-    );
-    const hoping = mapSymbolsAgain(
-      span,
-      variation.Positions,
-      chordRoots,
-      chordHighlighted
-    );
-    console.log(works, hoping);
-    return works;
+    return mapSymbols(span, variation.Positions, chordRoots, chordHighlighted);
   }, [variation, highlightedNotes]);
+
+  const usesHeader = min(variation.Positions) < variation.Offset || indexOf(variation.Positions, null) > -1;
 
   return (
     <Diagram
@@ -171,7 +143,7 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
       handleClick={() => handleClick(variation)}
       span={span}
       symbols={renderSymbols()}
-      header={mapHeader(variation.Positions, chordRoots, chordHighlighted)}
+      header={usesHeader && mapHeader(variation.Positions, chordRoots, chordHighlighted)}
       barres={mapBarres(variation.Barres, variation.Positions)}
     />
   );
