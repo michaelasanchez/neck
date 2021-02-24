@@ -2,7 +2,9 @@ import { map, max, times } from 'lodash';
 import * as React from 'react';
 
 export const ALWAYS_SHOW_OFFSET = false;
-export const MIN_SHOW_OFFSET = 3;
+export const MIN_SHOW_OFFSET = 2;
+
+export const ALWAYS_SHOW_HEADER = false;
 
 export const USE_FRET_PADDING = true;
 export const FRET_PADDING_SIZE = 1;
@@ -78,14 +80,13 @@ export const Diagram: React.FC<DiagramProps> = ({
 }) => {
   /* Frets / Fret Padding */
   const paddingTop =
-    (span.min <= NO_FRET_PADDING_AT_OR_BELOW ? 0 : USE_FRET_PADDING ? 1 : 0) *
-      FRET_PADDING_SIZE;
+    (span.min == 0 ? 0 : USE_FRET_PADDING ? 1 : 0) * FRET_PADDING_SIZE;
   const paddingBottom = (USE_FRET_PADDING ? 1 : 0) * FRET_PADDING_SIZE;
   const paddingTotal = paddingTop + paddingBottom;
 
   /* Dimensions */
   const numStrings = symbols[0].length;
-  const numFrets = span.max - span.min + FRET_PADDING_SIZE * paddingTotal - (span.min === 0 ? 1 : 0);
+  const numFrets = span.max - span.min + FRET_PADDING_SIZE * paddingTotal;
 
   /* Outline & Fret Offset Label */
   const offsetSpan = React.useRef();
@@ -114,9 +115,9 @@ export const Diagram: React.FC<DiagramProps> = ({
       <div
         className={`diagram-container${
           span.min < NO_FRET_PADDING_AT_OR_BELOW ? ' open' : ''
-        }${span.min > 0 && span.min <= 2 ? ' first' : ''}${
-          header ? ' with-header' : ''
-        }`}
+        }${span.min - paddingTop < 1 ? ' first' : ''}${
+          span.min - paddingTop === 1 ? ' second' : ''
+        }${header ? ' header' : ''}`}
       >
         <span ref={offsetSpan} style={spanStyle}>
           {(span.min >= MIN_SHOW_OFFSET || ALWAYS_SHOW_OFFSET) && span.min}

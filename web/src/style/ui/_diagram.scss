@@ -94,6 +94,7 @@ $diagram-outline-border-radius: 16px * $scale;
     }
   }
 
+  /* Fret Label */
   .label-container {
     width: 100%;
     display: flex;
@@ -165,7 +166,6 @@ $diagram-outline-border-radius: 16px * $scale;
     .frets,
     .barres {
       position: absolute;
-
     }
 
     /* Symbols */
@@ -245,8 +245,9 @@ $diagram-outline-border-radius: 16px * $scale;
         }
 
         &.header {
-          margin: 0;  // TODO: override .slidein .title, .slidein .header
-          
+          // Bootstrap override
+          margin: 0; // TODO: override .slidein .title, .slidein .header
+
           .dot {
             background: none;
             border: $diagram-dot-border;
@@ -284,12 +285,13 @@ $diagram-outline-border-radius: 16px * $scale;
 
       display: flex;
       flex-direction: column;
-      
+
       padding: 0 ($diagram-fret-width * $scale - $diagram-string-width) / 2;
 
       > div.header {
         border-top: none;
-        margin: 0; 
+        // Bootstrap override
+        margin: 0;
       }
     }
 
@@ -302,6 +304,7 @@ $diagram-outline-border-radius: 16px * $scale;
       display: flex;
       flex-direction: column;
 
+      // Bootstrap override
       .header {
         margin: 0;
       }
@@ -322,22 +325,6 @@ $diagram-outline-border-radius: 16px * $scale;
             background: $diagram-barre-background-color;
             width: 100%;
             height: 30%;
-          }
-        }
-      }
-    }
-
-    &.with-header {
-      > span {
-        top: ($diagram-fret-height * $scale) * 2;
-      }
-      .strings {
-        padding-top: $diagram-fret-height * $scale;
-      }
-      .frets {
-        > div {
-          &:first-child {
-            border-top: none;
           }
         }
       }
@@ -384,7 +371,8 @@ $diagram-outline-border-radius: 16px * $scale;
     }
 
     /** First Fret **/
-    &.first {
+    &.first,
+    &.second.header {
       .frets,
       .symbols,
       .barres {
@@ -395,10 +383,35 @@ $diagram-outline-border-radius: 16px * $scale;
           }
         }
       }
+    }
+
+    &.first,
+    &.header {
+      margin: 0;
+
+      /* Offset */
+      > span {
+        top: $diagram-fret-height * $scale * 2;
+      }
+
+      .strings {
+        padding-top: $diagram-fret-height * $scale;
+      }
 
       .symbols {
         > div:first-child {
           // border-bottom-color: red;
+        }
+      }
+    }
+
+    &.second:not(.header) {
+      .frets,
+      .symbols,
+      .barres {
+        > div:first-child {
+          border-top-width: $diagram-nut-border-width * $scale;
+          height: ($diagram-fret-height + $diagram-nut-border-width) * $scale;
         }
       }
     }
