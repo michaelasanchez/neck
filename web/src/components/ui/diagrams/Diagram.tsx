@@ -2,6 +2,7 @@ import { map, max, times } from 'lodash';
 import * as React from 'react';
 
 export const ALWAYS_SHOW_OFFSET = false;
+export const MIN_SHOW_OFFSET = 3;
 
 export const USE_FRET_PADDING = true;
 export const FRET_PADDING_SIZE = 1;
@@ -103,10 +104,6 @@ export const Diagram: React.FC<DiagramProps> = ({
     transform: `translateX(${-offsetWidth})`,
   };
 
-  React.useEffect(() => {
-    console.log(symbols, header, barres)
-  }, [symbols, header, barres]);
-
   return (
     <div
       className={`diagram ${className}${active ? ' active' : ''}`}
@@ -122,7 +119,7 @@ export const Diagram: React.FC<DiagramProps> = ({
         }`}
       >
         <span ref={offsetSpan} style={spanStyle}>
-          {(span.min > 1 || ALWAYS_SHOW_OFFSET) && span.min}
+          {(span.min >= MIN_SHOW_OFFSET || ALWAYS_SHOW_OFFSET) && span.min}
         </span>
         <>
           <div className="strings">

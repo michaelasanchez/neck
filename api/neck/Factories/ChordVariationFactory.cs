@@ -80,6 +80,7 @@ namespace neck.Generators
 					return note;
 				}).ToList();
 
+				// Remove variations that do not begin with root tone
 				if (FILTER_INVERSIONS)
 				{
 					for (int i = 0; i < notes.Count; i++)
@@ -106,7 +107,10 @@ namespace neck.Generators
 				// Validate & add variation
 				if (!ENFORCE_CHORD_TONES || toneCheck.All(c => c == true))
 				{
-					variations.Add(new ChordVariation(chord, tuning.Id, positions.Min().Value, positions));
+					// Remove non-open, empty fret rows
+					var offset = positions.Select(z => z == 0 ? null : z).Min().Value;
+
+					variations.Add(new ChordVariation(chord, tuning.Id, offset, positions));
 				}
 			}
 
