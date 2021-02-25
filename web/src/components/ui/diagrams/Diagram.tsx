@@ -1,13 +1,14 @@
 import { map, max, times } from 'lodash';
 import * as React from 'react';
 
+export const FRET_PADDING_SIZE = 1;
+
 export const ALWAYS_SHOW_OFFSET = false;
-export const MIN_SHOW_OFFSET = 2;
 
 export const ALWAYS_SHOW_HEADER = false;
 
+// TODO: css not supported
 export const USE_FRET_PADDING = true;
-export const FRET_PADDING_SIZE = 1;
 export const NO_FRET_PADDING_AT_OR_BELOW = 1;
 
 export interface DiagramProps {
@@ -80,7 +81,11 @@ export const Diagram: React.FC<DiagramProps> = ({
 }) => {
   /* Frets / Fret Padding */
   const paddingTop =
-    (span.min == 0 ? 0 : USE_FRET_PADDING ? 1 : 0) * FRET_PADDING_SIZE;
+    ((header && span.min <= FRET_PADDING_SIZE) || span.min < FRET_PADDING_SIZE
+      ? 0
+      : USE_FRET_PADDING
+      ? 1
+      : 0) * FRET_PADDING_SIZE;
   const paddingBottom = (USE_FRET_PADDING ? 1 : 0) * FRET_PADDING_SIZE;
   const paddingTotal = paddingTop + paddingBottom;
 
@@ -105,6 +110,15 @@ export const Diagram: React.FC<DiagramProps> = ({
     transform: `translateX(${-offsetWidth})`,
   };
 
+  let first: boolean, second: boolean;
+  if (FRET_PADDING_SIZE > 0) {
+    first = span.min + paddingTop <= 2;
+    second = span.min === 2;
+  } else {
+    // Hack for first fret since second is unused
+    second = span.min < 2;
+  }
+
   return (
     <div
       className={`diagram ${className}${active ? ' active' : ''}`}
@@ -115,12 +129,12 @@ export const Diagram: React.FC<DiagramProps> = ({
       <div
         className={`diagram-container${
           span.min < NO_FRET_PADDING_AT_OR_BELOW ? ' open' : ''
-        }${span.min - paddingTop < 1 ? ' first' : ''}${
-          span.min - paddingTop === 1 ? ' second' : ''
-        }${header ? ' header' : ''}`}
+        }${first ? ' first' : ''}${second ? ' second' : ''}${
+          header ? ' header' : ''
+        }`}
       >
-        <span ref={offsetSpan} style={spanStyle}>
-          {(span.min >= MIN_SHOW_OFFSET || ALWAYS_SHOW_OFFSET) && span.min}
+        <span ref={offsetSpan} style={spanStyle} className={`p-${paddingTop}`}>
+          {(span.min >= paddingTop + 2 || ALWAYS_SHOW_OFFSET) && span.min}
         </span>
         <>
           <div className="strings">

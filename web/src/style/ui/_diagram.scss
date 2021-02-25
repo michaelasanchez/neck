@@ -121,11 +121,18 @@ $diagram-outline-border-radius: 16px * $scale;
     /* Offset */
     > span {
       position: absolute;
-      top: $diagram-fret-height * $scale;
       right: calc(100% + 0.2rem); // TODO: does not work perfectly with scale
 
       font-size: 1.4rem * $scale;
       line-height: $diagram-fret-height * $scale;
+
+      &.p-0 {
+        top: 0;
+      }
+      &.p-1 {
+        top: $diagram-fret-height * $scale;
+        padding: 0 !important;
+      }
     }
 
     // Fret height & borders
@@ -190,7 +197,7 @@ $diagram-outline-border-radius: 16px * $scale;
             width: $diagram-dot-diameter * $scale;
             border-radius: $diagram-dot-diameter * $scale;
 
-            transition: background-color 300ms ease-out;
+            transition: all 300ms ease-out;
 
             /* Root */
             &.root {
@@ -200,7 +207,7 @@ $diagram-outline-border-radius: 16px * $scale;
 
             /* Highlighted */
             &.highlight {
-              background: $diagram-dot-highlight-background-color;
+              background-color: $diagram-dot-highlight-background-color;
             }
           }
 
@@ -246,12 +253,14 @@ $diagram-outline-border-radius: 16px * $scale;
 
         &.header {
           // Bootstrap override
-          margin: 0; // TODO: override .slidein .title, .slidein .header
+          margin: 0;
 
           .dot {
             background: none;
             border: $diagram-dot-border;
-            &.root {
+
+            &.highlight {
+              border-color: $diagram-dot-highlight-background-color;
             }
           }
         }
@@ -273,6 +282,11 @@ $diagram-outline-border-radius: 16px * $scale;
         > div {
           border-left: $diagram-string-border;
           height: 100%;
+        }
+
+        &:last-child > div {
+          border-left: none;
+          border-right: $diagram-string-border;
         }
       }
     }
@@ -370,7 +384,29 @@ $diagram-outline-border-radius: 16px * $scale;
       }
     }
 
-    /** First Fret **/
+    /**
+     * First, Second
+     *  & Header Frets
+     **/
+    &.header,
+    &.first {
+      margin: 0;
+
+      /* Offset */
+      > span {
+        &.p-0 {
+          top: $diagram-fret-height * $scale;
+        }
+        &.p-1 {
+          top: $diagram-fret-height * $scale * 2;
+        }
+      }
+
+      .strings {
+        padding-top: $diagram-fret-height * $scale;
+      }
+    }
+
     &.first,
     &.second.header {
       .frets,
@@ -381,26 +417,6 @@ $diagram-outline-border-radius: 16px * $scale;
             border-top: none;
             border-bottom-width: $diagram-nut-border-width * $scale;
           }
-        }
-      }
-    }
-
-    &.first,
-    &.header {
-      margin: 0;
-
-      /* Offset */
-      > span {
-        top: $diagram-fret-height * $scale * 2;
-      }
-
-      .strings {
-        padding-top: $diagram-fret-height * $scale;
-      }
-
-      .symbols {
-        > div:first-child {
-          // border-bottom-color: red;
         }
       }
     }
