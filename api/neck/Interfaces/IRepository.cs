@@ -15,6 +15,8 @@ namespace neck.Interfaces
 
 		public Task<OperationResult<T>> GetById(Guid? id);
 
+        public Task<OperationResult<IEnumerable<T>>> GetBy(Expression<Func<T,bool>> predicate);
+
         public Task<OperationResult<IEnumerable<T>>> GetAll();
 
         public Task<OperationResult<T>> GetOrCreate(T entity);

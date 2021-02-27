@@ -59,19 +59,15 @@ export class Note {
   public Base: NoteValue;
   public Suffix: NoteSuffix;
 
-  public Octave: number;
-
   public Pitch: number;
 
   public Degree: ScaleDegree;
 
   public Interval: NoteInterval;
 
-  constructor(value: NoteValue = NoteValue.C, suffix: NoteSuffix = NoteSuffix.Natural, octave: number = null) {
+  constructor(value: NoteValue = NoteValue.C, suffix: NoteSuffix = NoteSuffix.Natural) {
     this.Base = value % Note.NUM_NOTES;
     this.Suffix = suffix;
-    
-    if (octave) this.Octave = octave;
   }
 
   private ModifiedValue(): NoteValue {

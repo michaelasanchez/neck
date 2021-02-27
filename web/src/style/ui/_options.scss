@@ -1,11 +1,10 @@
 .modal {
-  
   #options {
     max-height: calc(100vh - #{$modal-margin-top} - #{$modal-margin-bottom});
     max-width: 400px;
     width: calc(100vw - 30px);
     margin: $modal-margin-top 15px $modal-margin-bottom;
-    overflow: hidden;
+    // overflow: hidden;
 
     position: absolute;
     bottom: 0;
@@ -37,6 +36,9 @@
       .card {
         border: none;
 
+        // Bootstrap override (for dropovers)
+        overflow: visible;
+
         // Stole from bootstrap
         border-bottom: 1px solid rgba(0, 0, 0, 0.125);
       }
@@ -61,8 +63,9 @@
     }
   }
 
-  &.lg #options {
-    
+  /* Tuning */
+  .tuning-selector {
+    display: flex;
+    justify-content: space-between;
   }
-
 }

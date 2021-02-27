@@ -28,6 +28,14 @@ namespace neck.Controllers
 			return Ok(result.Result);
 		}
 
+		[HttpPost]
+		public virtual async Task<IActionResult> Insert(T entity)
+		{
+			var result = await _repository.Create(entity);
+
+			return result.Success ? Ok(result.Result) : BadRequest(result.Message);
+		}
+
 		[HttpGet("{id:Guid}")]
 		public virtual async Task<ActionResult<T>> GetById(Guid id)
 		{
@@ -38,14 +46,6 @@ namespace neck.Controllers
 			}
 
 			return Ok(result.Result);
-		}
-
-		[HttpPost]
-		public virtual async Task<IActionResult> Insert(T entity)
-		{
-			var result = await _repository.Create(entity);
-
-			return result.Success ? Ok(result.Result) : BadRequest(result.Message);
 		}
 
 		//[HttpPatch]

@@ -48,12 +48,16 @@ namespace neck.Repositories
 			return BuildGetOperationResult(result);
 		}
 
+		public virtual Task<OperationResult<IEnumerable<TEntity>>> GetBy(Expression<Func<TEntity, bool>> predicate)
+		{
+			var result = (GetAllDefaultIncludes ? DefaultIncludes() : _set).Where(predicate);
+			return Task.FromResult(BuildGetOperationResult(result.AsEnumerable()));
+		}
+
 		public virtual Task<OperationResult<IEnumerable<TEntity>>> GetAll()
 		{
-			var enumerable = GetAllDefaultIncludes
-				? BuildGetOperationResult(DefaultIncludes().AsEnumerable())
-				: BuildGetOperationResult(_set.AsEnumerable());
-			return Task.FromResult(enumerable);
+			var result = (GetAllDefaultIncludes ? DefaultIncludes() : _set).AsEnumerable();
+			return Task.FromResult(BuildGetOperationResult(result));
 		}
 
 		public virtual async Task<OperationResult<TEntity>> GetOrCreate(TEntity entity)
