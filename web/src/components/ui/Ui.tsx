@@ -106,8 +106,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
           <OptionsModal
             showing={showOptions}
             onHide={() => setShowOptions(false)}
-            setTuning={(t: Tuning) => setAppOptions({ tuning: t })}
-            setMode={(m: Mode) => setAppOptions({ mode: m })}
           />
         </div>
         <Draggable>

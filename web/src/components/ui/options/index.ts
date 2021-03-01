@@ -1,1 +1,2 @@
-export * from './TuningOptionCard';
+export * from './TuningCard';
+export * from './InstrumentCard';

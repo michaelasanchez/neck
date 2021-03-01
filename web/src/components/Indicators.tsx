@@ -62,7 +62,8 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   if (
     mode == IndicatorsMode.Chord &&
     !!chordVariation &&
-    chordVariation.ChordId === chord.Id
+    chordVariation.ChordId === chord.Id &&
+    chordVariation.TuningId === tuning.Id
   ) {
     const nonNullPositions = filter(
       chordVariation.Positions,
@@ -153,7 +154,8 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   } else if (
     mode == IndicatorsMode.Scale &&
     !!scaleVariation &&
-    scaleVariation.ScaleId == scale.Id
+    scaleVariation.ScaleId === scale.Id &&
+    scaleVariation.TuningId === tuning.Id
   ) {
     const fretStart = scaleVariation.Offset;
     const fretEnd =

@@ -2,23 +2,19 @@ import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Accordion, Dropdown, Modal } from 'react-bootstrap';
-import { RadioOptionCard, TuningOptionCard } from '.';
+import { RadioOptionCard, InstrumentCard, TuningCard } from '.';
 import { useAppOptionsContext } from '../..';
-import { Mode, Tuning } from '../../models';
+import { Instrument, Mode, Tuning } from '../../models';
 import { TuningApi } from '../../network';
 
 export interface OptionsModalProps {
   showing: boolean;
   onHide: Function;
-  setTuning: Function;
-  setMode: Function;
 }
 
 export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   showing,
   onHide,
-  setTuning,
-  setMode,
 }: OptionsModalProps) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
   const { instrument, tuning, mode } = appOptions;
@@ -26,9 +22,15 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   const container = React.useRef();
   const [tunings, setTunings] = useState<Array<Tuning>>();
 
+  const [activeKey, setActiveKey] = useState<string>();
+
   useEffect(() => {
     reloadScaleVariation();
   }, []);
+
+  useEffect(() => {
+    if (!showing) setActiveKey(null);
+  }, [showing]);
 
   const reloadScaleVariation = () => {
     new TuningApi().ByInstrument(instrument.Id).then((tunings) => {
@@ -50,19 +52,29 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
-          <Accordion>
-            <TuningOptionCard
+          <Accordion onSelect={(key: any) => setActiveKey(key)}>
+            <InstrumentCard
+              active={activeKey === '0'}
               eventKey="0"
+              instrument={instrument}
+              setInstrument={(i: Instrument) =>
+                setAppOptions({ instrument: i, tuning: i.DefaultTuning })
+              }
+            />
+            <TuningCard
+              active={activeKey === '1'}
+              eventKey="1"
               instrument={instrument}
               tuning={tuning}
               setTuning={(t: Tuning) => setAppOptions({ tuning: t })}
             />
             <RadioOptionCard
-              eventKey="1"
+              active={activeKey === '2'}
+              eventKey="2"
               title="Mode"
               value={mode}
               options={Mode.All()}
-              setValue={(m: Mode) => setMode(m)}
+              setValue={(m: Mode) => setAppOptions({ mode: m })}
             />
           </Accordion>
         </Modal.Body>

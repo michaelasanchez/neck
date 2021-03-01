@@ -81,7 +81,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
       setSelected([]);
       reloadScaleVariation();
     }
-  }, [scale]);
+  }, [scale, tuning]);
 
   useEffect(() => {
     if (!variations && !collapse && !loading) {

@@ -15,6 +15,8 @@ export class ChordVariation {
 
   public ChordId: string;
 
+  public TuningId: string;
+
   public Pitches: number[];
 
   public Barres: number[];
