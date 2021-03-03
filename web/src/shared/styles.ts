@@ -29,6 +29,7 @@ export const styles = {
     width: FRET_NUMBERS_WIDTH,
   },
   fretMarkers: {
+    margin: `0 ${FRET_NUMBERS_WIDTH}px`,
     maxWidth: MAX_WIDTH,
   },
 }

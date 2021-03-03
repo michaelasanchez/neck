@@ -39,9 +39,16 @@
         // Bootstrap override (for dropovers)
         overflow: visible;
 
-        // Stole from bootstrap
-        border-top: 1px solid rgba(0, 0, 0, 0.125);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        &.expanded {
+          // Stole from bootstrap
+          border-top: 1px solid rgba(0, 0, 0, 0.125);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+
+          .card-subtitle {
+            opacity: 0;
+            max-height: 0;
+          }
+        }
 
         &:first-child {
           border-top: none;
@@ -64,16 +71,16 @@
         .card-subtitle {
           transition: all 300ms;
           max-height: 1em;
-
-          &.hidden {
-            opacity: 0;
-            max-height: 0;
-          }
         }
       }
 
       .card-body {
         padding-top: 0;
+        .form-inline {
+          input {
+            max-width: 3em;
+          }
+        }
       }
     }
   }

@@ -106,7 +106,7 @@ export const useAppOptions = () => {
       const instrument: Instrument = isArray(instrumentResult)
         ? instrumentResult[0]
         : instrumentResult;
-      instrument.NumFrets = cookie.neck.numFrets;
+      instrument.NumFrets = parseInt(cookie.neck.numFrets);
 
       // Create app options
       const options = {

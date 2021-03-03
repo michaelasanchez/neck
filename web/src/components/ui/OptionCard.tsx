@@ -18,10 +18,10 @@ export const OptionCard: React.FunctionComponent<OptionCardProps> = ({
   body,
 }: OptionCardProps) => {
   return (
-    <Card>
+    <Card className={`${active ? 'expanded' : ''}`}>
       <Accordion.Toggle as={Card.Header} variant="link" eventKey={eventKey}>
         <h5>{title}</h5>
-        <h6 className={`card-subtitle small text-muted ${active ? 'hidden' : ''}`}>
+        <h6 className={`card-subtitle small text-muted`}>
           {subtitle}
         </h6>
       </Accordion.Toggle>

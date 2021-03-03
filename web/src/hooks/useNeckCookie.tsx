@@ -11,7 +11,7 @@ const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
   cookie.key = appOptions.key;
   cookie.mode = appOptions.mode;
   cookie.neck = {
-    numFrets: appOptions.instrument.NumFrets,
+    numFrets: appOptions.instrument.NumFrets.toString(),
   };
   cookie.scaleId = appOptions.scale.Id;
   cookie.indicatorsMode = appOptions.indicatorsMode;

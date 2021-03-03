@@ -46,11 +46,13 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   const body = (
     <>
       <Form>
-        <Form.Control as="select" custom="true">
-          {map(tunings, (t, i) => (
-            <option key={i}>{t.Label}</option>
-          ))}
-        </Form.Control>
+        <Form.Group>
+          <Form.Control as="select" custom="true">
+            {map(tunings, (t, i) => (
+              <option key={i}>{t.Label}</option>
+            ))}
+          </Form.Control>
+        </Form.Group>
       </Form>
       {map(tunings, (t, i) => (
         <div className="tuning-selector" key={i}>

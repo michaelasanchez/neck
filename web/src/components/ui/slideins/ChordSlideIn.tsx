@@ -59,7 +59,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       setSelected([]);
       reloadChordVariations();
     }
-  }, [chord, tuning]);
+  }, [chord, instrument.NumFrets, tuning]);
 
   useEffect(() => {
     if (!variations && !collapse && !loading) {
