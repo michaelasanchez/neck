@@ -82,6 +82,46 @@
           }
         }
       }
+
+      .tuning-actions {
+        display: flex;
+        margin-bottom: 1em;
+
+        .dropdown {
+          flex: 1;
+          margin-right: 0.5em;
+
+          &.show {
+            button {
+              background-color: unset;
+            }
+          }
+
+          button {
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+        }
+
+        button {
+          border-color: #ced4da;
+          color: #6c757d;
+
+          &:active,
+          &:focus,
+          &:hover {
+            background-color: unset;
+            border-color: #80bdff;
+            color: #6c757d;
+          }
+          &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+          }
+        }
+      }
     }
   }
 

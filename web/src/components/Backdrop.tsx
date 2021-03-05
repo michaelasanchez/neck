@@ -49,8 +49,6 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
     );
   };
 
-  console.log('no likey', instrument.NumFrets, neckStyles);
-
   if (instrument) {
     return (
       <>

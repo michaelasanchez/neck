@@ -71,6 +71,14 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
             <RadioOptionCard
               active={activeKey === '2'}
               eventKey="2"
+              title="Capo"
+              value={{ Label: '(Coming Soon)' }}
+              options={[]}
+              setValue={(m: Mode) => {}}
+            />
+            <RadioOptionCard
+              active={activeKey === '3'}
+              eventKey="3"
               title="Mode"
               value={mode}
               options={Mode.All()}
