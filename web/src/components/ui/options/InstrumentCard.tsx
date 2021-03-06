@@ -45,7 +45,7 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
             <Form.Group>
               <Form.Control
                 as="select"
-                custom="true"
+                custom
                 value={instrument.Label}
                 onChange={(e) => {
                   let target: any = e.target;
