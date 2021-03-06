@@ -23,7 +23,7 @@ export const DropOver: React.FunctionComponent<DropOverProps> = (props) => {
       disabled={disabled}
       className="dropover"
       id={`${id}`}
-      variant="light"
+      variant={disabled ? 'light' : 'outline-secondary'}
       title={options[currentIndex]?.label || ''}
       onClick={(e: React.BaseSyntheticEvent) => {
         console.log(e);

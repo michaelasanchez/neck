@@ -81,6 +81,22 @@
             max-width: 3em;
           }
         }
+
+        button.btn-outline-secondary {
+          border-color: #ced4da;
+          color: #6c757d;
+
+          &:active,
+          &:focus,
+          &:hover {
+            background-color: unset;
+            border-color: #80bdff;
+            color: #6c757d;
+          }
+          &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+          }
+        }
       }
 
       .tuning-actions {
@@ -106,20 +122,10 @@
           }
         }
 
-        button {
-          border-color: #ced4da;
-          color: #6c757d;
-
-          &:active,
-          &:focus,
-          &:hover {
-            background-color: unset;
-            border-color: #80bdff;
-            color: #6c757d;
-          }
-          &:focus {
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          }
+        > button.btn-secondary {
+          color: #fff;
+          background-color: #6c757d;
+          border-color: #6c757d;
         }
       }
     }
@@ -128,6 +134,6 @@
   /* Tuning */
   .tuning-selector {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
   }
 }

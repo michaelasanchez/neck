@@ -21,9 +21,7 @@ export const OptionCard: React.FunctionComponent<OptionCardProps> = ({
     <Card className={`${active ? 'expanded' : ''}`}>
       <Accordion.Toggle as={Card.Header} variant="link" eventKey={eventKey}>
         <h5>{title}</h5>
-        <h6 className={`card-subtitle small text-muted`}>
-          {subtitle}
-        </h6>
+        <h6 className={`card-subtitle small text-muted`}>{subtitle}</h6>
       </Accordion.Toggle>
       <Accordion.Collapse eventKey={eventKey}>
         <Card.Body>{body}</Card.Body>

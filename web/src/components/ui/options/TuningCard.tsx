@@ -1,4 +1,5 @@
 import { faEdit, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEdit as farEdit } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { findIndex, map } from 'lodash';
 import * as React from 'react';
@@ -22,6 +23,8 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   const { eventKey, instrument, tuning, setTuning, ...rest } = props;
 
   const [tunings, setTunings] = useState<Array<Tuning>>();
+
+  const [editing, setEditing] = useState<boolean>();
 
   useEffect(() => {
     reloadTunings();
@@ -53,27 +56,23 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
           id="tuning-select"
           variant="outline-secondary"
           title={tuning.Label}
-          onClick={(e: React.BaseSyntheticEvent) => {
-            console.log('click');
-            e.stopPropagation();
-          }}
         >
           {map(tunings, (t, i) => (
             <Dropdown.Item
               eventKey={i.toString()}
               key={i}
               active={t.Id === tuning.Id}
-              onClick={(e: React.BaseSyntheticEvent) => {
-                setTuning(t);
-                e.stopPropagation();
-              }}
+              onClick={(e: React.BaseSyntheticEvent) => setTuning(t)}
             >
               {t.Label}
             </Dropdown.Item>
           ))}
         </DropdownButton>
-        <Button variant="outline-secondary">
-          <FontAwesomeIcon icon={faEdit} />
+        <Button
+          variant={editing ? 'secondary' : 'outline-secondary'}
+          onClick={() => setEditing(!editing)}
+        >
+          <FontAwesomeIcon icon={editing ? farEdit : faEdit} />
         </Button>
       </div>
       <div className="tuning-selector">
@@ -81,6 +80,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
           const options = tuningNotes(tuning);
           return (
             <DropOver
+              disabled={!editing}
               currentIndex={findIndex(
                 options,
                 (n) => n.value.Pitch === o.Pitch && n.value.Octave === o.Octave
