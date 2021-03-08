@@ -1,4 +1,3 @@
-import * as $ from 'jquery';
 import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -6,7 +5,6 @@ import { Col, Form } from 'react-bootstrap';
 import { OptionCard, OptionCardProps } from '..';
 import { Instrument } from '../../../models';
 import { InstrumentApi } from '../../../network';
-import { Confirmation } from '../Confirmation';
 
 export interface InstrumentCardOptions extends Pick<OptionCardProps, 'active'> {
   eventKey: string;

@@ -48,8 +48,13 @@ namespace neck.Controllers
 			return Ok(result.Result);
 		}
 
-		//[HttpPatch]
-		//public async Task Update(T entity) => await _repository.Update(entity);
+		[HttpPatch]
+		public async Task<ActionResult<T>> Update(T entity)
+		{
+			var result = await _repository.Update(entity);
+
+			return Ok(result.Result);
+		}
 
 		[HttpDelete]
 		public virtual async Task<IActionResult> Delete(T entity) => Ok(await _repository.Delete(entity));

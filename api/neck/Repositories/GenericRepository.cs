@@ -94,17 +94,22 @@ namespace neck.Repositories
 				return OperationResult<TEntity>.CreateFailure($"Failed to save {TrimType(typeof(TEntity))}: {saveResult.Message}");
 			}
 
-			return BuildEntityResult(entry.Entity, true);
+			return BuildEntityResult(entry.Entity);
 		}
 
-		public virtual Task<OperationResult<TEntity>> Update(TEntity entity)
+		public virtual async Task<OperationResult<TEntity>> Update(TEntity entity)
 		{
 			var entry = _context.Entry(entity);
 			entry.State = EntityState.Modified;
 
 			// TODO: error checking?
+			var saveResult = await Save();
+			if (!saveResult.Success)
+			{
+				return OperationResult<TEntity>.CreateFailure($"Failed to save {TrimType(typeof(TEntity))}: {saveResult.Message}");
+			}
 
-			return BuildEntityResultAsync(entry.Entity, true);
+			return BuildEntityResult(entry.Entity);
 		}
 
 		public virtual Task<OperationResult<TEntity>> Delete(TEntity entity)
@@ -134,7 +139,7 @@ namespace neck.Repositories
 
 		#region Operation Results
 
-		protected OperationResult<TEntity> BuildEntityResult(TEntity entity, bool success)
+		protected OperationResult<TEntity> BuildEntityResult(TEntity entity, bool success = true)
 		{
 			return new OperationResult<TEntity>()
 			{
@@ -144,7 +149,7 @@ namespace neck.Repositories
 			};
 		}
 
-		protected Task<OperationResult<TEntity>> BuildEntityResultAsync(TEntity entity, bool success)
+		protected Task<OperationResult<TEntity>> BuildEntityResultAsync(TEntity entity, bool success = true)
 		{
 			return Task.FromResult(BuildEntityResult(entity, success));
 		}

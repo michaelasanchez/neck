@@ -15,7 +15,7 @@ namespace neck.Converters
 
 		// Converts list of neck positions to delimited string
 		public static string ListToString(List<Note> p) =>
-			string.Join(NoteDelimiter, p.Select(n => $"({n.Base}{ValueDelimiter}{n.Suffix}{ValueDelimiter}{n.Octave})"));
+			string.Join(NoteDelimiter, p.Select(n => $"({(int)n.Base}{ValueDelimiter}{(int)n.Suffix}{ValueDelimiter}{n.Octave})"));
 
 		// TODO: Look into doing this non-manually
 		// Converts delimited positions string to list of notes

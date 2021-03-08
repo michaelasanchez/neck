@@ -42,7 +42,7 @@ export class BaseRequest<TResult> {
   private execute(type: RequestType, data?: {}) {
     let convert = this._baseOptions.convertToJson;
 
-    const options = type === RequestType.Post ? {
+    const options = type === RequestType.Post || type === RequestType.Patch ? {
       method: type,
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
@@ -72,6 +72,10 @@ export class BaseRequest<TResult> {
 
   Post(data?: {}): Promise<TResult | TResult[]> {
     return this.execute(RequestType.Post, data);
+  }
+
+  Patch(data?: {}): Promise<TResult> {
+    return this.execute(RequestType.Patch, data);
   }
 
   // Delete(data?: {}): Promise<TResult> {

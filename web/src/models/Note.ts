@@ -59,8 +59,6 @@ export class Note {
   public Base: NoteValue;
   public Suffix: NoteSuffix;
 
-  public Pitch: number;
-
   public Degree: ScaleDegree;
 
   public Interval: NoteInterval;
@@ -101,7 +99,7 @@ export class Note {
     return this.ModifiedValue();
   }
 
-  get Modified(): number {
+  get Pitch(): number {
     return (this.Base + this.Suffix) % Note.NUM_NOTES;
   }
 
@@ -159,20 +157,20 @@ export class Note {
   }
 
   public HalfStepUp(): Note {
-    let mod = this.Modified;
+    let pitch = this.Pitch;
     let next: Note;
 
-    if (isUndefined(NoteValue[(mod + 1) % Note.NUM_NOTES])) {
-      if (mod != this.Base) {
-        next = new Note(mod, NoteSuffix.Sharp);
+    if (isUndefined(NoteValue[(pitch + 1) % Note.NUM_NOTES])) {
+      if (pitch != this.Base) {
+        next = new Note(pitch, NoteSuffix.Sharp);
       } else {
-        next = new Note(mod + 2, NoteSuffix.Flat);
+        next = new Note(pitch + 2, NoteSuffix.Flat);
       }
     } else {
-      if (mod + 1 == this.Base) {
-        next = new Note(mod + 2, NoteSuffix.Flat);
+      if (pitch + 1 == this.Base) {
+        next = new Note(pitch + 2, NoteSuffix.Flat);
       } else {
-        next = new Note(mod + 1);
+        next = new Note(pitch + 1);
       }
     }
 
@@ -185,20 +183,20 @@ export class Note {
   //  0     1     2     3     4     5     6     7     8     9     10    11 
 
   public WholeStepUp(): Note {
-    let mod = this.Modified;
+    let pitch = this.Pitch;
     let next: Note;
 
-    if (isUndefined(NoteValue[(mod + 2) % Note.NUM_NOTES])) {
-      if (mod + 1 == this.Base) {
-        next = new Note(mod + 3, NoteSuffix.Flat);
+    if (isUndefined(NoteValue[(pitch + 2) % Note.NUM_NOTES])) {
+      if (pitch + 1 == this.Base) {
+        next = new Note(pitch + 3, NoteSuffix.Flat);
       } else {
-        next = new Note(mod + 1, NoteSuffix.Sharp);
+        next = new Note(pitch + 1, NoteSuffix.Sharp);
       }
     } else {
-      if (mod - this.Base > 0) {
-        next = new Note(mod + 1, NoteSuffix.Sharp);
+      if (pitch - this.Base > 0) {
+        next = new Note(pitch + 1, NoteSuffix.Sharp);
       } else {
-        next = new Note(mod + 2);
+        next = new Note(pitch + 2);
       }
     }
 

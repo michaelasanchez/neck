@@ -82,50 +82,21 @@
           }
         }
 
+        /* Bootstrap override */
         button.btn-outline-secondary {
           border-color: #ced4da;
-          color: #6c757d;
+          color: #212529;
 
           &:active,
           &:focus,
           &:hover {
             background-color: unset;
             border-color: #80bdff;
-            color: #6c757d;
+            color: #212529;
           }
           &:focus {
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
           }
-        }
-      }
-
-      .tuning-actions {
-        display: flex;
-        margin-bottom: 1em;
-
-        .dropdown {
-          flex: 1;
-          margin-right: 0.5em;
-
-          &.show {
-            button {
-              background-color: unset;
-            }
-          }
-
-          button {
-            width: 100%;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-          }
-        }
-
-        > button.btn-secondary {
-          color: #fff;
-          background-color: #6c757d;
-          border-color: #6c757d;
         }
       }
     }
@@ -135,5 +106,42 @@
   .tuning-selector {
     display: flex;
     justify-content: space-around;
+  }
+
+  .tuning-actions {
+    display: flex;
+    margin-bottom: 1em;
+
+    > *:first-child {
+      flex: 1;
+      margin-right: 0.5em;
+    }
+
+    .dropdown {
+
+      &.show {
+        button {
+          background-color: unset;
+        }
+      }
+
+      button {
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    /* Edit Toggle */
+    > button.btn-outline-secondary {
+      color: #6c757d !important;
+    }
+    > button.btn-secondary {
+      color: #fff;
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
   }
 }
