@@ -1,7 +1,10 @@
 import { faEdit as farEdit } from '@fortawesome/free-regular-svg-icons';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEdit,
+  faPlus as faPlusCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { countBy, filter, findIndex, isUndefined, map } from 'lodash';
+import { countBy, filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
@@ -21,6 +24,11 @@ export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
   instrument: Instrument;
   tuning: Tuning;
   setTuning: (t: Tuning) => void;
+}
+
+enum EditMode {
+  Edit,
+  Create,
 }
 
 const calcOptions = (start: TuningNote, end: TuningNote) => {
@@ -81,53 +89,41 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const [pending, setPending] = useState<Tuning>();
 
-  const [editing, setEditing] = useState<boolean>(false);
-
+  const [editMode, setEditMode] = useState<EditMode>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const labelRef = useRef();
 
   useEffect(() => {
-    reloadTunings();
+    if (!!instrument) {
+      reloadTunings();
+    }
   }, [instrument]);
 
+  // TODO: do we need this?
   useEffect(() => {
-    setEditing(false);
+    setEditMode(null);
   }, [rest.active]);
 
   useEffect(() => {
-    if (editing && !!labelRef.current) {
-      // Begin edit
-      // const labelInput = labelRef.current as HTMLInputElement;
-      // labelInput.focus();
-
-      setPending({ ...tuning, Offsets: [...tuning.Offsets] });
-    } else if (!editing && !!pending) {
-      // Detect changes
-      const offsetsMatch = map(pending.Offsets, (o: TuningNote, i: number) => {
-        return (
-          o.Pitch == tuning.Offsets[i].Pitch &&
-          o.Octave == tuning.Offsets[i].Octave
-        );
-      });
-
-      // Save
-      if (
-        pending.Label != tuning.Label ||
-        filter(offsetsMatch, (m) => m == false).length > 0
-      ) {
-        setLoading(true);
-        new TuningApi().Patch(pending).then((saved) => {
-          setTuning(saved);
-          setLoading(false);
-        });
+    if (editMode === EditMode.Create) {
+      if (!!labelRef.current) {
+        const labelInput = labelRef.current as HTMLInputElement;
+        labelInput.focus();
       }
+      setPending(
+        new Tuning(instrument.Id, 'New Tuning', [...instrument.DefaultTuning.Offsets])
+      );
+    } else if (editMode === EditMode.Edit) {
+      setPending({ ...tuning, Offsets: [...tuning.Offsets] });
     }
-  }, [editing]);
+  }, [editMode]);
 
   const reloadTunings = () => {
+    setLoading(true);
     new TuningApi().ByInstrument(instrument.Id).then((tunings) => {
       setTunings(tunings);
+      setLoading(false);
     });
   };
 
@@ -144,10 +140,53 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     handleSetPending({ Offsets: pending.Offsets });
   };
 
+  const handleSetEditMode = (nextMode: EditMode) => {
+    if (nextMode !== null) {
+      setEditMode(nextMode);
+    } else {
+      setLoading(true);
+      if (editMode === EditMode.Edit) {
+        // Detect changes
+        const offsetsMatch = map(
+          pending.Offsets,
+          (o: TuningNote, i: number) => {
+            return (
+              o.Pitch == tuning.Offsets[i].Pitch &&
+              o.Octave == tuning.Offsets[i].Octave
+            );
+          }
+        );
+
+        // Save
+        if (
+          (!!pending.Id && pending.Label != tuning.Label) ||
+          filter(offsetsMatch, (m) => m == false).length > 0
+        ) {
+          new TuningApi().Patch(pending).then((saved) => {
+            setTuning(saved);
+            reloadTunings();
+          });
+        }
+      } else {
+        new TuningApi().Create(pending).then((created) => {
+          if (!!created) {
+            setTuning(created);
+            reloadTunings();
+          } else {
+            console.error('failed to create tuning');
+          }
+        });
+      }
+
+      setPending(null);
+      setEditMode(null);
+    }
+  };
+
   const body = (current: Tuning) => (
     <>
       <div className="tuning-actions">
-        {editing ? (
+        {editMode !== null ? (
           <Form.Control
             value={current.Label}
             ref={labelRef}
@@ -158,7 +197,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
             id="tuning-select"
             variant="outline-secondary"
             title={current.Label}
-            disabled={editing}
+            // disabled={editMode}
           >
             {map(tunings, (t, i) => (
               <Dropdown.Item
@@ -172,18 +211,38 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
             ))}
           </DropdownButton>
         )}
+        {/* Edit */}
         <Button
-          variant={editing ? 'secondary' : 'outline-secondary'}
-          onClick={() => setEditing(!editing)}
+          variant={
+            editMode === EditMode.Edit ? 'secondary' : 'outline-secondary'
+          }
+          disabled={editMode === EditMode.Create}
+          onClick={() =>
+            handleSetEditMode(editMode !== EditMode.Edit ? EditMode.Edit : null)
+          }
         >
-          <FontAwesomeIcon icon={editing ? farEdit : faEdit} />
+          <FontAwesomeIcon icon={editMode ? farEdit : faEdit} />
+        </Button>
+        {/* Create */}
+        <Button
+          variant={
+            editMode === EditMode.Create ? 'success' : 'outline-secondary'
+          }
+          disabled={editMode === EditMode.Edit}
+          onClick={() =>
+            handleSetEditMode(
+              editMode !== EditMode.Create ? EditMode.Create : null
+            )
+          }
+        >
+          <FontAwesomeIcon icon={faPlusCircle} />
         </Button>
       </div>
       <div className="tuning-selector">
         {map(current.Offsets, (o, j) => {
           return (
             <DropOver
-              disabled={!editing}
+              disabled={editMode === null}
               currentIndex={findIndex(
                 tuningNoteOptions,
                 (n) => n.value.Pitch === o.Pitch && n.value.Octave === o.Octave
@@ -204,7 +263,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
       {...rest}
       title="Tuning"
       subtitle={tuning.Label}
-      body={body(editing && !!pending ? pending : tuning)}
+      body={body(editMode !== null && !!pending ? pending : tuning)}
       eventKey={eventKey}
     />
   );

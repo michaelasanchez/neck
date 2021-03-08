@@ -1,11 +1,9 @@
-import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Accordion, Dropdown, Modal } from 'react-bootstrap';
-import { RadioOptionCard, InstrumentCard, TuningCard } from '.';
+import { Accordion, Modal } from 'react-bootstrap';
+import { InstrumentCard, RadioOptionCard, TuningCard } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Mode, Tuning } from '../../models';
-import { TuningApi } from '../../network';
 
 export interface OptionsModalProps {
   showing: boolean;
@@ -20,23 +18,12 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   const { instrument, tuning, mode } = appOptions;
 
   const container = React.useRef();
-  const [tunings, setTunings] = useState<Array<Tuning>>();
 
   const [activeKey, setActiveKey] = useState<string>();
 
   useEffect(() => {
-    reloadScaleVariation();
-  }, []);
-
-  useEffect(() => {
     if (!showing) setActiveKey(null);
   }, [showing]);
-
-  const reloadScaleVariation = () => {
-    new TuningApi().ByInstrument(instrument.Id).then((tunings) => {
-      setTunings(tunings);
-    });
-  };
 
   return (
     <div className="options-container" ref={container}>

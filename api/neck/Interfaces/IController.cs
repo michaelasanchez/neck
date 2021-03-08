@@ -12,7 +12,7 @@ namespace neck.Interfaces
 
 		public Task<ActionResult<T>> GetById(Guid id);
 
-		public Task<IActionResult> Insert(T entity);
+		public Task<IActionResult> Create(T entity);
 
         //public Task Update(T entity);
 

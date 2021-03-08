@@ -29,7 +29,7 @@ namespace neck.Controllers
 		}
 
 		[HttpPost]
-		public virtual async Task<IActionResult> Insert(T entity)
+		public virtual async Task<IActionResult> Create(T entity)
 		{
 			var result = await _repository.Create(entity);
 
