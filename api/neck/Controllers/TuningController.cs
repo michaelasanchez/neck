@@ -23,7 +23,7 @@ namespace neck.Controllers
 			var result = await _repository.GetBy(t => t.InstrumentId == instrumentId);
 			if (!result.Success)
 			{
-				return NotFound(result.Message);
+				return NotFound(new { message = result.Message });
 			}
 
 			return Ok(result.Result);

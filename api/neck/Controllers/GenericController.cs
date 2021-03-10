@@ -22,7 +22,7 @@ namespace neck.Controllers
 			var result = await _repository.GetAll();
 			if (!result.Success)
 			{
-				return BadRequest(result.Message);
+				return BadRequest(new { message = result.Message });
 			}
 
 			return Ok(result.Result);
@@ -33,7 +33,7 @@ namespace neck.Controllers
 		{
 			var result = await _repository.Create(entity);
 
-			return result.Success ? Ok(result.Result) : BadRequest(result.Message);
+			return result.Success ? Ok(result.Result) : BadRequest(new { message = result.Message });
 		}
 
 		[HttpGet("{id:Guid}")]
@@ -42,7 +42,7 @@ namespace neck.Controllers
 			var result = await _repository.GetById(id);
 			if (!result.Success)
 			{
-				return NotFound(result.Message);
+				return NotFound(new { message = result.Message });
 			}
 
 			return Ok(result.Result);

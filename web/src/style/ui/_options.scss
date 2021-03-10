@@ -119,8 +119,8 @@
       margin-left: 0.5em;
     }
 
+    /* Select + Menu */
     .dropdown {
-
       &.show {
         button {
           background-color: unset;
@@ -132,7 +132,13 @@
         text-align: left;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+      }
+
+      /* Select */
+      &:first-child {
+        button {
+          justify-content: space-between;
+        }
       }
     }
 

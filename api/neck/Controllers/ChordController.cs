@@ -34,7 +34,7 @@ namespace neck.Controllers
 			var noteResult = await _noteRepo.GetOrCreate(note);
 			if (!noteResult.Success)
 			{
-				return BadRequest("Failed to get create note");
+				return BadRequest(new { message = noteResult.Message });
 			}
 
 			var chord = new Chord(noteResult.Result, @params.modifier);
@@ -42,7 +42,7 @@ namespace neck.Controllers
 
 			if (!chordResult.Success)
 			{
-				return BadRequest("Failed to create chord");
+				return BadRequest(new { message = chordResult.Message });
 			}
 
 			return Ok(chordResult.Result);

@@ -108,7 +108,7 @@ namespace neck.Generators
 				if (!ENFORCE_CHORD_TONES || toneCheck.All(c => c == true))
 				{
 					// Remove non-open, empty fret rows
-					var offset = positions.Select(z => z == 0 ? null : z).Min().Value;
+					var offset = positions.Select(z => z == 0 ? null : z).Min() ?? fretOffset;
 
 					variations.Add(new ChordVariation(chord, tuning.Id, offset, positions));
 				}
