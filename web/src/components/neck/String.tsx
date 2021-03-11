@@ -18,7 +18,7 @@ const calcNote = (f: number, offset: Note, scale: Scale) => {
   // Check if Note exists for current fret number
   let note = filter(
     scale.Notes,
-    (note: Note) => note.Modified == offsetNoteValue
+    (note: Note) => note.Pitch == offsetNoteValue
   );
   return note.length ? note[0] : null;
 };

@@ -24,12 +24,13 @@ export class Cookie {
       indicatorsMode: IndicatorsMode.Chord,
 
       neck: {
-        numFrets: 14,
+        numFrets: "14",
       },
     } as Cookie;
   }
 }
 
 export class NeckOptions {
-  numFrets: number;
+  // stored as string, need to parse
+  numFrets: string;
 }

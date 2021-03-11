@@ -21,6 +21,7 @@ export interface AppOptions {
   [key: string]: any
 }
 
+// TODO: get rid of this
 export interface IOption {
   Label: string;
 }

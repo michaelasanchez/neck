@@ -1,11 +1,10 @@
 .modal {
-  
   #options {
     max-height: calc(100vh - #{$modal-margin-top} - #{$modal-margin-bottom});
     max-width: 400px;
     width: calc(100vw - 30px);
     margin: $modal-margin-top 15px $modal-margin-bottom;
-    overflow: hidden;
+    // overflow: hidden;
 
     position: absolute;
     bottom: 0;
@@ -37,8 +36,23 @@
       .card {
         border: none;
 
-        // Stole from bootstrap
-        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+        // Bootstrap override (for dropovers)
+        overflow: visible;
+
+        &.expanded {
+          // Stole from bootstrap
+          border-top: 1px solid rgba(0, 0, 0, 0.125);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+
+          .card-subtitle {
+            opacity: 0;
+            max-height: 0;
+          }
+        }
+
+        &:first-child {
+          border-top: none;
+        }
       }
 
       .card-header {
@@ -53,16 +67,89 @@
         h5 {
           margin-bottom: 0.3rem;
         }
+
+        .card-subtitle {
+          transition: all 300ms;
+          max-height: 1em;
+        }
       }
 
       .card-body {
         padding-top: 0;
+        .form-inline {
+          input {
+            max-width: 3em;
+          }
+        }
+
+        /* Bootstrap override */
+        button.btn-outline-secondary {
+          border-color: #ced4da;
+          color: #212529;
+
+          &:active,
+          &:focus,
+          &:hover {
+            background-color: unset;
+            border-color: #80bdff;
+            color: #212529;
+          }
+          &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+          }
+        }
       }
     }
   }
 
-  &.lg #options {
-    
+  /* Tuning */
+  .tuning-selector {
+    display: flex;
+    justify-content: space-around;
   }
 
+  .tuning-actions {
+    display: flex;
+    margin-bottom: 1em;
+
+    > *:first-child {
+      flex: 1;
+    }
+    > *:not(:first-child) {
+      margin-left: 0.5em;
+    }
+
+    /* Select + Menu */
+    .dropdown {
+      &.show {
+        button {
+          background-color: unset;
+        }
+      }
+
+      button {
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Select */
+      &:first-child {
+        button {
+          justify-content: space-between;
+        }
+      }
+    }
+
+    /* Edit Toggle */
+    > button.btn-outline-secondary {
+      color: #6c757d !important;
+    }
+    > button.btn-secondary {
+      color: #fff;
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+  }
 }

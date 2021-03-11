@@ -42,13 +42,13 @@ namespace neck.Controllers
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
 			{
-				return BadRequest(validateResult.Message);
+				return BadRequest(new { message = validateResult.Message });
 			}
 
 			var baseResult = await locateBase(args);
 			if (!baseResult.Success)
 			{
-				return BadRequest(baseResult.Message);
+				return BadRequest(new { message = baseResult.Message });
 			}
 
 			var @base = baseResult.Result;
@@ -56,7 +56,7 @@ namespace neck.Controllers
 			var tuningResult = await locateTuning(args);
 			if (!tuningResult.Success)
 			{
-				return BadRequest(tuningResult.Message);
+				return BadRequest(new { message = tuningResult.Message });
 			}
 			var tuning = tuningResult.Result;
 
@@ -71,20 +71,20 @@ namespace neck.Controllers
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
 			{
-				return BadRequest(validateResult.Message);
+				return BadRequest(new { message = validateResult.Message });
 			}
 
 			var baseResult = await locateBase(args);
 			if (!baseResult.Success)
 			{
-				return BadRequest(baseResult.Message);
+				return BadRequest(new { message = baseResult.Message });
 			}
 			var @base = baseResult.Result;
 
 			var tuningResult = await locateTuning(args);
 			if (!tuningResult.Success)
 			{
-				return BadRequest(tuningResult.Message);
+				return BadRequest(new { message = tuningResult.Message });
 			}
 			var tuning = tuningResult.Result;
 

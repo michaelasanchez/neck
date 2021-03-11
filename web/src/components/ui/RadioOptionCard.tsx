@@ -1,13 +1,12 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { Form } from 'react-bootstrap';
-
-import { OptionCard } from '.';
+import { OptionCard, OptionCardProps } from '.';
 import { IOption } from '../../shared';
 
-export interface RadioOptionCard {
+export interface RadioOptionCard
+  extends Pick<OptionCardProps, 'active' | 'title'> {
   eventKey: string;
-  title: string;
   value: IOption;
   options: IOption[];
   setValue: Function;
@@ -16,21 +15,14 @@ export interface RadioOptionCard {
 export const RadioOptionCard: React.FunctionComponent<RadioOptionCard> = (
   props
 ) => {
-  const { eventKey, title, value, options, setValue } = props;
-
-  const header = (
-    <>
-      <h5>{title}</h5>
-      <h6 className="card-subtitle small text-muted">{value.Label}</h6>
-    </>
-  );
+  const { eventKey, value, options, setValue, ...rest } = props;
 
   const body = (
     <Form>
       {map(options, (o: IOption, i: number) => (
         <Form.Check
-          id={`${header}-${i}`}
-          key={`${header}-${i}`}
+          id={`option-${i}`}
+          key={i}
           type={'radio'}
           label={o.Label}
           checked={o.Label === value.Label}
@@ -40,5 +32,12 @@ export const RadioOptionCard: React.FunctionComponent<RadioOptionCard> = (
     </Form>
   );
 
-  return <OptionCard header={header} body={body} eventKey={eventKey} />;
+  return (
+    <OptionCard
+      {...rest}
+      subtitle={value.Label}
+      body={body}
+      eventKey={eventKey}
+    />
+  );
 };

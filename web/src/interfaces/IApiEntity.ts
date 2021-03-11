@@ -1,5 +1,5 @@
 export interface IApiEntity {
   Id: string;
-  Created: string;
-  Updated: string;
+  // Created: string;
+  // Updated: string;
 }

@@ -1,26 +1,17 @@
-import { map } from "lodash";
+import { TuningNote } from '.';
+import { ApiEntity } from '../network/ApiEntity';
 
-import { Note, NoteSuffix } from ".";
-import { ApiEntity } from "../network/ApiEntity";
-import { IOption } from "../shared";
+export class Tuning extends ApiEntity {
 
-export class Tuning extends ApiEntity implements IOption {
-  private _label: string;
-  private _offsets: Note[];
+  public InstrumentId: string;
 
-  constructor(label: string, offsets: Note[]) {
+  public Label: string;
+  public Offsets: TuningNote[];
+
+  constructor(instrumentId: string, label: string, offsets: TuningNote[]) {
     super();
-    this._label = label;
-    this._offsets = offsets;
-  }
-
-  get Label(): string { return this._label; }
-  set Label(value: string) { this._label = value; }
-
-  get Offsets(): Note[] { return this._offsets; }
-  set Offsets(value: Note[]) { this._offsets = value; }
-
-  static All(): Tuning[] {
-    return [];
+    this.InstrumentId = instrumentId;
+    this.Label = label;
+    this.Offsets = offsets;
   }
 }

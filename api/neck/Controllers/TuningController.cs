@@ -16,5 +16,17 @@ namespace neck.Controllers
 			: base(repository)
 		{
 		}
+
+		[HttpGet("byinstrument/{instrumentId:Guid}")]
+		public virtual async Task<ActionResult<List<Tuning>>> GetByInstrument(Guid instrumentId)
+		{
+			var result = await _repository.GetBy(t => t.InstrumentId == instrumentId);
+			if (!result.Success)
+			{
+				return NotFound(new { message = result.Message });
+			}
+
+			return Ok(result.Result);
+		}
 	}
 }

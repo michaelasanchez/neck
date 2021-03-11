@@ -11,8 +11,7 @@ export const ENABLE_NECK_NUMBERS = true;
 
 const ENABLE_STRINGS = false;
 
-export interface BackdropProps {
-}
+export interface BackdropProps {}
 
 const fretHeight = 100;
 
@@ -71,7 +70,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
         <div className="fretboard-markers-container">
           {ENABLE_NECK_MARKERS && (
             <div className="fretboard-markers" style={styles.fretMarkers}>
-              <FretMarkers markers={markers} />
+              <FretMarkers markers={markers} frets={instrument.NumFrets} />
             </div>
           )}
         </div>

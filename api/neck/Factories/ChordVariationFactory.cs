@@ -13,7 +13,7 @@ namespace neck.Generators
 		private bool INSERT_OPEN_NOTES = true;
 		private bool INSERT_MUTED_NOTES = true;
 
-		private bool FILTER_INVERSIONS = true;
+		private bool FILTER_INVERSIONS = false;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
 
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
@@ -108,7 +108,7 @@ namespace neck.Generators
 				if (!ENFORCE_CHORD_TONES || toneCheck.All(c => c == true))
 				{
 					// Remove non-open, empty fret rows
-					var offset = positions.Select(z => z == 0 ? null : z).Min().Value;
+					var offset = positions.Select(z => z == 0 ? null : z).Min() ?? fretOffset;
 
 					variations.Add(new ChordVariation(chord, tuning.Id, offset, positions));
 				}

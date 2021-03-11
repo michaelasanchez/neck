@@ -124,7 +124,7 @@ $diagram-outline-border-radius: 16px * $scale;
       right: calc(100% + 0.2rem); // TODO: does not work perfectly with scale
 
       font-size: 1.4rem * $scale;
-      line-height: $diagram-fret-height * $scale;
+      line-height: $diagram-fret-height * $scale * .85;
 
       &.p-0 {
         top: 0;

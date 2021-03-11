@@ -36,7 +36,7 @@ export const Neck: React.FunctionComponent<NeckProps> = () => {
 
     // Fret Animation
     if (ENABLE_NECK_ANIMATION) {
-      const diff = nextRoot?.Modified - root?.Modified;
+      const diff = nextRoot?.Pitch - root?.Pitch;
 
       if ((diff < 0 && diff < -6) || (diff > 0 && diff < 6)) {
         setClassName('down');

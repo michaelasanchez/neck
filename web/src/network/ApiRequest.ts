@@ -57,6 +57,12 @@ export class ApiRequest<TResult = ApiEntity> extends BaseRequest<TResult> {
     return super.Get() as Promise<TResult>;
   }
 
+  Create = (data: {}): Promise<TResult> => {
+    return super.Post(data) as Promise<TResult>;
+  }
+
+  // TODO: This one breaks an endpoint on load
+  //    when converted to an arrow function???
   Post(data?: {}, action?: string): Promise<TResult | TResult[]> {
 
     if (action) {

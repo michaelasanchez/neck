@@ -27,7 +27,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
 
   const { indicatorsMode, key, mode, tuning } = appOptions;
 
-  const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [showOptions, setShowOptions] = useState<boolean>(true);
 
   const [disabled, setDisabled] = useState<boolean>(false);
 
@@ -106,10 +106,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
           <OptionsModal
             showing={showOptions}
             onHide={() => setShowOptions(false)}
-            tuning={tuning}
-            mode={mode}
-            setTuning={(t: Tuning) => setAppOptions({ tuning: t })}
-            setMode={(m: Mode) => setAppOptions({ mode: m })}
           />
         </div>
         <Draggable>

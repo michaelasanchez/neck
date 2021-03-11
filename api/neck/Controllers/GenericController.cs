@@ -22,10 +22,18 @@ namespace neck.Controllers
 			var result = await _repository.GetAll();
 			if (!result.Success)
 			{
-				return BadRequest(result.Message);
+				return BadRequest(new { message = result.Message });
 			}
 
 			return Ok(result.Result);
+		}
+
+		[HttpPost]
+		public virtual async Task<IActionResult> Create(T entity)
+		{
+			var result = await _repository.Create(entity);
+
+			return result.Success ? Ok(result.Result) : BadRequest(new { message = result.Message });
 		}
 
 		[HttpGet("{id:Guid}")]
@@ -34,22 +42,19 @@ namespace neck.Controllers
 			var result = await _repository.GetById(id);
 			if (!result.Success)
 			{
-				return NotFound(result.Message);
+				return NotFound(new { message = result.Message });
 			}
 
 			return Ok(result.Result);
 		}
 
-		[HttpPost]
-		public virtual async Task<IActionResult> Insert(T entity)
+		[HttpPatch]
+		public async Task<ActionResult<T>> Update(T entity)
 		{
-			var result = await _repository.Create(entity);
+			var result = await _repository.Update(entity);
 
-			return result.Success ? Ok(result.Result) : BadRequest(result.Message);
+			return Ok(result.Result);
 		}
-
-		//[HttpPatch]
-		//public async Task Update(T entity) => await _repository.Update(entity);
 
 		[HttpDelete]
 		public virtual async Task<IActionResult> Delete(T entity) => Ok(await _repository.Delete(entity));
