@@ -1,7 +1,8 @@
 import { ApiEntity } from "./ApiEntity";
 import { BaseRequest } from "./BaseRequest";
 
-const DOMAIN_DEFAULT = 'https://localhost:5001';
+// const DOMAIN_DEFAULT = 'https://localhost:5001';
+const DOMAIN_DEFAULT = 'https://neck-api.azurewebsites.net';
 
 // Allowed types
 export type EntityType = 'chord' | 'chordvariation' | 'instrument' | 'scale' | 'scalevariation' | 'tuning';
