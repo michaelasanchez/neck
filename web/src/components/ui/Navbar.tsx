@@ -1,9 +1,8 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap';
-import { Key } from '../../models/key';
+import { Key } from '../../models';
 import { Keys } from '../../shared';
-import { FretDisplayMode } from '../neck';
 import { KeySlider } from './KeySlider';
 
 export interface NavbarProps {
@@ -49,7 +48,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
       <a className="navbar-brand" href="#">
         Neck
       </a>
-      
+
       <div className="navbar-nav">
         <form className="form-inline">
           <Button

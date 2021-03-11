@@ -1,10 +1,8 @@
 import { each, every, filter, indexOf, last, map } from 'lodash';
-
-import { Chord } from '.';
+import { Chord, Mode, Note } from '.';
 import { ApiEntity } from '../network';
 import { NoteUtils } from '../shared';
-import { Mode } from './mode';
-import { Note } from "./note";
+
 
 export enum ScaleStep {
   Whole = 'w',

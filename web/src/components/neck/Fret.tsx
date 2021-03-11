@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-
-import { Note } from '../../models/note';
+import { Note } from '../../models';
 import { ENABLE_NECK_ANIMATION } from './Neck';
+
 
 export enum FretDisplayMode {
   Note,
