@@ -10,7 +10,7 @@ dist
 # Dev assets
 *.png
 
-appsettings.Development.json
+appsettings.*.json
 
 # Build results
 [Dd]ebug/
@@ -28,3 +28,10 @@ msbuild.err
 msbuild.wrn
 
 *.csproj.user
+*.json.user
+
+*.pubxml
+*.pubxml.user
+
+serviceDependencies.*
+ServiceDependencies/
