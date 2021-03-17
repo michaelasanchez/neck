@@ -2,6 +2,7 @@ export * from './DropOver';
 export * from './FretIndicator';
 export * from './KeySlider';
 export * from './Navbar';
+export * from './Notifications';
 export * from './OptionCard';
 export * from './options';
 export * from './OptionsModal';
