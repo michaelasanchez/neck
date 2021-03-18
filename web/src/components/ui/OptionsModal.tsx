@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Accordion, Modal } from 'react-bootstrap';
-import { InstrumentCard, RadioOptionCard, TuningCard } from '.';
+import { RadioOptionCard } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Mode, Tuning } from '../../models';
+import { InstrumentCard, TuningCard } from './options';
 
 export interface OptionsModalProps {
   showing: boolean;

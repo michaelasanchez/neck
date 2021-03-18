@@ -92,7 +92,7 @@ export class BaseRequest<TResult> {
       result,
     } as BaseResponse<TResult>;
 
-    console.log(soclose);
+    // console.log(soclose);
     
     // return soclose;
 
@@ -121,19 +121,5 @@ export class BaseRequest<TResult> {
 
   // Delete(data?: {}): Promise<TResult> {
   //   return this.execute(RequestType.Delete, data);
-  // }
-
-  // protected async executeAsync() {
-  //   const convert = this._baseOptions.convertToJson;
-  //   return await fetch(this._url)
-  //     .then(response => convert ? response.json() : response)
-  //     .then(response => {
-  //       console.log('base response', response);
-  //     })
-  //     .catch(reason => {
-  //       const message = reason?.message || 'Failed to fetch'
-  //       console.log('base error', reason);
-  //       console.log('base message', message);
-  //     });
   // }
 }

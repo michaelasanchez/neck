@@ -12,17 +12,15 @@ import { FretDisplayMode } from '../neck';
 import { Notifications } from './Notifications';
 import { slideInDuration } from './slideins';
 
-
-
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
-export interface UiProps { }
+export interface UiProps {}
 
 export interface UiState {
   showOptions: boolean;
 }
 
-export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
+export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
 
   const { notifications } = useNotificationContext();
@@ -36,8 +34,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
 
   const [disabled, setDisabled] = useState<boolean>(false);
 
-  useEffect(() => {
-  }, [notifications]);
+  useEffect(() => {}, [notifications]);
 
   const handleFretDisplayModeUpdate = (fretMode: FretDisplayMode) => {
     let updated: FretDisplayMode;
@@ -100,7 +97,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
 
   return (
     <>
-    <Notifications />
       <Navbar
         musicKey={key}
         showing={showOptions}
@@ -126,7 +122,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
             <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
           </div>
         </Draggable>
-        {/* <KeySlideIn /> */}
+        <Notifications />
       </div>
     </>
   );

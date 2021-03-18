@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNotificationContext } from '../components/App';
-import { NotificationType } from './useNotification';
-
+import { NotificationType } from '../interfaces';
 
 export const useRequest = (request: any) => {
   const [data, setData] = useState<any>();
@@ -16,11 +15,14 @@ export const useRequest = (request: any) => {
 
       return response;
     } catch ({ message }) {
-      addNotification({ type: NotificationType.Danger, message: message ?? 'unknown error' });
+      addNotification({
+        type: NotificationType.Error,
+        message: message ?? 'unknown error',
+      });
 
       return null;
     }
-  }
+  };
 
   return { req, data };
 };
