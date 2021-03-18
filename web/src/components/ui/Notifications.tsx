@@ -10,6 +10,8 @@ export const Notifications: React.FunctionComponent<NotificationsProps> = (props
   const { notifications } = useNotificationContext();
 
   return <div className="notifications">
-    {map(notifications, (n: Notification, i: number) => <Alert key={i} variant={n.type}>{n.message}</Alert>)}
+    {map(notifications, (n: Notification, i: number) => {
+      return <Alert key={i} variant={n.type} className={n.expiring === true ? 'fading' : ''}>{n.message}</Alert>
+    })}
   </div>;
 };

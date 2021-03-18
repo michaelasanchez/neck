@@ -2,5 +2,14 @@
     position: absolute;
     top: 20px;
     margin: 0 20px;
-    z-index: 5;
+    z-index: 1041;
+
+    .alert {
+        opacity: 1;
+        transition: opacity 500ms;
+
+        &.fading {
+            opacity: 0;
+        }
+    }
 }
