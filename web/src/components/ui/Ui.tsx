@@ -1,26 +1,31 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
+import Draggable from 'react-draggable'; // Both at the same time
 import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
+import { useNotificationContext } from '..';
 import { useAppOptionsContext } from '../..';
-import { Key, Mode, Tuning } from '../../models';
+import { Key } from '../../models';
 import { IndicatorsMode } from '../Indicators';
 import { Loading } from '../Loading';
 import { FretDisplayMode } from '../neck';
-import { KeySlideIn, slideInDuration } from './slideins';
+import { Notifications } from './Notifications';
+import { slideInDuration } from './slideins';
 
-import Draggable, { DraggableCore } from 'react-draggable'; // Both at the same time
+
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
-export interface UiProps {}
+export interface UiProps { }
 
 export interface UiState {
   showOptions: boolean;
 }
 
-export const Ui: React.FunctionComponent<UiProps> = ({}) => {
+export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
+
+  const { notifications } = useNotificationContext();
 
   // TODO: static
   let fretDisplayMode: FretDisplayMode = FretDisplayMode.Note;
@@ -30,6 +35,9 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   const [showOptions, setShowOptions] = useState<boolean>(true);
 
   const [disabled, setDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+  }, [notifications]);
 
   const handleFretDisplayModeUpdate = (fretMode: FretDisplayMode) => {
     let updated: FretDisplayMode;
@@ -92,6 +100,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
 
   return (
     <>
+    <Notifications />
       <Navbar
         musicKey={key}
         showing={showOptions}

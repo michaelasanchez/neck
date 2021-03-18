@@ -35,6 +35,8 @@ export class ChordVariation {
     this.Positions = positions;
     this.Barres = barres;
 
+    this.TuningId = tuning.Id;
+
     this.Pitches = map(tuning.Offsets, (o: Note, i: number) => {
       const pos = this.Positions[i];
       if (pos === null) return pos; 

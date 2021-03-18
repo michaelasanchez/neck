@@ -5,10 +5,17 @@ import { useAppOptionsContext } from '..';
 import { Loading } from './Loading';
 import { Neck } from './neck';
 import { Ui } from './ui';
+import { useNotification } from '../hooks';
+
+import constate from 'constate';
 
 const SHOW_INDICATORS = true;
 
-export interface AppProps {}
+export interface AppProps { }
+
+export const [NotificationsProvider, useNotificationContext] = constate(
+  useNotification
+);
 
 const App: React.FunctionComponent<AppProps> = () => {
   const { loading, errors } = useAppOptionsContext();
@@ -29,7 +36,9 @@ const App: React.FunctionComponent<AppProps> = () => {
             </div>
           )}
         </main>
-        <Ui />
+        <NotificationsProvider>
+          <Ui />
+        </NotificationsProvider>
       </>
     );
   }

@@ -15,6 +15,13 @@ enum RequestType {
   Delete = 'DELETE'
 }
 
+export interface BaseResponse<TResult> {
+  success: boolean;
+  result?: TResult;
+  message?: string;
+  code?: number;
+}
+
 export class BaseRequest<TResult> {
 
   protected _url: string;
@@ -66,12 +73,46 @@ export class BaseRequest<TResult> {
       });
   }
 
+  private executeAsync = async (type: RequestType, data?: {}) => {
+
+    const options = type === RequestType.Post || type === RequestType.Patch ? {
+      method: type,
+      body: JSON.stringify(data),
+      headers: { 'Content-type': 'application/json' }
+    } : null;
+
+    const response = await fetch(this._url, options);
+
+    const { message, ...result } = await response.json();
+
+    const soclose = {
+      success: response.ok,
+      code: response.status,
+      message,
+      result,
+    } as BaseResponse<TResult>;
+
+    console.log(soclose);
+    
+    // return soclose;
+
+    if (response.ok) {
+      return result;
+    } else {
+      throw new Error(message ?? 'Hope this isn\'t production!');
+    }
+  }
+
   Get(): Promise<TResult | TResult[]> {
     return this.execute(RequestType.Get);
   }
 
   Post(data?: {}): Promise<TResult | TResult[]> {
     return this.execute(RequestType.Post, data);
+  }
+
+  PostAsync(data?: {}) {
+    return this.executeAsync(RequestType.Post, data);
   }
 
   Patch(data?: {}): Promise<TResult> {

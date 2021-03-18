@@ -1,13 +1,17 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { Alert } from 'react-bootstrap';
-import { useNotification, Notification } from '../../hooks/useNotification';
+import { useNotificationContext } from '..';
+import { Notification } from '../../hooks/useNotification';
 
-interface NotificationsProps {}
+interface NotificationsProps { }
 
-const Notifications: React.FunctionComponent<NotificationsProps> = (props) => {
-  const { notifications, addNotification } = useNotification();
-  return <>
-  {map(notifications, (n: Notification, i: number) => <Alert key={i} variant={n.Type}>{n.Message}</Alert>)}
-  </>;
+export const Notifications: React.FunctionComponent<NotificationsProps> = (props) => {
+  const { notifications } = useNotificationContext();
+
+  return <div className="notifications">
+    {map(notifications, (n: Notification, i: number) => {
+      return <Alert key={i} variant={n.type} className={n.expiring === true ? 'fading' : ''}>{n.message}</Alert>
+    })}
+  </div>;
 };

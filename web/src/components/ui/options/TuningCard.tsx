@@ -9,6 +9,7 @@ import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { OptionCard, OptionCardProps } from '..';
+import { useRequest } from '../../../hooks';
 import {
   Instrument,
   Note,
@@ -94,9 +95,15 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const labelRef = useRef();
 
+  const { req: getTunings, data: tuningsTest } = useRequest(() =>
+    new TuningApi().ByInstrument(instrument?.Id));
+
+  const { req: createTuning } = useRequest(new TuningApi().Create);
+
   useEffect(() => {
     if (!!instrument) {
       reloadTunings();
+      // getTunings();
     }
   }, [instrument]);
 
@@ -168,12 +175,11 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
           });
         }
       } else {
-        new TuningApi().Create(pending).then((created) => {
+        createTuning(pending).then((created) => {
+        // new TuningApi().Create(pending).then((created) => {
           if (!!created) {
             setTuning(created);
             reloadTunings();
-          } else {
-            console.error('failed to create tuning');
           }
         });
       }
@@ -197,7 +203,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
             id="tuning-select"
             variant="outline-secondary"
             title={current.Label}
-            // disabled={editMode}
+          // disabled={editMode}
           >
             {map(tunings, (t, i) => (
               <Dropdown.Item
