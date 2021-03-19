@@ -17,7 +17,7 @@ import {
   Tuning,
   TuningNote,
 } from '../../../models';
-import { TuningApi } from '../../../network';
+import { BaseResponse, TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
 
 export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
@@ -95,10 +95,10 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const labelRef = useRef();
 
-  const { req: getTunings, data: tuningsTest } = useRequest(() =>
-    new TuningApi().ByInstrument(instrument?.Id));
+  // const { resp: getTunings, data: tuningsTest } = useRequest(() =>
+  //   new TuningApi().ByInstrument(instrument?.Id));
 
-  const { req: createTuning } = useRequest(new TuningApi().Create);
+  const { resp: createTuning } = useRequest(new TuningApi().Create);
 
   useEffect(() => {
     if (!!instrument) {
@@ -175,8 +175,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
           });
         }
       } else {
-        createTuning(pending).then((created) => {
-        // new TuningApi().Create(pending).then((created) => {
+        createTuning(pending).then((created: Tuning) => {
           if (!!created) {
             setTuning(created);
             reloadTunings();

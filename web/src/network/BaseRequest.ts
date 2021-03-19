@@ -1,4 +1,4 @@
-import { isNull } from "lodash";
+import { isNull } from 'lodash';
 
 export interface BaseRequestOptions {
   convertToJson: boolean;
@@ -6,13 +6,13 @@ export interface BaseRequestOptions {
 
 export const DefaultBaseRequestOptions = {
   convertToJson: true,
-}
+};
 
 enum RequestType {
   Get = 'GET',
   Post = 'POST',
   Patch = 'PATCH',
-  Delete = 'DELETE'
+  Delete = 'DELETE',
 }
 
 export interface BaseResponse<TResult> {
@@ -23,23 +23,31 @@ export interface BaseResponse<TResult> {
 }
 
 export class BaseRequest<TResult> {
-
   protected _url: string;
 
   protected _data: {};
 
   protected _baseOptions: BaseRequestOptions;
 
-  protected constructor(url?: string, options: BaseRequestOptions = DefaultBaseRequestOptions) {
+  protected constructor(
+    url?: string,
+    options: BaseRequestOptions = DefaultBaseRequestOptions
+  ) {
     if (url) this._url = url;
 
     this._baseOptions = options;
   }
 
-  get Url(): string { return this._url; }
-  set Url(value: string) { this._url = value; }
+  get Url(): string {
+    return this._url;
+  }
+  set Url(value: string) {
+    this._url = value;
+  }
 
-  get Data(): {} { return this._data; }
+  get Data(): {} {
+    return this._data;
+  }
   set Data(value: {}) {
     if (isNull(this._data) || !isNull(value)) {
       this._data = value;
@@ -49,59 +57,63 @@ export class BaseRequest<TResult> {
   private execute(type: RequestType, data?: {}) {
     let convert = this._baseOptions.convertToJson;
 
-    const options = type === RequestType.Post || type === RequestType.Patch ? {
-      method: type,
-      body: JSON.stringify(data),
-      headers: { 'Content-type': 'application/json' }
-    } : null;
+    const options =
+      type === RequestType.Post || type === RequestType.Patch
+        ? {
+            method: type,
+            body: JSON.stringify(data),
+            headers: { 'Content-type': 'application/json' },
+          }
+        : null;
 
     return fetch(this._url, options)
       .then((response: Response) => {
         if (!response.ok) {
           convert = false;
-          throw new Error(`Request failed: ${response.url}`)
+          throw new Error(`Request failed: ${response.url}`);
         }
         return response;
       })
-      .then(response => convert ? response.json() : response)
-      .then(response => {
+      .then((response) => (convert ? response.json() : response))
+      .then((response) => {
         return response;
       })
-      .catch(reason => {
-        const message = reason?.message || 'Failed to fetch'
+      .catch((reason) => {
+        const message = reason?.message || 'Failed to fetch';
         console.error(message);
       });
   }
 
-  private executeAsync = async (type: RequestType, data?: {}) => {
-
-    const options = type === RequestType.Post || type === RequestType.Patch ? {
-      method: type,
-      body: JSON.stringify(data),
-      headers: { 'Content-type': 'application/json' }
-    } : null;
+  private executeAsync = async (
+    type: RequestType,
+    data?: {}
+  ): Promise<BaseResponse<TResult>> => {
+    const options =
+      type === RequestType.Post || type === RequestType.Patch
+        ? {
+            method: type,
+            body: JSON.stringify(data),
+            headers: { 'Content-type': 'application/json' },
+          }
+        : null;
 
     const response = await fetch(this._url, options);
 
     const { message, ...result } = await response.json();
 
-    const soclose = {
+    const baseResponse = {
       success: response.ok,
       code: response.status,
       message,
       result,
     } as BaseResponse<TResult>;
 
-    // console.log(soclose);
-    
-    // return soclose;
-
-    if (response.ok) {
-      return result;
-    } else {
-      throw new Error(message ?? 'Hope this isn\'t production!');
-    }
-  }
+    // TODO: decide
+    return Promise.resolve(baseResponse);
+    // return response.ok
+    //   ? Promise.resolve(baseResponse)
+    //   : Promise.reject(baseResponse);
+  };
 
   Get(): Promise<TResult | TResult[]> {
     return this.execute(RequestType.Get);

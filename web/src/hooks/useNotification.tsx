@@ -1,6 +1,6 @@
 import { findIndex, map, remove } from 'lodash';
 import { useEffect, useState } from 'react';
-import { IActiveNotification, INotification } from '../interfaces';
+import { IActiveNotification, NotificationType } from '../interfaces';
 
 export const NOTIFICATION_TIMESPAN_DEFAULT = 5000;
 export const NOTIFICATION_FADE_TIMESPAN_DEFAULT = 1000;
@@ -44,21 +44,25 @@ export const useNotification = () => {
     }
   }, [notifications]);
 
-  const addNotification = (newNotification: INotification) => {
+  const add = (
+    message: string,
+    type: NotificationType = NotificationType.Primary
+  ) => {
     setNotifications([
       {
         init: new Date(),
         id: nextId,
         expiring: false,
         postponed: false,
-        ...newNotification,
+        message,
+        type,
       },
       ...notifications,
     ]);
     setNextId((id) => id + 1);
   };
 
-  const dismissNotification = (notificationId: number) => {
+  const dismiss = (notificationId: number) => {
     const index = findIndex(notifications, (n) => n.id == notificationId);
     if (index >= 0) {
       notifications[index].dismissed = true;
@@ -67,10 +71,7 @@ export const useNotification = () => {
     }
   };
 
-  const postponeNotification = (
-    notificationId: number,
-    postpone: boolean = true
-  ) => {
+  const postpone = (notificationId: number, postpone: boolean = true) => {
     const index = findIndex(notifications, (n) => n.id == notificationId);
     if (index >= 0) {
       notifications[index].postponed = postpone;
@@ -83,8 +84,8 @@ export const useNotification = () => {
 
   return {
     notifications,
-    addNotification,
-    dismissNotification,
-    postponeNotification,
+    addNotification: add,
+    dismissNotification: dismiss,
+    postponeNotification: postpone,
   };
 };

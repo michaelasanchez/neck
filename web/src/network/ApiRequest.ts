@@ -1,15 +1,20 @@
-import { ApiEntity } from "./ApiEntity";
-import { BaseRequest } from "./BaseRequest";
+import { ApiEntity } from './ApiEntity';
+import { BaseRequest, BaseResponse } from './BaseRequest';
 
 const DOMAIN_DEFAULT = 'https://neck-api.azurewebsites.net';
 
 // Allowed types
-export type EntityType = 'chord' | 'chordvariation' | 'instrument' | 'scale' | 'scalevariation' | 'tuning';
+export type EntityType =
+  | 'chord'
+  | 'chordvariation'
+  | 'instrument'
+  | 'scale'
+  | 'scalevariation'
+  | 'tuning';
 
-export enum ApiAction { }
+export enum ApiAction {}
 
-export class ApiRequest<TResult = ApiEntity> extends BaseRequest<TResult> {
-
+export class ApiRequest<T = ApiEntity> extends BaseRequest<T> {
   protected _domain: string;
 
   protected _entityType: EntityType;
@@ -25,46 +30,53 @@ export class ApiRequest<TResult = ApiEntity> extends BaseRequest<TResult> {
     this.Url = this.calcUrl();
   }
 
-  private get Domain(): string { return this._domain };
+  private get Domain(): string {
+    return this._domain;
+  }
   private set Domain(value: string) {
     this._domain = value;
     this.Url = this.calcUrl();
   }
 
-  get EntityType(): EntityType { return this._entityType; }
+  get EntityType(): EntityType {
+    return this._entityType;
+  }
   set EntityType(value: EntityType) {
     this._entityType = value;
     this.Url = this.calcUrl();
   }
 
-  get Action(): string { return this._action; }
+  get Action(): string {
+    return this._action;
+  }
   set Action(value: string) {
     this._action = value;
     this.Url = this.calcUrl();
-  };
+  }
 
   protected calcUrl(): string {
-    return `${this.Domain}/${this.EntityType}${this.Action ? '/' : ''}${this.Action}`;
+    return `${this.Domain}/${this.EntityType}${this.Action ? '/' : ''}${
+      this.Action
+    }`;
   }
 
-  GetAll = (): Promise<TResult[]> => {
+  GetAll = (): Promise<T[]> => {
     this.Action = 'all';
-    return super.Get() as Promise<TResult[]>;
-  }
+    return super.Get() as Promise<T[]>;
+  };
 
-  GetById = (id: string): Promise<TResult> => {
+  GetById = (id: string): Promise<T> => {
     this.Action = id;
-    return super.Get() as Promise<TResult>;
-  }
+    return super.Get() as Promise<T>;
+  };
 
-  Create = (data: {}): Promise<TResult> => {
-    return super.PostAsync(data) as Promise<TResult>;
-  }
+  Create = (data: T): Promise<BaseResponse<T>> => {
+    return super.PostAsync(data) as Promise<BaseResponse<T>>;
+  };
 
   // TODO: This one breaks an endpoint on load
   //    when converted to an arrow function???
-  Post(data?: {}, action?: string): Promise<TResult | TResult[]> {
-
+  Post(data?: {}, action?: string): Promise<T | T[]> {
     if (action) {
       this.Action = action;
     }
