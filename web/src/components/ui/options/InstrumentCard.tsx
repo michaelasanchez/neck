@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Col, Form } from 'react-bootstrap';
 import { OptionCard, OptionCardProps } from '..';
+import { useRequest } from '../../../hooks';
 import { Instrument } from '../../../models';
 import { InstrumentApi } from '../../../network';
 
@@ -20,13 +21,17 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
   const [instruments, setInstruments] = useState<Array<Instrument>>();
   const [pending, setPending] = useState<Instrument>(instrument);
 
+  const { req: getInstruments } = useRequest(new InstrumentApi().GetAllAsync);
+
   useEffect(() => {
     reloadInstruments();
   }, []);
 
   const reloadInstruments = () => {
-    new InstrumentApi().GetAll().then((instruments) => {
-      setInstruments(instruments);
+    getInstruments().then((instruments) => {
+      if (!!instruments) {
+        setInstruments(instruments);
+      }
     });
   };
 

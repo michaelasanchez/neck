@@ -3,15 +3,21 @@ import { useNotificationContext } from '../components/App';
 import { NotificationType } from '../interfaces';
 import { BaseResponse } from '../network';
 
+export interface IUseRequest<T> {
+  req: (...params: Array<any>) => Promise<T>,
+  data: T,
+  loading: boolean,
+}
+
 export function useRequest<T>(
-  request: (...params: Array<any>) => Promise<BaseResponse<T | Array<T>>>
+  request: (...params: Array<any>) => Promise<BaseResponse<T>>
 ) {
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState<boolean>();
 
   const { addNotification } = useNotificationContext();
 
-  const resp = async (...params: Array<any>) => {
+  const req = async (...params: Array<any>) => {
     setLoading(true);
 
     try {
@@ -20,7 +26,18 @@ export function useRequest<T>(
       if (response.success) {
         setData(response.result);
       } else {
-        throw new Error(response.message);
+        if (response.code >= 400) {
+          throw new Error(response.message);
+        }
+      }
+
+      if (response.message) {
+        addNotification(
+          response.message,
+          response.code >= 300
+            ? NotificationType.Warning
+            : NotificationType.Info
+        );
       }
 
       return response.result;
@@ -32,5 +49,5 @@ export function useRequest<T>(
     }
   };
 
-  return { resp, data, loading };
+  return { req, data, loading } as IUseRequest<T>;
 }

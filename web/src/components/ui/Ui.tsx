@@ -30,7 +30,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
 
   const { indicatorsMode, key, mode, tuning } = appOptions;
 
-  const [showOptions, setShowOptions] = useState<boolean>(true);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
 
   const [disabled, setDisabled] = useState<boolean>(false);
 

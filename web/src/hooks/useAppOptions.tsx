@@ -68,7 +68,7 @@ const loadInstrument = (
   }
 
   // TODO: there has to be a better way to provide a default
-  return new InstrumentApi().GetAll();
+  return new InstrumentApi().GetAll().then((i: Array<Instrument>) => i[0]);
 };
 
 export const useAppOptions = () => {
@@ -101,11 +101,7 @@ export const useAppOptions = () => {
 
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
-      const [chord, scale, instrumentResult] = values;
-
-      const instrument: Instrument = isArray(instrumentResult)
-        ? instrumentResult[0]
-        : instrumentResult;
+      const [chord, scale, instrument] = values;
       instrument.NumFrets = parseInt(cookie.neck.numFrets);
 
       // Create app options

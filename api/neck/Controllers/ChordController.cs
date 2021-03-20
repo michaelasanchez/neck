@@ -5,8 +5,6 @@ using neck.Models;
 using neck.Models.Results;
 using neck.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static neck.Enums.ChordEnums;
 

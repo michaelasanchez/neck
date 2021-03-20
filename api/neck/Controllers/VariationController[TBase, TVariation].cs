@@ -58,6 +58,7 @@ namespace neck.Controllers
 			{
 				return BadRequest(new Response(tuningResult));
 			}
+
 			var tuning = tuningResult.Result;
 
 			var variations = _factory.GenerateVariations(@base, tuning, (int)args.offset, (int)args.span);

@@ -1,5 +1,6 @@
-import { Chord, ChordVariation, Tuning } from "../models";
-import { ApiRequest } from "./ApiRequest";
+import { BaseResponse } from '.';
+import { Chord, ChordVariation, Tuning } from '../models';
+import { ApiRequest } from './ApiRequest';
 
 export interface ChordVariationGenerateParams {
   baseId?: string;
@@ -10,7 +11,8 @@ export interface ChordVariationGenerateParams {
   span?: number;
 }
 
-export interface ChordVariationGenerateRangeParams extends ChordVariationGenerateParams {
+export interface ChordVariationGenerateRangeParams
+  extends ChordVariationGenerateParams {
   range?: number;
 }
 
@@ -20,17 +22,32 @@ enum ChordVariationAction {
 }
 
 export class ChordVariationApi extends ApiRequest<ChordVariation> {
-
   constructor() {
     super('chordvariation');
   }
 
-  Generate(params: ChordVariationGenerateParams): Promise<ChordVariation[]> {
-    return super.Post(params, ChordVariationAction.Generate) as Promise<ChordVariation[]>;
+  // Generate(params: ChordVariationGenerateParams): Promise<ChordVariation[]> {
+  //   return super.Post(params, ChordVariationAction.Generate) as Promise<ChordVariation[]>;
+  // }
+
+  // GenerateRange(params: ChordVariationGenerateRangeParams): Promise<ChordVariation[]> {
+  //   return super.Post(params, ChordVariationAction.GenerateRange) as Promise<ChordVariation[]>;
+  // }
+
+  Generate(
+    params: ChordVariationGenerateParams
+  ): Promise<BaseResponse<Array<ChordVariation>>> {
+    return super.PostAsync(params, ChordVariationAction.Generate) as Promise<
+      BaseResponse<Array<ChordVariation>>
+    >;
   }
 
-  GenerateRange(params: ChordVariationGenerateRangeParams): Promise<ChordVariation[]> {
-    return super.Post(params, ChordVariationAction.GenerateRange) as Promise<ChordVariation[]>;
+  GenerateRange = (
+    params: ChordVariationGenerateRangeParams
+  ): Promise<BaseResponse<Array<ChordVariation>>> => {
+    return super.PostAsync(
+      params,
+      ChordVariationAction.GenerateRange
+    ) as Promise<BaseResponse<Array<ChordVariation>>>;
   }
-
 }

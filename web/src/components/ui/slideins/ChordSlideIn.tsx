@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { useAppOptionsContext } from '../../..';
+import { useRequest } from '../../../hooks';
 import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
 import { ChordVariationApi } from '../../../network';
 import { NoteUtils } from '../../../shared';
@@ -51,34 +52,28 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
 
   const [selected, setSelected] = useState<Note[]>();
 
-  const [loading, setLoading] = useState<boolean>(!collapse);
+  // const [loading, setLoading] = useState<boolean>(!collapse);
+
+  const { req: generateVariations, loading } = useRequest(
+    new ChordVariationApi().GenerateRange
+  );
 
   // Side Effects
   useEffect(() => {
-    if (!!chord && !collapse) {
+    if (
+      !!chord &&
+      !collapse &&
+      !loading &&
+      (!variations || variations[0].ChordId != chord.Id)
+    ) {
       setSelected([]);
-      reloadChordVariations();
-    }
-  }, [chord, instrument.NumFrets, tuning]);
-
-  useEffect(() => {
-    if (!variations && !collapse && !loading) {
-      setSelected([]);
-      reloadChordVariations();
-    }
-  }, [collapse]);
-
-  // Load
-  const reloadChordVariations = () => {
-    new ChordVariationApi()
-      .GenerateRange({
+      generateVariations({
         baseId: chord.Id,
         tuningId: tuning.Id,
         // offset: 8,
         // span: 9,
         range: instrument.NumFrets,
-      })
-      .then((variations: any[]) => {
+      }).then((variations: any[]) => {
         // TODO: should not have to run this through a constructor
         const newVariations = map(
           variations,
@@ -97,7 +92,25 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
           handleSetChordVariation(newVariations[0], 0);
         }
       });
-  };
+    }
+  }, [chord, instrument.NumFrets, tuning, collapse]);
+
+  useEffect(() => {
+    if (!appOptions.chordVariation && variations?.length) {
+      setAppOptions({ chordVariation: variations[0] });
+    }
+  }, [variations]);
+
+  // useEffect(() => {
+  //   if (!variations && !collapse && !loading) {
+  //     setSelected([]);
+  //     reloadChordVariations();
+  //   }
+  // }, [collapse]);
+
+  // Load
+  // const reloadChordVariations = () => {
+  // };
 
   // Render State
   const modifier = chord?.Modifier;
@@ -135,9 +148,8 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   ) => {
     setAppOptions({ chordVariation: variation });
     setCurrentIndex(index);
-    setLoading(false);
   };
-  
+
   const renderVariations = useCallback(() => {
     return variations?.length > 0 ? (
       map(variations, (v: ChordVariation, i: number) => (

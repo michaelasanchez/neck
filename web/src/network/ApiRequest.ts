@@ -1,7 +1,7 @@
 import { ApiEntity } from './ApiEntity';
 import { BaseRequest, BaseResponse } from './BaseRequest';
 
-const DOMAIN_DEFAULT = 'https://neck-api.azurewebsites.net';
+const DOMAIN_DEFAULT = 'https://localhost:5001';
 
 // Allowed types
 export type EntityType =
@@ -60,9 +60,9 @@ export class ApiRequest<T = ApiEntity> extends BaseRequest<T> {
     }`;
   }
 
-  GetAll = (): Promise<T[]> => {
+  GetAll = (): Promise<Array<T>> => {
     this.Action = 'all';
-    return super.Get() as Promise<T[]>;
+    return super.Get() as Promise<Array<T>>;
   };
 
   GetById = (id: string): Promise<T> => {
@@ -70,17 +70,28 @@ export class ApiRequest<T = ApiEntity> extends BaseRequest<T> {
     return super.Get() as Promise<T>;
   };
 
-  Create = (data: T): Promise<BaseResponse<T>> => {
+  GetAllAsync = (): Promise<BaseResponse<Array<T>>> => {
+    this.Action = 'all';
+    return super.GetAsync() as Promise<BaseResponse<Array<T>>>;
+  };
+
+  CreateAsync = (data: T): Promise<BaseResponse<T>> => {
     return super.PostAsync(data) as Promise<BaseResponse<T>>;
   };
 
   // TODO: This one breaks an endpoint on load
   //    when converted to an arrow function???
-  Post(data?: {}, action?: string): Promise<T | T[]> {
+  // Post(data?: {}, action?: string): Promise<T | Array<T>> {
+  //   if (action) {
+  //     this.Action = action;
+  //   }
+  //   return super.Post(data);
+  // }
+
+  PostAsync(data?: {}, action?: string): Promise<BaseResponse<T | Array<T>>> {
     if (action) {
       this.Action = action;
     }
-
-    return super.Post(data);
+    return super.PostAsync(data);
   }
 }

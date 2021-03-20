@@ -98,7 +98,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   // const { resp: getTunings, data: tuningsTest } = useRequest(() =>
   //   new TuningApi().ByInstrument(instrument?.Id));
 
-  const { resp: createTuning } = useRequest(new TuningApi().Create);
+  const { req: createTuning } = useRequest(new TuningApi().CreateAsync);
 
   useEffect(() => {
     if (!!instrument) {
@@ -119,7 +119,9 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         labelInput.focus();
       }
       setPending(
-        new Tuning(instrument.Id, 'New Tuning', [...instrument.DefaultTuning.Offsets])
+        new Tuning(instrument.Id, 'New Tuning', [
+          ...instrument.DefaultTuning.Offsets,
+        ])
       );
     } else if (editMode === EditMode.Edit) {
       setPending({ ...tuning, Offsets: [...tuning.Offsets] });
@@ -169,12 +171,16 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
           (!!pending.Id && pending.Label != tuning.Label) ||
           filter(offsetsMatch, (m) => m == false).length > 0
         ) {
-          new TuningApi().Patch(pending).then((saved) => {
-            setTuning(saved);
-            reloadTunings();
+          // Update
+          new TuningApi().PatchAsync(pending).then((saved) => {
+            if (!!saved.success) {
+              setTuning(saved.result);
+              reloadTunings();
+            }
           });
         }
       } else {
+        // Create
         createTuning(pending).then((created: Tuning) => {
           if (!!created) {
             setTuning(created);
@@ -202,7 +208,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
             id="tuning-select"
             variant="outline-secondary"
             title={current.Label}
-          // disabled={editMode}
+            // disabled={editMode}
           >
             {map(tunings, (t, i) => (
               <Dropdown.Item

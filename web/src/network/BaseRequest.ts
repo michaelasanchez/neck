@@ -1,4 +1,4 @@
-import { isNull } from 'lodash';
+import { isArray, isNull } from 'lodash';
 
 export interface BaseRequestOptions {
   convertToJson: boolean;
@@ -22,7 +22,7 @@ export interface BaseResponse<TResult> {
   code?: number;
 }
 
-export class BaseRequest<TResult> {
+export class BaseRequest<T> {
   protected _url: string;
 
   protected _data: {};
@@ -87,7 +87,7 @@ export class BaseRequest<TResult> {
   private executeAsync = async (
     type: RequestType,
     data?: {}
-  ): Promise<BaseResponse<TResult>> => {
+  ): Promise<BaseResponse<T>> => {
     const options =
       type === RequestType.Post || type === RequestType.Patch
         ? {
@@ -99,14 +99,23 @@ export class BaseRequest<TResult> {
 
     const response = await fetch(this._url, options);
 
-    const { message, ...result } = await response.json();
+    const json = await response.json();
+    const { message, ...rest } = json;
+
+    // TODO: arrays are converted to objects without this
+    let result: any;
+    if (isArray(json)) {
+      result = json;
+    } else {
+      result = rest;
+    }
 
     const baseResponse = {
       success: response.ok,
       code: response.status,
       message,
       result,
-    } as BaseResponse<TResult>;
+    } as BaseResponse<T>;
 
     // TODO: decide
     return Promise.resolve(baseResponse);
@@ -115,23 +124,23 @@ export class BaseRequest<TResult> {
     //   : Promise.reject(baseResponse);
   };
 
-  Get(): Promise<TResult | TResult[]> {
+  Get(): Promise<T | Array<T>> {
     return this.execute(RequestType.Get);
   }
 
-  Post(data?: {}): Promise<TResult | TResult[]> {
+  GetAsync(): Promise<BaseResponse<T | Array<T>>> {
+    return this.executeAsync(RequestType.Get);
+  }
+
+  Post(data?: {}): Promise<T | Array<T>> {
     return this.execute(RequestType.Post, data);
   }
 
-  PostAsync(data?: {}) {
+  PostAsync(data?: {}): Promise<BaseResponse<T | Array<T>>> {
     return this.executeAsync(RequestType.Post, data);
   }
 
-  Patch(data?: {}): Promise<TResult> {
-    return this.execute(RequestType.Patch, data);
+  PatchAsync(data?: {}): Promise<BaseResponse<T>> {
+    return this.executeAsync(RequestType.Patch, data);
   }
-
-  // Delete(data?: {}): Promise<TResult> {
-  //   return this.execute(RequestType.Delete, data);
-  // }
 }
