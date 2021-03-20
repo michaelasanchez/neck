@@ -2,6 +2,7 @@
 using neck.Enums;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Results;
 using neck.Repositories;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace neck.Controllers
 			var noteResult = await _noteRepo.GetOrCreate(note);
 			if (!noteResult.Success)
 			{
-				return BadRequest(new { message = noteResult.Message });
+				return BadRequest(new Response<Note>(noteResult));
 			}
 
 			var chord = new Chord(noteResult.Result, @params.modifier);
@@ -42,7 +43,7 @@ namespace neck.Controllers
 
 			if (!chordResult.Success)
 			{
-				return BadRequest(new { message = chordResult.Message });
+				return BadRequest(new Response<Chord>(chordResult));
 			}
 
 			return Ok(chordResult.Result);

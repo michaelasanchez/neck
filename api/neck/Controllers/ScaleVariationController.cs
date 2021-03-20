@@ -3,9 +3,6 @@ using Microsoft.Extensions.Logging;
 using neck.Interfaces;
 using neck.Models;
 using neck.Models.Variations;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace neck.Controllers
 {
@@ -26,25 +23,6 @@ namespace neck.Controllers
 			: base(logger, factory, repository, baseRepository, tuningRepository)
 		{
 			_logger = logger;
-		}
-
-		[HttpPost("Test")]
-		public async Task<ActionResult<List<ScaleVariation>>> Test(/*[FromBody] ChordVariationGenerateParams @params*/)
-		{
-			Tuning tuning = null; // = @params.tuning;
-			if (tuning == null)
-			{
-				var result = await _tuningRepo.GetById(new Guid("F8EBD6AE-B39F-4C4F-8CEB-94D3DE160A0B")/*@params.tuningId*/);
-				if (result.Success)
-				{
-					tuning = result.Result;
-				}
-			}
-
-			var note = new Note(Enums.NoteValue.C, Enums.NoteSuffix.Natural);
-			var scale = new Scale(note, Enums.ScaleType.Diatonic);
-
-			return Ok(_factory.GenerateVariations(scale, tuning, 3, 5));
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using neck.Interfaces;
+using neck.Models.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,41 +20,47 @@ namespace neck.Controllers
 		[HttpGet("all")]
 		public virtual async Task<ActionResult<IEnumerable<T>>> GetAll()
 		{
-			var result = await _repository.GetAll();
-			if (!result.Success)
+			var getAllResult = await _repository.GetAll();
+			if (!getAllResult.Success)
 			{
-				return BadRequest(new { message = result.Message });
+				return BadRequest(new Response<IEnumerable<T>>(getAllResult));
 			}
 
-			return Ok(result.Result);
+			return Ok(getAllResult.Result);
 		}
 
 		[HttpPost]
 		public virtual async Task<IActionResult> Create(T entity)
 		{
-			var result = await _repository.Create(entity);
+			var createResult = await _repository.Create(entity);
 
-			return result.Success ? Ok(result.Result) : BadRequest(new { message = result.Message });
+			return createResult.Success
+				? Ok(createResult.Result)
+				: Conflict(new Response<T>(createResult));
 		}
 
 		[HttpGet("{id:Guid}")]
 		public virtual async Task<ActionResult<T>> GetById(Guid id)
 		{
-			var result = await _repository.GetById(id);
-			if (!result.Success)
+			var getResult = await _repository.GetById(id);
+			if (!getResult.Success)
 			{
-				return NotFound(new { message = result.Message });
+				return NotFound(new Response<T>(getResult));
 			}
 
-			return Ok(result.Result);
+			return Ok(getResult.Result);
 		}
 
 		[HttpPatch]
 		public async Task<ActionResult<T>> Update(T entity)
 		{
-			var result = await _repository.Update(entity);
+			var updateResult = await _repository.Update(entity);
+			if (!updateResult.Success)
+			{
+				return BadRequest(new Response<T>(updateResult));
+			}
 
-			return Ok(result.Result);
+			return Ok(updateResult.Result);
 		}
 
 		[HttpDelete]

@@ -42,13 +42,13 @@ namespace neck.Controllers
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
 			{
-				return BadRequest(new { message = validateResult.Message });
+				return BadRequest(new Response(validateResult));
 			}
 
 			var baseResult = await locateBase(args);
 			if (!baseResult.Success)
 			{
-				return BadRequest(new { message = baseResult.Message });
+				return BadRequest(new Response(baseResult));
 			}
 
 			var @base = baseResult.Result;
@@ -56,7 +56,7 @@ namespace neck.Controllers
 			var tuningResult = await locateTuning(args);
 			if (!tuningResult.Success)
 			{
-				return BadRequest(new { message = tuningResult.Message });
+				return BadRequest(new Response(tuningResult));
 			}
 			var tuning = tuningResult.Result;
 
@@ -71,20 +71,20 @@ namespace neck.Controllers
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
 			{
-				return BadRequest(new { message = validateResult.Message });
+				return BadRequest(new Response(validateResult));
 			}
 
 			var baseResult = await locateBase(args);
 			if (!baseResult.Success)
 			{
-				return BadRequest(new { message = baseResult.Message });
+				return BadRequest(new Response(baseResult));
 			}
 			var @base = baseResult.Result;
 
 			var tuningResult = await locateTuning(args);
 			if (!tuningResult.Success)
 			{
-				return BadRequest(new { message = tuningResult.Message });
+				return BadRequest(new Response(tuningResult));
 			}
 			var tuning = tuningResult.Result;
 
@@ -96,7 +96,7 @@ namespace neck.Controllers
 			}
 			catch (Exception ex)
 			{
-				return BadRequest($"An error occured while generating variations:\n\n{ex.Message}");
+				return BadRequest(new Response($"An error occured while generating variations:\n\n{ex.Message}"));
 			}
 
 			return Ok(variations);

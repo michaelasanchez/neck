@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,13 @@ namespace neck.Controllers
 		[HttpGet("byinstrument/{instrumentId:Guid}")]
 		public virtual async Task<ActionResult<List<Tuning>>> GetByInstrument(Guid instrumentId)
 		{
-			var result = await _repository.GetBy(t => t.InstrumentId == instrumentId);
-			if (!result.Success)
+			var tuningsResult = await _repository.GetBy(t => t.InstrumentId == instrumentId);
+			if (!tuningsResult.Success)
 			{
-				return NotFound(new { message = result.Message });
+				return NotFound(new Response<IEnumerable<Tuning>>(tuningsResult));
 			}
 
-			return Ok(result.Result);
+			return Ok(tuningsResult.Result);
 		}
 	}
 }
