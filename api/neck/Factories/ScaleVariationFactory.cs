@@ -17,9 +17,10 @@ namespace neck.Factories
 			var noteSpan = mapNoteSpan(scale, tuning, offset, span);
 			var positions = generateDegreePositions(noteSpan, scale, offset, span, new List<List<ScaleDegree?>>());
 
-			var variations = positions.Select(p => new ScaleVariation(scale, tuning.Id, offset, p)).ToList();
+			var variations = positions.Select(p => new ScaleVariation(scale, tuning.Id, offset, p));
+			variations = adjustDegreePositions(variations);
 
-			return adjustDegreePositions(variations);
+			return variations.ToList();
 		}
 
 		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int start, int end, int fretSpan)
@@ -169,9 +170,9 @@ namespace neck.Factories
 			return positions;
 		}
 
-		private List<ScaleVariation> adjustDegreePositions(List<ScaleVariation> variations)
+		private IEnumerable<ScaleVariation> adjustDegreePositions(IEnumerable<ScaleVariation> variations)
 		{
-			var adjusted = variations.Select(v =>
+			return variations.Select(v =>
 			{
 				var positions = v.Positions;
 
@@ -196,9 +197,7 @@ namespace neck.Factories
 				}
 
 				return v;
-			}).ToList();
-
-			return adjusted;
+			});
 		}
 
 		#endregion

@@ -1,5 +1,6 @@
 import { map } from 'lodash';
 import { Tuning } from '.';
+import { Formation } from './Formation';
 import { Note } from './Note';
 
 export class Format {
@@ -11,7 +12,7 @@ export class Format {
 export class ChordVariation {
   public Offset: number;
 
-  public Positions: number[];
+  public Formation: Formation;
 
   public ChordId: string;
 
@@ -19,26 +20,22 @@ export class ChordVariation {
 
   public Pitches: number[];
 
-  public Barres: number[];
-
   constructor(
     chordId: string,
     offset: number,
-    positions: number[],
-    barres: number[],
+    formation: Formation,
     tuning: Tuning
   ) {
     this.ChordId = chordId;
 
     this.Offset = offset;
     
-    this.Positions = positions;
-    this.Barres = barres;
+    this.Formation = formation;;
 
     this.TuningId = tuning.Id;
 
     this.Pitches = map(tuning.Offsets, (o: Note, i: number) => {
-      const pos = this.Positions[i];
+      const pos = this.Formation.Positions[i];
       if (pos === null) return pos; 
       return (o.Pitch + pos) % Note.NUM_NOTES;
     });

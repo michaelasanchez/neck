@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useEffect, useRef } from 'react';
 import { useAppOptionsContext } from '..';
 import { Note } from '../models';
-import { AppOptions } from '../shared';
 import { FretIndicator } from './ui';
 
 export enum IndicatorsMode {
@@ -65,39 +64,28 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     chordVariation.ChordId === chord.Id &&
     chordVariation.TuningId === tuning.Id
   ) {
-    const nonNullPositions = filter(
-      chordVariation.Positions,
-      (p) => p !== null
-    );
+    const positions = chordVariation.Formation.Positions;
+    const barres = chordVariation.Formation.Barres;
 
-    let firstFretIndex = indexOf(
-      chordVariation.Positions,
-      Math.min(...nonNullPositions)
-    );
-    let lastFretIndex = indexOf(
-      chordVariation.Positions,
-      Math.max(...nonNullPositions)
-    );
+    const nonNullPositions = filter(positions, (p) => p !== null);
+
+    let firstFretIndex = indexOf(positions, Math.min(...nonNullPositions));
+    let lastFretIndex = indexOf(positions, Math.max(...nonNullPositions));
 
     // TODO: supports single barre only
-    let barre: number[] = null, barreFret: number;
-    if (chordVariation.Barres) {
-      barreFret = chordVariation.Positions[chordVariation.Barres[0]];
-      const firstBarreIndex = indexOf(
-        chordVariation.Positions,
-        barreFret
-      );
-      const lastBarreIndex = lastIndexOf(
-        chordVariation.Positions,
-        barreFret
-      );
+    let barre: number[] = null,
+      barreFret: number;
+    if (barres?.length) {
+      barreFret = positions[barres[0]];
+      const firstBarreIndex = indexOf(positions, barreFret);
+      const lastBarreIndex = lastIndexOf(positions, barreFret);
       barre = [firstBarreIndex, lastBarreIndex];
     }
 
     return (
       <div className="indicators">
         {map(tuning.Offsets, (o: Note, i: number) => {
-          const position = chordVariation.Positions[i];
+          const position = positions[i];
 
           const open = position === 0;
           const muted = position === null;
@@ -139,8 +127,17 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     label={note?.Label}
                     degree={note?.Degree}
                     fretRef={ref}
-                    barre={barre && f + 1 === barreFret && i >= barre[0] && i <= barre[1]}
-                    barreClass={barre && f + 1 === barreFret && (i === barre[0] ? 'start' : i === barre[1] ? 'end' : null)}
+                    barre={
+                      barre &&
+                      f + 1 === barreFret &&
+                      i >= barre[0] &&
+                      i <= barre[1]
+                    }
+                    barreClass={
+                      barre &&
+                      f + 1 === barreFret &&
+                      (i === barre[0] ? 'start' : i === barre[1] ? 'end' : null)
+                    }
                   />
                 );
               })}

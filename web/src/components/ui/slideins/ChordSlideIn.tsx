@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
+import { IGenerateResponseHeader } from '../../../interfaces';
 import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
 import { ChordVariationApi } from '../../../network';
 import { NoteUtils } from '../../../shared';
@@ -47,26 +48,28 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   const { chord, instrument, tuning } = appOptions;
 
   // State
+  const [header, setHeader] = useState<
+    IGenerateResponseHeader<ChordVariation>
+  >();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [variations, setVariations] = useState<ChordVariation[]>();
 
   const [selected, setSelected] = useState<Note[]>();
 
-  // const [loading, setLoading] = useState<boolean>(!collapse);
-
   const { req: generateVariations, loading } = useRequest(
     new ChordVariationApi().GenerateRange
   );
 
-  // Side Effects
+  // Generate
   useEffect(() => {
     if (
       !!chord &&
       !collapse &&
       !loading &&
       (!variations ||
-        variations[0].ChordId != chord.Id ||
-        variations[0].TuningId != tuning.Id)
+        header.BaseId != chord.Id ||
+        header.TuningId != tuning.Id ||
+        header.Range != instrument.NumFrets)
     ) {
       setSelected([]);
       generateVariations({
@@ -75,20 +78,14 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
         // offset: 8,
         // span: 9,
         range: instrument.NumFrets,
-      }).then((variations: any[]) => {
+      }).then((newHeader: IGenerateResponseHeader<ChordVariation>) => {
         // TODO: should not have to run this through a constructor
         const newVariations = map(
-          variations,
-          (v) =>
-            new ChordVariation(
-              chord.Id,
-              v.Offset,
-              v.Formation.Positions,
-              v.Formation.Barres,
-              tuning
-            )
+          newHeader.Variations,
+          (v) => new ChordVariation(v.ChordId, v.Offset, v.Formation, tuning)
         );
 
+        setHeader({ ...newHeader, Variations: null });
         setVariations(newVariations);
         if (newVariations.length) {
           handleSetChordVariation(newVariations[0], 0);
@@ -103,20 +100,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     }
   }, [variations]);
 
-  // useEffect(() => {
-  //   if (!variations && !collapse && !loading) {
-  //     setSelected([]);
-  //     reloadChordVariations();
-  //   }
-  // }, [collapse]);
-
-  // Load
-  // const reloadChordVariations = () => {
-  // };
-
-  // Render State
-  const modifier = chord?.Modifier;
-
   // Header Badge Actions
   const handleRootUpdate = (root: Note) => handleChordUpdate(root);
   const handleModifierUpdate = (mod: ChordModifier) =>
@@ -129,7 +112,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     if (!!root && !NoteUtils.NotesAreEqual(chord.Root, root)) {
       updatedRoot = root;
     }
-    if (mod !== null && mod != modifier) {
+    if (mod !== null && mod != chord.Modifier) {
       updatedModifier = mod;
     }
 
@@ -137,7 +120,8 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       const updated = {
         ...chord,
         Root: updatedRoot || chord.Root,
-        Modifier: updatedModifier !== undefined ? updatedModifier : modifier,
+        Modifier:
+          updatedModifier !== undefined ? updatedModifier : chord.Modifier,
       };
 
       setAppOptions({ chord: updated as Chord });
@@ -153,7 +137,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   };
 
   const renderVariations = useCallback(() => {
-    return variations?.length > 0 ? (
+    return variations?.length ? (
       map(variations, (v: ChordVariation, i: number) => (
         <ChordDiagram
           active={i == currentIndex}
@@ -173,11 +157,13 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     <DropdownSlideIn
       {...props}
       className="chord"
-      title={
-        <h2>
-          Chord{' '}
-          {/* <span className="h6 text-muted">({variations?.length || 0})</span> */}
-        </h2>
+      title={<h2>Chord</h2>}
+      header={
+        <NoteSelection
+          notes={chord.Tones}
+          selected={selected}
+          setSelected={setSelected}
+        />
       }
       options={[
         {
@@ -200,13 +186,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
           onUpdate: (mod: ChordModifier) => handleModifierUpdate(mod),
         },
       ]}
-      header={
-        <NoteSelection
-          notes={chord.Tones}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      }
       loading={variations == null}
     >
       <div className="variations">{renderVariations()}</div>

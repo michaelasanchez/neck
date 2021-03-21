@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace neck.Controllers
 {
 	public abstract class VariationController<TBase, TVariation> : GenericController<TVariation>
+		where TBase : IDbEntity
 		where TVariation : IVariation<TBase>
 	{
 		private readonly ILogger<VariationController<TBase, TVariation>> _logger;
@@ -37,13 +38,16 @@ namespace neck.Controllers
 		}
 
 		[HttpPost("Generate")]
-		public async Task<ActionResult<List<TBase>>> Generate([FromBody] VariationGenerateArgs<TBase> args)
+		public async Task<ActionResult<GenerateResponseHeader<TVariation>>> Generate([FromBody] VariationGenerateArgs<TBase> args)
 		{
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
 			{
 				return BadRequest(new Response(validateResult));
 			}
+
+			var offset = (int)args.offset;
+			var span = (int)args.span;
 
 			var baseResult = await locateBase(args);
 			if (!baseResult.Success)
@@ -61,13 +65,28 @@ namespace neck.Controllers
 
 			var tuning = tuningResult.Result;
 
-			var variations = _factory.GenerateVariations(@base, tuning, (int)args.offset, (int)args.span);
+			try
+			{
+				var variations = _factory.GenerateVariations(@base, tuning, offset, span);
 
-			return Ok(variations);
+				return Ok(new GenerateResponseHeader<TVariation>()
+				{
+					BaseId = @base.Id,
+					InstrumentId = tuning.InstrumentId,
+					TuningId = tuning.Id,
+					Offset = offset,
+					Span = span,
+					Variations = variations
+				});
+			}
+			catch (Exception ex)
+			{
+				return BadRequest(new Response($"An error occurred while generation variations:\n\n{ex.Message}"));
+			}
 		}
 
 		[HttpPost("GenerateRange")]
-		public async Task<ActionResult<List<TBase>>> GenerateRange([FromBody] VariationGenerateRangeArgs<TBase> args)
+		public async Task<ActionResult<GenerateResponseHeader<TVariation>>> GenerateRange([FromBody] VariationGenerateRangeArgs<TBase> args)
 		{
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
@@ -75,11 +94,16 @@ namespace neck.Controllers
 				return BadRequest(new Response(validateResult));
 			}
 
+			var offset = (int)args.offset;
+			var range = (int)args.range;
+			var span = (int)args.span;
+
 			var baseResult = await locateBase(args);
 			if (!baseResult.Success)
 			{
 				return BadRequest(new Response(baseResult));
 			}
+
 			var @base = baseResult.Result;
 
 			var tuningResult = await locateTuning(args);
@@ -87,20 +111,28 @@ namespace neck.Controllers
 			{
 				return BadRequest(new Response(tuningResult));
 			}
+
 			var tuning = tuningResult.Result;
 
-			// TODO: Remove this eventually..
-			List<TVariation> variations;
 			try
 			{
-				variations = _factory.GenerateRange(@base, tuning, (int)args.offset, (int)args.range, (int)args.span);
+				var variations = _factory.GenerateRange(@base, tuning, offset, range, span);
+
+				return Ok(new GenerateResponseHeader<TVariation>()
+				{
+					BaseId = @base.Id,
+					InstrumentId = tuning.InstrumentId,
+					TuningId = tuning.Id,
+					Offset = offset,
+					Range = range,
+					Span = span,
+					Variations = variations
+				});
 			}
 			catch (Exception ex)
 			{
 				return BadRequest(new Response($"An error occured while generating variations:\n\n{ex.Message}"));
 			}
-
-			return Ok(variations);
 		}
 
 		#region Private Methods

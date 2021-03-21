@@ -16,7 +16,7 @@ export interface ChordDiagramProps {
 const calcSpan = (variation: ChordVariation): DiagramSpan => {
   return {
     min: variation.Offset,
-    max: max(variation.Positions) + 1, // TODO: this is the wrong fix & forces "padding" (?) with incorrect max value
+    max: max(variation.Formation.Positions) + 1, // TODO: this is the wrong fix & forces "padding" (?) with incorrect max value
   };
 };
 
@@ -125,13 +125,15 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
     </>
   );
 
+  const formation = variation.Formation;
+
   const renderSymbols = useCallback(() => {
-    return mapSymbols(span, variation.Positions, chordRoots, chordHighlighted);
+    return mapSymbols(span, formation.Positions, chordRoots, chordHighlighted);
   }, [variation, highlightedNotes]);
 
   const usesHeader =
-    min(variation.Positions) < variation.Offset ||
-    (variation.Offset > 0 && indexOf(variation.Positions, null) > -1);
+    min(formation.Positions) < variation.Offset ||
+    (variation.Offset > 0 && indexOf(formation.Positions, null) > -1);
 
   return (
     <Diagram
@@ -143,9 +145,9 @@ export const ChordDiagram: React.FC<ChordDiagramProps> = ({
       symbols={renderSymbols()}
       header={
         usesHeader &&
-        mapHeader(variation.Positions, chordRoots, chordHighlighted)
+        mapHeader(formation.Positions, chordRoots, chordHighlighted)
       }
-      barres={mapBarres(variation.Barres, variation.Positions)}
+      barres={mapBarres(formation.Barres, formation.Positions)}
     />
   );
 };

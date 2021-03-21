@@ -1,4 +1,5 @@
 import { BaseResponse } from '.';
+import { IGenerateResponseHeader } from '../interfaces';
 import { Chord, ChordVariation, Tuning } from '../models';
 import { ApiRequest } from './ApiRequest';
 
@@ -25,29 +26,20 @@ export class ChordVariationApi extends ApiRequest<ChordVariation> {
   constructor() {
     super('chordvariation');
   }
-
-  // Generate(params: ChordVariationGenerateParams): Promise<ChordVariation[]> {
-  //   return super.Post(params, ChordVariationAction.Generate) as Promise<ChordVariation[]>;
-  // }
-
-  // GenerateRange(params: ChordVariationGenerateRangeParams): Promise<ChordVariation[]> {
-  //   return super.Post(params, ChordVariationAction.GenerateRange) as Promise<ChordVariation[]>;
-  // }
-
   Generate(
     params: ChordVariationGenerateParams
-  ): Promise<BaseResponse<Array<ChordVariation>>> {
+  ): Promise<BaseResponse<IGenerateResponseHeader<ChordVariation>>> {
     return super.PostAsync(params, ChordVariationAction.Generate) as Promise<
-      BaseResponse<Array<ChordVariation>>
+      BaseResponse<IGenerateResponseHeader<ChordVariation>>
     >;
   }
 
   GenerateRange = (
     params: ChordVariationGenerateRangeParams
-  ): Promise<BaseResponse<Array<ChordVariation>>> => {
+  ): Promise<BaseResponse<IGenerateResponseHeader<ChordVariation>>> => {
     return super.PostAsync(
       params,
       ChordVariationAction.GenerateRange
-    ) as Promise<BaseResponse<Array<ChordVariation>>>;
-  }
+    ) as Promise<BaseResponse<IGenerateResponseHeader<ChordVariation>>>;
+  };
 }

@@ -5,6 +5,7 @@ import { DropdownSlideIn, ISlideInProps } from '.';
 import { NoteSelection } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
+import { IGenerateResponseHeader } from '../../../interfaces';
 import { Note, Scale, ScaleType, ScaleVariation } from '../../../models';
 import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
 import { NoteUtils } from '../../../shared';
@@ -53,31 +54,42 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const { instrument, scale, tuning } = appOptions;
   const { collapse } = props;
 
+  const [header, setHeader] = useState<
+    IGenerateResponseHeader<ScaleVariation>
+  >();
+
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [variations, setVariations] = useState<ScaleVariation[]>();
 
   const [selected, setSelected] = useState<Note[]>();
 
-  const { req: reloadVariations, data: variations, loading } = useRequest(
+  const { req: generateVariations, loading } = useRequest(
     new ScaleVariationApi().GenerateRange
   );
-
+console.log(header);
   useEffect(() => {
     if (
       !!scale &&
       !collapse &&
       !loading &&
       (!variations ||
-        variations[0].ScaleId != scale.Id ||
-        variations[0].TuningId != tuning.Id)
+        header.BaseId != scale.Id ||
+        header.TuningId != tuning.Id ||
+        header.Range != instrument.NumFrets)
     ) {
-
       setSelected([]);
-      reloadVariations({
+      generateVariations({
         baseId: scale.Id,
         tuningId: tuning.Id,
         span: 5,
         offset: 0,
         range: instrument.NumFrets,
+      }).then((newHeader: IGenerateResponseHeader<ScaleVariation>) => {
+        setHeader({ ...newHeader, Variations: null });
+        setVariations(newHeader.Variations);
+        if (newHeader.Variations.length) {
+          handleSetScaleVariation(newHeader.Variations[0], 0);
+        }
       });
     }
   }, [instrument.NumFrets, scale, tuning, collapse]);
@@ -87,14 +99,6 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
       setAppOptions({ scaleVariation: variations[0] });
     }
   }, [variations]);
-
-  const handleSetChordVariation = (
-    variation: ScaleVariation,
-    index: number
-  ) => {
-    setAppOptions({ scaleVariation: variation });
-    setCurrentIndex(index);
-  };
 
   const handleNoteUpdate = (tonic: Note) => handleScaleUpdate(tonic);
   const handleTypeUpdate = (type: ScaleType) => handleScaleUpdate(null, type);
@@ -121,6 +125,14 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
     }
   };
 
+  const handleSetScaleVariation = (
+    variation: ScaleVariation,
+    index: number
+  ) => {
+    setAppOptions({ scaleVariation: variation });
+    setCurrentIndex(index);
+  };
+
   const renderVariations = useCallback(() => {
     return map(variations, (v, i) => (
       <ScaleDiagram
@@ -128,7 +140,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         active={i == currentIndex}
         highlighted={selected}
         variation={v}
-        setVariation={(v) => handleSetChordVariation(v, i)}
+        setVariation={(v) => handleSetScaleVariation(v, i)}
       />
     ));
   }, [variations, currentIndex, selected]);

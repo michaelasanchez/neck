@@ -88,7 +88,7 @@ export class ApiRequest<T = ApiEntity> extends BaseRequest<T> {
   //   return super.Post(data);
   // }
 
-  PostAsync(data?: {}, action?: string): Promise<BaseResponse<T | Array<T>>> {
+  PostAsync(data?: {}, action?: string): Promise<BaseResponse<any>> {
     if (action) {
       this.Action = action;
     }
