@@ -62,9 +62,16 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   );
 
   useEffect(() => {
-    if (!!scale && !collapse && !loading && (!variations || variations[0].ScaleId != scale.Id)) {
+    if (
+      !!scale &&
+      !collapse &&
+      !loading &&
+      (!variations ||
+        variations[0].ScaleId != scale.Id ||
+        variations[0].TuningId != tuning.Id)
+    ) {
+
       setSelected([]);
-      console.log(instrument, instrument.Label == 'Ukulele')
       reloadVariations({
         baseId: scale.Id,
         tuningId: tuning.Id,
@@ -76,7 +83,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   }, [instrument.NumFrets, scale, tuning, collapse]);
 
   useEffect(() => {
-    if (!appOptions.scaleVariation && variations?.length) {
+    if (variations?.length) {
       setAppOptions({ scaleVariation: variations[0] });
     }
   }, [variations]);
@@ -112,7 +119,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
 
       setAppOptions({ scale: updated as Scale });
     }
-  }; 
+  };
 
   const renderVariations = useCallback(() => {
     return map(variations, (v, i) => (

@@ -64,7 +64,9 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       !!chord &&
       !collapse &&
       !loading &&
-      (!variations || variations[0].ChordId != chord.Id)
+      (!variations ||
+        variations[0].ChordId != chord.Id ||
+        variations[0].TuningId != tuning.Id)
     ) {
       setSelected([]);
       generateVariations({
@@ -96,7 +98,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   }, [chord, instrument.NumFrets, tuning, collapse]);
 
   useEffect(() => {
-    if (!appOptions.chordVariation && variations?.length) {
+    if (variations?.length) {
       setAppOptions({ chordVariation: variations[0] });
     }
   }, [variations]);
