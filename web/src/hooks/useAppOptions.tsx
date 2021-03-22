@@ -1,4 +1,4 @@
-import { filter, isArray } from 'lodash';
+import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
@@ -14,8 +14,9 @@ import {
   NoteValue,
   Scale,
   ScaleType,
+  Tuning,
 } from '../models';
-import { ChordApi, InstrumentApi, ScaleApi } from '../network';
+import { ChordApi, InstrumentApi, ScaleApi, TuningApi } from '../network';
 import { AppOptions } from '../shared';
 
 const validateAppOptions = (appOptions: AppOptions): IError => {
@@ -71,6 +72,13 @@ const loadInstrument = (
   return new InstrumentApi().GetAll().then((i: Array<Instrument>) => i[0]);
 };
 
+const loadTuning = (tuningId?: string): Promise<Tuning> => {
+  if (tuningId) {
+    return new TuningApi().GetById(tuningId);
+  }
+  return Promise.resolve(null);
+};
+
 export const useAppOptions = () => {
   const { loading: cookieLoading, cookie, setCookie } = useNeckCookie();
 
@@ -96,12 +104,15 @@ export const useAppOptions = () => {
     // Scale
     requests.push(loadScale(cookie.scaleId));
 
-    // Instrument / Tuning
+    // Instrument
     requests.push(loadInstrument(cookie?.instrumentId));
+
+    // Tuning
+    requests.push(loadTuning(cookie?.tuningId));
 
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
-      const [chord, scale, instrument] = values;
+      const [chord, scale, instrument, tuning] = values;
       instrument.NumFrets = parseInt(cookie.neck.numFrets);
 
       // Create app options
@@ -109,14 +120,13 @@ export const useAppOptions = () => {
         chord,
         scale,
         instrument,
-        tuning: instrument.DefaultTuning,
+        tuning: tuning || instrument.DefaultTuning,
 
         key: cookie.key,
         mode: cookie.mode,
         indicatorsMode: cookie.indicatorsMode,
       } as AppOptions;
 
-      // TODO: We should use handle here to do the loading
       setAppOptions(options);
       setLoading(false);
     });

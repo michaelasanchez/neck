@@ -3,7 +3,8 @@ import { IndicatorsMode } from '../components';
 
 export class Cookie {
   instrumentId: string;
-  
+  tuningId: string;
+
   chordId: string;
   scaleId: string;
 
@@ -18,6 +19,7 @@ export class Cookie {
     return {
       chordId: null,
       instrumentId: null,
+      tuningId: null,
 
       key: Key.C(),
 

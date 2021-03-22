@@ -8,6 +8,7 @@ const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
 
   cookie.chordId = appOptions.chord.Id;
   cookie.instrumentId = appOptions.instrument.Id;
+  cookie.tuningId = appOptions.tuning.Id === appOptions.instrument.DefaultTuningId ? null : appOptions.tuning.Id;
   cookie.key = appOptions.key;
   cookie.mode = appOptions.mode;
   cookie.neck = {
