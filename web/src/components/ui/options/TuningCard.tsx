@@ -1,14 +1,8 @@
-import { faEdit as farEdit } from '@fortawesome/free-regular-svg-icons';
-import {
-  faEdit,
-  faPlus as faPlusCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { countBy, filter, findIndex, isUndefined, map, times } from 'lodash';
+import { filter, findIndex, isUndefined, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
-import { OptionCard, OptionCardProps } from '..';
+import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
+import { EditMode, OptionCard, OptionCardProps } from '..';
 import { useRequest } from '../../../hooks';
 import {
   Instrument,
@@ -17,8 +11,9 @@ import {
   Tuning,
   TuningNote,
 } from '../../../models';
-import { BaseResponse, TuningApi } from '../../../network';
+import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
+import { InlineOptionsForm } from './InlineOptionsForm';
 
 export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
   eventKey: string;
@@ -26,12 +21,6 @@ export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
   tuning: Tuning;
   setTuning: (t: Tuning) => void;
 }
-
-enum EditMode {
-  Edit,
-  Create,
-}
-
 const calcOptions = (start: TuningNote, end: TuningNote) => {
   const options = [];
   let current = start;
@@ -93,17 +82,11 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   const [editMode, setEditMode] = useState<EditMode>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const labelRef = useRef();
-
-  // const { resp: getTunings, data: tuningsTest } = useRequest(() =>
-  //   new TuningApi().ByInstrument(instrument?.Id));
-
   const { req: createTuning } = useRequest(new TuningApi().CreateAsync);
 
   useEffect(() => {
     if (!!instrument) {
       reloadTunings();
-      // getTunings();
     }
   }, [instrument]);
 
@@ -114,10 +97,6 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   useEffect(() => {
     if (editMode === EditMode.Create) {
-      if (!!labelRef.current) {
-        const labelInput = labelRef.current as HTMLInputElement;
-        labelInput.focus();
-      }
       setPending(
         new Tuning(instrument.Id, 'New Tuning', [
           ...instrument.DefaultTuning.Offsets,
@@ -151,6 +130,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const handleSetEditMode = (nextMode: EditMode) => {
     if (nextMode !== null) {
+      setPending(tuning)
       setEditMode(nextMode);
     } else {
       setLoading(true);
@@ -197,57 +177,13 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   const body = (current: Tuning) => (
     <>
       <div className="tuning-actions">
-        {editMode !== null ? (
-          <Form.Control
-            value={current.Label}
-            ref={labelRef}
-            onChange={(e) => handleSetPending({ Label: e.target.value })}
-          />
-        ) : (
-          <DropdownButton
-            id="tuning-select"
-            variant="outline-secondary"
-            title={current.Label}
-            // disabled={editMode}
-          >
-            {map(tunings, (t, i) => (
-              <Dropdown.Item
-                eventKey={i.toString()}
-                key={i}
-                active={t.Id === current.Id}
-                onClick={(e: React.BaseSyntheticEvent) => setTuning(t)}
-              >
-                {t.Label}
-              </Dropdown.Item>
-            ))}
-          </DropdownButton>
-        )}
-        {/* Edit */}
-        <Button
-          variant={
-            editMode === EditMode.Edit ? 'secondary' : 'outline-secondary'
-          }
-          disabled={editMode === EditMode.Create}
-          onClick={() =>
-            handleSetEditMode(editMode !== EditMode.Edit ? EditMode.Edit : null)
-          }
-        >
-          <FontAwesomeIcon icon={editMode ? farEdit : faEdit} />
-        </Button>
-        {/* Create */}
-        <Button
-          variant={
-            editMode === EditMode.Create ? 'success' : 'outline-secondary'
-          }
-          disabled={editMode === EditMode.Edit}
-          onClick={() =>
-            handleSetEditMode(
-              editMode !== EditMode.Create ? EditMode.Create : null
-            )
-          }
-        >
-          <FontAwesomeIcon icon={faPlusCircle} />
-        </Button>
+        <InlineOptionsForm
+          current={editMode == null ? tuning : pending }
+          mode={editMode}
+          options={tunings}
+          setMode={handleSetEditMode}
+          setCurrent={editMode == null ? setTuning : handleSetPending}
+        />
       </div>
       <div className="tuning-selector">
         {map(current.Offsets, (o, j) => {

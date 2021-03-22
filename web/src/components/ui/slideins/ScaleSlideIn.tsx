@@ -66,7 +66,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const { req: generateVariations, loading } = useRequest(
     new ScaleVariationApi().GenerateRange
   );
-console.log(header);
+
   useEffect(() => {
     if (
       !!scale &&

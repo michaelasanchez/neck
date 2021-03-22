@@ -83,6 +83,7 @@
         }
 
         /* Bootstrap override */
+        // TODO: move this somewhere we can re-use
         button.btn-outline-secondary {
           border-color: #ced4da;
           color: #212529;
@@ -102,54 +103,13 @@
     }
   }
 
+  /* Instrument */
+  .instrument-actions {
+  }
+
   /* Tuning */
   .tuning-selector {
     display: flex;
     justify-content: space-around;
-  }
-
-  .tuning-actions {
-    display: flex;
-    margin-bottom: 1em;
-
-    > *:first-child {
-      flex: 1;
-    }
-    > *:not(:first-child) {
-      margin-left: 0.5em;
-    }
-
-    /* Select + Menu */
-    .dropdown {
-      &.show {
-        button {
-          background-color: unset;
-        }
-      }
-
-      button {
-        width: 100%;
-        text-align: left;
-        display: flex;
-        align-items: center;
-      }
-
-      /* Select */
-      &:first-child {
-        button {
-          justify-content: space-between;
-        }
-      }
-    }
-
-    /* Edit Toggle */
-    > button.btn-outline-secondary {
-      color: #6c757d !important;
-    }
-    > button.btn-secondary {
-      color: #fff;
-      background-color: #6c757d;
-      border-color: #6c757d;
-    }
   }
 }

@@ -2,8 +2,9 @@ import { Key, Mode } from '.';
 import { IndicatorsMode } from '../components';
 
 export class Cookie {
-  chordId: string;
   instrumentId: string;
+  
+  chordId: string;
   scaleId: string;
 
   key: Key;
