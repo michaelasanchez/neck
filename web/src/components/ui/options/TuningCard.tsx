@@ -2,7 +2,7 @@ import { filter, findIndex, isUndefined, map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
-import { EditMode, OptionCard, OptionCardProps } from '..';
+import { FormAction, OptionCard, OptionCardProps } from '..';
 import { useRequest } from '../../../hooks';
 import {
   Instrument,
@@ -79,7 +79,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const [pending, setPending] = useState<Tuning>();
 
-  const [editMode, setEditMode] = useState<EditMode>(null);
+  const [editMode, setEditMode] = useState<FormAction>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { req: createTuning } = useRequest(new TuningApi().CreateAsync);
@@ -96,13 +96,13 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   }, [rest.active]);
 
   useEffect(() => {
-    if (editMode === EditMode.Create) {
+    if (editMode === FormAction.Create) {
       setPending(
         new Tuning(instrument.Id, 'New Tuning', [
           ...instrument.DefaultTuning.Offsets,
         ])
       );
-    } else if (editMode === EditMode.Edit) {
+    } else if (editMode === FormAction.Edit) {
       setPending({ ...tuning, Offsets: [...tuning.Offsets] });
     }
   }, [editMode]);
@@ -128,13 +128,16 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     handleSetPending({ Offsets: pending.Offsets });
   };
 
-  const handleSetEditMode = (nextMode: EditMode) => {
-    if (nextMode !== null) {
-      setPending(tuning)
-      setEditMode(nextMode);
-    } else {
+  const handleFormAction = (action: FormAction) => {
+    if (action == FormAction.Edit) {
+      setPending(tuning);
+      setEditMode(action);
+    } else if (action == FormAction.Create) {
+      setPending(instrument.DefaultTuning);
+      setEditMode(action);
+    } else if (action == FormAction.Confirm) {
       setLoading(true);
-      if (editMode === EditMode.Edit) {
+      if (editMode === FormAction.Edit) {
         // Detect changes
         const offsetsMatch = map(
           pending.Offsets,
@@ -169,22 +172,21 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         });
       }
 
-      setPending(null);
+      setEditMode(null);
+    } else if (action == FormAction.Cancel) {
       setEditMode(null);
     }
   };
 
   const body = (current: Tuning) => (
     <>
-      <div className="tuning-actions">
-        <InlineOptionsForm
-          current={editMode == null ? tuning : pending }
-          mode={editMode}
-          options={tunings}
-          setMode={handleSetEditMode}
-          setCurrent={editMode == null ? setTuning : handleSetPending}
-        />
-      </div>
+      <InlineOptionsForm
+        current={editMode == null ? tuning : pending}
+        mode={editMode}
+        options={tunings}
+        onAction={handleFormAction}
+        setCurrent={editMode == null ? setTuning : handleSetPending}
+      />
       <div className="tuning-selector">
         {map(current.Offsets, (o, j) => {
           return (

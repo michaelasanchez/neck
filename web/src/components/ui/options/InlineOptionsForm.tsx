@@ -1,8 +1,11 @@
+import * as $ from 'jquery';
 import { faEdit as farEdit } from '@fortawesome/free-regular-svg-icons';
 import {
+  faCheck,
   faEdit,
   faEllipsisV,
   faPlus as faPlusCircle,
+  faTimes,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,36 +16,33 @@ import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { IApiEntity } from '../../../interfaces';
 
 export interface InlineOptionsFormProps {
-  mode: EditMode;
+  mode: FormAction;
   options: IApiEntity[];
   current: IApiEntity;
-  setMode: (updated: EditMode) => void;
+  onAction: (updated: FormAction) => void;
   setCurrent: (updated: Partial<IApiEntity>) => void;
 }
 
-export enum EditMode {
+export enum FormAction {
   Edit,
   Create,
+  Confirm,
+  Cancel,
 }
+
+const hiddenActionsStyle: React.CSSProperties = {
+  position: 'absolute',
+  transform: 'translateY(100%)',
+  opacity: 0,
+};
 
 export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> = ({
   mode,
   options,
   current,
-  setMode,
+  onAction: performAction,
   setCurrent,
 }) => {
-  const labelRef = useRef();
-
-  useEffect(() => {
-    if (mode === EditMode.Create) {
-      if (!!labelRef.current) {
-        const labelInput = labelRef.current as HTMLInputElement;
-        labelInput.focus();
-      }
-    }
-  }, [mode]);
-
   const labelSelect = useCallback(() => {
     return (
       <DropdownButton
@@ -65,51 +65,84 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
     );
   }, [current, mode, options]);
 
-  const labelEdit = useCallback(() => {
-    return (
-      <Form.Control
-        value={current.Label}
-        ref={labelRef}
-        onChange={(e) => setCurrent({ Label: e.target.value })}
-        className={mode == null ? 'hide' : ''}
-      />
-    );
-  }, [current, mode]);
-
   return (
     <div className="options-form">
       {/* Select */}
       <div className="select-action">
         {labelSelect()}
-        {mode != null && labelEdit()}
+        {mode != null && (
+          <Form.Control
+            value={current.Label}
+            onChange={(e) => setCurrent({ Label: e.target.value })}
+            className={mode == null ? 'hide' : ''}
+            autoFocus={true}
+          />
+        )}
       </div>
 
-      {/* Edit */}
-      <Button
-        variant={mode === EditMode.Edit ? 'secondary' : 'outline-secondary'}
-        disabled={mode === EditMode.Create}
-        onClick={() => setMode(mode !== EditMode.Edit ? EditMode.Edit : null)}
-      >
-        <FontAwesomeIcon icon={mode ? farEdit : faEdit} />
-      </Button>
+      <div className="actions-container">
+        <div
+          className={`mode-actions${mode === null ? '' : ' hidden'}`}
+          //   style={mode === null ? {} : hiddenActionsStyle}
+        >
+          {/* Edit */}
+          <Button
+            variant={'outline-secondary'}
+            // variant={mode === EditMode.Edit ? 'secondary' : 'outline-secondary'}
+            disabled={mode === FormAction.Create}
+            onClick={() => performAction(FormAction.Edit)}
+          >
+            <FontAwesomeIcon icon={mode ? farEdit : faEdit} />
+          </Button>
 
-      {/* Menu */}
-      <DropdownButton
-        variant="outline-secondary"
-        title={<FontAwesomeIcon icon={faEllipsisV} />}
-        alignRight={true}
-      >
-        {/* Create */}
-        <Dropdown.Item eventKey="1" key={1} className="create">
-          <FontAwesomeIcon icon={faPlusCircle} />
-          Create
-        </Dropdown.Item>
-        {/* Delete */}
-        <Dropdown.Item eventKey="2" key={2} className="delete">
-          <FontAwesomeIcon icon={faTrash} />
-          Delete
-        </Dropdown.Item>
-      </DropdownButton>
+          {/* Menu */}
+          <DropdownButton
+            variant="outline-secondary"
+            title={<FontAwesomeIcon icon={faEllipsisV} />}
+            alignRight={true}
+          >
+            {/* Create */}
+            <Dropdown.Item
+              eventKey="1"
+              key={1}
+              className="create"
+              onClick={() => performAction(FormAction.Create)}
+            >
+              <FontAwesomeIcon icon={faPlusCircle} />
+              Create
+            </Dropdown.Item>
+            {/* Delete */}
+            <Dropdown.Item
+              eventKey="2"
+              key={2}
+              className="delete"
+              disabled={true}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+              Delete
+            </Dropdown.Item>
+          </DropdownButton>
+        </div>
+        <div
+          className={`confirm-actions${mode !== null ? '' : ' hidden'}`}
+          //   style={mode !== null ? {} : hiddenActionsStyle}
+        >
+          {/* Confirm */}
+          <Button
+            variant={'outline-success'}
+            onClick={() => performAction(FormAction.Confirm)}
+          >
+            <FontAwesomeIcon icon={faCheck} />
+          </Button>
+          {/* Cancel */}
+          <Button
+            variant={'outline-danger'}
+            onClick={() => performAction(FormAction.Cancel)}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

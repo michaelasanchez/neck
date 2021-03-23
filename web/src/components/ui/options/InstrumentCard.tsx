@@ -8,7 +8,7 @@ import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Button, Col, Dropdown, DropdownButton, Form } from 'react-bootstrap';
-import { EditMode, OptionCard, OptionCardProps } from '..';
+import { FormAction, OptionCard, OptionCardProps } from '..';
 import { useRequest } from '../../../hooks';
 import { Instrument } from '../../../models';
 import { InstrumentApi } from '../../../network';
@@ -27,7 +27,7 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
   const [instruments, setInstruments] = useState<Array<Instrument>>();
   const [pending, setPending] = useState<Instrument>(instrument);
 
-  const [editMode, setEditMode] = useState<EditMode>(null);
+  const [editMode, setEditMode] = useState<FormAction>(null);
 
   const { req: getInstruments } = useRequest(new InstrumentApi().GetAllAsync);
 
@@ -35,7 +35,7 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     reloadInstruments();
   }, []);
 
-  const handleSetEditMode = (nextMode: EditMode) => {
+  const handleSetEditMode = (nextMode: FormAction) => {
     setEditMode(nextMode);
   };
 
@@ -93,11 +93,11 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
         {/* Edit */}
         <Button
           variant={
-            editMode === EditMode.Edit ? 'secondary' : 'outline-secondary'
+            editMode === FormAction.Edit ? 'secondary' : 'outline-secondary'
           }
-          disabled={editMode === EditMode.Create}
+          disabled={editMode === FormAction.Create}
           onClick={() =>
-            handleSetEditMode(editMode !== EditMode.Edit ? EditMode.Edit : null)
+            handleSetEditMode(editMode !== FormAction.Edit ? FormAction.Edit : null)
           }
         >
           <FontAwesomeIcon icon={editMode ? farEdit : faEdit} />
@@ -105,12 +105,12 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
         {/* Create */}
         <Button
           variant={
-            editMode === EditMode.Create ? 'success' : 'outline-secondary'
+            editMode === FormAction.Create ? 'success' : 'outline-secondary'
           }
-          disabled={editMode === EditMode.Edit}
+          disabled={editMode === FormAction.Edit}
           onClick={() =>
             handleSetEditMode(
-              editMode !== EditMode.Create ? EditMode.Create : null
+              editMode !== FormAction.Create ? FormAction.Create : null
             )
           }
         >

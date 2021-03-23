@@ -1,3 +1,21 @@
+@keyframes in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes out {
+  0% {
+    display: flex;
+  }
+  100% {
+    display: none;
+  }
+}
+
 .options-form {
   display: flex;
   margin-bottom: 1em;
@@ -18,28 +36,44 @@
       left: 0;
       bottom: 0;
       right: 0;
-
     }
 
-    @keyframes in {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-      }
-      
-
     > input {
-        animation: in 2000ms;
+      animation: in 200ms;
     }
   }
 
-  /* Actions */
-  > *:not(:first-child) {
-    margin-left: 0.5em;
+  .actions-container {
+    position: relative;
+  }
 
+  $time: 100ms;
+
+  .mode-actions,
+  .confirm-actions {
+    transition: transform (2 * $time) ease-out, opacity $time ease-in $time;
+
+    &.hidden {
+      position: absolute;
+
+      opacity: 0;
+      transform: translateY(100%) scaleY(0);
+      transition: transform (2 * $time) ease-in, opacity $time ease-out;
+    }
+
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+
+    > * {
+      margin-left: 0.5em;
+    }
+  }
+
+  /* Mode Actions */
+  .mode-actions {
     .dropdown-toggle::after {
       content: none;
     }
@@ -68,7 +102,7 @@
   // > button.btn-outline-secondary {
   //   color: #6c757d !important;
   // }
-  > button,
+  button,
   .dropdown button {
     &.btn-outline-secondary {
       color: #6c757d !important;
@@ -83,6 +117,11 @@
     svg {
       color: #6c757d;
       margin-right: 0.5em;
+    }
+    &.disabled {
+      svg {
+        opacity: 0.3;
+      }
     }
     &.create:hover svg {
       color: #28a745;
