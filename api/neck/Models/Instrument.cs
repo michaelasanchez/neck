@@ -11,6 +11,7 @@ namespace neck.Models
 
 		public int NumStrings { get; set; }
 
+		[JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
 		public Guid? DefaultTuningId { get; set; }
 
 		public Tuning DefaultTuning { get; set; }

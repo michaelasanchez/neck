@@ -12,7 +12,7 @@ export interface IUseRequest<T> {
 export function useRequest<T>(
   request: (...params: Array<any>) => Promise<BaseResponse<T>>
 ) {
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>();
 
   const { addNotification } = useNotificationContext();

@@ -1,6 +1,7 @@
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
+import { useNotificationContext } from '../components';
 import { IError } from '../components/Loading';
 import {
   Chord,
@@ -21,7 +22,7 @@ import { AppOptions } from '../shared';
 
 const validateAppOptions = (appOptions: AppOptions): IError => {
   //
-  const required = ['chord', 'instrument', 'tuning', 'key', 'mode'];
+  const required = ['chord', 'instrument', 'tuning', 'key', 'mode', 'scale'];
   const missing = filter(required, (r) => !appOptions[r]);
 
   if (missing.length > 0) {
@@ -86,6 +87,8 @@ export const useAppOptions = () => {
 
   const [loading, setLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<IError[]>();
+
+  const { addNotification } = useNotificationContext();
 
   // Init
   useEffect(() => {
@@ -176,6 +179,8 @@ export const useAppOptions = () => {
     }
 
     if (!!validationError) {
+      // TODO: this doesn't work here.. hmm...
+      addNotification(validationError.message);
       setErrors([validationError]);
     } else {
       setAppOptions(newOptions);

@@ -13,7 +13,7 @@ import {
 } from '../../../models';
 import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
-import { InlineOptionsForm } from './InlineOptionsForm';
+import { FormMode, InlineOptionsForm } from './InlineOptionsForm';
 
 export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
   eventKey: string;
@@ -75,45 +75,19 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 ) => {
   const { eventKey, instrument, tuning, setTuning, ...rest } = props;
 
-  const [tunings, setTunings] = useState<Array<Tuning>>();
-
+  // const [tunings, setTunings] = useState<Tuning[]>();
   const [pending, setPending] = useState<Tuning>();
 
-  const [editMode, setEditMode] = useState<FormAction>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [formMode, setFormMode] = useState<FormMode>(FormMode.Select);
 
   const { req: createTuning } = useRequest(new TuningApi().CreateAsync);
+  const { req: getTunings, data: tunings } = useRequest(new TuningApi().ByInstrument);
 
   useEffect(() => {
     if (!!instrument) {
-      reloadTunings();
+      getTunings(instrument.Id);
     }
   }, [instrument]);
-
-  // TODO: do we need this?
-  useEffect(() => {
-    setEditMode(null);
-  }, [rest.active]);
-
-  useEffect(() => {
-    if (editMode === FormAction.Create) {
-      setPending(
-        new Tuning(instrument.Id, 'New Tuning', [
-          ...instrument.DefaultTuning.Offsets,
-        ])
-      );
-    } else if (editMode === FormAction.Edit) {
-      setPending({ ...tuning, Offsets: [...tuning.Offsets] });
-    }
-  }, [editMode]);
-
-  const reloadTunings = () => {
-    setLoading(true);
-    new TuningApi().ByInstrument(instrument.Id).then((tunings) => {
-      setTunings(tunings);
-      setLoading(false);
-    });
-  };
 
   const handleSetPending = (updated: Partial<Tuning>) => {
     setPending({
@@ -128,70 +102,72 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     handleSetPending({ Offsets: pending.Offsets });
   };
 
+  const saveEdit = () => {
+    // Detect changes
+    const offsetsMatch = map(pending.Offsets, (o: TuningNote, i: number) => {
+      return (
+        o.Pitch == tuning.Offsets[i].Pitch &&
+        o.Octave == tuning.Offsets[i].Octave
+      );
+    });
+
+    // Save
+    if (
+      (!!pending.Id && pending.Label != tuning.Label) ||
+      filter(offsetsMatch, (m) => m == false).length > 0
+    ) {
+      // Update
+      new TuningApi().PatchAsync(pending).then((saved) => {
+        if (!!saved.success) {
+          setTuning(saved.result);
+          getTunings();
+        }
+      });
+    }
+  };
+
+  const saveCreate = () => {
+    createTuning(pending).then((created: Tuning) => {
+      if (!!created) {
+        setTuning(created);
+        getTunings();
+      }
+    });
+  };
+
   const handleFormAction = (action: FormAction) => {
     if (action == FormAction.Edit) {
-      setPending(tuning);
-      setEditMode(action);
+      setPending({ ...tuning, Offsets: [...tuning.Offsets] });
+      setFormMode(FormMode.Edit);
     } else if (action == FormAction.Create) {
-      setPending(instrument.DefaultTuning);
-      setEditMode(action);
+      setPending({ ...instrument.DefaultTuning, Id: null, Label: 'New Tuning' });
+      setFormMode(FormMode.Create);
     } else if (action == FormAction.Confirm) {
-      setLoading(true);
-      if (editMode === FormAction.Edit) {
-        // Detect changes
-        const offsetsMatch = map(
-          pending.Offsets,
-          (o: TuningNote, i: number) => {
-            return (
-              o.Pitch == tuning.Offsets[i].Pitch &&
-              o.Octave == tuning.Offsets[i].Octave
-            );
-          }
-        );
-
-        // Save
-        if (
-          (!!pending.Id && pending.Label != tuning.Label) ||
-          filter(offsetsMatch, (m) => m == false).length > 0
-        ) {
-          // Update
-          new TuningApi().PatchAsync(pending).then((saved) => {
-            if (!!saved.success) {
-              setTuning(saved.result);
-              reloadTunings();
-            }
-          });
-        }
-      } else {
-        // Create
-        createTuning(pending).then((created: Tuning) => {
-          if (!!created) {
-            setTuning(created);
-            reloadTunings();
-          }
-        });
+      if (formMode === FormMode.Edit) {
+        saveEdit();
+      } else if (formMode === FormMode.Create) {
+        saveCreate();
+        setFormMode(FormMode.Select);
       }
-
-      setEditMode(null);
     } else if (action == FormAction.Cancel) {
-      setEditMode(null);
+      setFormMode(FormMode.Select);
     }
   };
 
   const body = (current: Tuning) => (
     <>
       <InlineOptionsForm
-        current={editMode == null ? tuning : pending}
-        mode={editMode}
+        current={formMode == FormMode.Select ? tuning : pending}
+        mode={formMode}
         options={tunings}
         onAction={handleFormAction}
-        setCurrent={editMode == null ? setTuning : handleSetPending}
+        setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
       <div className="tuning-selector">
         {map(current.Offsets, (o, j) => {
           return (
             <DropOver
-              disabled={editMode === null}
+              disabled={formMode === FormMode.Select}
               currentIndex={findIndex(
                 tuningNoteOptions,
                 (n) => n.value.Pitch === o.Pitch && n.value.Octave === o.Octave
@@ -212,7 +188,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
       {...rest}
       title="Tuning"
       subtitle={tuning.Label}
-      body={body(editMode !== null && !!pending ? pending : tuning)}
+      body={body(formMode !== null && !!pending ? pending : tuning)}
       eventKey={eventKey}
     />
   );

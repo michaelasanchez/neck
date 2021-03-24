@@ -7,6 +7,7 @@ namespace neck.Models
 	public abstract class DbEntity : IDbEntity, IDatedEntity
     {
         [System.ComponentModel.DataAnnotations.Key]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public Guid Id { get; set; }
 
         [JsonIgnore]

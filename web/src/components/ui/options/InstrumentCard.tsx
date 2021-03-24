@@ -1,14 +1,13 @@
-import { faEdit as farEdit } from '@fortawesome/free-regular-svg-icons';
-import {
-  faEdit,
-  faPlus as faPlusCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, DropdownButton, Form } from 'react-bootstrap';
-import { FormAction, OptionCard, OptionCardProps } from '..';
+import { Form } from 'react-bootstrap';
+import {
+  FormAction,
+  FormMode,
+  InlineOptionsForm,
+  OptionCard,
+  OptionCardProps,
+} from '..';
 import { useRequest } from '../../../hooks';
 import { Instrument } from '../../../models';
 import { InstrumentApi } from '../../../network';
@@ -24,26 +23,68 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
 ) => {
   const { eventKey, instrument, setInstrument, ...rest } = props;
 
-  const [instruments, setInstruments] = useState<Array<Instrument>>();
   const [pending, setPending] = useState<Instrument>(instrument);
 
-  const [editMode, setEditMode] = useState<FormAction>(null);
+  const [formMode, setFormMode] = useState<FormMode>(FormMode.Select);
 
-  const { req: getInstruments } = useRequest(new InstrumentApi().GetAllAsync);
+  const { req: createInstrument } = useRequest(new InstrumentApi().CreateAsync);
+  const { req: getInstruments, data: instruments } = useRequest(
+    new InstrumentApi().GetAllAsync
+  );
 
   useEffect(() => {
-    reloadInstruments();
+    getInstruments();
   }, []);
 
-  const handleSetEditMode = (nextMode: FormAction) => {
-    setEditMode(nextMode);
+  const saveEdit = () => {
+    if (
+      (!!pending.Id && pending.Label != instrument.Label) ||
+      pending.NumStrings != instrument.NumStrings ||
+      pending.NumFrets != instrument.NumFrets
+    ) {
+      new InstrumentApi().PatchAsync(pending).then((saved) => {
+        if (!!saved.success) {
+          setInstrument({ ...saved.result, NumFrets: instrument.NumFrets });
+          getInstruments();
+        }
+      });
+    }
   };
 
-  const reloadInstruments = () => {
-    getInstruments().then((instruments) => {
-      if (!!instruments) {
-        setInstruments(instruments);
+  const saveCreate = () => {
+    createInstrument(pending).then((created: Instrument) => {
+      if (!!created) {
+        setInstrument(created);
+        getInstruments();
       }
+    });
+  };
+
+  const handleFormAction = (action: FormAction) => {
+    if (action == FormAction.Edit) {
+      setPending({ ...instrument });
+      setFormMode(FormMode.Edit);
+    } else if (action == FormAction.Create) {
+      setPending({ ...instrument, Id: null, Label: 'New Instrument', DefaultTuning: null, DefaultTuningId: null });
+      setFormMode(FormMode.Create);
+    } else if (action == FormAction.Confirm) {
+      if (formMode === FormMode.Edit) {
+        saveEdit();
+        setFormMode(FormMode.Select);
+      } else if (formMode === FormMode.Create) {
+        saveCreate();
+        setFormMode(FormMode.Select);
+      }
+    } else if (action == FormAction.Cancel) {
+      setFormMode(FormMode.Select);
+    }
+  };
+
+  const handleSetInstrument = (updated: Instrument) => {
+    console.log(updated);
+    setInstrument({
+      ...updated,
+      NumFrets: instrument.NumFrets,
     });
   };
 
@@ -60,69 +101,23 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     instrument.NumFrets = numFrets;
     setInstrument(instrument);
   };
-
   const body = (
     <>
-      <div className="instrument-actions">
-        {editMode !== null ? (
-          <Form.Control
-            value={instrument.Label}
-            // ref={labelRef}
-            onChange={(e) => handleSetPending({ Label: e.target.value })}
-          />
-        ) : (
-          <DropdownButton
-            id="instrument-select"
-            variant="outline-secondary"
-            title={instrument.Label}
-          >
-            {map(instruments, (i, j) => (
-              <Dropdown.Item
-                eventKey={j.toString()}
-                key={j}
-                active={i.Id === instrument.Id}
-                onClick={() =>
-                  setInstrument({ ...i, NumFrets: instrument.NumFrets })
-                }
-              >
-                {i.Label}
-              </Dropdown.Item>
-            ))}
-          </DropdownButton>
-        )}
-        {/* Edit */}
-        <Button
-          variant={
-            editMode === FormAction.Edit ? 'secondary' : 'outline-secondary'
-          }
-          disabled={editMode === FormAction.Create}
-          onClick={() =>
-            handleSetEditMode(editMode !== FormAction.Edit ? FormAction.Edit : null)
-          }
-        >
-          <FontAwesomeIcon icon={editMode ? farEdit : faEdit} />
-        </Button>
-        {/* Create */}
-        <Button
-          variant={
-            editMode === FormAction.Create ? 'success' : 'outline-secondary'
-          }
-          disabled={editMode === FormAction.Edit}
-          onClick={() =>
-            handleSetEditMode(
-              editMode !== FormAction.Create ? FormAction.Create : null
-            )
-          }
-        >
-          <FontAwesomeIcon icon={faPlusCircle} />
-        </Button>
-      </div>
+      <InlineOptionsForm
+        current={formMode == FormMode.Select ? instrument : pending}
+        mode={formMode}
+        options={instruments}
+        onAction={handleFormAction}
+        setCurrent={
+          formMode == FormMode.Select ? handleSetInstrument : handleSetPending
+        }
+      />
       <Form inline>
         <Form.Label className="my-1 mr-2">
           <small>Strings</small>
         </Form.Label>
         <Form.Control
-          disabled={true} // TODO: finish this
+          disabled={formMode == FormMode.Select}
           value={pending?.NumStrings.toString()}
           onChange={(e: any) =>
             handleSetPending({ NumStrings: parseInt(e.target.value) })

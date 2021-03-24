@@ -16,7 +16,7 @@ import { Button, Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { IApiEntity } from '../../../interfaces';
 
 export interface InlineOptionsFormProps {
-  mode: FormAction;
+  mode: FormMode;
   options: IApiEntity[];
   current: IApiEntity;
   onAction: (updated: FormAction) => void;
@@ -28,6 +28,12 @@ export enum FormAction {
   Create,
   Confirm,
   Cancel,
+}
+
+export enum FormMode {
+  Select,
+  Edit,
+  Create,
 }
 
 const hiddenActionsStyle: React.CSSProperties = {
@@ -48,14 +54,14 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
       <DropdownButton
         id="tuning-select"
         variant="outline-secondary"
-        title={current.Label}
-        className={mode != null ? 'hide' : ''}
+        title={current?.Label || 'fuck'}
+        className={mode != FormMode.Select ? 'hide' : ''}
       >
         {map(options, (t, i) => (
           <Dropdown.Item
             eventKey={i.toString()}
             key={i}
-            active={t.Id === current.Id}
+            active={t.Id === current?.Id}
             onClick={(e: React.BaseSyntheticEvent) => setCurrent(t)}
           >
             {t.Label}
@@ -70,11 +76,11 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
       {/* Select */}
       <div className="select-action">
         {labelSelect()}
-        {mode != null && (
+        {mode != FormMode.Select && (
           <Form.Control
-            value={current.Label}
+            value={current?.Label}
             onChange={(e) => setCurrent({ Label: e.target.value })}
-            className={mode == null ? 'hide' : ''}
+            // className={mode == FormMode.Select ? 'hide' : ''}
             autoFocus={true}
           />
         )}
@@ -82,14 +88,13 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
 
       <div className="actions-container">
         <div
-          className={`mode-actions${mode === null ? '' : ' hidden'}`}
+          className={`mode-actions${mode === FormMode.Select ? '' : ' hidden'}`}
           //   style={mode === null ? {} : hiddenActionsStyle}
         >
           {/* Edit */}
           <Button
             variant={'outline-secondary'}
-            // variant={mode === EditMode.Edit ? 'secondary' : 'outline-secondary'}
-            disabled={mode === FormAction.Create}
+            disabled={mode === FormMode.Create}
             onClick={() => performAction(FormAction.Edit)}
           >
             <FontAwesomeIcon icon={mode ? farEdit : faEdit} />
@@ -124,8 +129,9 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
           </DropdownButton>
         </div>
         <div
-          className={`confirm-actions${mode !== null ? '' : ' hidden'}`}
-          //   style={mode !== null ? {} : hiddenActionsStyle}
+          className={`confirm-actions${
+            mode !== FormMode.Select ? '' : ' hidden'
+          }`}
         >
           {/* Confirm */}
           <Button
