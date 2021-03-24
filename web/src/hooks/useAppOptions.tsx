@@ -88,7 +88,8 @@ export const useAppOptions = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<IError[]>();
 
-  const { addNotification } = useNotificationContext();
+  // TODO: this doesn't work here.. hmm...
+  // const { addNotification } = useNotificationContext();
 
   // Init
   useEffect(() => {
@@ -179,8 +180,7 @@ export const useAppOptions = () => {
     }
 
     if (!!validationError) {
-      // TODO: this doesn't work here.. hmm...
-      addNotification(validationError.message);
+      // addNotification(validationError.message);
       setErrors([validationError]);
     } else {
       setAppOptions(newOptions);

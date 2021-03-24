@@ -23,13 +23,16 @@ namespace neck.Converters
 		{
 			var notes = new List<Note>();
 
-			foreach (var noteString in p.Split(NoteDelimiter, StringSplitOptions.None))
-			{
-				var noteArray = noteString.Split(ValueDelimiter);
-				var values = noteArray
-					.Select(v => Int32.Parse(Regex.Replace(v, "[^0-9]", "")))
-					.ToList();
-				notes.Add(new Note((NoteValue)values[0], (NoteSuffix)values[1], values[2]));
+			if (p != string.Empty)
+            {
+				foreach (var noteString in p.Split(NoteDelimiter, StringSplitOptions.None))
+				{
+					var noteArray = noteString.Split(ValueDelimiter);
+					var values = noteArray
+						.Select(v => Int32.Parse(Regex.Replace(v, "[^0-9]", "")))
+						.ToList();
+					notes.Add(new Note((NoteValue)values[0], (NoteSuffix)values[1], values[2]));
+				}
 			}
 
 			return notes;

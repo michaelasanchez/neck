@@ -13,6 +13,7 @@ export interface StringProps {
 
 // Note Value = root offset + string offset, then repeat for global notes
 const calcNote = (f: number, offset: Note, scale: Scale) => {
+  if (!offset) return null;
   let offsetNoteValue = (f + offset.Pitch) % Note.NUM_NOTES;
 
   // Check if Note exists for current fret number
@@ -23,12 +24,9 @@ const calcNote = (f: number, offset: Note, scale: Scale) => {
   return note.length ? note[0] : null;
 };
 
-export const StringComponent: React.FunctionComponent<StringProps> = ({
-  fretmode,
-  frets,
-  offset,
-  scale,
-}) => {
+export const StringComponent: React.FunctionComponent<StringProps> = (props) => {
+  const { fretmode, frets, offset, scale } = props;
+
   return (
     <div className="string">
       <Fret fretMode={fretmode} note={calcNote(0, offset, scale)} open={true} />

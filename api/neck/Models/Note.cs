@@ -54,14 +54,20 @@ namespace neck.Models
 		{
 			if (obj is Note note)
 			{
-				return this.Base == note.Base &&
+				return note != null &&
+					this.Base == note.Base &&
 					this.Suffix == note.Suffix;
 			}
 
 			return false;
 		}
 
-		private string SuffixSymbol(NoteSuffix suffix)
+        public override int GetHashCode()
+		{
+			return HashCode.Combine(Base, Suffix);
+		}
+
+        private string SuffixSymbol(NoteSuffix suffix)
 		{
 			switch (suffix)
 			{

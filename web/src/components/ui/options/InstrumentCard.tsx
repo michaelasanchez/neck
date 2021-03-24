@@ -81,7 +81,6 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
   };
 
   const handleSetInstrument = (updated: Instrument) => {
-    console.log(updated);
     setInstrument({
       ...updated,
       NumFrets: instrument.NumFrets,

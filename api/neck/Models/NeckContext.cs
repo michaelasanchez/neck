@@ -62,7 +62,7 @@ namespace neck.Models
 
 			modelBuilder.Entity<Tuning>(entity =>
 			{
-				entity.HasIndex(t => t.Offsets)
+				entity.HasIndex(t => new { t.InstrumentId, t.Offsets })
 					.IsUnique();
 				entity.HasOne(t => t.Instrument)
 					.WithMany(i => i.Tunings)

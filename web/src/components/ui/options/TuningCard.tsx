@@ -1,4 +1,4 @@
-import { filter, findIndex, isUndefined, map } from 'lodash';
+import { filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
@@ -105,6 +105,8 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   const saveEdit = () => {
     // Detect changes
     const offsetsMatch = map(pending.Offsets, (o: TuningNote, i: number) => {
+      const offset = tuning.Offsets[i];
+      if (!offset) return false;
       return (
         o.Pitch == tuning.Offsets[i].Pitch &&
         o.Octave == tuning.Offsets[i].Octave
@@ -120,17 +122,18 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
       new TuningApi().PatchAsync(pending).then((saved) => {
         if (!!saved.success) {
           setTuning(saved.result);
-          getTunings();
+          getTunings(instrument.Id);
         }
       });
     }
   };
 
   const saveCreate = () => {
+    console.log('pending bro', pending)
     createTuning(pending).then((created: Tuning) => {
       if (!!created) {
         setTuning(created);
-        getTunings();
+        getTunings(instrument.Id);
       }
     });
   };
@@ -145,6 +148,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     } else if (action == FormAction.Confirm) {
       if (formMode === FormMode.Edit) {
         saveEdit();
+        setFormMode(FormMode.Select);
       } else if (formMode === FormMode.Create) {
         saveCreate();
         setFormMode(FormMode.Select);
@@ -164,13 +168,19 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
       <div className="tuning-selector">
-        {map(current.Offsets, (o, j) => {
+        {times(instrument.NumStrings, j => {
+
+          const offsets = formMode == FormMode.Select ? tuning.Offsets : pending.Offsets;
+          const o = j < offsets.length
+            ? offsets[j]
+            : null;
+
           return (
             <DropOver
               disabled={formMode === FormMode.Select}
               currentIndex={findIndex(
                 tuningNoteOptions,
-                (n) => n.value.Pitch === o.Pitch && n.value.Octave === o.Octave
+                (n) => n.value.Pitch === o?.Pitch && n.value.Octave === o?.Octave
               )}
               key={j}
               id={j.toString()}

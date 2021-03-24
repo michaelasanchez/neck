@@ -15,7 +15,7 @@ namespace neck.Repositories
 		public async override Task<OperationResult<Tuning>> Get(Tuning tuning)
 		{
 			var result = await DefaultIncludes()
-				.FirstOrDefaultAsync(t => t.Offsets == tuning.Offsets);
+				.FirstOrDefaultAsync(t => t.InstrumentId == tuning.InstrumentId && t.Offsets == tuning.Offsets);
 			return BuildGetOperationResult(result);
 		}
 

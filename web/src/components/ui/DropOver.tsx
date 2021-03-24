@@ -40,22 +40,24 @@ export const DropOver: React.FunctionComponent<DropOverProps> = (props) => {
     let active = null,
       scroll = null;
     if (
-      !!activeRef.current &&
-      !!scrollRef.current
+      !!activeRef?.current &&
+      !!scrollRef?.current
     ) {
       active = activeRef.current as HTMLDivElement;
       scroll = scrollRef.current as HTMLDivElement;
-    }
 
-    if (!!toggle) {
-      if (!disabled) {
-        scroll.scrollTop = active.offsetTop - 102;
+      if (!!toggle) {
+        if (!disabled) {
+          scroll.scrollTop = active.offsetTop - 102;
 
-        setMenuOffset(active.offsetTop);
-        if (!menuItemHeight) setMenuItemHeight(active.offsetHeight);
+          setMenuOffset(active.offsetTop);
+          if (!menuItemHeight) setMenuItemHeight(active.offsetHeight);
+        }
+      } else {
+        // scroll.scrollTop = active.offsetTop;
       }
-    } else {
-      // scroll.scrollTop = active.offsetTop;
+    } else if (!menuItemHeight) {
+      setMenuItemHeight(30);
     }
   }, [toggle]);
 
@@ -107,7 +109,7 @@ export const DropOver: React.FunctionComponent<DropOverProps> = (props) => {
           disabled={disabled}
           variant={disabled ? 'light' : 'outline-secondary'}
         >
-          {options[currentIndex]?.label || ''}
+          {options[currentIndex]?.label || ' - '}
         </Dropdown.Toggle>
         <Dropdown.Menu renderOnMount={true} className={`menu-${id}`}>
           <div

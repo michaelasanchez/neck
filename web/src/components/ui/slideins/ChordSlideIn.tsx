@@ -14,7 +14,7 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> {}
+export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> { }
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));
@@ -67,32 +67,38 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       !collapse &&
       !loading &&
       (!variations ||
-        header.BaseId != chord.Id ||
-        header.TuningId != tuning.Id ||
-        header.Range != instrument.NumFrets)
+        header?.BaseId != chord.Id ||
+        header?.TuningId != tuning.Id ||
+        header?.Range != instrument.NumFrets)
     ) {
-      setSelected([]);
-      generateVariations({
-        baseId: chord.Id,
-        tuningId: tuning.Id,
-        // offset: 8,
-        // span: 9,
-        range: instrument.NumFrets,
-      }).then((newHeader: IGenerateResponseHeader<ChordVariation>) => {
-        // TODO: should not have to run this through a constructor
-        const newVariations = map(
-          newHeader.Variations,
-          (v) => new ChordVariation(v.ChordId, v.Offset, v.Formation, tuning)
-        );
+      // Handle new instrument
+      if (tuning.Offsets.length === 0) {
+        setSelected([]);
+        setVariations([]);
+      } else {
+        setSelected([]);
+        generateVariations({
+          baseId: chord.Id,
+          tuningId: tuning.Id,
+          // offset: 8,
+          // span: 9,
+          range: instrument.NumFrets,
+        }).then((newHeader: IGenerateResponseHeader<ChordVariation>) => {
+          // TODO: should not have to run this through a constructor
+          const newVariations = map(
+            newHeader.Variations,
+            (v) => new ChordVariation(v.ChordId, v.Offset, v.Formation, tuning)
+          );
 
-        setHeader({ ...newHeader, Variations: null });
-        setVariations(newVariations);
-        if (newVariations.length) {
-          handleSetChordVariation(newVariations[0], 0);
-        }
-      });
+          setHeader({ ...newHeader, Variations: null });
+          setVariations(newVariations);
+          if (newVariations.length) {
+            handleSetChordVariation(newVariations[0], 0);
+          }
+        });
+      }
     }
-  }, [chord, instrument.NumFrets, tuning, collapse]);
+  }, [chord, instrument.NumFrets, tuning, tuning.Offsets, collapse]);
 
   useEffect(() => {
     if (variations?.length) {

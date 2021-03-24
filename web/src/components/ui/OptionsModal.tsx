@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Accordion, Modal } from 'react-bootstrap';
-import { RadioOptionCard } from '.';
+import { OptionCard, RadioOptionCard } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Mode, Tuning } from '../../models';
 import { InstrumentCard, TuningCard } from './options';
@@ -41,37 +41,44 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
 
         <Modal.Body>
           <Accordion onSelect={(key: any) => setActiveKey(key)}>
-            <InstrumentCard
+            <OptionCard
               active={activeKey === '0'}
               eventKey="0"
+              title="General"
+              subtitle="You know..."
+              body={<ul><li>Left-Hand Mode</li><li># / b / #+b</li><li>Hmm...</li></ul>}
+            />
+            <InstrumentCard
+              active={activeKey === '1'}
+              eventKey="1"
               instrument={instrument}
               setInstrument={(i: Instrument) =>
                 setAppOptions({ instrument: i, tuning: i.DefaultTuning })
               }
             />
             <TuningCard
-              active={activeKey === '1'}
-              eventKey="1"
+              active={activeKey === '2'}
+              eventKey="2"
               instrument={instrument}
               tuning={tuning}
               setTuning={(t: Tuning) => setAppOptions({ tuning: t })}
             />
-            <RadioOptionCard
-              active={activeKey === '2'}
-              eventKey="2"
+            {/* <RadioOptionCard
+              active={activeKey === '3'}
+              eventKey="3"
               title="Capo"
               value={{ Label: '(Coming Soon)' }}
               options={[]}
-              setValue={(m: Mode) => {}}
-            />
-            <RadioOptionCard
-              active={activeKey === '3'}
-              eventKey="3"
+              setValue={(m: Mode) => { }}
+            /> */}
+            {/* <RadioOptionCard
+              active={activeKey === '4'}
+              eventKey="4"
               title="Mode"
               value={mode}
               options={Mode.All()}
               setValue={(m: Mode) => setAppOptions({ mode: m })}
-            />
+            /> */}
           </Accordion>
         </Modal.Body>
 

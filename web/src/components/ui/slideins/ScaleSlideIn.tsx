@@ -12,7 +12,7 @@ import { NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
 
 export interface IScaleSlideInProps
-  extends Pick<ISlideInProps, 'devYOffset' | 'collapse'> {}
+  extends Pick<ISlideInProps, 'devYOffset' | 'collapse'> { }
 
 // Badge ScaleType
 const types = filter(ScaleType, (m) => !isNaN(m));
@@ -77,22 +77,28 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         header.TuningId != tuning.Id ||
         header.Range != instrument.NumFrets)
     ) {
-      setSelected([]);
-      generateVariations({
-        baseId: scale.Id,
-        tuningId: tuning.Id,
-        span: 5,
-        offset: 0,
-        range: instrument.NumFrets,
-      }).then((newHeader: IGenerateResponseHeader<ScaleVariation>) => {
-        setHeader({ ...newHeader, Variations: null });
-        setVariations(newHeader.Variations);
-        if (newHeader.Variations.length) {
-          handleSetScaleVariation(newHeader.Variations[0], 0);
-        }
-      });
+      // Handle new instrument
+      if (tuning.Offsets.length === 0) {
+        setSelected([]);
+        setVariations([]);
+      } else {
+        setSelected([]);
+        generateVariations({
+          baseId: scale.Id,
+          tuningId: tuning.Id,
+          span: 5,
+          offset: 0,
+          range: instrument.NumFrets,
+        }).then((newHeader: IGenerateResponseHeader<ScaleVariation>) => {
+          setHeader({ ...newHeader, Variations: null });
+          setVariations(newHeader.Variations);
+          if (newHeader.Variations.length) {
+            handleSetScaleVariation(newHeader.Variations[0], 0);
+          }
+        });
+      }
     }
-  }, [instrument.NumFrets, scale, tuning, collapse]);
+  }, [instrument.NumFrets, scale, tuning, tuning.Offsets, collapse]);
 
   useEffect(() => {
     if (variations?.length) {
