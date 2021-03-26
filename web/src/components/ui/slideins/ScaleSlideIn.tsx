@@ -74,9 +74,9 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
       !loading &&
       !!tuning &&
       (!variations ||
-        header.BaseId != scale.Id ||
-        header.TuningId != tuning.Id ||
-        header.Range != instrument.NumFrets)
+        header?.BaseId != scale.Id ||
+        header?.TuningId != tuning.Id ||
+        header?.Range != instrument.NumFrets)
     ) {
       // Handle new instrument
       if (tuning.Offsets.length === 0) {

@@ -8,6 +8,11 @@ export interface OptionCardProps {
   title: string;
   subtitle: string;
   body: ReactNode;
+  onAction?: (action: CardAction) => void;
+}
+
+export enum CardAction {
+  Toggle = 'toggle',
 }
 
 export const OptionCard: React.FunctionComponent<OptionCardProps> = ({

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { DropdownButton, Form } from 'react-bootstrap';
 import {
   FormAction,
   FormMode,
   InlineOptionsForm,
   OptionCard,
-  OptionCardProps,
+  OptionCardProps
 } from '..';
 import { useRequest } from '../../../hooks';
 import { Instrument } from '../../../models';
@@ -50,7 +50,7 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     ) {
       new InstrumentApi().PatchAsync(pending).then((saved) => {
         if (!!saved.success) {
-          setInstrument({ ...saved.result, NumFrets: instrument.NumFrets });
+          handleSetInstrument(saved.result);
           getInstruments();
         }
       });
@@ -60,29 +60,34 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
   const saveCreate = () => {
     createInstrument(pending).then((created: Instrument) => {
       if (!!created) {
-        setInstrument(created);
+        handleSetInstrument(created);
         getInstruments();
       }
     });
   };
 
   const handleFormAction = (action: FormAction) => {
-    if (action == FormAction.Edit) {
-      setPending({ ...instrument });
-      setFormMode(FormMode.Edit);
-    } else if (action == FormAction.Create) {
-      setPending({ ...instrument, Id: null, Label: 'New Instrument', DefaultTuning: null, DefaultTuningId: null });
-      setFormMode(FormMode.Create);
-    } else if (action == FormAction.Confirm) {
-      if (formMode === FormMode.Edit) {
-        saveEdit();
+    switch (action) {
+      case FormAction.Edit:
+        setPending({ ...instrument });
+        setFormMode(FormMode.Edit);
+        break;
+      case FormAction.Create:
+        setPending({ ...instrument, Id: null, Label: 'New Instrument', DefaultTuning: null, DefaultTuningId: null });
+        setFormMode(FormMode.Create);
+        break;
+      case FormAction.Confirm:
+        if (formMode === FormMode.Edit) {
+          saveEdit();
+          setFormMode(FormMode.Select);
+        } else if (formMode === FormMode.Create) {
+          saveCreate();
+          setFormMode(FormMode.Select);
+        }
+        break;
+      case FormAction.Cancel:
         setFormMode(FormMode.Select);
-      } else if (formMode === FormMode.Create) {
-        saveCreate();
-        setFormMode(FormMode.Select);
-      }
-    } else if (action == FormAction.Cancel) {
-      setFormMode(FormMode.Select);
+        break;
     }
   };
 
@@ -91,6 +96,11 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
       ...updated,
       NumFrets: instrument.NumFrets,
     });
+  };
+
+  const handleUpdateNumFrets = (numFrets: number) => {
+    instrument.NumFrets = numFrets;
+    setInstrument(instrument);
   };
 
   const handleSetPending = (updated: Partial<Instrument>) => {
@@ -102,10 +112,6 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     });
   };
 
-  const handleUpdateNumFrets = (numFrets: number) => {
-    instrument.NumFrets = numFrets;
-    setInstrument(instrument);
-  };
   const body = (
     <>
       <InlineOptionsForm
@@ -149,7 +155,9 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
           }}
         />
       </Form>
-      Default Tuning: {instrument.DefaultTuning?.Label}
+      {/* Default Tuning:
+      <DropdownButton variant="outline-secondary" title={instrument.DefaultTuning?.Label}></DropdownButton> */}
+
     </>
   );
 

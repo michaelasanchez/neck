@@ -110,6 +110,7 @@
   /* Tuning */
   .tuning-selector {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
   }
 }

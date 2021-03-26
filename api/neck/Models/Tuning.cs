@@ -3,6 +3,7 @@ using neck.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace neck.Models
 {

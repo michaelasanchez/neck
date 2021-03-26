@@ -37,7 +37,7 @@ namespace neck.Repositories
 				var tuningResult = await _tuningRepo.Value.Create(new Tuning()
 				{
 					InstrumentId = instrument.Id,
-					Label = "Default Tuning",
+					Label = "Standard",
 					Offsets = new List<Note>(instrument.NumStrings)
 				});
 

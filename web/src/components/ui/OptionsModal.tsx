@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Accordion, Modal } from 'react-bootstrap';
-import { OptionCard, RadioOptionCard } from '.';
+import { CardAction, OptionCard, RadioOptionCard } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Mode, Tuning } from '../../models';
 import { InstrumentCard, TuningCard } from './options';
@@ -9,6 +9,12 @@ import { InstrumentCard, TuningCard } from './options';
 export interface OptionsModalProps {
   showing: boolean;
   onHide: Function;
+}
+
+enum CardKey {
+  General = '0',
+  Instrument = '1',
+  Tuning = '2',
 }
 
 export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
@@ -26,6 +32,10 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
     if (!showing) setActiveKey(null);
   }, [showing]);
 
+  const handleCardAction = (action: CardAction, key: CardKey) => {
+    console.log('yo', action, key);
+  }
+
   return (
     <div className="options-container" ref={container}>
       <Modal
@@ -42,23 +52,23 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
         <Modal.Body>
           <Accordion onSelect={(key: any) => setActiveKey(key)}>
             <OptionCard
-              active={activeKey === '0'}
-              eventKey="0"
+              active={activeKey === CardKey.General}
+              eventKey={CardKey.General}
               title="General"
               subtitle="You know..."
-              body={<ul><li>Left-Hand Mode</li><li># / b / #+b</li><li>Hmm...</li></ul>}
+              body={<ul><li>Left-Hand Mode</li><li># / b / #+b</li><li>Dark Mode</li><li>Hmm...</li></ul>}
             />
             <InstrumentCard
-              active={activeKey === '1'}
-              eventKey="1"
+              active={activeKey === CardKey.Instrument}
+              eventKey={CardKey.Instrument}
               instrument={instrument}
               setInstrument={(i: Instrument) =>
                 setAppOptions({ instrument: i, tuning: i.DefaultTuning })
               }
             />
             <TuningCard
-              active={activeKey === '2'}
-              eventKey="2"
+              active={activeKey === CardKey.Tuning}
+              eventKey={CardKey.Tuning}
               instrument={instrument}
               tuning={tuning}
               setTuning={(t: Tuning) => setAppOptions({ tuning: t })}
