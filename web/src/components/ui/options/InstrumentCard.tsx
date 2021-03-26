@@ -36,6 +36,12 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     getInstruments();
   }, []);
 
+  useEffect(() => {
+    if (!rest.active && formMode != FormMode.Select) {
+      handleFormAction(FormAction.Cancel);
+    }
+  }, [rest.active]);
+
   const saveEdit = () => {
     if (
       (!!pending.Id && pending.Label != instrument.Label) ||
@@ -143,6 +149,7 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
           }}
         />
       </Form>
+      Default Tuning: {instrument.DefaultTuning?.Label}
     </>
   );
 

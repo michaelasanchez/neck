@@ -22,7 +22,7 @@ import { AppOptions } from '../shared';
 
 const validateAppOptions = (appOptions: AppOptions): IError => {
   //
-  const required = ['chord', 'instrument', 'tuning', 'key', 'mode', 'scale'];
+  const required = ['chord', 'instrument', 'key', 'mode', 'scale'];
   const missing = filter(required, (r) => !appOptions[r]);
 
   if (missing.length > 0) {

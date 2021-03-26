@@ -1,9 +1,11 @@
-import { filter, findIndex, isUndefined, map, times } from 'lodash';
+import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
 import { FormAction, OptionCard, OptionCardProps } from '..';
+import { useNotificationContext } from '../..';
 import { useRequest } from '../../../hooks';
+import { NotificationType } from '../../../interfaces';
 import {
   Instrument,
   Note,
@@ -70,6 +72,18 @@ const tuningNotes = calcOptions(
 
 const tuningNoteOptions = mapOptions(tuningNotes);
 
+const newTuning = (instrument: Instrument): Tuning => {
+  return {
+    ...instrument?.DefaultTuning,
+    Id: null,
+    InstrumentId: instrument.Id,
+    Label: 'New Tuning',
+    Offsets: !!instrument?.DefaultTuning
+      ? [...instrument.DefaultTuning.Offsets]
+      : new Array<TuningNote>(instrument.NumStrings),
+  };
+};
+
 export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   props
 ) => {
@@ -80,8 +94,18 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const [formMode, setFormMode] = useState<FormMode>(FormMode.Select);
 
+  const { addNotification } = useNotificationContext();
+
   const { req: createTuning } = useRequest(new TuningApi().CreateAsync);
-  const { req: getTunings, data: tunings } = useRequest(new TuningApi().ByInstrument);
+  const { req: getTunings, data: tunings } = useRequest(
+    new TuningApi().ByInstrument
+  );
+
+  useEffect(() => {
+    if (!rest.active && formMode != FormMode.Select) {
+      handleFormAction(FormAction.Cancel);
+    }
+  }, [rest.active]);
 
   useEffect(() => {
     if (!!instrument) {
@@ -129,7 +153,6 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   };
 
   const saveCreate = () => {
-    console.log('pending bro', pending)
     createTuning(pending).then((created: Tuning) => {
       if (!!created) {
         setTuning(created);
@@ -143,20 +166,29 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
       setPending({ ...tuning, Offsets: [...tuning.Offsets] });
       setFormMode(FormMode.Edit);
     } else if (action == FormAction.Create) {
-      setPending({ ...instrument.DefaultTuning, Id: null, Label: 'New Tuning' });
+      setPending(newTuning(instrument));
       setFormMode(FormMode.Create);
     } else if (action == FormAction.Confirm) {
-      if (formMode === FormMode.Edit) {
-        saveEdit();
-        setFormMode(FormMode.Select);
-      } else if (formMode === FormMode.Create) {
-        saveCreate();
+      // TODO: hopefully a placeholder fix for breaking the backend
+      //  saving a list containing null THE SECOND TIME throws NRE
+      if (!every(pending.Offsets, (o) => o != null)) {
+        addNotification(
+          'Tuning cannot contain empty offsets!',
+          NotificationType.Warning
+        );
+      } else {
+        if (formMode === FormMode.Edit) {
+          saveEdit();
+        } else if (formMode === FormMode.Create) {
+          saveCreate();
+        }
         setFormMode(FormMode.Select);
       }
     } else if (action == FormAction.Cancel) {
       setFormMode(FormMode.Select);
     }
   };
+  console.log('pending', pending);
 
   const body = (current: Tuning) => (
     <>
@@ -168,19 +200,20 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
       <div className="tuning-selector">
-        {times(instrument.NumStrings, j => {
+        {times(instrument.NumStrings, (j) => {
+          const offsets =
+            formMode == FormMode.Select ? tuning?.Offsets : pending.Offsets;
+          const o = !!offsets && j < offsets.length ? offsets[j] : null;
 
-          const offsets = formMode == FormMode.Select ? tuning.Offsets : pending.Offsets;
-          const o = j < offsets.length
-            ? offsets[j]
-            : null;
+          if (!!offsets) console.log('o', j, offsets.length, o);
 
           return (
             <DropOver
               disabled={formMode === FormMode.Select}
               currentIndex={findIndex(
                 tuningNoteOptions,
-                (n) => n.value.Pitch === o?.Pitch && n.value.Octave === o?.Octave
+                (n) =>
+                  n.value.Pitch === o?.Pitch && n.value.Octave === o?.Octave
               )}
               key={j}
               id={j.toString()}
@@ -197,7 +230,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     <OptionCard
       {...rest}
       title="Tuning"
-      subtitle={tuning.Label}
+      subtitle={tuning?.Label || '(No Tuning)'}
       body={body(formMode !== null && !!pending ? pending : tuning)}
       eventKey={eventKey}
     />

@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace neck.Models
 {
-	public class Note : DbEntity, ILabelled
+	public class Note : DbEntity, ILabelled, IEquatable<Note>
 	{
 		public NoteValue Base;
 		public NoteSuffix Suffix;
@@ -52,22 +52,29 @@ namespace neck.Models
 
 		public override bool Equals(object obj)
 		{
-			if (obj is Note note)
+			return Equals(obj as Note);
+		}
+
+		public bool Equals(Note other)
+		{
+			return this != null &&
+					other != null &&
+				   Base == other.Base &&
+				   Suffix == other.Suffix;
+		}
+
+		public override int GetHashCode()
+		{
+			if (this == null)
 			{
-				return note != null &&
-					this.Base == note.Base &&
-					this.Suffix == note.Suffix;
+				return 0;
 			}
 
-			return false;
+			var hash = HashCode.Combine(Base, Suffix);
+			return hash;
 		}
 
-        public override int GetHashCode()
-		{
-			return HashCode.Combine(Base, Suffix);
-		}
-
-        private string SuffixSymbol(NoteSuffix suffix)
+		private string SuffixSymbol(NoteSuffix suffix)
 		{
 			switch (suffix)
 			{

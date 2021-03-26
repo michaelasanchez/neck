@@ -72,6 +72,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
       !!scale &&
       !collapse &&
       !loading &&
+      !!tuning &&
       (!variations ||
         header.BaseId != scale.Id ||
         header.TuningId != tuning.Id ||
@@ -86,7 +87,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         generateVariations({
           baseId: scale.Id,
           tuningId: tuning.Id,
-          span: 5,
+          span: 6,
           offset: 0,
           range: instrument.NumFrets,
         }).then((newHeader: IGenerateResponseHeader<ScaleVariation>) => {
@@ -98,7 +99,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         });
       }
     }
-  }, [instrument.NumFrets, scale, tuning, tuning.Offsets, collapse]);
+  }, [instrument.NumFrets, scale, tuning, collapse]);
 
   useEffect(() => {
     if (variations?.length) {

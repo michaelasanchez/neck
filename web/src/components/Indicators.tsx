@@ -62,7 +62,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     mode == IndicatorsMode.Chord &&
     !!chordVariation &&
     chordVariation.ChordId === chord.Id &&
-    chordVariation.TuningId === tuning.Id
+    chordVariation.TuningId === tuning?.Id
   ) {
     const positions = chordVariation.Formation.Positions;
     const barres = chordVariation.Formation.Barres;
@@ -152,7 +152,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     mode == IndicatorsMode.Scale &&
     !!scaleVariation &&
     scaleVariation.ScaleId === scale.Id &&
-    scaleVariation.TuningId === tuning.Id
+    scaleVariation.TuningId === tuning?.Id
   ) {
     const fretStart = scaleVariation.Offset;
     const fretEnd =

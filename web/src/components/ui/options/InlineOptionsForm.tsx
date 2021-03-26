@@ -54,8 +54,9 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
       <DropdownButton
         id="tuning-select"
         variant="outline-secondary"
-        title={current?.Label || 'fuck'}
+        title={current?.Label || 'None'}
         className={mode != FormMode.Select ? 'hide' : ''}
+        disabled={!options?.length}
       >
         {map(options, (t, i) => (
           <Dropdown.Item
@@ -94,7 +95,7 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
           {/* Edit */}
           <Button
             variant={'outline-secondary'}
-            disabled={mode === FormMode.Create}
+            disabled={mode === FormMode.Create || !options?.length}
             onClick={() => performAction(FormAction.Edit)}
           >
             <FontAwesomeIcon icon={mode ? farEdit : faEdit} />

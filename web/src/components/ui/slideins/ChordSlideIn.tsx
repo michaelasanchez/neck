@@ -66,6 +66,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       !!chord &&
       !collapse &&
       !loading &&
+      !!tuning &&
       (!variations ||
         header?.BaseId != chord.Id ||
         header?.TuningId != tuning.Id ||
@@ -98,7 +99,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
         });
       }
     }
-  }, [chord, instrument.NumFrets, tuning, tuning.Offsets, collapse]);
+  }, [chord, instrument.NumFrets, tuning, collapse]);
 
   useEffect(() => {
     if (variations?.length) {
