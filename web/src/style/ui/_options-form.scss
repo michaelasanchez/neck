@@ -48,13 +48,13 @@
   }
 
   $time: 100ms;
-  $time: 300ms;
+  // $time: 300ms;
 
   .mode-actions,
   .confirm-actions {
-    filter: blur(0px);
-    // transition: transform (2 * $time) ease-out, opacity $time ease-in $time;
-    transition: all $time ease-in, transform 0s;
+    transition: transform (2 * $time) ease-out, opacity $time ease-in $time;
+    // filter: blur(0px);
+    // transition: all $time ease-in, transform 0s;
 
     &.hidden {
       position: absolute;
@@ -64,9 +64,9 @@
       //  being clicked while hidden
       transform: translateY(100%) scaleY(0);
 
-      filter: blur(2px);
-      // transition: transform (2 * $time) ease-in, opacity $time ease-out;
-      transition: all $time ease-out, transform 0s linear $time;
+      transition: transform (2 * $time) ease-in, opacity $time ease-out;
+      // filter: blur(2px);
+      // transition: all $time ease-out, transform 0s linear $time;
     }
 
     top: 0;

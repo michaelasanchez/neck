@@ -9,6 +9,7 @@ namespace neck.Models
 	public class Note : DbEntity, ILabelled, IEquatable<Note>
 	{
 		public NoteValue Base;
+
 		public NoteSuffix Suffix;
 
 		[NotMapped]
@@ -57,21 +58,14 @@ namespace neck.Models
 
 		public bool Equals(Note other)
 		{
-			return this != null &&
-					other != null &&
+			return other != null &&
 				   Base == other.Base &&
 				   Suffix == other.Suffix;
 		}
 
 		public override int GetHashCode()
 		{
-			if (this == null)
-			{
-				return 0;
-			}
-
-			var hash = HashCode.Combine(Base, Suffix);
-			return hash;
+			return HashCode.Combine(Base, Suffix);
 		}
 
 		private string SuffixSymbol(NoteSuffix suffix)

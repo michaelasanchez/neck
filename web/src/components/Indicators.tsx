@@ -36,7 +36,9 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   useEffect(() => {
     if (!!mainRef?.current && !!firstIndicatorRef?.current) {
       const first = firstIndicatorRef.current as HTMLDivElement;
-      const last = lastIndicatorRef.current as HTMLDivElement;
+      const last = !!lastIndicatorRef?.current
+        ? lastIndicatorRef.current as HTMLDivElement
+        : first;
 
       const main = mainRef.current;
 

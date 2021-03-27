@@ -12,4 +12,8 @@ export class TuningNote extends Note {
 
     this.Octave = octave;
   }
+
+  public Equals(note: TuningNote) {
+    return !!note && this.Octave == note.Octave && super.Equals(note as Note);
+  }
 }

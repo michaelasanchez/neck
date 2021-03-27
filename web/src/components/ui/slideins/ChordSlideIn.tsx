@@ -1,11 +1,17 @@
-import { filter, map } from 'lodash';
+import { every, filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
 import { IGenerateResponseHeader } from '../../../interfaces';
-import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
+import {
+  Chord,
+  ChordModifier,
+  ChordVariation,
+  Note,
+  TuningNote,
+} from '../../../models';
 import { ChordVariationApi } from '../../../network';
 import { NoteUtils } from '../../../shared';
 import { NoteSelection } from '../../NoteSelection';
@@ -14,7 +20,7 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> { }
+export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> {}
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));
@@ -62,6 +68,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
 
   // Generate
   useEffect(() => {
+    console.log(header, tuning);
     if (
       !!chord &&
       !collapse &&
@@ -70,8 +77,10 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       (!variations ||
         header?.BaseId != chord.Id ||
         header?.TuningId != tuning.Id ||
-        header?.Range != instrument.NumFrets)
+        header?.Range != instrument.NumFrets ||
+        !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets))
     ) {
+      console.log('made it here');
       // Handle new instrument
       if (tuning.Offsets.length === 0) {
         setSelected([]);
@@ -91,7 +100,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
             (v) => new ChordVariation(v.ChordId, v.Offset, v.Formation, tuning)
           );
 
-          setHeader({ ...newHeader, Variations: null });
+          setHeader({ ...newHeader, Tuning: { ...tuning }, Variations: null });
           setVariations(newVariations);
           if (newVariations.length) {
             handleSetChordVariation(newVariations[0], 0);
@@ -99,7 +108,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
         });
       }
     }
-  }, [chord, instrument.NumFrets, tuning, collapse]);
+  }, [chord, instrument.NumFrets, tuning, tuning?.Offsets, collapse]);
 
   useEffect(() => {
     if (variations?.length) {

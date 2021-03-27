@@ -2,10 +2,10 @@ import { isUndefined } from 'lodash';
 
 import { ScaleDegree } from '.';
 
-//  C           D           E     F           G           A           B   
+//  C           D           E     F           G           A           B
 //        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb
 //  B#                      Fb    E#                                  Cb
-//  0     1     2     3     4     5     6     7     8     9     10    11 
+//  0     1     2     3     4     5     6     7     8     9     10    11
 
 export enum NoteValue {
   C = 0,
@@ -17,23 +17,22 @@ export enum NoteValue {
   B = 11,
 }
 
-export enum NoteInterval
-{
-    Root = 0,
-    //PerfectUnison = 0,
-    MinorSecond = 1,
-    MajorSecond = 2,
-    MinorThird = 3,
-    MajorThird = 4,
-    PerfectFourth = 5,
-    DiminishedFifth = 6,
-    AugmentedFourth = 6,
-    PerfectFifth = 7,
-    MinorSixth = 8,
-    MajorSixth = 9,
-    MinorSeventh = 10,
-    MajorSeventh = 11,
-    PerfectOctave = 12
+export enum NoteInterval {
+  Root = 0,
+  //PerfectUnison = 0,
+  MinorSecond = 1,
+  MajorSecond = 2,
+  MinorThird = 3,
+  MajorThird = 4,
+  PerfectFourth = 5,
+  DiminishedFifth = 6,
+  AugmentedFourth = 6,
+  PerfectFifth = 7,
+  MinorSixth = 8,
+  MajorSixth = 9,
+  MinorSeventh = 10,
+  MajorSeventh = 11,
+  PerfectOctave = 12,
 }
 
 export enum NoteSuffix {
@@ -51,9 +50,7 @@ export enum NoteSuffixLabel {
   DoubleFlat = '\ud834\udd2b',
 }
 
-
 export class Note {
-
   public static NUM_NOTES = 12;
 
   public Base: NoteValue;
@@ -63,7 +60,10 @@ export class Note {
 
   public Interval: NoteInterval;
 
-  constructor(value: NoteValue = NoteValue.C, suffix: NoteSuffix = NoteSuffix.Natural) {
+  constructor(
+    value: NoteValue = NoteValue.C,
+    suffix: NoteSuffix = NoteSuffix.Natural
+  ) {
     this.Base = value % Note.NUM_NOTES;
     this.Suffix = suffix;
   }
@@ -75,7 +75,7 @@ export class Note {
   private SuffixLabel(suffix: NoteSuffix, long = false) {
     switch (suffix) {
       case NoteSuffix.DoubleFlat:
-        return long ? 'Double Flat' : `${NoteSuffixLabel.DoubleFlat }`;
+        return long ? 'Double Flat' : `${NoteSuffixLabel.DoubleFlat}`;
       case NoteSuffix.Flat:
         return long ? 'Flat' : `${NoteSuffixLabel.Flat}`;
       case NoteSuffix.Natural:
@@ -88,11 +88,15 @@ export class Note {
   }
 
   get Label(): string {
-    return NoteValue[this.Base] ? `${NoteValue[this.Base]}${this.SuffixLabel(this.Suffix)}` : 'ERROR';
+    return NoteValue[this.Base]
+      ? `${NoteValue[this.Base]}${this.SuffixLabel(this.Suffix)}`
+      : 'ERROR';
   }
 
   get LongLabel(): string {
-    return NoteValue[this.Base] ? `${NoteValue[this.Base]} ${this.SuffixLabel(this.Suffix, true)}` : 'ERROR';
+    return NoteValue[this.Base]
+      ? `${NoteValue[this.Base]} ${this.SuffixLabel(this.Suffix, true)}`
+      : 'ERROR';
   }
 
   get Value(): NoteValue {
@@ -101,6 +105,10 @@ export class Note {
 
   get Pitch(): number {
     return (this.Base + this.Suffix) % Note.NUM_NOTES;
+  }
+
+  public Equals(note: Note) {
+    return !!note && this.Base == note.Base && this.Suffix == note.Suffix;
   }
 
   static A(): Note {
@@ -177,10 +185,10 @@ export class Note {
     return next;
   }
 
-  //  C           D           E     F           G           A           B   
+  //  C           D           E     F           G           A           B
   //        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb
   //  B#                      Fb    E#                                  Cb
-  //  0     1     2     3     4     5     6     7     8     9     10    11 
+  //  0     1     2     3     4     5     6     7     8     9     10    11
 
   public WholeStepUp(): Note {
     let pitch = this.Pitch;

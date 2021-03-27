@@ -6,7 +6,7 @@ import {
   FormMode,
   InlineOptionsForm,
   OptionCard,
-  OptionCardProps
+  OptionCardProps,
 } from '..';
 import { useRequest } from '../../../hooks';
 import { Instrument } from '../../../models';
@@ -73,7 +73,13 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
         setFormMode(FormMode.Edit);
         break;
       case FormAction.Create:
-        setPending({ ...instrument, Id: null, Label: 'New Instrument', DefaultTuning: null, DefaultTuningId: null });
+        setPending({
+          ...instrument,
+          Id: null,
+          Label: 'New Instrument',
+          DefaultTuning: null,
+          DefaultTuningId: null,
+        });
         setFormMode(FormMode.Create);
         break;
       case FormAction.Confirm:
@@ -128,7 +134,9 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
           <small>Strings</small>
         </Form.Label>
         <Form.Control
-          disabled={formMode == FormMode.Select}
+          // TODO: This technically works for Edit,
+          //  but I think the old tuning is overwritten?
+          disabled={formMode != FormMode.Create}
           value={pending?.NumStrings.toString()}
           onChange={(e: any) =>
             handleSetPending({ NumStrings: parseInt(e.target.value) })
@@ -157,7 +165,6 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
       </Form>
       {/* Default Tuning:
       <DropdownButton variant="outline-secondary" title={instrument.DefaultTuning?.Label}></DropdownButton> */}
-
     </>
   );
 

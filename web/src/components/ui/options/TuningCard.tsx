@@ -2,8 +2,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
 import { FormAction, OptionCard, OptionCardProps } from '..';
 import { useNotificationContext } from '../..';
 import { useRequest } from '../../../hooks';
@@ -82,7 +81,7 @@ const newTuning = (instrument: Instrument): Tuning => {
     Label: 'New Tuning',
     Offsets: !!instrument?.DefaultTuning
       ? [...instrument.DefaultTuning.Offsets]
-      : times(instrument.NumStrings, s => null),//new Array<TuningNote>(instrument.NumStrings),
+      : times(instrument.NumStrings, (s) => null), //new Array<TuningNote>(instrument.NumStrings),
   };
 };
 
@@ -91,10 +90,8 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 ) => {
   const { eventKey, instrument, tuning, setTuning, ...rest } = props;
 
-  // const [tunings, setTunings] = useState<Tuning[]>();
-  const [pending, setPending] = useState<Tuning>();
-
   const [formMode, setFormMode] = useState<FormMode>(FormMode.Select);
+  const [pending, setPending] = useState<Tuning>();
 
   const { addNotification } = useNotificationContext();
 
@@ -118,14 +115,14 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   const handleSetPending = (updated: Partial<Tuning>) => {
     setPending({
       ...pending,
-      Offsets: updated?.Offsets || pending.Offsets,
+      Offsets: [...(updated?.Offsets || pending.Offsets)],
       Label: updated?.Label || pending.Label,
     });
   };
 
   const handleSetOffset = (index: number, note: TuningNote) => {
     pending.Offsets[index] = note;
-    handleSetPending({ Offsets: pending.Offsets });
+    handleSetPending({ Offsets: [...pending.Offsets] });
   };
 
   const saveEdit = () => {
@@ -133,10 +130,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     const offsetsMatch = map(pending.Offsets, (o: TuningNote, i: number) => {
       const offset = tuning.Offsets[i];
       if (!offset) return false;
-      return (
-        o.Pitch == tuning.Offsets[i].Pitch &&
-        o.Octave == tuning.Offsets[i].Octave
-      );
+      return o.Pitch == offset.Pitch && o.Octave == offset.Octave;
     });
 
     // Save
@@ -165,7 +159,12 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const handleFormAction = (action: FormAction) => {
     if (action == FormAction.Edit) {
-      setPending({ ...tuning, Offsets: tuning.Offsets.length ? tuning.Offsets : times(instrument.NumStrings, s => null) });
+      setPending({
+        ...tuning,
+        Offsets: tuning.Offsets.length
+          ? [...tuning.Offsets]
+          : times(instrument.NumStrings, (s) => null),
+      });
       setFormMode(FormMode.Edit);
     } else if (action == FormAction.Create) {
       setPending(newTuning(instrument));
@@ -173,7 +172,6 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     } else if (action == FormAction.Confirm) {
       // TODO: hopefully a placeholder fix for breaking the backend
       //  saving a list containing null THE SECOND TIME throws NRE
-      console.log(pending.Offsets, every(pending.Offsets, (o) => o != null))
       if (!every(pending.Offsets, (o) => o != null)) {
         addNotification(
           'Tuning cannot contain empty offsets.',
@@ -192,8 +190,6 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     }
   };
 
-  const isValid = tuning.Offsets.length > 0;
-
   const body = (current: Tuning) => (
     <>
       <InlineOptionsForm
@@ -203,10 +199,16 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         onAction={handleFormAction}
         setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
-      {!isValid && <div className="text-center text-danger mb-3"><FontAwesomeIcon icon={faExclamationTriangle} className="mx-2" />Help! my tuning is invalid :'(</div>}
+      {tuning?.Offsets.length <= 0 && (
+        <div className="text-center text-danger mb-3">
+          <FontAwesomeIcon icon={faExclamationTriangle} className="mx-2" />
+          Help! my tuning is invalid :'(
+        </div>
+      )}
       <div className="tuning-selector">
         {times(instrument.NumStrings, (j) => {
-          const offsets = formMode == FormMode.Select ? tuning?.Offsets : pending.Offsets;
+          const offsets =
+            formMode == FormMode.Select ? tuning?.Offsets : pending.Offsets;
           const o = !!offsets && j < offsets.length ? offsets[j] : null;
 
           return (

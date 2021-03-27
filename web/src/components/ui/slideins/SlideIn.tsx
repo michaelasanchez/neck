@@ -1,3 +1,5 @@
+import { faCog, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as $ from 'jquery';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';

@@ -1,9 +1,7 @@
-﻿using neck.Enums;
-using neck.Interfaces;
+﻿using neck.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace neck.Models
 {
@@ -27,21 +25,6 @@ namespace neck.Models
         {
             Label = label;
             Offsets = offsets;
-        }
-
-        public static Tuning Standard()
-        {
-            var offsets = new List<Note>
-            {
-                new Note(NoteValue.E, octave: 2),
-                new Note(NoteValue.A, octave: 2),
-                new Note(NoteValue.D, octave: 3),
-                new Note(NoteValue.G, octave: 3),
-                new Note(NoteValue.B, octave: 3),
-                new Note(NoteValue.E, octave: 4),
-            };
-
-            return new Tuning("Standard", offsets);
         }
     }
 }

@@ -16,7 +16,6 @@ namespace neck.Models
 		[JsonIgnore]
 		public Tuning Tuning { get; set; }
 
-		[NotMapped]
 		[JsonIgnore]
 		public T Base { get; set; }
 	}
