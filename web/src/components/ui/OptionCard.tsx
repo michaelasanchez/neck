@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 import { Accordion, Card } from 'react-bootstrap';
+import { CardKey } from '.';
 
 export interface OptionCardProps {
   active?: boolean;
@@ -8,11 +9,11 @@ export interface OptionCardProps {
   title: string;
   subtitle: string;
   body: ReactNode;
-  onAction?: (action: CardAction) => void;
+  onAction?: (action: CardAction, key: CardKey) => void;
 }
 
 export enum CardAction {
-  Toggle = 'toggle',
+  Open = 'open',
 }
 
 export const OptionCard: React.FunctionComponent<OptionCardProps> = ({

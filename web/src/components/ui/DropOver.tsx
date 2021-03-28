@@ -2,7 +2,6 @@ import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Dropdown } from 'react-bootstrap';
-import { TuningNote } from '../../models';
 
 const MENU_MAX_HEIGHT = 200;
 const NUM_MENU_ITEMS = 7;
@@ -39,10 +38,7 @@ export const DropOver: React.FunctionComponent<DropOverProps> = (props) => {
   useEffect(() => {
     let active = null,
       scroll = null;
-    if (
-      !!activeRef?.current &&
-      !!scrollRef?.current
-    ) {
+    if (!!activeRef?.current && !!scrollRef?.current) {
       active = activeRef.current as HTMLDivElement;
       scroll = scrollRef.current as HTMLDivElement;
 
@@ -53,11 +49,10 @@ export const DropOver: React.FunctionComponent<DropOverProps> = (props) => {
           setMenuOffset(active.offsetTop);
           if (!menuItemHeight) setMenuItemHeight(active.offsetHeight);
         }
-      } else {
-        // scroll.scrollTop = active.offsetTop;
       }
     } else if (!menuItemHeight) {
       setMenuItemHeight(30);
+      setMenuOffset(200);
     }
   }, [toggle]);
 

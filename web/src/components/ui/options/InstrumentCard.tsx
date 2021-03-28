@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import {
+  CardAction,
+  CardKey,
   FormAction,
   FormMode,
   InlineOptionsForm,
@@ -14,7 +16,8 @@ import { NotificationType } from '../../../interfaces';
 import { Instrument } from '../../../models';
 import { InstrumentApi } from '../../../network';
 
-export interface InstrumentCardOptions extends Pick<OptionCardProps, 'active'> {
+export interface InstrumentCardOptions
+  extends Pick<OptionCardProps, 'active' | 'onAction'> {
   eventKey: string;
   instrument: Instrument;
   setInstrument: (i: Instrument) => void;
@@ -66,7 +69,13 @@ const validatePending = (pending: PendingInstrument) => {
 export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
   props
 ) => {
-  const { eventKey, instrument, setInstrument, ...rest } = props;
+  const {
+    eventKey,
+    instrument,
+    setInstrument,
+    onAction: performAction,
+    ...rest
+  } = props;
 
   const [pending, setPending] = useState<PendingInstrument>({
     ...instrument,
@@ -116,6 +125,7 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     createInstrument(pending).then((created: Instrument) => {
       if (!!created) {
         handleSetInstrument(created, true);
+        performAction(CardAction.Open, CardKey.Tuning);
       }
     });
   };

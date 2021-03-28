@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Accordion, Modal } from 'react-bootstrap';
-import { CardAction, OptionCard, RadioOptionCard } from '.';
+import { Accordion, Modal, useAccordionToggle } from 'react-bootstrap';
+import { CardAction, OptionCard } from '.';
 import { useAppOptionsContext } from '../..';
-import { Instrument, Mode, Tuning } from '../../models';
+import { Instrument, Tuning } from '../../models';
 import { InstrumentCard, TuningCard } from './options';
 
 export interface OptionsModalProps {
@@ -11,7 +11,7 @@ export interface OptionsModalProps {
   onHide: Function;
 }
 
-enum CardKey {
+export enum CardKey  {
   General = '0',
   Instrument = '1',
   Tuning = '2',
@@ -33,8 +33,14 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   }, [showing]);
 
   const handleCardAction = (action: CardAction, key: CardKey) => {
-    console.log('yo', action, key);
-  }
+    if (action == CardAction.Open) {
+      setActiveKey(key);
+    }
+  };
+
+  // const test = useAccordionToggle(eventKey, () => {
+
+  // });
 
   return (
     <div className="options-container" ref={container}>
@@ -50,13 +56,20 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
-          <Accordion onSelect={(key: any) => setActiveKey(key)}>
+          <Accordion onSelect={(key: any) => setActiveKey(key)} activeKey={activeKey}>
             <OptionCard
               active={activeKey === CardKey.General}
               eventKey={CardKey.General}
               title="General"
               subtitle="You know..."
-              body={<ul><li>Left-Hand Mode</li><li># / b / #+b</li><li>Dark Mode</li><li>Hmm...</li></ul>}
+              body={
+                <ul>
+                  <li>Left-Hand Mode</li>
+                  <li># / b / #+b</li>
+                  <li>Dark Mode</li>
+                  <li>Hmm...</li>
+                </ul>
+              }
             />
             <InstrumentCard
               active={activeKey === CardKey.Instrument}
@@ -65,6 +78,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
               setInstrument={(i: Instrument) =>
                 setAppOptions({ instrument: i, tuning: i.DefaultTuning })
               }
+              onAction={handleCardAction}
             />
             <TuningCard
               active={activeKey === CardKey.Tuning}

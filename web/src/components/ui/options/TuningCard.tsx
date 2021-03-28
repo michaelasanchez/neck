@@ -1,6 +1,8 @@
 import {
   faExclamationCircle,
   faExclamationTriangle,
+  faLevelUpAlt,
+  faShare,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
@@ -21,7 +23,7 @@ import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
 import { FormMode, InlineOptionsForm } from './InlineOptionsForm';
 
-const incompleteTuningMessage = "Tuning is incomplete :'(";
+const incompleteTuningMessage = 'Complete the tuning';
 const missingTuningMessage = 'Tuning is missing!';
 
 export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
@@ -114,7 +116,11 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   }, [rest.active]);
 
   useEffect(() => {
-    if ((!!instrument && !tunings) || instrument.Id != tuning?.InstrumentId) {
+    if (
+      (!!instrument && !tunings) ||
+      !tunings.length ||
+      instrument.Id != tuning?.InstrumentId
+    ) {
       getTunings(instrument.Id);
     }
   }, [instrument]);
@@ -197,8 +203,6 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     }
   };
 
-  console.log('tunings', tunings)
-
   const messages = (
     <div className="text-center mb-3">
       {tuning?.Offsets.length <= 0 && (
@@ -207,16 +211,28 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
             <FontAwesomeIcon icon={faExclamationTriangle} className="mx-2" />
           </span>
           {incompleteTuningMessage}
+          {/* <span className="ml-4 text-muted"><FontAwesomeIcon icon={faLevelUpAlt} className="mx-2" /></span> */}
+          <span className="ml-1 text-muted">
+            <FontAwesomeIcon
+              icon={faShare}
+              className="directions mx-2"
+              style={
+                formMode == FormMode.Select
+                  ? { transform: 'rotate(-70deg) scaleY(-1)' }
+                  : { transform: 'rotate(110deg) translateX(5px)' }
+              }
+            />
+          </span>
         </>
       )}
-      {/* {tunings?.length <= 0 && (
+      {tunings?.length <= 0 && (
         <>
           <span className="text-danger">
             <FontAwesomeIcon icon={faExclamationCircle} className="mx-2" />
           </span>
           {missingTuningMessage}
         </>
-      )} */}
+      )}
     </div>
   );
 
