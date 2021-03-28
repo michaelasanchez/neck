@@ -48,17 +48,25 @@
   }
 
   $time: 100ms;
+  // $time: 300ms;
 
   .mode-actions,
   .confirm-actions {
     transition: transform (2 * $time) ease-out, opacity $time ease-in $time;
+    // filter: blur(0px);
+    // transition: all $time ease-in, transform 0s;
 
     &.hidden {
       position: absolute;
-
       opacity: 0;
+
+      // Hacking to keep animation & prevent buttons from
+      //  being clicked while hidden
       transform: translateY(100%) scaleY(0);
+
       transition: transform (2 * $time) ease-in, opacity $time ease-out;
+      // filter: blur(2px);
+      // transition: all $time ease-out, transform 0s linear $time;
     }
 
     top: 0;

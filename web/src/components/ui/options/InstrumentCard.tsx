@@ -2,30 +2,90 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import {
+  CardAction,
+  CardKey,
   FormAction,
   FormMode,
   InlineOptionsForm,
   OptionCard,
   OptionCardProps,
 } from '..';
+import { useNotificationContext } from '../..';
 import { useRequest } from '../../../hooks';
+import { NotificationType } from '../../../interfaces';
 import { Instrument } from '../../../models';
 import { InstrumentApi } from '../../../network';
 
-export interface InstrumentCardOptions extends Pick<OptionCardProps, 'active'> {
+export interface InstrumentCardOptions
+  extends Pick<OptionCardProps, 'active' | 'onAction'> {
   eventKey: string;
   instrument: Instrument;
   setInstrument: (i: Instrument) => void;
 }
 
+interface PendingInstrument
+  extends Pick<
+    Instrument,
+    'Id' | 'Label' | 'DefaultTuning' | 'DefaultTuningId' | 'Formation'
+  > {
+  NumStrings: string;
+  NumFrets: string;
+}
+
+const toPending = (instrument: Instrument) => {
+  return {
+    ...instrument,
+    NumStrings: instrument?.NumStrings.toString(),
+    NumFrets: instrument?.NumFrets.toString(),
+  };
+};
+
+const fromPending = (pending: PendingInstrument): Instrument => {
+  return {
+    ...pending,
+    NumStrings: parseInt(pending?.NumStrings),
+    NumFrets: parseInt(pending?.NumFrets),
+  };
+};
+
+const validatePending = (pending: PendingInstrument) => {
+  const warnings = [];
+  if (!pending?.Label) {
+    warnings.push('Instrument name cannot be blank');
+  }
+  if (!pending?.NumStrings) {
+    warnings.push('Strings cannot be empty');
+  } else if (isNaN(parseInt(pending.NumStrings))) {
+    warnings.push('Strings must be a number');
+  }
+  if (!pending?.NumFrets) {
+    warnings.push('Frets cannot be empty');
+  } else if (isNaN(parseInt(pending.NumFrets))) {
+    warnings.push('Frets must be a number');
+  }
+  return warnings;
+};
+
 export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
   props
 ) => {
-  const { eventKey, instrument, setInstrument, ...rest } = props;
+  const {
+    eventKey,
+    instrument,
+    setInstrument,
+    onAction: performAction,
+    ...rest
+  } = props;
 
-  const [pending, setPending] = useState<Instrument>(instrument);
+  const [pending, setPending] = useState<PendingInstrument>({
+    ...instrument,
+    NumStrings: instrument.NumStrings.toString(),
+    NumFrets: instrument.NumFrets.toString(),
+  });
 
   const [formMode, setFormMode] = useState<FormMode>(FormMode.Select);
+
+  const { addNotification } = useNotificationContext();
 
   const { req: createInstrument } = useRequest(new InstrumentApi().CreateAsync);
   const { req: getInstruments, data: instruments } = useRequest(
@@ -36,16 +96,26 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     getInstruments();
   }, []);
 
+  useEffect(() => {
+    if (!rest.active && formMode != FormMode.Select) {
+      handleFormAction(FormAction.Cancel);
+    }
+  }, [rest.active]);
+
   const saveEdit = () => {
     if (
       (!!pending.Id && pending.Label != instrument.Label) ||
-      pending.NumStrings != instrument.NumStrings ||
-      pending.NumFrets != instrument.NumFrets
+      pending.NumStrings != instrument.NumStrings.toString()
     ) {
       new InstrumentApi().PatchAsync(pending).then((saved) => {
         if (!!saved.success) {
-          setInstrument({ ...saved.result, NumFrets: instrument.NumFrets });
-          getInstruments();
+          handleSetInstrument(
+            {
+              ...saved.result,
+              NumFrets: instrument.NumFrets,
+            },
+            true
+          );
         }
       });
     }
@@ -54,52 +124,85 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
   const saveCreate = () => {
     createInstrument(pending).then((created: Instrument) => {
       if (!!created) {
-        setInstrument(created);
-        getInstruments();
+        handleSetInstrument(created, true);
+        performAction(CardAction.Open, CardKey.Tuning);
       }
     });
   };
 
   const handleFormAction = (action: FormAction) => {
-    if (action == FormAction.Edit) {
-      setPending({ ...instrument });
-      setFormMode(FormMode.Edit);
-    } else if (action == FormAction.Create) {
-      setPending({ ...instrument, Id: null, Label: 'New Instrument', DefaultTuning: null, DefaultTuningId: null });
-      setFormMode(FormMode.Create);
-    } else if (action == FormAction.Confirm) {
-      if (formMode === FormMode.Edit) {
-        saveEdit();
+    switch (action) {
+      case FormAction.Edit:
+        setPending(toPending(instrument));
+        setFormMode(FormMode.Edit);
+        break;
+      case FormAction.Create:
+        setPending(
+          toPending({
+            ...instrument,
+            Id: null,
+            DefaultTuning: null,
+            DefaultTuningId: null,
+            Label: 'New Instrument',
+          })
+        );
+        setFormMode(FormMode.Create);
+        break;
+      case FormAction.Confirm:
+        const warnings = validatePending(pending);
+        if (warnings.length) {
+          addNotification(warnings[0], NotificationType.Warning);
+        } else {
+          if (formMode === FormMode.Edit) {
+            saveEdit();
+            setFormMode(FormMode.Select);
+          } else if (formMode === FormMode.Create) {
+            saveCreate();
+            setFormMode(FormMode.Select);
+          }
+        }
+        break;
+      case FormAction.Cancel:
         setFormMode(FormMode.Select);
-      } else if (formMode === FormMode.Create) {
-        saveCreate();
-        setFormMode(FormMode.Select);
-      }
-    } else if (action == FormAction.Cancel) {
-      setFormMode(FormMode.Select);
+        break;
     }
   };
 
-  const handleSetInstrument = (updated: Instrument) => {
+  const handleSetInstrument = (
+    updated: Instrument,
+    refresh: boolean = false
+  ) => {
     setInstrument({
       ...updated,
-      NumFrets: instrument.NumFrets,
+      NumFrets: updated?.NumFrets || instrument.NumFrets,
     });
+    if (refresh) {
+      getInstruments();
+    }
   };
 
-  const handleSetPending = (updated: Partial<Instrument>) => {
+  const handleSetPending = (updated: Partial<PendingInstrument>) => {
     setPending({
       ...pending,
-      Label: updated?.Label || pending.Label,
-      NumStrings: updated?.NumStrings || pending.NumStrings,
-      NumFrets: updated.NumFrets || pending.NumFrets,
+      Label: updated?.Label !== undefined ? updated.Label : pending.Label,
+      NumStrings:
+        updated.NumStrings != undefined
+          ? updated.NumStrings
+          : pending.NumStrings,
+      NumFrets:
+        updated.NumFrets != undefined ? updated.NumFrets : pending.NumFrets,
     });
   };
 
-  const handleUpdateNumFrets = (numFrets: number) => {
-    instrument.NumFrets = numFrets;
-    setInstrument(instrument);
+  const handleNumFretsUpdate = (updated: PendingInstrument) => {
+    const warnings = validatePending(updated);
+    if (warnings.length) {
+      addNotification(warnings[0], NotificationType.Warning);
+    } else if (formMode != FormMode.Create) {
+      handleSetInstrument(fromPending(updated));
+    }
   };
+
   const body = (
     <>
       <InlineOptionsForm
@@ -112,32 +215,26 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
         }
       />
       <Form inline>
-        <Form.Label className="my-1 mr-2">
-          <small>Strings</small>
-        </Form.Label>
+        <Form.Label className="my-1 mr-2">Strings</Form.Label>
         <Form.Control
-          disabled={formMode == FormMode.Select}
+          // TODO: This technically works for edit,
+          //  but I think the old tuning is overwritten?
+          disabled={formMode != FormMode.Create}
           value={pending?.NumStrings.toString()}
           onChange={(e: any) =>
-            handleSetPending({ NumStrings: parseInt(e.target.value) })
+            handleSetPending({ NumStrings: e.target.value })
           }
-          size={'sm'}
         />
-        <Form.Label className="my-1 mr-2 ml-3">
-          <small>Frets</small>
-        </Form.Label>
+        <Form.Label className="my-1 mr-2 ml-3">Frets</Form.Label>
         <Form.Control
           value={pending?.NumFrets.toString()}
-          size={'sm'}
           onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
-            handleUpdateNumFrets(parseInt(e.target.value))
+            handleNumFretsUpdate(pending)
           }
-          onChange={(e: any) =>
-            handleSetPending({ NumFrets: parseInt(e.target.value) })
-          }
+          onChange={(e: any) => handleSetPending({ NumFrets: e.target.value })}
           onKeyDown={(e: any) => {
             if (e.keyCode === 13) {
-              handleUpdateNumFrets(parseInt(e.target.value));
+              handleNumFretsUpdate(pending);
               e.target.blur();
             }
           }}

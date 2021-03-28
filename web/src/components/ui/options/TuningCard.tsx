@@ -1,9 +1,17 @@
-import { filter, findIndex, isUndefined, map, times } from 'lodash';
+import {
+  faExclamationCircle,
+  faExclamationTriangle,
+  faLevelUpAlt,
+  faShare,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
 import { FormAction, OptionCard, OptionCardProps } from '..';
+import { useNotificationContext } from '../..';
 import { useRequest } from '../../../hooks';
+import { NotificationType } from '../../../interfaces';
 import {
   Instrument,
   Note,
@@ -15,12 +23,16 @@ import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
 import { FormMode, InlineOptionsForm } from './InlineOptionsForm';
 
+const incompleteTuningMessage = 'Complete the tuning';
+const missingTuningMessage = 'Tuning is missing!';
+
 export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
   eventKey: string;
   instrument: Instrument;
   tuning: Tuning;
   setTuning: (t: Tuning) => void;
 }
+
 const calcOptions = (start: TuningNote, end: TuningNote) => {
   const options = [];
   let current = start;
@@ -70,21 +82,45 @@ const tuningNotes = calcOptions(
 
 const tuningNoteOptions = mapOptions(tuningNotes);
 
+const newTuning = (instrument: Instrument): Tuning => {
+  return {
+    ...instrument?.DefaultTuning,
+    Id: null,
+    InstrumentId: instrument.Id,
+    Label: 'New Tuning',
+    Offsets: !!instrument?.DefaultTuning
+      ? [...instrument.DefaultTuning.Offsets]
+      : times(instrument.NumStrings, (s) => null), //new Array<TuningNote>(instrument.NumStrings),
+  };
+};
+
 export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   props
 ) => {
   const { eventKey, instrument, tuning, setTuning, ...rest } = props;
 
-  // const [tunings, setTunings] = useState<Tuning[]>();
+  const [formMode, setFormMode] = useState<FormMode>(FormMode.Select);
   const [pending, setPending] = useState<Tuning>();
 
-  const [formMode, setFormMode] = useState<FormMode>(FormMode.Select);
+  const { addNotification } = useNotificationContext();
 
   const { req: createTuning } = useRequest(new TuningApi().CreateAsync);
-  const { req: getTunings, data: tunings } = useRequest(new TuningApi().ByInstrument);
+  const { req: getTunings, data: tunings } = useRequest(
+    new TuningApi().ByInstrument
+  );
 
   useEffect(() => {
-    if (!!instrument) {
+    if (!rest.active && formMode != FormMode.Select) {
+      handleFormAction(FormAction.Cancel);
+    }
+  }, [rest.active]);
+
+  useEffect(() => {
+    if (
+      (!!instrument && !tunings) ||
+      !tunings.length ||
+      instrument.Id != tuning?.InstrumentId
+    ) {
       getTunings(instrument.Id);
     }
   }, [instrument]);
@@ -92,14 +128,14 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   const handleSetPending = (updated: Partial<Tuning>) => {
     setPending({
       ...pending,
-      Offsets: updated?.Offsets || pending.Offsets,
+      Offsets: [...(updated?.Offsets || pending.Offsets)],
       Label: updated?.Label || pending.Label,
     });
   };
 
   const handleSetOffset = (index: number, note: TuningNote) => {
     pending.Offsets[index] = note;
-    handleSetPending({ Offsets: pending.Offsets });
+    handleSetPending({ Offsets: [...pending.Offsets] });
   };
 
   const saveEdit = () => {
@@ -107,10 +143,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     const offsetsMatch = map(pending.Offsets, (o: TuningNote, i: number) => {
       const offset = tuning.Offsets[i];
       if (!offset) return false;
-      return (
-        o.Pitch == tuning.Offsets[i].Pitch &&
-        o.Octave == tuning.Offsets[i].Octave
-      );
+      return o.Pitch == offset.Pitch && o.Octave == offset.Octave;
     });
 
     // Save
@@ -129,7 +162,6 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   };
 
   const saveCreate = () => {
-    console.log('pending bro', pending)
     createTuning(pending).then((created: Tuning) => {
       if (!!created) {
         setTuning(created);
@@ -140,23 +172,69 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
 
   const handleFormAction = (action: FormAction) => {
     if (action == FormAction.Edit) {
-      setPending({ ...tuning, Offsets: [...tuning.Offsets] });
+      setPending({
+        ...tuning,
+        Offsets: tuning.Offsets.length
+          ? [...tuning.Offsets]
+          : times(instrument.NumStrings, (s) => null),
+      });
       setFormMode(FormMode.Edit);
     } else if (action == FormAction.Create) {
-      setPending({ ...instrument.DefaultTuning, Id: null, Label: 'New Tuning' });
+      setPending(newTuning(instrument));
       setFormMode(FormMode.Create);
     } else if (action == FormAction.Confirm) {
-      if (formMode === FormMode.Edit) {
-        saveEdit();
-        setFormMode(FormMode.Select);
-      } else if (formMode === FormMode.Create) {
-        saveCreate();
+      // TODO: hopefully a placeholder fix for breaking the backend
+      //  saving a list containing null THE SECOND TIME throws NRE
+      if (!every(pending.Offsets, (o) => o != null)) {
+        addNotification(
+          'Tuning cannot contain empty offsets.',
+          NotificationType.Warning
+        );
+      } else {
+        if (formMode === FormMode.Edit) {
+          saveEdit();
+        } else if (formMode === FormMode.Create) {
+          saveCreate();
+        }
         setFormMode(FormMode.Select);
       }
     } else if (action == FormAction.Cancel) {
       setFormMode(FormMode.Select);
     }
   };
+
+  const messages = (
+    <div className="text-center mb-3">
+      {tuning?.Offsets.length <= 0 && (
+        <>
+          <span className="text-warning">
+            <FontAwesomeIcon icon={faExclamationTriangle} className="mx-2" />
+          </span>
+          {incompleteTuningMessage}
+          {/* <span className="ml-4 text-muted"><FontAwesomeIcon icon={faLevelUpAlt} className="mx-2" /></span> */}
+          <span className="ml-1 text-muted">
+            <FontAwesomeIcon
+              icon={faShare}
+              className="directions mx-2"
+              style={
+                formMode == FormMode.Select
+                  ? { transform: 'rotate(-70deg) scaleY(-1)' }
+                  : { transform: 'rotate(110deg) translateX(5px)' }
+              }
+            />
+          </span>
+        </>
+      )}
+      {tunings?.length <= 0 && (
+        <>
+          <span className="text-danger">
+            <FontAwesomeIcon icon={faExclamationCircle} className="mx-2" />
+          </span>
+          {missingTuningMessage}
+        </>
+      )}
+    </div>
+  );
 
   const body = (current: Tuning) => (
     <>
@@ -167,20 +245,20 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         onAction={handleFormAction}
         setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
+      {messages}
       <div className="tuning-selector">
-        {times(instrument.NumStrings, j => {
-
-          const offsets = formMode == FormMode.Select ? tuning.Offsets : pending.Offsets;
-          const o = j < offsets.length
-            ? offsets[j]
-            : null;
+        {times(instrument.NumStrings, (j) => {
+          const offsets =
+            formMode == FormMode.Select ? tuning?.Offsets : pending.Offsets;
+          const o = !!offsets && j < offsets.length ? offsets[j] : null;
 
           return (
             <DropOver
               disabled={formMode === FormMode.Select}
               currentIndex={findIndex(
                 tuningNoteOptions,
-                (n) => n.value.Pitch === o?.Pitch && n.value.Octave === o?.Octave
+                (n) =>
+                  n.value.Pitch === o?.Pitch && n.value.Octave === o?.Octave
               )}
               key={j}
               id={j.toString()}
@@ -197,8 +275,8 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     <OptionCard
       {...rest}
       title="Tuning"
-      subtitle={tuning.Label}
-      body={body(formMode !== null && !!pending ? pending : tuning)}
+      subtitle={tuning?.Label || '(No Tuning)'}
+      body={body(formMode == FormMode.Select ? tuning : pending)}
       eventKey={eventKey}
     />
   );

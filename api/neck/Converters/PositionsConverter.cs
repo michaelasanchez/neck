@@ -10,28 +10,40 @@ namespace neck.Converters
 {
 	public class PositionsConverter
 	{
+		private const string NullNote = "()";
+
 		private const char NoteDelimiter = ',';
 		private const char ValueDelimiter = ' ';
 
 		// Converts list of neck positions to delimited string
-		public static string ListToString(List<Note> p) =>
-			string.Join(NoteDelimiter, p.Select(n => $"({(int)n.Base}{ValueDelimiter}{(int)n.Suffix}{ValueDelimiter}{n.Octave})"));
+		public static string ListToString(List<Note> p)
+		{
+			return string.Join(NoteDelimiter, p.Select(n => n == null
+				? NullNote
+				: $"({(int)n.Base}{ValueDelimiter}{(int)n.Suffix}{ValueDelimiter}{n.Octave})"));
+		}
 
-		// TODO: Look into doing this non-manually
 		// Converts delimited positions string to list of notes
 		public static List<Note> StringToList(string p, int defaultValue = 0)
 		{
 			var notes = new List<Note>();
 
 			if (p != string.Empty)
-            {
+			{
 				foreach (var noteString in p.Split(NoteDelimiter, StringSplitOptions.None))
 				{
-					var noteArray = noteString.Split(ValueDelimiter);
-					var values = noteArray
-						.Select(v => Int32.Parse(Regex.Replace(v, "[^0-9]", "")))
-						.ToList();
-					notes.Add(new Note((NoteValue)values[0], (NoteSuffix)values[1], values[2]));
+					if (noteString == NullNote)
+					{
+						notes.Add(null);
+					}
+					else
+					{
+						var noteArray = noteString.Split(ValueDelimiter);
+						var values = noteArray
+							.Select(v => Int32.Parse(Regex.Replace(v, "[^0-9]", "")))
+							.ToList();
+						notes.Add(new Note((NoteValue)values[0], (NoteSuffix)values[1], values[2]));
+					}
 				}
 			}
 

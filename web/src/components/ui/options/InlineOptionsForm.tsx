@@ -36,12 +36,6 @@ export enum FormMode {
   Create,
 }
 
-const hiddenActionsStyle: React.CSSProperties = {
-  position: 'absolute',
-  transform: 'translateY(100%)',
-  opacity: 0,
-};
-
 export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> = ({
   mode,
   options,
@@ -54,8 +48,9 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
       <DropdownButton
         id="tuning-select"
         variant="outline-secondary"
-        title={current?.Label || 'fuck'}
+        title={current?.Label || 'None'}
         className={mode != FormMode.Select ? 'hide' : ''}
+        disabled={!options?.length}
       >
         {map(options, (t, i) => (
           <Dropdown.Item
@@ -73,14 +68,12 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
 
   return (
     <div className="options-form">
-      {/* Select */}
       <div className="select-action">
         {labelSelect()}
         {mode != FormMode.Select && (
           <Form.Control
             value={current?.Label}
             onChange={(e) => setCurrent({ Label: e.target.value })}
-            // className={mode == FormMode.Select ? 'hide' : ''}
             autoFocus={true}
           />
         )}
@@ -89,12 +82,11 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
       <div className="actions-container">
         <div
           className={`mode-actions${mode === FormMode.Select ? '' : ' hidden'}`}
-          //   style={mode === null ? {} : hiddenActionsStyle}
         >
           {/* Edit */}
           <Button
             variant={'outline-secondary'}
-            disabled={mode === FormMode.Create}
+            disabled={mode === FormMode.Create || !options?.length}
             onClick={() => performAction(FormAction.Edit)}
           >
             <FontAwesomeIcon icon={mode ? farEdit : faEdit} />

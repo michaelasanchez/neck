@@ -6,9 +6,10 @@ using System.Diagnostics;
 
 namespace neck.Models
 {
-	public class Note : DbEntity, ILabelled
+	public class Note : DbEntity, ILabelled, IEquatable<Note>
 	{
 		public NoteValue Base;
+
 		public NoteSuffix Suffix;
 
 		[NotMapped]
@@ -52,22 +53,22 @@ namespace neck.Models
 
 		public override bool Equals(object obj)
 		{
-			if (obj is Note note)
-			{
-				return note != null &&
-					this.Base == note.Base &&
-					this.Suffix == note.Suffix;
-			}
-
-			return false;
+			return Equals(obj as Note);
 		}
 
-        public override int GetHashCode()
+		public bool Equals(Note other)
+		{
+			return other != null &&
+				   Base == other.Base &&
+				   Suffix == other.Suffix;
+		}
+
+		public override int GetHashCode()
 		{
 			return HashCode.Combine(Base, Suffix);
 		}
 
-        private string SuffixSymbol(NoteSuffix suffix)
+		private string SuffixSymbol(NoteSuffix suffix)
 		{
 			switch (suffix)
 			{

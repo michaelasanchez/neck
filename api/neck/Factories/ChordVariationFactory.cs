@@ -26,7 +26,7 @@ namespace neck.Generators
 
 			// Matches will contain a set of notes for each string (tuning offset)
 			//  Each note is a component of chord
-			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o.Pitch, fretOffset, fretSpan)).ToList()).ToList();
+			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o?.Pitch, fretOffset, fretSpan)).ToList()).ToList();
 
 			// Calculate number of combinations from matched notes
 			var noteCounts = matches.Select(m => m.Count()).ToList();
@@ -101,7 +101,7 @@ namespace neck.Generators
 						toneCheck[toneIndex] = true;
 					}
 
-					return calcNotePosition(n, tuning.Offsets[i].Pitch, fretOffset, fretSpan);
+					return calcNotePosition(n, tuning.Offsets[i]?.Pitch, fretOffset, fretSpan);
 				}).ToList();
 
 				// Validate & add variation
@@ -147,9 +147,9 @@ namespace neck.Generators
 
 		// Returns a fret number based on a Note, tuning
 		//  offset and an optional minimum fret position
-		private int? calcNotePosition(Note note, int tuningOffset, int min = 0, int? span = null)
+		private int? calcNotePosition(Note note, int? tuningOffset, int min = 0, int? span = null)
 		{
-			if (note == null) return null;
+			if (note == null || tuningOffset == null) return null;
 
 			// Calculate absolute position (withing first "octave")
 			var pos = (note.Pitch - tuningOffset + Notes.Count) % Notes.Count;
@@ -162,9 +162,9 @@ namespace neck.Generators
 			return pos;
 		}
 
-		private bool isNoteInRange(Note note, int tuning, int offset, int span)
+		private bool isNoteInRange(Note note, int? tuningOffset, int offset, int span)
 		{
-			var pos = calcNotePosition(note, tuning, offset);
+			var pos = calcNotePosition(note, tuningOffset, offset);
 			return pos >= offset && pos <= offset + (span - 1);
 		}
 

@@ -36,7 +36,9 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   useEffect(() => {
     if (!!mainRef?.current && !!firstIndicatorRef?.current) {
       const first = firstIndicatorRef.current as HTMLDivElement;
-      const last = lastIndicatorRef.current as HTMLDivElement;
+      const last = !!lastIndicatorRef?.current
+        ? lastIndicatorRef.current as HTMLDivElement
+        : first;
 
       const main = mainRef.current;
 
@@ -62,7 +64,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     mode == IndicatorsMode.Chord &&
     !!chordVariation &&
     chordVariation.ChordId === chord.Id &&
-    chordVariation.TuningId === tuning.Id
+    chordVariation.TuningId === tuning?.Id
   ) {
     const positions = chordVariation.Formation.Positions;
     const barres = chordVariation.Formation.Barres;
@@ -152,7 +154,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     mode == IndicatorsMode.Scale &&
     !!scaleVariation &&
     scaleVariation.ScaleId === scale.Id &&
-    scaleVariation.TuningId === tuning.Id
+    scaleVariation.TuningId === tuning?.Id
   ) {
     const fretStart = scaleVariation.Offset;
     const fretEnd =
