@@ -2,6 +2,7 @@ import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
 import { useAppOptionsContext } from '..';
+import { useStyles } from '../hooks';
 import { Note } from '../models';
 import { FretIndicator } from './ui';
 
@@ -17,6 +18,7 @@ interface IndicatorsProps {
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { appOptions } = useAppOptionsContext();
+  const { styles } = useStyles();
 
   const { mainRef } = props;
 
@@ -37,7 +39,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     if (!!mainRef?.current && !!firstIndicatorRef?.current) {
       const first = firstIndicatorRef.current as HTMLDivElement;
       const last = !!lastIndicatorRef?.current
-        ? lastIndicatorRef.current as HTMLDivElement
+        ? (lastIndicatorRef.current as HTMLDivElement)
         : first;
 
       const main = mainRef.current;
@@ -85,7 +87,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     }
 
     return (
-      <div className="indicators">
+      <div className="indicators" style={styles.indicators}>
         {map(tuning.Offsets, (o: Note, i: number) => {
           const position = positions[i];
 

@@ -1,6 +1,6 @@
 import { times } from 'lodash';
 import * as React from 'react';
-import { styles } from '../../shared';
+import { useStyles } from '../../hooks';
 
 export const FRET_NUMBERS_VISIBLE = [3, 5, 7, 9, 12];
 
@@ -24,6 +24,8 @@ export const FretNumbers: React.FunctionComponent<FretNumbersProps> = ({
   mode = FRET_NUMBERS_MODE,
   visible = FRET_NUMBERS_VISIBLE,
 }) => {
+  const { styles } = useStyles();
+
   const renderNumberGroup = (
     <div className="fret-number-group" style={styles.fretNumberGroup}>
       <div className="fret-number open"></div>

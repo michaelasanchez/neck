@@ -12,7 +12,6 @@
 
   .fret {
     position: relative;
-    height: $fret-height;
 
     border-bottom: $fret-border-bottom;
 
@@ -59,6 +58,18 @@
         border-radius: 25%;
         transform: rotate(45deg);
       }
+    }
+  }
+}
+
+
+
+.fret,
+.fret-number,
+.fretboard-marker-group {
+  @for $i from 1 through 50 {
+    &:nth-child(#{$i}) {
+      height: calc(#{$fret-height} - #{$i}px);
     }
   }
 }

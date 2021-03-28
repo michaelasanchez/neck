@@ -35,17 +35,14 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
 
 .indicators {
   display: flex;
-  max-width: $neck-width;
+  justify-content: space-evenly;
   padding: $neck-padding-vertical 0;
-  width: 100%;
-  margin: 0 $fretboard-marker-width;
 
   .string {
-    width: 100%;
+    flex: 1;
 
     .fret {
       position: relative;
-      height: $fret-height;
       @include flex-center;
 
       // Easiest way to match neck fret

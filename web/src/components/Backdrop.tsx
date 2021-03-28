@@ -1,9 +1,8 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { useAppOptionsContext } from '..';
+import { useStyles } from '../hooks';
 import { Note } from '../models';
-
-import { AppOptions, styles } from '../shared';
 import { FretMarkers, FretNumbers } from './neck';
 
 export const ENABLE_NECK_MARKERS = true;
@@ -23,15 +22,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
   const { appOptions } = useAppOptionsContext();
   const { instrument, tuning } = appOptions;
 
-  const neckStyles = {
-    height: (instrument?.NumFrets + 1) * fretHeight || 0,
-    maxWidth: styles.neck.maxWidth,
-  };
-
-  const neckWithMarginStyles = {
-    height: neckStyles.height + 100 * 2,
-    maxWidth: styles.neck.maxWidth,
-  };
+  const { styles: styles } = useStyles();
 
   const renderString = () => {
     return (
@@ -53,13 +44,13 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
     return (
       <>
         <div className="shadow-container">
-          <div className="shadow" style={neckStyles}></div>
+          <div className="shadow" style={styles.shadow}></div>
         </div>
         <div className="shadow-overlay-container">
-          <div className="shadow-overlay" style={neckWithMarginStyles}></div>
+          <div className="shadow-overlay" style={styles.overlay}></div>
         </div>
         <div className="fretboard-container">
-          <div className="fretboard" style={neckWithMarginStyles}></div>
+          <div className="fretboard" style={styles.fretboard}></div>
         </div>
         {ENABLE_STRINGS && (
           <div className="strings-container">{renderString()}</div>

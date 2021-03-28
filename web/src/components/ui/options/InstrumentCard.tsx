@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import {
   CardAction,
   CardKey,
@@ -56,12 +56,14 @@ const validatePending = (pending: PendingInstrument) => {
   if (!pending?.NumStrings) {
     warnings.push('Strings cannot be empty');
   } else if (isNaN(parseInt(pending.NumStrings))) {
-    warnings.push('Strings must be a number');
+    warnings.push('String dimension must be a number');
   }
   if (!pending?.NumFrets) {
     warnings.push('Frets cannot be empty');
   } else if (isNaN(parseInt(pending.NumFrets))) {
-    warnings.push('Frets must be a number');
+    warnings.push('Fret dimension must be a number');
+  } else if (parseInt(pending.NumFrets) > 48) {
+    warnings.push('Fret dimension must be less than 48')
   }
   return warnings;
 };
@@ -172,10 +174,12 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
     updated: Instrument,
     refresh: boolean = false
   ) => {
-    setInstrument({
+    const next = {
       ...updated,
       NumFrets: updated?.NumFrets || instrument.NumFrets,
-    });
+    };
+    setInstrument(next);
+    setPending(toPending(next));
     if (refresh) {
       getInstruments();
     }
@@ -214,6 +218,7 @@ export const InstrumentCard: React.FunctionComponent<InstrumentCardOptions> = (
           formMode == FormMode.Select ? handleSetInstrument : handleSetPending
         }
       />
+      <h6>Dimensions</h6>
       <Form inline>
         <Form.Label className="my-1 mr-2">Strings</Form.Label>
         <Form.Control

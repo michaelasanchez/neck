@@ -7,6 +7,8 @@
   }
 }
 
+$warning: #ffc107;
+
 .notifications {
   position: absolute;
   top: 20px;
@@ -21,6 +23,19 @@
     animation: new-notification 200ms ease-out;
     transition: opacity 250ms, transform 250ms ease-out;
 
+    // Overrides
+    padding: 1rem 1.25rem;
+    
+    &.alert-dismissible {
+      padding-right: 4rem;
+
+      // TODO: remove this hard coding
+      .close {
+        bottom: 6px;
+      }
+    }
+    // Overrides
+
     &.fading {
       opacity: 0;
     }
@@ -30,7 +45,18 @@
     }
 
     .close {
-      line-height: .8;
+      line-height: 0.8;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+
+    &.alert-warning {
+      color: #fff;
+      background-color: $warning;
+      border: 3px solid darken($warning, 8%);
+      font-weight: 500;
     }
   }
 }

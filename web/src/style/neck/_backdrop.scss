@@ -1,5 +1,4 @@
 .shadow {
-  width: $neck-width;
   height: 1000px;
   box-shadow: $neck-box-shadow;
   margin: $neck-padding-vertical 0;
@@ -7,13 +6,12 @@
 
 .shadow-overlay {
   height: 100vh;
-  width: $neck-width;
   background: $body-background-color;
 }
 
 .fretboard {
   background: $fretboard-background;
-  width: $neck-width;
+  padding: $neck-padding-vertical 0;
 }
 
 .fretboard-numbers,
@@ -24,30 +22,27 @@
 .fretboard-numbers {
   display: flex;
   justify-content: space-between;
+  width: 100%;
 
   &.right {
     justify-content: flex-end;
   }
 
   .fret-number-group {
+
     .fret-number {
       @include flex-center;
 
       color: $fret-label-color;
-      height: $fret-height;
+      // height: $fret-height;
     }
   }
-}
-
-.fretboard-markers {
-  width: $neck-width;
 }
 
 .fretboard-marker-group {
   @include flex-center;
 
   color: #999;
-  height: $fret-height;
 
   // FretDisplayMode.Marker
   .fretboard-marker:not(.open) {
@@ -69,7 +64,6 @@
     display: flex;
     height: 100%;
     width: 100%;
-    max-width: $neck-width;
     padding: #{$neck-padding-vertical + $fret-height} 0 $neck-padding-vertical;
     flex: 1 1 auto;
     justify-content: space-around;

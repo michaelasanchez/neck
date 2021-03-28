@@ -43,10 +43,16 @@
         // Bootstrap override (for dropovers)
         overflow: visible;
 
+        .card-header {
+          &:hover h5 {
+            // TODO: finish this
+          }
+        }
+
         &.expanded {
           // Stole from bootstrap
-          border-top: 1px solid rgba(0, 0, 0, 0.125);
-          border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+          // border-top: 1px solid rgba(0, 0, 0, 0.125);
+          // border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 
           .card-subtitle {
             opacity: 0;

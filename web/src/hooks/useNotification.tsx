@@ -2,7 +2,7 @@ import { findIndex, map, remove } from 'lodash';
 import { useEffect, useState } from 'react';
 import { IActiveNotification, NotificationType } from '../interfaces';
 
-export const NOTIFICATION_TIMESPAN_DEFAULT = 5000;
+export const NOTIFICATION_TIMESPAN_DEFAULT = 500000;
 export const NOTIFICATION_FADE_TIMESPAN_DEFAULT = 1000;
 
 export const useNotification = () => {
