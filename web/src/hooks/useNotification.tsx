@@ -61,6 +61,15 @@ export const useNotification = () => {
     ]);
     setNextId((id) => id + 1);
   };
+  
+  const queue = (
+    message: string,
+    type: NotificationType = NotificationType.Primary
+  ) => {
+    // TODO: need a good way to add multiple - two options:
+    //  1) add queueing system to render 1 per redraw?
+    //  2) fix css/js for adding several without stacking
+  }
 
   const dismiss = (notificationId: number) => {
     const index = findIndex(notifications, (n) => n.id == notificationId);

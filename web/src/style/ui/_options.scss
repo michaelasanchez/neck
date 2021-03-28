@@ -81,24 +81,6 @@
             max-width: 3em;
           }
         }
-
-        /* Bootstrap override */
-        // TODO: move this somewhere we can re-use
-        button.btn-outline-secondary {
-          border-color: #ced4da;
-          color: #212529;
-
-          &:active,
-          &:focus,
-          &:hover {
-            background-color: unset;
-            border-color: #80bdff;
-            color: #212529;
-          }
-          &:focus {
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-          }
-        }
       }
     }
   }

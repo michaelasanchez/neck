@@ -1,4 +1,7 @@
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faExclamationCircle,
+  faExclamationTriangle,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
@@ -18,12 +21,16 @@ import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
 import { FormMode, InlineOptionsForm } from './InlineOptionsForm';
 
+const incompleteTuningMessage = "Tuning is incomplete :'(";
+const missingTuningMessage = 'Tuning is missing!';
+
 export interface TuningCardOptions extends Pick<OptionCardProps, 'active'> {
   eventKey: string;
   instrument: Instrument;
   tuning: Tuning;
   setTuning: (t: Tuning) => void;
 }
+
 const calcOptions = (start: TuningNote, end: TuningNote) => {
   const options = [];
   let current = start;
@@ -107,7 +114,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
   }, [rest.active]);
 
   useEffect(() => {
-    if (!!instrument) {
+    if ((!!instrument && !tunings) || instrument.Id != tuning?.InstrumentId) {
       getTunings(instrument.Id);
     }
   }, [instrument]);
@@ -190,6 +197,29 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
     }
   };
 
+  console.log('tunings', tunings)
+
+  const messages = (
+    <div className="text-center mb-3">
+      {tuning?.Offsets.length <= 0 && (
+        <>
+          <span className="text-warning">
+            <FontAwesomeIcon icon={faExclamationTriangle} className="mx-2" />
+          </span>
+          {incompleteTuningMessage}
+        </>
+      )}
+      {/* {tunings?.length <= 0 && (
+        <>
+          <span className="text-danger">
+            <FontAwesomeIcon icon={faExclamationCircle} className="mx-2" />
+          </span>
+          {missingTuningMessage}
+        </>
+      )} */}
+    </div>
+  );
+
   const body = (current: Tuning) => (
     <>
       <InlineOptionsForm
@@ -199,12 +229,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         onAction={handleFormAction}
         setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
-      {tuning?.Offsets.length <= 0 && (
-        <div className="text-center text-danger mb-3">
-          <FontAwesomeIcon icon={faExclamationTriangle} className="mx-2" />
-          Help! my tuning is invalid :'(
-        </div>
-      )}
+      {messages}
       <div className="tuning-selector">
         {times(instrument.NumStrings, (j) => {
           const offsets =
@@ -235,7 +260,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
       {...rest}
       title="Tuning"
       subtitle={tuning?.Label || '(No Tuning)'}
-      body={body(formMode !== null && !!pending ? pending : tuning)}
+      body={body(formMode == FormMode.Select ? tuning : pending)}
       eventKey={eventKey}
     />
   );

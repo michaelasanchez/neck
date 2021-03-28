@@ -36,12 +36,6 @@ export enum FormMode {
   Create,
 }
 
-const hiddenActionsStyle: React.CSSProperties = {
-  position: 'absolute',
-  transform: 'translateY(100%)',
-  opacity: 0,
-};
-
 export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> = ({
   mode,
   options,
@@ -74,14 +68,12 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
 
   return (
     <div className="options-form">
-      {/* Select */}
       <div className="select-action">
         {labelSelect()}
         {mode != FormMode.Select && (
           <Form.Control
             value={current?.Label}
             onChange={(e) => setCurrent({ Label: e.target.value })}
-            // className={mode == FormMode.Select ? 'hide' : ''}
             autoFocus={true}
           />
         )}
@@ -90,7 +82,6 @@ export const InlineOptionsForm: React.FunctionComponent<InlineOptionsFormProps> 
       <div className="actions-container">
         <div
           className={`mode-actions${mode === FormMode.Select ? '' : ' hidden'}`}
-          //   style={mode === null ? {} : hiddenActionsStyle}
         >
           {/* Edit */}
           <Button

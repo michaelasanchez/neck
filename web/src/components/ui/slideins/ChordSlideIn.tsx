@@ -68,7 +68,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
 
   // Generate
   useEffect(() => {
-    console.log(header, tuning);
     if (
       !!chord &&
       !collapse &&
@@ -80,7 +79,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
         header?.Range != instrument.NumFrets ||
         !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets))
     ) {
-      console.log('made it here');
       // Handle new instrument
       if (tuning.Offsets.length === 0) {
         setSelected([]);
