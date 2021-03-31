@@ -16,8 +16,6 @@
     border-bottom: $fret-border-bottom;
 
     &.open {
-      height: $fret-open-height;
-
       border-bottom: $fret-open-border-bottom;
       font-weight: $fret-open-font-weight;
     }

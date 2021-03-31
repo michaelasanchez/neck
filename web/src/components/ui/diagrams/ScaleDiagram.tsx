@@ -55,18 +55,14 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   variation,
 }) => {
   const renderSymbols = useCallback(() => {
-    return mapSymbols(
-      calcSpan(variation),
-      variation.Positions,
-      highlighted
-    );
+    return mapSymbols(calcSpan(variation), variation.Positions, highlighted);
   }, [variation, highlighted]);
 
   return (
     <Diagram
       active={active}
       className="scale"
-      diagramLabel={<>label</>} //{<>{variation.Label}</>}
+      diagramLabel={<></>} //{<>{variation.Label}</>}
       handleClick={() => setVariation(variation)}
       span={calcSpan(variation)}
       symbols={renderSymbols()}

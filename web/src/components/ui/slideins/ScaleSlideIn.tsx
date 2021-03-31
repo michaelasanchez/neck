@@ -1,4 +1,6 @@
-import { every, filter, map } from 'lodash';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
@@ -6,13 +8,7 @@ import { NoteSelection } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
 import { IGenerateResponseHeader } from '../../../interfaces';
-import {
-  Note,
-  Scale,
-  ScaleType,
-  ScaleVariation,
-  TuningNote,
-} from '../../../models';
+import { Note, Scale, ScaleType, ScaleVariation } from '../../../models';
 import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
 import { NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
@@ -83,7 +79,8 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         header?.BaseId != scale.Id ||
         header?.TuningId != tuning.Id ||
         header?.Range != instrument.NumFrets ||
-        !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets))
+        (!!header.Tuning &&
+          !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets)))
     ) {
       // Handle new instrument
       if (tuning.Offsets.length === 0) {
@@ -94,7 +91,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         generateVariations({
           baseId: scale.Id,
           tuningId: tuning.Id,
-          span: 6,
+          span: 5,
           offset: 0,
           range: instrument.NumFrets,
         }).then((newHeader: IGenerateResponseHeader<ScaleVariation>) => {

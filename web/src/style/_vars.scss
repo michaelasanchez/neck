@@ -52,11 +52,9 @@ $fretboard-marker-width: $fretboard-marker-diameter;
 $fretboard-marker-height: $fretboard-marker-diameter;
 
 // /* Frets */
-$fret-height: 100px;
 $fret-border-bottom-width: 1px;
 $fret-border-bottom: $fret-border-bottom-width solid #ddd;
 
-$fret-open-height: $fret-height;
 $fret-open-border-bottom-width: 2px;
 $fret-open-border-bottom: $fret-open-border-bottom-width solid #aaa;
 $fret-open-font-weight: 700;

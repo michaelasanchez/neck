@@ -2,7 +2,7 @@ import { reduce, times } from 'lodash';
 import { CSSProperties, useEffect, useState } from 'react';
 import { useAppOptionsContext } from '..';
 
-const mobileHMargin = 60; // Also fret number width
+const mobileHMargin = 60; // Used for fret number width
 const mobileVMargin = 100;
 
 const fretHeight = 100;
@@ -34,7 +34,6 @@ export const useStyles = () => {
   const { instrument } = appOptions;
 
   const fretHeights = times(instrument.NumFrets, (f) => fretHeight - f);
-  //   const neckHeight = (instrument?.NumFrets * fretHeight || 0) + fretHeight;
 
   const neckHeight =
     fretHeight +

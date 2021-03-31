@@ -61,13 +61,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     }
   }, [chordVariation, scaleVariation, mode]);
 
-  /* ChordVariation */
-  if (
-    mode == IndicatorsMode.Chord &&
-    !!chordVariation &&
-    chordVariation.ChordId === chord.Id &&
-    chordVariation.TuningId === tuning?.Id
-  ) {
+  const renderChordIndicators = () => {
     const positions = chordVariation.Formation.Positions;
     const barres = chordVariation.Formation.Barres;
 
@@ -87,7 +81,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     }
 
     return (
-      <div className="indicators" style={styles.indicators}>
+      <>
         {map(tuning.Offsets, (o: Note, i: number) => {
           const position = positions[i];
 
@@ -148,16 +142,11 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
             </div>
           );
         })}
-      </div>
+      </>
     );
+  };
 
-    /* ScaleVariation */
-  } else if (
-    mode == IndicatorsMode.Scale &&
-    !!scaleVariation &&
-    scaleVariation.ScaleId === scale.Id &&
-    scaleVariation.TuningId === tuning?.Id
-  ) {
+  const renderScaleIndicators = () => {
     const fretStart = scaleVariation.Offset;
     const fretEnd =
       scaleVariation.Offset + scaleVariation.Positions[0].length - 1;
@@ -176,7 +165,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     });
 
     return (
-      <div className="indicators">
+      <>
         {map(tuning.Offsets, (o: Note, i: number) => {
           const positions = scaleVariation.Positions[i];
           const open = scaleVariation.Offset === 0 && positions[0] !== null;
@@ -233,9 +222,33 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
             </div>
           );
         })}
-      </div>
+      </>
     );
-  } else {
-    return null;
-  }
+  };
+
+  const renderIndicators = () => {
+    if (
+      mode == IndicatorsMode.Chord &&
+      !!chordVariation &&
+      chordVariation.ChordId === chord.Id &&
+      chordVariation.TuningId === tuning?.Id
+    ) {
+      return renderChordIndicators();
+    } else if (
+      mode == IndicatorsMode.Scale &&
+      !!scaleVariation &&
+      scaleVariation.ScaleId === scale.Id &&
+      scaleVariation.TuningId === tuning?.Id
+    ) {
+      return renderScaleIndicators();
+    } else {
+      return null;
+    }
+  };
+
+  return (
+    <div className="indicators" style={styles.indicators}>
+      {renderIndicators()}
+    </div>
+  );
 };

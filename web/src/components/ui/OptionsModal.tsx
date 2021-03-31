@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Accordion, Modal, useAccordionToggle } from 'react-bootstrap';
+import { Accordion, Form, Modal, useAccordionToggle } from 'react-bootstrap';
 import { CardAction, OptionCard } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Tuning } from '../../models';
@@ -11,7 +11,7 @@ export interface OptionsModalProps {
   onHide: Function;
 }
 
-export enum CardKey  {
+export enum CardKey {
   General = '0',
   Instrument = '1',
   Tuning = '2',
@@ -38,10 +38,6 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
     }
   };
 
-  // const test = useAccordionToggle(eventKey, () => {
-
-  // });
-
   return (
     <div className="options-container" ref={container}>
       <Modal
@@ -56,19 +52,19 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
         </Modal.Header>
 
         <Modal.Body>
-          <Accordion onSelect={(key: any) => setActiveKey(key)} activeKey={activeKey}>
+          <Accordion
+            onSelect={(key: any) => setActiveKey(key)}
+            activeKey={activeKey}
+          >
             <OptionCard
               active={activeKey === CardKey.General}
               eventKey={CardKey.General}
               title="General"
-              subtitle="You know..."
+              subtitle=""
               body={
-                <ul>
-                  <li>Left-Hand Mode</li>
-                  <li># / b / #+b</li>
-                  <li>Dark Mode</li>
-                  <li>Hmm...</li>
-                </ul>
+                <Form.Group>
+                  <Form.Check type="checkbox" label="Left-Hand Mode" custom={true} />
+                </Form.Group>
               }
             />
             <InstrumentCard

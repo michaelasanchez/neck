@@ -77,7 +77,8 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
         header?.BaseId != chord.Id ||
         header?.TuningId != tuning.Id ||
         header?.Range != instrument.NumFrets ||
-        !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets))
+        (!!header.Tuning &&
+          !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets)))
     ) {
       // Handle new instrument
       if (tuning.Offsets.length === 0) {

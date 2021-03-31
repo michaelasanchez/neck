@@ -5,6 +5,10 @@ $fret-animation-scale-y: 0.5;
 
 $fret-height-hide-scale: 0.4;
 
+// TODO: only correct for open fret
+//  I think we can replace this with +/- 100%
+$fret-height: 100px;
+
 @keyframes up-out {
   0% {
     transform: translateY(0) scaleY(1);
