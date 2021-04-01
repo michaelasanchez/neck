@@ -12,6 +12,7 @@ export interface NavbarProps {
   show: Function;
   setKey: Function;
   setFretDisplayMode: Function;
+  className: string;
 }
 
 export const Navbar: React.FunctionComponent<NavbarProps> = ({
@@ -21,6 +22,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
   setKey,
   setFretDisplayMode,
   musicKey,
+  className,
 }) => {
   const keys = Keys.DropdownValues();
 
@@ -44,7 +46,11 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
   };
 
   return (
-    <nav className="navbar navbar-dark bg-dark">
+    <nav
+      className={`navbar navbar-dark bg-dark${
+        className ? ` ${className}` : ''
+      }`}
+    >
       <a className="navbar-brand" href="#">
         Neck
       </a>

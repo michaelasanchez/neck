@@ -24,7 +24,7 @@ export const Notifications: React.FunctionComponent<NotificationsProps> = () => 
           onMouseOver={() => postponeNotification(n.id)}
           onMouseOut={() => postponeNotification(n.id, false)}
           onClose={() => dismissNotification(n.id)}
-          style={{ transform: `translate(0px, ${i * 60}px)` }}
+          style={{ transform: `translate(0px, ${i * 70}px)` }}
         >
           <span>{n.message}</span>
         </Alert>

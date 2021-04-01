@@ -20,10 +20,7 @@ main.left {
   .indicators {
     flex-direction: row-reverse;
   }
-}
 
-// Slide-Ins
-.ui.left {
   .diagram {
     .diagram-container .symbols > div {
       flex-direction: row-reverse;
@@ -31,5 +28,17 @@ main.left {
     .label-container {
       flex-direction: row-reverse;
     }
+  }
+}
+
+.navbar.left {
+  flex-direction: row-reverse;
+}
+
+// Slide-Ins
+.ui.left {
+  .mode-switch {
+    left: unset;
+    right: 30px;
   }
 }

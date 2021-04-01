@@ -8,8 +8,6 @@ export class Cookie {
   chordId: string;
   scaleId: string;
 
-  leftHandMode: boolean;
-
   key: Key;
   mode: Mode;
 
@@ -17,18 +15,22 @@ export class Cookie {
 
   indicatorsMode: IndicatorsMode;
 
+  leftHandMode: boolean;
+  leftHandUi: boolean;
+
   static Default(): Cookie {
     return {
       chordId: null,
       instrumentId: null,
       tuningId: null,
 
-      leftHandMode: false,
-
       key: Key.C(),
       mode: Mode.Ionian(),
 
       indicatorsMode: IndicatorsMode.Chord,
+
+      leftHandMode: false,
+      leftHandUi: false,
 
       neck: {
         numFrets: "14",

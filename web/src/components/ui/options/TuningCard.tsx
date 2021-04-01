@@ -246,6 +246,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
       {messages}
+        <h6>Strings</h6>
       <div className="tuning-selector">
         {times(instrument.NumStrings, (j) => {
           const offsets =

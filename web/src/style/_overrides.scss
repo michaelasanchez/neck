@@ -24,6 +24,13 @@
   padding: 0.5rem 1rem;
 }
 
+/* Forms / Inputs */
+.form-group.clickable {
+  &, * {
+    cursor: pointer;
+  }
+}
+
 /* Navbar */
 nav.fixed-bottom {
   // z-index: 1060;

@@ -22,7 +22,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   onHide,
 }: OptionsModalProps) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { instrument, tuning, leftHandMode } = appOptions;
+  const { instrument, tuning, leftHandMode, leftHandUi } = appOptions;
 
   const container = React.useRef();
 
@@ -60,20 +60,46 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
               active={activeKey === CardKey.General}
               eventKey={CardKey.General}
               title="General"
-              subtitle=""
+              subtitle={
+                !leftHandMode
+                  ? 'Default'
+                  : !leftHandUi
+                  ? 'Left-hand Guitar'
+                  : 'Left-hand Mode'
+              }
               body={
-                <Form.Group>
-                  <Form.Check
-                    type="checkbox"
-                    label="Left-Hand Mode"
-                    // custom
-                    // custom={true}
-                    checked={leftHandMode}
-                    onChange={(e) => {
-                      setAppOptions({ leftHandMode: !leftHandMode });
+                <>
+                  <Form.Group
+                    onClick={(e: any) =>
+                      setAppOptions({
+                        leftHandMode: !leftHandMode,
+                      })
+                    }
+                    className="clickable mb-1"
+                  >
+                    <Form.Check
+                      type="checkbox"
+                      label="Left-hand Guitar"
+                      custom
+                      checked={leftHandMode}
+                      onChange={() => {}}
+                    />
+                  </Form.Group>
+                  <Form.Group
+                    onClick={(e: any) => {
+                      setAppOptions({ leftHandUi: !leftHandUi });
                     }}
-                  />
-                </Form.Group>
+                    className="clickable mb-0"
+                  >
+                    <Form.Check
+                      type="checkbox"
+                      label="Left-hand UI"
+                      custom
+                      checked={leftHandUi}
+                      onChange={() => {}}
+                    />
+                  </Form.Group>
+                </>
               }
             />
             <InstrumentCard

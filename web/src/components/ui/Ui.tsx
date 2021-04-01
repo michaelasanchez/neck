@@ -104,8 +104,18 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         show={() => setShowOptions(true)}
         setKey={(k: Key) => setAppOptions({ key: k })}
         setFretDisplayMode={handleFretDisplayModeUpdate}
+        className={`${appOptions.leftHandUi ? 'left' : ''}`}
       />
-      <div className={`ui${appOptions.leftHandMode ? ' left' : ''}`}>
+      {/* <Draggable>
+        <div className="slidein-container">
+          <ScaleSlideIn
+            devYOffset={0}
+            collapse={indicatorsMode !== IndicatorsMode.Scale}
+          />
+          <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
+        </div>
+      </Draggable> */}
+      <div className={`ui${appOptions.leftHandUi ? ' left' : ''}`}>
         {renderModeSwitch(appOptions.indicatorsMode)}
         <div className="modal-container">
           <OptionsModal
@@ -113,15 +123,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
             onHide={() => setShowOptions(false)}
           />
         </div>
-        <Draggable>
-          <div className="slidein-container">
-            <ScaleSlideIn
-              devYOffset={0}
-              collapse={indicatorsMode !== IndicatorsMode.Scale}
-            />
-            <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
-          </div>
-        </Draggable>
         <Notifications />
       </div>
     </>
