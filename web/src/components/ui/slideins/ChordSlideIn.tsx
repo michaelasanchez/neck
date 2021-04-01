@@ -166,7 +166,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     ) : (
       <> Nope!</>
     );
-  }, [variations, currentIndex, selected]);
+  }, [variations, currentIndex, selected, appOptions.leftHandMode]);
 
   return (
     <DropdownSlideIn

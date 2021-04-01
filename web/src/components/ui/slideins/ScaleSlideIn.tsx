@@ -154,7 +154,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         setVariation={(v) => handleSetScaleVariation(v, i)}
       />
     ));
-  }, [variations, currentIndex, selected]);
+  }, [variations, currentIndex, selected, appOptions.leftHandMode]);
 
   return (
     <DropdownSlideIn

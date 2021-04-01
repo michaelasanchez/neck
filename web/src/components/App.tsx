@@ -18,14 +18,15 @@ export const [NotificationsProvider, useNotificationContext] = constate(
 );
 
 const App: React.FunctionComponent<AppProps> = () => {
-  const { loading, errors } = useAppOptionsContext();
+  const { loading, errors, appOptions } = useAppOptionsContext();
+
 
   const mainRef = useRef<HTMLDivElement>();
 
   if (!loading) {
     return (
       <>
-        <main ref={mainRef}>
+        <main ref={mainRef} className={appOptions.leftHandMode ? 'left' : ''}>
           <Backdrop />
           <div className="neck-container">
             <Neck />

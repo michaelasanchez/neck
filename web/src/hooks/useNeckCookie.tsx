@@ -3,12 +3,16 @@ import { useCookie } from '.';
 import { Cookie, Key, Mode, Note } from '../models';
 import { AppOptions } from '../shared';
 
+// Encode
 const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
   const cookie = new Cookie();
 
   cookie.chordId = appOptions.chord.Id;
   cookie.instrumentId = appOptions.instrument.Id;
-  cookie.tuningId = appOptions.tuning?.Id === appOptions.instrument.DefaultTuningId ? null : appOptions.tuning.Id;
+  cookie.tuningId =
+    appOptions.tuning?.Id === appOptions.instrument.DefaultTuningId
+      ? null
+      : appOptions.tuning.Id;
   cookie.key = appOptions.key;
   cookie.mode = appOptions.mode;
   cookie.neck = {
@@ -17,9 +21,12 @@ const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
   cookie.scaleId = appOptions.scale.Id;
   cookie.indicatorsMode = appOptions.indicatorsMode;
 
+  cookie.leftHandMode = appOptions.leftHandMode;
+
   return JSON.stringify(cookie);
 };
 
+// Decode
 const cookieFromCookieString = (cookieString: string): Cookie => {
   if (!cookieString) return null;
 

@@ -14,13 +14,13 @@ import { slideInDuration } from './slideins';
 
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
-export interface UiProps { }
+export interface UiProps {}
 
 export interface UiState {
   showOptions: boolean;
 }
 
-export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
+export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
 
   const { notifications } = useNotificationContext();
@@ -34,7 +34,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
 
   const [disabled, setDisabled] = useState<boolean>(false);
 
-  useEffect(() => { }, [notifications]);
+  useEffect(() => {}, [notifications]);
 
   const handleFretDisplayModeUpdate = (fretMode: FretDisplayMode) => {
     let updated: FretDisplayMode;
@@ -105,7 +105,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({ }) => {
         setKey={(k: Key) => setAppOptions({ key: k })}
         setFretDisplayMode={handleFretDisplayModeUpdate}
       />
-      <div className="ui">
+      <div className={`ui${appOptions.leftHandMode ? ' left' : ''}`}>
         {renderModeSwitch(appOptions.indicatorsMode)}
         <div className="modal-container">
           <OptionsModal

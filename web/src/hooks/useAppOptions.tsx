@@ -1,7 +1,6 @@
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
-import { useNotificationContext } from '../components';
 import { IError } from '../components/Loading';
 import {
   Chord,
@@ -128,7 +127,9 @@ export const useAppOptions = () => {
 
         key: cookie.key,
         mode: cookie.mode,
+
         indicatorsMode: cookie.indicatorsMode,
+        leftHandMode: cookie.leftHandMode,
       } as AppOptions;
 
       setAppOptions(options);

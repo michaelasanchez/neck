@@ -1,23 +1,35 @@
 main.left {
+  // Navbar
+  nav {
+    flex-direction: row-reverse;
 
-    // Navbar
-    nav {
+    form {
       flex-direction: row-reverse;
 
-      form {
-        flex-direction: row-reverse;
-
-        button.options {
-          margin: 0 0 0 15px;
-        }
+      button.options {
+        margin: 0 0 0 15px;
       }
     }
+  }
 
-    // Options
+  // Neck
+  .neck .neck-strings {
+    flex-direction: row-reverse;
+  }
 
-    // Neck
-    .neck .neck-strings {
+  .indicators {
+    flex-direction: row-reverse;
+  }
+}
+
+// Slide-Ins
+.ui.left {
+  .diagram {
+    .diagram-container .symbols > div {
       flex-direction: row-reverse;
     }
-
+    .label-container {
+      flex-direction: row-reverse;
+    }
+  }
 }

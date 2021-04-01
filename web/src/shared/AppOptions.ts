@@ -11,6 +11,8 @@ export interface AppOptions {
   key: Key; 
   mode: Mode; // Options modal 
 
+  leftHandMode: boolean;
+
   // Ui?
   indicatorsMode?: IndicatorsMode;
 

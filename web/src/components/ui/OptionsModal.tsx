@@ -22,7 +22,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   onHide,
 }: OptionsModalProps) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { instrument, tuning, mode } = appOptions;
+  const { instrument, tuning, leftHandMode } = appOptions;
 
   const container = React.useRef();
 
@@ -63,7 +63,16 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
               subtitle=""
               body={
                 <Form.Group>
-                  <Form.Check type="checkbox" label="Left-Hand Mode" custom={true} />
+                  <Form.Check
+                    type="checkbox"
+                    label="Left-Hand Mode"
+                    // custom
+                    // custom={true}
+                    checked={leftHandMode}
+                    onChange={(e) => {
+                      setAppOptions({ leftHandMode: !leftHandMode });
+                    }}
+                  />
                 </Form.Group>
               }
             />
