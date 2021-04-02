@@ -20,15 +20,6 @@ main.left {
   .indicators {
     flex-direction: row-reverse;
   }
-
-  .diagram {
-    .diagram-container .symbols > div {
-      flex-direction: row-reverse;
-    }
-    .label-container {
-      flex-direction: row-reverse;
-    }
-  }
 }
 
 .navbar.left {
@@ -40,5 +31,27 @@ main.left {
   .mode-switch {
     left: unset;
     right: 30px;
+  }
+
+  .modal #options {
+    right: unset;
+    left: 0;
+  }
+}
+
+.slidein-container {
+  &.ui-left {
+    left: unset;
+    right: 450px;
+  }
+  &.left {
+    .diagram {
+      .diagram-container .symbols > div {
+        flex-direction: row-reverse;
+      }
+      .label-container {
+        flex-direction: row-reverse;
+      }
+    }
   }
 }

@@ -17,6 +17,7 @@ export class Cookie {
 
   leftHandMode: boolean;
   leftHandUi: boolean;
+  autoScroll: boolean;
 
   static Default(): Cookie {
     return {
@@ -31,6 +32,7 @@ export class Cookie {
 
       leftHandMode: false,
       leftHandUi: false,
+      autoScroll: true,
 
       neck: {
         numFrets: "14",

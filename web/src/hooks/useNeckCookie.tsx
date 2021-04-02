@@ -22,6 +22,7 @@ const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
 
   cookie.leftHandMode = appOptions.leftHandMode;
   cookie.leftHandUi = appOptions.leftHandUi;
+  cookie.autoScroll = appOptions.autoScroll;
 
   cookie.neck = {
     numFrets: appOptions.instrument.NumFrets.toString(),

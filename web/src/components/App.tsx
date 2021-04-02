@@ -26,33 +26,18 @@ const App: React.FunctionComponent<AppProps> = () => {
   if (!loading) {
     return (
       <>
-        <NotificationsProvider>
-          <main ref={mainRef} className={appOptions.leftHandMode ? 'left' : ''}>
-            <Backdrop />
-            <div className="neck-container">
-              <Neck />
+        <main ref={mainRef} className={appOptions.leftHandMode ? 'left' : ''}>
+          <Backdrop />
+          <div className="neck-container">
+            <Neck />
+          </div>
+          {SHOW_INDICATORS && (
+            <div className="indicators-container">
+              <Indicators mainRef={mainRef} />
             </div>
-            {SHOW_INDICATORS && (
-              <div className="indicators-container">
-                <Indicators mainRef={mainRef} />
-              </div>
-            )}
-            <Draggable>
-              <div
-                // TODO: decide if this is "ui" or not.. (this smells)
-                className={`slidein-container${
-                  appOptions.leftHandUi ? ' left' : ''
-                }`}
-              >
-                <ScaleSlideIn
-                  collapse={appOptions.indicatorsMode !== IndicatorsMode.Scale}
-                />
-                <ChordSlideIn
-                  collapse={appOptions.indicatorsMode !== IndicatorsMode.Chord}
-                />
-              </div>
-            </Draggable>
-          </main>
+          )}
+        </main>
+        <NotificationsProvider>
           <Ui />
         </NotificationsProvider>
       </>

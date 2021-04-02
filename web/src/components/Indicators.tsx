@@ -30,12 +30,14 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     scaleVariation,
     tuning,
     instrument,
+    autoScroll
   } = appOptions;
 
   const firstIndicatorRef = useRef();
   const lastIndicatorRef = useRef();
 
   useEffect(() => {
+
     if (!!mainRef?.current && !!firstIndicatorRef?.current) {
       const first = firstIndicatorRef.current as HTMLDivElement;
       const last = !!lastIndicatorRef?.current
@@ -56,10 +58,10 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
         scrollPosition = bottom - main.offsetHeight;
       }
 
-      if (scrollPosition !== undefined)
+      if (scrollPosition !== undefined && !!autoScroll)
         main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
-  }, [chordVariation, scaleVariation, mode]);
+  }, [chordVariation, scaleVariation, mode, autoScroll]);
 
   const renderChordIndicators = () => {
     const positions = chordVariation.Formation.Positions;

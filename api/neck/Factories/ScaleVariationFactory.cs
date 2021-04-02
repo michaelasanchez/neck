@@ -10,6 +10,8 @@ namespace neck.Factories
 	public class ScaleVariationFactory : IVariationFactory<Scale, ScaleVariation>
 	{
 
+		public const bool ENFORCE_OCTAVE = false;
+
 		public List<ScaleVariation> GenerateVariations(Scale @base, Tuning tuning, int offset, int span)
 		{
 			Scale scale = @base;
@@ -119,7 +121,7 @@ namespace neck.Factories
 					// Validate next note
 					var note = noteSpan[o][p];
 					if (note != null && (prevNote == null ||
-						(note.Degree == calcNextDegree(scale, prevNote) && note.Octave == calcNextOctave(scale, prevNote))))
+						(note.Degree == calcNextDegree(scale, prevNote) && (ENFORCE_OCTAVE == false || note.Octave == calcNextOctave(scale, prevNote)))))
 					{
 						prevNote = note;
 						currentDegree = note.Degree;
@@ -127,32 +129,30 @@ namespace neck.Factories
 						var nextDegree = calcNextDegree(scale, note);
 						var nextOctave = calcNextOctave(scale, note);
 
-						// Next note on current string
-						var currentStringIndex = noteSpan[o].FindIndex(p, n => n != null && n.Degree == nextDegree && n.Octave == nextOctave);
-						if (currentStringIndex > -1)
+						// TODO: still not sure why this was here
+						//var currentStringIndex = noteSpan[o].FindIndex(p, n => n != null && n.Degree == nextDegree && (ENFORCE_OCTAVE == false || n.Octave == nextOctave));
+
+						// First note on next string
+						if (o < noteSpan.Count - 1)
 						{
-							// First note on next string
-							if (o < noteSpan.Count - 1)
+							var nextStringIndex = noteSpan[o + 1].FindIndex(n => n != null && n.Degree == nextDegree && (ENFORCE_OCTAVE == false || n.Octave == nextOctave));
+							if (nextStringIndex > -1)
 							{
-								var nextStringIndex = noteSpan[o + 1].FindIndex(n => n != null && n.Degree == nextDegree && n.Octave == nextOctave);
-								if (nextStringIndex > -1)
-								{
-									var currentDup = currentDegrees.Select(d => d).ToList();
-									currentDup.Add(note.Degree);
+								var currentDup = currentDegrees.Select(d => d).ToList();
+								currentDup.Add(note.Degree);
 
-									while (currentDup.Count < span)
-										currentDup.Add(null);
+								while (currentDup.Count < span)
+									currentDup.Add(null);
 
-									var directionsDup = degrees.Select(o => o.Select(p => p).ToList()).ToList();
-									directionsDup.Add(currentDup);
+								var directionsDup = degrees.Select(o => o.Select(p => p).ToList()).ToList();
+								directionsDup.Add(currentDup);
 
-									positions.AddRange(generateDegreePositions(noteSpan, scale, offset, span, directionsDup, prevNote.Copy(), o + 1, 0));
-								}
+								positions.AddRange(generateDegreePositions(noteSpan, scale, offset, span, directionsDup, prevNote.Copy(), o + 1, 0));
 							}
-							else
-							{
-								// TODO: Handle case where scale has ended
-							}
+						}
+						else
+						{
+							// TODO: Handle case where scale has ended
 						}
 					}
 

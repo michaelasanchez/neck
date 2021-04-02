@@ -12,6 +12,8 @@ export interface AppOptions {
   mode: Mode; // Options modal 
 
   leftHandMode: boolean;
+  leftHandUi: boolean;
+  autoScroll: boolean;
 
   // Ui?
   indicatorsMode?: IndicatorsMode;

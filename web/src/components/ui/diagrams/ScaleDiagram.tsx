@@ -57,7 +57,6 @@ export const ScaleDiagram: React.FC<ScaleDiagramProps> = ({
   const renderSymbols = useCallback(() => {
     return mapSymbols(calcSpan(variation), variation.Positions, highlighted);
   }, [variation, highlighted]);
-
   return (
     <Diagram
       active={active}

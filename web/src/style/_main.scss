@@ -17,6 +17,7 @@ main {
   position: relative;
 
   // main scrolls, not page
+  overflow-x: hidden;
   overflow-y: auto;
 
   // Prevent scrollbar + nav overlap

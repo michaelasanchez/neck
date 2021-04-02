@@ -131,6 +131,7 @@ export const useAppOptions = () => {
         indicatorsMode: cookie.indicatorsMode,
         leftHandMode: cookie.leftHandMode,
         leftHandUi: cookie.leftHandUi,
+        autoScroll: cookie.autoScroll,
       } as AppOptions;
 
       setAppOptions(options);

@@ -1,6 +1,14 @@
+import { join } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Accordion, Form, Modal, useAccordionToggle } from 'react-bootstrap';
+import {
+  Accordion,
+  Col,
+  Form,
+  Modal,
+  Row,
+  useAccordionToggle,
+} from 'react-bootstrap';
 import { CardAction, OptionCard } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Tuning } from '../../models';
@@ -22,7 +30,13 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   onHide,
 }: OptionsModalProps) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { instrument, tuning, leftHandMode, leftHandUi } = appOptions;
+  const {
+    instrument,
+    tuning,
+    leftHandMode,
+    leftHandUi,
+    autoScroll,
+  } = appOptions;
 
   const container = React.useRef();
 
@@ -35,6 +49,25 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   const handleCardAction = (action: CardAction, key: CardKey) => {
     if (action == CardAction.Open) {
       setActiveKey(key);
+    }
+  };
+
+  const getSubtitle = () => {
+    const notDefault = [];
+    if (!autoScroll) {
+      notDefault.push('Auto-scroll off');
+    }
+    if (leftHandMode && leftHandUi) {
+      notDefault.push('Left-hand Mode');
+    } else if (leftHandMode) {
+      notDefault.push('Left-hand Guitar');
+    } else if (leftHandUi) {
+      notDefault.push('Left-hand UI');
+    }
+    if (!notDefault.length) {
+      return 'Default';
+    } else {
+      return join(notDefault, ', ');
     }
   };
 
@@ -60,46 +93,75 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
               active={activeKey === CardKey.General}
               eventKey={CardKey.General}
               title="General"
-              subtitle={
-                !leftHandMode
-                  ? 'Default'
-                  : !leftHandUi
-                  ? 'Left-hand Guitar'
-                  : 'Left-hand Mode'
-              }
+              subtitle={getSubtitle()}
               body={
-                <>
-                  <Form.Group
-                    onClick={(e: any) =>
-                      setAppOptions({
-                        leftHandMode: !leftHandMode,
-                      })
-                    }
-                    className="clickable mb-1"
-                  >
-                    <Form.Check
-                      type="checkbox"
-                      label="Left-hand Guitar"
-                      custom
-                      checked={leftHandMode}
-                      onChange={() => {}}
-                    />
-                  </Form.Group>
-                  <Form.Group
-                    onClick={(e: any) => {
-                      setAppOptions({ leftHandUi: !leftHandUi });
-                    }}
-                    className="clickable mb-0"
-                  >
-                    <Form.Check
-                      type="checkbox"
-                      label="Left-hand UI"
-                      custom
-                      checked={leftHandUi}
-                      onChange={() => {}}
-                    />
-                  </Form.Group>
-                </>
+                <Row>
+                  <Col>
+                    <Form.Group
+                      onClick={(e: any) => {
+                        setAppOptions({ autoScroll: autoScroll ? false : true });
+                      }}
+                      className="clickable"
+                    >
+                      <Form.Check
+                        type="checkbox"
+                        label="Auto-scroll"
+                        custom
+                        checked={autoScroll}
+                        onChange={() => {}}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Group
+                      onClick={(e: any) =>
+                        setAppOptions({
+                          leftHandMode: !leftHandMode || !leftHandUi,
+                          leftHandUi: !leftHandMode || !leftHandUi,
+                        })
+                      }
+                      className="clickable mb-1"
+                    >
+                      <Form.Check
+                        type="checkbox"
+                        label="Left-hand Mode"
+                        custom
+                        checked={leftHandMode && leftHandUi}
+                        onChange={() => {}}
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      onClick={(e: any) =>
+                        setAppOptions({
+                          leftHandMode: !leftHandMode,
+                        })
+                      }
+                      className="clickable mb-1 ml-3"
+                    >
+                      <Form.Check
+                        type="checkbox"
+                        label="Guitar"
+                        custom
+                        checked={leftHandMode}
+                        onChange={() => {}}
+                      />
+                    </Form.Group>
+                    <Form.Group
+                      onClick={(e: any) => {
+                        setAppOptions({ leftHandUi: leftHandUi ? false : true });
+                      }}
+                      className="clickable mb-0 ml-3"
+                    >
+                      <Form.Check
+                        type="checkbox"
+                        label="UI"
+                        custom
+                        checked={leftHandUi}
+                        onChange={() => {}}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
               }
             />
             <InstrumentCard

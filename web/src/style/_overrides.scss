@@ -5,15 +5,15 @@
     border-color: #ced4da;
     color: #212529;
 
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    }
     &:active,
     &:focus,
     &:hover {
-      background-color: unset;
-      border-color: #80bdff;
-      color: #212529;
-    }
-    &:focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      background-color: unset !important;
+      border-color: #80bdff !important;
+      color: #212529 !important;
     }
   }
 }
