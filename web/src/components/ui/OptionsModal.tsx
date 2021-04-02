@@ -12,7 +12,7 @@ import {
 import { CardAction, OptionCard } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Tuning } from '../../models';
-import { InstrumentCard, TuningCard } from './options';
+import { GeneralCard, InstrumentCard, TuningCard } from './options';
 
 export interface OptionsModalProps {
   showing: boolean;
@@ -33,14 +33,23 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   const {
     instrument,
     tuning,
-    leftHandMode,
-    leftHandUi,
-    autoScroll,
+    leftHandUi
   } = appOptions;
 
   const container = React.useRef();
 
   const [activeKey, setActiveKey] = useState<string>();
+
+  const [uiLeft, setUiLeft] = useState<boolean>();
+
+  useEffect(() => {
+    if (!showing) {
+      const timeout = setTimeout(() => {
+        setUiLeft(!!leftHandUi);
+      }, 1000); // TODO: static
+      return () => clearTimeout(timeout);
+    }
+  }, [leftHandUi, showing]);
 
   useEffect(() => {
     if (!showing) setActiveKey(null);
@@ -52,25 +61,6 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
     }
   };
 
-  const getSubtitle = () => {
-    const notDefault = [];
-    if (!autoScroll) {
-      notDefault.push('Auto-scroll off');
-    }
-    if (leftHandMode && leftHandUi) {
-      notDefault.push('Left-hand Mode');
-    } else if (leftHandMode) {
-      notDefault.push('Left-hand Guitar');
-    } else if (leftHandUi) {
-      notDefault.push('Left-hand UI');
-    }
-    if (!notDefault.length) {
-      return 'Default';
-    } else {
-      return join(notDefault, ', ');
-    }
-  };
-
   return (
     <div className="options-container" ref={container}>
       <Modal
@@ -78,7 +68,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
         show={showing}
         onHide={() => onHide()}
         container={container}
-        className="lg"
+        className={`lg${uiLeft ? ' left' : ''}`}
       >
         <Modal.Header closeButton>
           <Modal.Title>Options</Modal.Title>
@@ -89,80 +79,9 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
             onSelect={(key: any) => setActiveKey(key)}
             activeKey={activeKey}
           >
-            <OptionCard
+            <GeneralCard
               active={activeKey === CardKey.General}
               eventKey={CardKey.General}
-              title="General"
-              subtitle={getSubtitle()}
-              body={
-                <Row>
-                  <Col>
-                    <Form.Group
-                      onClick={(e: any) => {
-                        setAppOptions({ autoScroll: autoScroll ? false : true });
-                      }}
-                      className="clickable"
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        label="Auto-scroll"
-                        custom
-                        checked={autoScroll}
-                        onChange={() => {}}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col>
-                    <Form.Group
-                      onClick={(e: any) =>
-                        setAppOptions({
-                          leftHandMode: !leftHandMode || !leftHandUi,
-                          leftHandUi: !leftHandMode || !leftHandUi,
-                        })
-                      }
-                      className="clickable mb-1"
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        label="Left-hand Mode"
-                        custom
-                        checked={leftHandMode && leftHandUi}
-                        onChange={() => {}}
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      onClick={(e: any) =>
-                        setAppOptions({
-                          leftHandMode: !leftHandMode,
-                        })
-                      }
-                      className="clickable mb-1 ml-3"
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        label="Guitar"
-                        custom
-                        checked={leftHandMode}
-                        onChange={() => {}}
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      onClick={(e: any) => {
-                        setAppOptions({ leftHandUi: leftHandUi ? false : true });
-                      }}
-                      className="clickable mb-0 ml-3"
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        label="UI"
-                        custom
-                        checked={leftHandUi}
-                        onChange={() => {}}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
-              }
             />
             <InstrumentCard
               active={activeKey === CardKey.Instrument}

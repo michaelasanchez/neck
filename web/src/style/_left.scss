@@ -32,11 +32,11 @@ main.left {
     left: unset;
     right: 30px;
   }
+}
 
-  .modal #options {
-    right: unset;
-    left: 0;
-  }
+.modal.left #options {
+  right: unset;
+  left: 0;
 }
 
 .slidein-container {

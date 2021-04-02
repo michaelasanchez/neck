@@ -1,8 +1,7 @@
 import {
   faExclamationCircle,
   faExclamationTriangle,
-  faLevelUpAlt,
-  faShare,
+  faShare
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
@@ -17,7 +16,7 @@ import {
   Note,
   NoteValue,
   Tuning,
-  TuningNote,
+  TuningNote
 } from '../../../models';
 import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
@@ -246,7 +245,7 @@ export const TuningCard: React.FunctionComponent<TuningCardOptions> = (
         setCurrent={formMode == FormMode.Select ? setTuning : handleSetPending}
       />
       {messages}
-        <h6>Strings</h6>
+      <h6>Strings</h6>
       <div className="tuning-selector">
         {times(instrument.NumStrings, (j) => {
           const offsets =
