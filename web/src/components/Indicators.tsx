@@ -1,10 +1,10 @@
 import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAppOptionsContext } from '..';
 import { useStyles } from '../hooks';
 import { Note } from '../models';
-import { FretIndicator } from './ui';
+import { FretIndicator } from './ui/indicators';
 
 export enum IndicatorsMode {
   Chord,
@@ -18,10 +18,6 @@ interface IndicatorsProps {
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { appOptions } = useAppOptionsContext();
-  const { styles } = useStyles();
-
-  const { mainRef } = props;
-
   const {
     indicatorsMode: mode = IndicatorsMode.Chord,
     chord,
@@ -30,14 +26,19 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     scaleVariation,
     tuning,
     instrument,
-    autoScroll
+    autoScroll,
   } = appOptions;
+
+  const { styles } = useStyles();
+
+  const [searchMatrix, setSearchMatrix] = useState<boolean[][]>();
+
+  const { mainRef } = props;
 
   const firstIndicatorRef = useRef();
   const lastIndicatorRef = useRef();
 
   useEffect(() => {
-
     if (!!mainRef?.current && !!firstIndicatorRef?.current) {
       const first = firstIndicatorRef.current as HTMLDivElement;
       const last = !!lastIndicatorRef?.current
@@ -62,6 +63,11 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
         main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
   }, [chordVariation, scaleVariation, mode, autoScroll]);
+
+  useEffect(() => {
+    if (mode === IndicatorsMode.Search) {
+    }
+  }, [mode]);
 
   const renderChordIndicators = () => {
     const positions = chordVariation.Formation.Positions;
@@ -228,6 +234,22 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     );
   };
 
+  const renderSearchIndicators = () => {
+    return (
+      <>
+        {map(tuning.Offsets, (o: Note, i: number) => {
+          return (
+            <div className="string" key={i}>
+              {times(instrument.NumFrets + 1, (f) => {
+                return <FretIndicator key={f} show={true} />;
+              })}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
   const renderIndicators = () => {
     if (
       mode == IndicatorsMode.Chord &&
@@ -243,6 +265,8 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
       scaleVariation.TuningId === tuning?.Id
     ) {
       return renderScaleIndicators();
+    } else if (mode == IndicatorsMode.Search) {
+      return renderSearchIndicators();
     } else {
       return null;
     }

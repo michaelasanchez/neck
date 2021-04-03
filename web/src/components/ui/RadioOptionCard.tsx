@@ -1,8 +1,8 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { Form } from 'react-bootstrap';
-import { OptionCard, OptionCardProps } from '.';
 import { IOption } from '../../shared';
+import { OptionCardProps, OptionCard } from './options';
 
 export interface RadioOptionCard
   extends Pick<OptionCardProps, 'active' | 'title'> {

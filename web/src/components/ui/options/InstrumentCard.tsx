@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Col, Form, Row } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import {
-  CardAction,
-  CardKey,
-  FormAction,
+  OptionCardProps,
   FormMode,
+  FormAction,
+  CardAction,
   InlineOptionsForm,
   OptionCard,
-  OptionCardProps,
-} from '..';
+} from '.';
+import { CardKey } from '..';
 import { useNotificationContext } from '../..';
 import { useRequest } from '../../../hooks';
 import { NotificationType } from '../../../interfaces';
@@ -63,7 +63,7 @@ const validatePending = (pending: PendingInstrument) => {
   } else if (isNaN(parseInt(pending.NumFrets))) {
     warnings.push('Fret dimension must be a number');
   } else if (parseInt(pending.NumFrets) > 48) {
-    warnings.push('Fret dimension must be less than 48')
+    warnings.push('Fret dimension must be less than 48');
   }
   return warnings;
 };

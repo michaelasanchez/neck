@@ -1,17 +1,11 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
-import Draggable from 'react-draggable'; // Both at the same time
-import { ChordSlideIn, Navbar, OptionsModal, ScaleSlideIn } from '.';
-import { useNotificationContext } from '..';
+import Draggable from 'react-draggable';
+import { OptionsModal, Notifications, Navbar } from '.';
+import { useNotificationContext, IndicatorsMode } from '..';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
-import { IndicatorsMode } from '../Indicators';
-import { Loading } from '../Loading';
 import { FretDisplayMode } from '../neck';
-import { Notifications } from './Notifications';
-import { slideInDuration } from './slideins';
-
+import { ScaleSlideIn, ChordSlideIn } from './slideins';
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
 export interface UiProps {}
@@ -29,9 +23,9 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   // TODO: static
   let fretDisplayMode: FretDisplayMode = FretDisplayMode.Note;
 
-  const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [showOptions, setShowOptions] = React.useState<boolean>(false);
 
-  useEffect(() => {}, [notifications]);
+  React.useEffect(() => {}, [notifications]);
 
   const handleFretDisplayModeUpdate = (fretMode: FretDisplayMode) => {
     let updated: FretDisplayMode;

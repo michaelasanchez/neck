@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ReactNode } from 'react';
 import { Accordion, Card } from 'react-bootstrap';
-import { CardKey } from '.';
+import { CardKey } from '..';
 
 export interface OptionCardProps {
   active?: boolean;

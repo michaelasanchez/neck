@@ -1,5 +1,58 @@
 $diagrams-per-row: 4;
 
+// $duration: 10000ms;
+$duration: 600ms;
+
+$translate-in: translate(0px, 100px) scale(1);
+$translate-out: translate(0px, 120px) scale(0.8);
+
+$opacity-in: 1;
+$opacity-out: 0;
+
+@keyframes collapse-out {
+  0% {
+    opacity: $opacity-in;
+    transform: $translate-in;
+    z-index: 11;
+  }
+  45% {
+    opacity: $opacity-in;
+    transform: translate(0px, 0px);
+    z-index: 11;
+  }
+  50% {
+    z-index: 10;
+  }
+  100% {
+    opacity: $opacity-out;
+    transform: $translate-out;
+  }
+}
+
+@keyframes collapse-in {
+  0% {
+    opacity: $opacity-out;
+    transform: $translate-out;
+    z-index: 10;
+  }
+  45% {
+    opacity: $opacity-in;
+    transform: translate(0px, 160px);
+    z-index: 10;
+  }
+  50% {
+    z-index: 11;
+  }
+  100% {
+    transform: $translate-in;
+  }
+}
+
+.slidein-container {
+  position: absolute;
+  top: 0;
+  right: 500px;
+}
 
 .slidein {
   position: absolute;
@@ -52,54 +105,6 @@ $diagrams-per-row: 4;
           padding-left: 0.6rem;
         }
       }
-    }
-  }
-
-  // $duration: 10000ms;
-  $duration: 600ms;
-
-  $translate-in: translate(0px, 100px) scale(1);
-  $translate-out: translate(0px, 120px) scale(0.8);
-
-  $opacity-in: 1;
-  $opacity-out: 1;
-
-  @keyframes collapse-out {
-    0% {
-      opacity: $opacity-in;
-      transform: $translate-in;
-      z-index: 11;
-    }
-    45% {
-      opacity: $opacity-in;
-      transform: translate(0px, 0px);
-      z-index: 11;
-    }
-    50% {
-      z-index: 10;
-    }
-    100% {
-      opacity: $opacity-out;
-      transform: $translate-out;
-    }
-  }
-
-  @keyframes collapse-in {
-    0% {
-      opacity: $opacity-out;
-      transform: $translate-out;
-      z-index: 10;
-    }
-    45% {
-      opacity: $opacity-in;
-      transform: translate(0px, 160px);
-      z-index: 10;
-    }
-    50% {
-      z-index: 11;
-    }
-    100% {
-      transform: $translate-in;
     }
   }
 

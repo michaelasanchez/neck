@@ -37,7 +37,16 @@ nav {
     .btn {
       color: #fff;
       margin-left: -3px;
-      
+
+      &:not(:active):not(:hover) {
+        &:first-child {
+          border-right-color: transparent;
+        }
+        &:last-child {
+          border-left-color: transparent;
+        }
+      }
+
       &:first-child {
         padding-right: 0.6rem;
       }

@@ -1,14 +1,12 @@
+import constate from 'constate';
 import * as React from 'react';
 import { useRef } from 'react';
-import { Backdrop, Indicators, IndicatorsMode } from '.';
+import { Backdrop, Indicators } from '.';
 import { useAppOptionsContext } from '..';
+import { useNotification } from '../hooks';
 import { Loading } from './Loading';
 import { Neck } from './neck';
-import { ChordSlideIn, ScaleSlideIn, Ui } from './ui';
-import { useNotification } from '../hooks';
-
-import constate from 'constate';
-import Draggable from 'react-draggable';
+import { Ui } from './ui';
 
 const SHOW_INDICATORS = true;
 

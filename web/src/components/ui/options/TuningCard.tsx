@@ -1,13 +1,13 @@
 import {
   faExclamationCircle,
   faExclamationTriangle,
-  faShare
+  faShare,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { FormAction, OptionCard, OptionCardProps } from '..';
+import { OptionCardProps, FormAction, FormMode, InlineOptionsForm, OptionCard } from '.';
 import { useNotificationContext } from '../..';
 import { useRequest } from '../../../hooks';
 import { NotificationType } from '../../../interfaces';
@@ -16,11 +16,10 @@ import {
   Note,
   NoteValue,
   Tuning,
-  TuningNote
+  TuningNote,
 } from '../../../models';
 import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
-import { FormMode, InlineOptionsForm } from './InlineOptionsForm';
 
 const incompleteTuningMessage = 'Complete the tuning';
 const missingTuningMessage = 'Tuning is missing!';

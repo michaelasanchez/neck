@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Accordion, Modal } from 'react-bootstrap';
-import { CardAction } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Tuning } from '../../models';
-import { GeneralCard, InstrumentCard, TuningCard } from './options';
+import { CardAction, GeneralCard, InstrumentCard, TuningCard } from './options';
 
 export interface OptionsModalProps {
   showing: boolean;

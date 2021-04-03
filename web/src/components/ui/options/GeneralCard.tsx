@@ -1,14 +1,19 @@
 import { join } from 'lodash';
 import * as React from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
-import { CardKey, OptionCard, OptionCardProps } from '..';
+import { OptionCard, OptionCardProps } from '.';
+import { CardKey } from '..';
 import { useAppOptionsContext } from '../../..';
 
 export interface GeneralCardProps extends Pick<OptionCardProps, 'active'> {
   eventKey: CardKey;
 }
 
-const getSubtitle = (leftHandMode: boolean, leftHandUi: boolean, autoScroll: boolean) => {
+const getSubtitle = (
+  leftHandMode: boolean,
+  leftHandUi: boolean,
+  autoScroll: boolean
+) => {
   const notDefault = [];
   if (!autoScroll) {
     notDefault.push('Auto-scroll off');
@@ -27,7 +32,9 @@ const getSubtitle = (leftHandMode: boolean, leftHandUi: boolean, autoScroll: boo
   }
 };
 
-export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (props) => {
+export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
+  props
+) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
   const { leftHandMode, leftHandUi, autoScroll } = appOptions;
   const { active, eventKey } = props;
@@ -52,7 +59,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (props) =>
                 label="Auto-scroll"
                 custom
                 checked={autoScroll}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </Form.Group>
           </Col>
@@ -71,7 +78,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (props) =>
                 label={<h6>Left-hand modes</h6>}
                 custom
                 checked={leftHandMode && leftHandUi}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </Form.Group>
             <Form.Group
@@ -87,7 +94,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (props) =>
                 label="Guitar"
                 custom
                 checked={leftHandMode}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </Form.Group>
             <Form.Group
@@ -101,11 +108,12 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (props) =>
                 label="UI"
                 custom
                 checked={leftHandUi}
-                onChange={() => { }}
+                onChange={() => {}}
               />
             </Form.Group>
           </Col>
         </Row>
       }
-    />);
-}
+    />
+  );
+};
