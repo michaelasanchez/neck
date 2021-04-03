@@ -1,15 +1,7 @@
-import { join } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import {
-  Accordion,
-  Col,
-  Form,
-  Modal,
-  Row,
-  useAccordionToggle,
-} from 'react-bootstrap';
-import { CardAction, OptionCard } from '.';
+import { Accordion, Modal } from 'react-bootstrap';
+import { CardAction } from '.';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Tuning } from '../../models';
 import { GeneralCard, InstrumentCard, TuningCard } from './options';
@@ -30,11 +22,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
   onHide,
 }: OptionsModalProps) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const {
-    instrument,
-    tuning,
-    leftHandUi
-  } = appOptions;
+  const { instrument, tuning, leftHandUi } = appOptions;
 
   const container = React.useRef();
 
@@ -46,7 +34,7 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
     if (!showing) {
       const timeout = setTimeout(() => {
         setUiLeft(!!leftHandUi);
-      }, 1000); // TODO: static
+      }, 300); // TODO: static
       return () => clearTimeout(timeout);
     }
   }, [leftHandUi, showing]);

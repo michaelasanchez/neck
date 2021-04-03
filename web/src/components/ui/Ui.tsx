@@ -22,17 +22,14 @@ export interface UiState {
 
 export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
+  const { key } = appOptions;
 
   const { notifications } = useNotificationContext();
 
   // TODO: static
   let fretDisplayMode: FretDisplayMode = FretDisplayMode.Note;
 
-  const { indicatorsMode, key, mode, tuning } = appOptions;
-
   const [showOptions, setShowOptions] = useState<boolean>(false);
-
-  const [disabled, setDisabled] = useState<boolean>(false);
 
   useEffect(() => {}, [notifications]);
 
@@ -51,59 +48,16 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
     }
   };
 
-  const toggleIndicatorsMode = (mode: IndicatorsMode) => {
-    setDisabled(true);
-    const timer = setTimeout(() => {
-      setDisabled(false);
-    }, slideInDuration);
-    const nextMode =
-      mode === IndicatorsMode.Chord
-        ? IndicatorsMode.Scale
-        : IndicatorsMode.Chord;
-    setAppOptions({ indicatorsMode: nextMode });
-    return () => {
-      setDisabled(false);
-      clearTimeout(timer);
-    };
-  };
-
-  const renderModeSwitch = (mode: IndicatorsMode) => {
-    let label: string;
-    switch (mode) {
-      case IndicatorsMode.Chord:
-        label = 'Chord';
-        break;
-      case IndicatorsMode.Scale:
-        label = 'Scale';
-        break;
-      case IndicatorsMode.Search:
-        label = 'Search';
-        break;
-    }
-    return (
-      <Button
-        className="mode-switch"
-        onClick={() => toggleIndicatorsMode(mode)}
-        disabled={disabled}
-      >
-        {disabled ? (
-          <Loading showLoadingText={false} variant={'light'} inline={true} />
-        ) : (
-          label
-        )}
-      </Button>
-    );
-  };
-
   return (
     <>
       <Navbar
         musicKey={key}
         showing={showOptions}
         setShowing={setShowOptions}
-        show={() => setShowOptions(true)}
         setKey={(k: Key) => setAppOptions({ key: k })}
-        setFretDisplayMode={handleFretDisplayModeUpdate}
+        setIndicatorsMode={(mode: IndicatorsMode) =>
+          setAppOptions({ indicatorsMode: mode })
+        }
         className={`${appOptions.leftHandUi ? 'left' : ''}`}
       />
       <Draggable>
@@ -121,7 +75,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         </div>
       </Draggable>
       <div className={`ui${appOptions.leftHandUi ? ' left' : ''}`}>
-        {renderModeSwitch(appOptions.indicatorsMode)}
         <div className="modal-container">
           <OptionsModal
             showing={showOptions}

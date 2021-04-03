@@ -17,15 +17,37 @@ nav {
     border-width: 3px;
   }
 
+  .dropup.mode,
   button.options {
-    color: #fff;
-    margin-right: 15px;
+    margin-right: 0.75rem;
     opacity: 0.6;
     transition: background-color opacity 100ms;
 
     &.active,
     &:hover {
       opacity: 1;
+    }
+  }
+
+  button.options {
+    color: #fff;
+  }
+
+  .dropup.mode {
+    .btn {
+      color: #fff;
+      margin-left: -3px;
+      
+      &:first-child {
+        padding-right: 0.6rem;
+      }
+      &:last-child {
+        padding-left: 0.6rem;
+      }
+    }
+    .dropdown-menu {
+      font-size: 1.25rem;
+      min-width: unset;
     }
   }
 
