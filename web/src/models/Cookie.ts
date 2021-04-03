@@ -28,7 +28,7 @@ export class Cookie {
       key: Key.C(),
       mode: Mode.Ionian(),
 
-      indicatorsMode: IndicatorsMode.Chord,
+      indicatorsMode: null,
 
       leftHandMode: false,
       leftHandUi: false,
