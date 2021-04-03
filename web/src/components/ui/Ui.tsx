@@ -1,10 +1,11 @@
 import * as React from 'react';
 import Draggable from 'react-draggable';
 import { OptionsModal, Notifications, Navbar } from '.';
-import { useNotificationContext, IndicatorsMode } from '..';
+import { useNotificationContext } from '..';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { FretDisplayMode } from '../neck';
+import { IndicatorsMode } from './indicators';
 import { ScaleSlideIn, ChordSlideIn } from './slideins';
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 

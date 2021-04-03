@@ -1,5 +1,5 @@
 import { Key, Mode } from '.';
-import { IndicatorsMode } from '../components';
+import { IndicatorsMode } from '../components/ui/indicators';
 
 export class Cookie {
   instrumentId: string;
@@ -35,7 +35,7 @@ export class Cookie {
       autoScroll: true,
 
       neck: {
-        numFrets: "14",
+        numFrets: '14',
       },
     } as Cookie;
   }

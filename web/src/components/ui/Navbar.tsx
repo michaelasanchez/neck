@@ -11,7 +11,7 @@ import {
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { Keys } from '../../shared';
-import { IndicatorsMode } from '../Indicators';
+import { IndicatorsMode } from './indicators/Indicators';
 import { KeySlider } from './KeySlider';
 
 export interface NavbarProps {
@@ -111,25 +111,15 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
               )
             }
           >
-            <Dropdown.Item
-              eventKey="1"
-              onClick={() => setIndicatorsMode(IndicatorsMode.Search)}
-            >
-              Search
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item
-              eventKey="2"
-              onClick={() => setIndicatorsMode(IndicatorsMode.Chord)}
-            >
-              Chord
-            </Dropdown.Item>
-            <Dropdown.Item
-              eventKey="3"
-              onClick={() => setIndicatorsMode(IndicatorsMode.Scale)}
-            >
-              Scale
-            </Dropdown.Item>
+            {map(IndicatorsMode, (m: IndicatorsMode, key: string) => (
+              <Dropdown.Item
+                eventKey={key}
+                key={key}
+                onClick={() => setIndicatorsMode(m)}
+              >
+                {getModeTitle(m)}
+              </Dropdown.Item>
+            ))}
           </SplitButton>
 
           <div className="nav-item btn-group dropup">

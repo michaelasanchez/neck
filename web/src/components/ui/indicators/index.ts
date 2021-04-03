@@ -1,2 +1,2 @@
 export * from './FretIndicator';
-export * from './FretToggleIndicator';
+export * from './Indicators';

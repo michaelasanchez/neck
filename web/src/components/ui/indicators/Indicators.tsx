@@ -1,10 +1,10 @@
 import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useAppOptionsContext } from '..';
-import { useStyles } from '../hooks';
-import { Note } from '../models';
-import { FretIndicator } from './ui/indicators';
+import { useAppOptionsContext } from '../../..';
+import { useStyles } from '../../../hooks';
+import { Note } from '../../../models';
+import { FretIndicator } from '.';
 
 export enum IndicatorsMode {
   Chord,
@@ -66,8 +66,18 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
   useEffect(() => {
     if (mode === IndicatorsMode.Search) {
+      const matrix = times(instrument.NumStrings, (s) =>
+        times(instrument.NumFrets, (f) => false)
+      );
+      setSearchMatrix(matrix);
     }
   }, [mode]);
+
+  const handleSetSearchMatrix = (s: number, f: number, set: boolean = null) => {
+    const value = searchMatrix[s][f];
+    searchMatrix[s][f] = set === null ? !value : set;
+    setSearchMatrix([...searchMatrix]);
+  };
 
   const renderChordIndicators = () => {
     const positions = chordVariation.Formation.Positions;
@@ -237,11 +247,21 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const renderSearchIndicators = () => {
     return (
       <>
-        {map(tuning.Offsets, (o: Note, i: number) => {
+        {map(tuning.Offsets, (o: Note, s: number) => {
           return (
-            <div className="string" key={i}>
+            <div className="string" key={s}>
               {times(instrument.NumFrets + 1, (f) => {
-                return <FretIndicator key={f} show={true} />;
+                return (
+                  <FretIndicator
+                    key={f}
+                    show={true}
+                    toggle={true}
+                    onClick={() => handleSetSearchMatrix(s, f)}
+                    indicatorClass={
+                      !!searchMatrix && !!searchMatrix[s][f] ? ' degree-5' : ''
+                    }
+                  />
+                );
               })}
             </div>
           );
@@ -273,7 +293,10 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   };
 
   return (
-    <div className="indicators" style={styles.indicators}>
+    <div
+      className={`indicators${mode === IndicatorsMode.Search ? ' search' : ''}`}
+      style={styles.indicators}
+    >
       {renderIndicators()}
     </div>
   );

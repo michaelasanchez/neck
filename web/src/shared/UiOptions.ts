@@ -1,6 +1,6 @@
-import { IndicatorsMode } from "../components";
-import { FretDisplayMode } from "../components/neck";
-import { ChordVariation } from "../models";
+import { FretDisplayMode } from '../components/neck';
+import { IndicatorsMode } from '../components/ui/indicators';
+import { ChordVariation } from '../models';
 
 export interface UiOptions {
   fretMode: FretDisplayMode;

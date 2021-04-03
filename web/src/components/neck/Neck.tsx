@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { StringComponent } from '.';
 import { useAppOptionsContext } from '../..';
 import { useStyles } from '../../hooks';
-import { Key, Mode, Scale } from '../../models';
+import { Key, Mode, Scale, TuningNote } from '../../models';
 import { FretDisplayMode } from './Fret';
 
 export const ENABLE_NECK_ANIMATION = false;
@@ -14,6 +14,8 @@ export const ENABLE_NECK_ANIMATION = false;
 export interface NeckProps {}
 
 const getScale = (key: Key, mode: Mode) => new Scale(key.Tonic, mode);
+
+export type NeckMap = TuningNote[][];
 
 export const Neck: React.FunctionComponent<NeckProps> = () => {
   // TODO: static
