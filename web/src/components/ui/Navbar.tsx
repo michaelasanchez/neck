@@ -112,13 +112,6 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             }
           >
             <Dropdown.Item
-              eventKey="1"
-              onClick={() => setIndicatorsMode(IndicatorsMode.Search)}
-            >
-              Search
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item
               eventKey="2"
               onClick={() => setIndicatorsMode(IndicatorsMode.Chord)}
             >
