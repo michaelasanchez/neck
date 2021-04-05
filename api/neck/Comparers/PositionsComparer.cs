@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using neck.Models;
+using neck.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace neck.Comparers
 {
-	public class PositionsComparer
+    public class PositionsComparer
 	{
 		public static ValueComparer Compare = new ValueComparer<List<Note>>(
 			(l1, l2) => l1.SequenceEqual(l2),

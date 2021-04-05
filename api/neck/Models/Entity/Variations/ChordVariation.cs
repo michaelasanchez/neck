@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace neck.Models.Variations
+namespace neck.Models.Entity.Variations
 {
     public class ChordVariation : Variation<Chord>
     {
@@ -16,7 +16,7 @@ namespace neck.Models.Variations
         public int Offset { get; set; }
 
         public Formation Formation { get; set; }
-         
+
         private ChordVariation() { }
 
         public ChordVariation(Chord chord, Guid tuningId, int offset, List<int?> positions)

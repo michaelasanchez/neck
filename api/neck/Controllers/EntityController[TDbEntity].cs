@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace neck.Controllers
 {
-	public class GenericController<T> : ControllerBase, IController<T>
+	public class EntityController<T> : ControllerBase, IController<T>
+		where T : IDbEntity
 	{
 		protected IRepository<T> _repository;
 
-		public GenericController(IRepository<T> repository)
+		public EntityController(IRepository<T> repository)
 		{
 			_repository = repository;
 		}

@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using neck.Interfaces;
-using neck.Models;
+using neck.Models.Entity;
 
-namespace neck.Controllers
+namespace neck.Controllers.DbEntity
 {
-	[ApiController]
+    [ApiController]
 	[Route("[controller]")]
-	public class InstrumentController : GenericController<Instrument>
+	public class InstrumentController : EntityController<Instrument>
 	{
 		public InstrumentController(IRepository<Instrument> repository)
 			: base(repository)

@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using neck.Enums;
 using neck.Interfaces;
-using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
 using neck.Repositories;
 using System;
 using System.Threading.Tasks;
 
-namespace neck.Controllers
+namespace neck.Controllers.DbEntity
 {
-	[ApiController]
+    [ApiController]
 	[Route("[controller]")]
-	public class ScaleController : GenericController<Scale>
+	public class ScaleController : EntityController<Scale>
 	{
 		// TODO: Replace this with note locator
 		private NoteRepository _noteRepo;

@@ -1,15 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Entity;
+using neck.Models.Entity.Variations;
 using neck.Models.Results;
-using neck.Models.Variations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Repositories
 {
-	public class ChordVariationRepository : GenericRepository<ChordVariation>
+    public class ChordVariationRepository : GenericRepository<ChordVariation>
 	{
 		private Lazy<IRepository<Chord>> _chordRepo;
 		private Lazy<IRepository<Formation>> _formationRepo;

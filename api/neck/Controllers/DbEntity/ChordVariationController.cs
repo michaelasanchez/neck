@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using neck.Interfaces;
-using neck.Models;
-using neck.Models.Variations;
+using neck.Models.Entity;
+using neck.Models.Entity.Variations;
 
-namespace neck.Controllers
+namespace neck.Controllers.DbEntity
 {
-	[ApiController]
+    [ApiController]
 	[Route("[controller]")]
 	public class ChordVariationController : VariationController<Chord, ChordVariation>
 	{

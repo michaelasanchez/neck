@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using neck.Enums;
 using neck.Interfaces;
-using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
 using neck.Repositories;
 using System;
 using System.Threading.Tasks;
 using static neck.Enums.ChordEnums;
 
-namespace neck.Controllers
+namespace neck.Controllers.DbEntity
 {
-	[ApiController]
+    [ApiController]
 	[Route("[controller]")]
-	public class ChordController : GenericController<Chord>
+	public class ChordController : EntityController<Chord>
 	{
 		private NoteRepository _noteRepo;
 		private Lazy<IRepository<Chord>> _chordRepo;

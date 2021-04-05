@@ -1,13 +1,14 @@
 ﻿using neck.Enums;
 using neck.Interfaces;
 using neck.Models;
-using neck.Models.Variations;
+using neck.Models.Entity;
+using neck.Models.Entity.Variations;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace neck.Factories
 {
-	public class ScaleVariationFactory : IVariationFactory<Scale, ScaleVariation>
+    public class ScaleVariationFactory : IVariationFactory<Scale, ScaleVariation>
 	{
 
 		public const bool ENFORCE_OCTAVE = false;

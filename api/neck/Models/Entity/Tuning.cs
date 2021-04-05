@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace neck.Models
+namespace neck.Models.Entity
 {
-	public class Tuning : DbEntity, ILabelled
+    public class Tuning : DbEntity, ILabelled
     {
         public string Label { get; set; }
 

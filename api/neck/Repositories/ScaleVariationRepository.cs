@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Models;
-using neck.Models.Variations;
+using neck.Models.Entity.Variations;
 using System.Linq;
 
 namespace neck.Repositories
 {
-	public class ScaleVariationRepository : GenericRepository<ScaleVariation>
+    public class ScaleVariationRepository : GenericRepository<ScaleVariation>
 	{
 		public ScaleVariationRepository(NeckContext context)
 			: base(context)

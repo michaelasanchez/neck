@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using neck.Interfaces;
-using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace neck.Controllers
+namespace neck.Controllers.DbEntity
 {
-	[ApiController]
+    [ApiController]
 	[Route("[controller]")]
-	public class TuningController : GenericController<Tuning>
+	public class TuningController : EntityController<Tuning>
 	{
 		public TuningController(IRepository<Tuning> repository)
 			: base(repository)

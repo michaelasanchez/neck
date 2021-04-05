@@ -1,5 +1,5 @@
 ﻿using neck.Enums;
-using neck.Models;
+using neck.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace neck.Converters
 {
-	public class PositionsConverter
+    public class PositionsConverter
 	{
 		private const string NullNote = "()";
 

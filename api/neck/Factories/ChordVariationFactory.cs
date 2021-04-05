@@ -1,12 +1,13 @@
 ﻿using neck.Interfaces;
 using neck.Models;
-using neck.Models.Variations;
+using neck.Models.Entity;
+using neck.Models.Entity.Variations;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace neck.Generators
 {
-	public class ChordVariationFactory : IVariationFactory<Chord, ChordVariation>
+    public class ChordVariationFactory : IVariationFactory<Chord, ChordVariation>
 	{
 		private bool ENFORCE_CHORD_TONES = true;
 

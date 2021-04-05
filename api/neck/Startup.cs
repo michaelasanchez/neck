@@ -9,14 +9,15 @@ using neck.Factories;
 using neck.Generators;
 using neck.Interfaces;
 using neck.Models;
-using neck.Models.Variations;
+using neck.Models.Entity;
+using neck.Models.Entity.Variations;
 using neck.Repositories;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace neck
 {
-	public class Startup
+    public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{

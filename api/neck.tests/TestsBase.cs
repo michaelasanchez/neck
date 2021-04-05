@@ -1,4 +1,4 @@
-﻿using neck.Models;
+﻿using neck.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using Xunit;
 
 namespace neck.tests
 {
-	public class TestsBase
+    public class TestsBase
 	{
 		protected string[] getLabelArray(List<Note> notes)
 		{
