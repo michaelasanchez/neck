@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { StringComponent } from '.';
 import { useAppOptionsContext } from '../..';
 import { useStyles } from '../../hooks';
-import { Key, Mode, Scale, TuningNote } from '../../models';
+import { Scale, TuningNote } from '../../models';
 import { FretDisplayMode } from './Fret';
 
 export const ENABLE_NECK_ANIMATION = false;
@@ -12,8 +12,6 @@ export const ENABLE_NECK_ANIMATION = false;
 // const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
 export interface NeckProps { }
-
-const getScale = (key: Key, mode: Mode) => key.Scale; //new Scale(key.Tonic, mode);
 
 export type NeckMap = TuningNote[][];
 
@@ -24,13 +22,13 @@ export const Neck: React.FunctionComponent<NeckProps> = () => {
   const { appOptions } = useAppOptionsContext();
   const { neck } = useStyles();
 
-  const { key, tuning, mode, instrument } = appOptions;
+  const { key, tuning, instrument } = appOptions;
 
-  const [scale, setScale] = useState<Scale>(getScale(key, mode));
+  const [scale, setScale] = useState<Scale>(key.Scale);
   const [className, setClassName] = useState<string>();
 
   useEffect(() => {
-    const nextScale = getScale(key, mode);
+    const nextScale = key.Scale;
     setScale(nextScale);
 
     const root = scale?.Tonic;
@@ -46,7 +44,7 @@ export const Neck: React.FunctionComponent<NeckProps> = () => {
         setClassName('up');
       }
     }
-  }, [key, mode]);
+  }, [key]);
 
   return (
     <div className="neck" style={neck}>

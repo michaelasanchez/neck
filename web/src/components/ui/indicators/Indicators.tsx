@@ -31,7 +31,7 @@ export const createFretMap = (instrument: Instrument, tuning: Tuning, scale: Sca
   return times(instrument.NumStrings, s => {
     const offset = tuning.Offsets[s];
     const scaleIndex = findIndex(scale.Notes, n => NoteUtils.NotesAreEqual(n, offset));
-    
+
     return times(instrument.NumFrets, f => {
       return new TuningNote(0, 0, 0);
     })
@@ -61,8 +61,6 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { mainRef } = props;
   const topRef = useRef<HTMLDivElement>();
   const bottomRef = useRef<HTMLDivElement>();
-
-  console.log('KEY KEY KEY', key);
 
   // Browser scroll position
   useEffect(() => {

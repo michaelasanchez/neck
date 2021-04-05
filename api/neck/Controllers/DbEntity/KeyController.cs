@@ -15,23 +15,22 @@ namespace neck.Controllers.DbEntity
 	[Route("[controller]")]
 	public class KeyController : EntityController<Key>
 	{
-		private NoteRepository _noteRepo;
+		private Lazy<IRepository<Note>> _noteRepo;
 		private Lazy<IRepository<Key>> _keyRepo;
 
 		public KeyController(IRepository<Key> repository, IRepository<Note> noteRepository)
 			: base(repository)
 		{
 			_keyRepo = new Lazy<IRepository<Key>>(repository);
-			_noteRepo = (NoteRepository)noteRepository;
+			_noteRepo = new Lazy<IRepository<Note>>(noteRepository);
 		}
 
-		// TODO: This really should just be get
 		[HttpPost("locate")]
 		public virtual async Task<ActionResult<Key>> Locate(LocateKeyArgs args)
 		{
 			var note = new Note(args.Base, args.Suffix);
 
-			var noteResult = await _noteRepo.GetOrCreate(note);
+			var noteResult = await _noteRepo.Value.GetOrCreate(note);
 			if (!noteResult.Success)
 			{
 				return BadRequest(new Response<Note>(noteResult));

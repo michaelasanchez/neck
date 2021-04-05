@@ -21,7 +21,7 @@ import { AppOptions } from '../shared';
 
 const validateAppOptions = (appOptions: AppOptions): IError => {
   //
-  const required = ['chord', 'instrument', 'key', 'mode', 'scale'];
+  const required = ['chord', 'instrument', 'key', 'scale'];
   const missing = filter(required, (r) => !appOptions[r]);
 
   if (missing.length > 0) {
@@ -38,6 +38,7 @@ const loadKey = (keyId?: string): Promise<Key> => {
     return new KeyApi().GetById(keyId);
   }
 
+  // TODO: static
   return new KeyApi().Locate(KeyType.Major, NoteValue.C, NoteSuffix.Natural)
 }
 
@@ -80,6 +81,8 @@ const loadInstrument = (
   return new InstrumentApi().GetAll().then((i: Array<Instrument>) => i[0]);
 };
 
+// TODO: This operates pretty loosely right now and assumes that
+//  instrument is going to have a default tuning
 const loadTuning = (tuningId?: string): Promise<Tuning> => {
   if (tuningId) {
     return new TuningApi().GetById(tuningId);
@@ -110,7 +113,7 @@ export const useAppOptions = () => {
     var requests: Promise<any>[] = [];
 
     // Key
-    requests.push(loadKey(/*cookie.keyId*/));
+    requests.push(loadKey(cookie.keyId));
 
     // Chord
     requests.push(loadChord(cookie.chordId));
@@ -129,17 +132,15 @@ export const useAppOptions = () => {
       const [key, chord, scale, instrument, tuning] = values;
       instrument.NumFrets = parseInt(cookie.neck.numFrets);
 
-      console.log('looksie', key, cookie.key)
-
       // Create app options
       const options = {
-        chord,
-        scale,
+        key,
+
         instrument,
         tuning: tuning || instrument.DefaultTuning,
-
-        key,
-        mode: cookie.mode,
+        
+        chord,
+        scale,
 
         indicatorsMode: cookie.indicatorsMode,
         leftHandMode: cookie.leftHandMode,

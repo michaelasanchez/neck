@@ -20,7 +20,9 @@ namespace neck.Models.Entity
 
         public Note Tonic { get; set; }
 
-        [NotMapped]
+
+        //public Guid ScaleId { get; set; }
+
         public Scale Scale
         {
             get

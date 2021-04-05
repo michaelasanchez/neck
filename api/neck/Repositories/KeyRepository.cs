@@ -16,6 +16,13 @@ namespace neck.Repositories
 		{
 		}
 
+		public override IQueryable<Key> DefaultIncludes()
+		{
+			return _set.AsQueryable()
+				.Include(k => k.Tonic);
+				//.Include(k => k.Scale);
+		}
+
 		public async override Task<OperationResult<Key>> Get(Key key)
 		{
 			var result = await DefaultIncludes()

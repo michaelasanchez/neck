@@ -4,21 +4,19 @@ import {
   ChordVariation,
   Instrument,
   Key,
-  Mode,
   Scale,
   ScaleVariation,
   Tuning,
 } from '../models';
 
 export interface AppOptions {
+  key: Key;
+
   chord: Chord;
   scale: Scale;
 
   instrument: Instrument;
   tuning: Tuning;
-
-  key: Key;
-  mode: Mode; // Options modal
 
   leftHandMode: boolean;
   leftHandUi: boolean;
@@ -32,11 +30,6 @@ export interface AppOptions {
 
   // Validation
   [key: string]: any;
-}
-
-// TODO: get rid of this
-export interface IOption {
-  Label: string;
 }
 
 //  C           D           E     F           G           A           B

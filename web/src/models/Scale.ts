@@ -1,5 +1,5 @@
 import { each, every, filter, indexOf, last, map } from 'lodash';
-import { Chord, Mode, Note } from '.';
+import { Chord, Note } from '.';
 import { ApiEntity } from '../network';
 import { NoteUtils } from '../shared';
 
@@ -44,90 +44,34 @@ export enum ScaleType {
   Pentatonic
 }
 
-// Returns array of notes, starting with the root note
-//  then following each step in a given mode
-const calcNotes = (root: Note, mode: Mode): Note[] => {
-  let notes = [root];
-
-  each(mode.Steps, (step: string) => {
-    let prevNote = last(notes);
-    let nextNote = step == ScaleStep.Whole ? prevNote.WholeStepUp() : prevNote.HalfStepUp();
-    nextNote.Degree = notes.length;
-    notes.push(nextNote);
-  });
-
-  // TODO: why do we have to remove the last one here?
-  notes.pop();
-
-  return notes;
-}
-
 export class Scale extends ApiEntity {
-
-  private _tonic: Note;
-
-  private _mode: Mode
-
-  private _notes: Note[];
 
   public Type: ScaleType;
 
-  constructor(
-    root: Note,
-    mode: Mode
-  ) {
-    super();
+  public Tonic: Note;
 
-    this._tonic = root;
-    this._tonic.Degree = 0;
+  public Notes: Note[];
 
-    this._mode = mode;
+  // public containsNote = (note: Note): boolean => {
+  //   const scaleNotes = NoteUtils.NoteArrayToString(this._notes);
+  //   return indexOf(scaleNotes, note.Label) >= 0;
+  // }
 
-    this._notes = calcNotes(this._tonic, this._mode);
-  }
+  // public containsChord = (chord: Chord): boolean => {
+  //   const chordNotes = NoteUtils.NoteArrayToString(chord.Tones);
+  //   const keyNotes = NoteUtils.NoteArrayToString(this._notes);
 
-  get Notes() {
-    return this._notes;
-  }
+  //   const found = map(chordNotes, n => indexOf(keyNotes, n) >= 0);
+  //   return every(found);
+  // }
 
-  get Tonic(): Note {
-    return this._tonic;
-  }
+  // public getNoteIndex = (note: Note): number => {
+  //   const scaleNotes = map(this._notes, n => n.Label);
+  //   return indexOf(scaleNotes, note.Label);
+  // }
 
-  set Tonic(updated: Note) {
-    this._tonic = updated;
-    this._notes = calcNotes(this._tonic, this._mode);
-  }
-
-  get Mode(): Mode {
-    return this._mode;
-  }
-
-  set Mode(updated: Mode) {
-    this._mode = updated;
-    this._notes = calcNotes(this._tonic, this._mode);
-  }
-
-  public containsNote = (note: Note): boolean => {
-    const scaleNotes = NoteUtils.NoteArrayToString(this._notes);
-    return indexOf(scaleNotes, note.Label) >= 0;
-  }
-
-  public containsChord = (chord: Chord): boolean => {
-    const chordNotes = NoteUtils.NoteArrayToString(chord.Tones);
-    const keyNotes = NoteUtils.NoteArrayToString(this._notes);
-
-    const found = map(chordNotes, n => indexOf(keyNotes, n) >= 0);
-    return every(found);
-  }
-
-  public getNoteIndex = (note: Note): number => {
-    const scaleNotes = map(this._notes, n => n.Label);
-    return indexOf(scaleNotes, note.Label);
-  }
-
-  public getNoteFromBaseNote = (note: Note): Note => {
-    const result = filter(this._notes, n => n.Base === note.Base);
-    return result.length === 1 ? result[0] : null;
-  }
+  // public getNoteFromBaseNote = (note: Note): Note => {
+  //   const result = filter(this._notes, n => n.Base === note.Base);
+  //   return result.length === 1 ? result[0] : null;
+  // }
 }

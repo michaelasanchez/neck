@@ -14,14 +14,14 @@ namespace neck.Controllers.DbEntity
 	[Route("[controller]")]
 	public class ChordController : EntityController<Chord>
 	{
-		private NoteRepository _noteRepo;
+		private Lazy<IRepository<Note>> _noteRepo;
 		private Lazy<IRepository<Chord>> _chordRepo;
 
 		public ChordController(IRepository<Chord> repository, IRepository<Note> noteRepository)
 			: base(repository)
 		{
 			_chordRepo = new Lazy<IRepository<Chord>>(repository);
-			_noteRepo = (NoteRepository)noteRepository;
+			_noteRepo = new Lazy<IRepository<Note>>(noteRepository);
 		}
 
 		// TODO: This really should just be get
@@ -30,7 +30,7 @@ namespace neck.Controllers.DbEntity
 		{
 			var note = new Note(@params.value, @params.suffix);
 
-			var noteResult = await _noteRepo.GetOrCreate(note);
+			var noteResult = await _noteRepo.Value.GetOrCreate(note);
 			if (!noteResult.Success)
 			{
 				return BadRequest(new Response<Note>(noteResult));

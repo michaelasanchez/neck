@@ -14,14 +14,14 @@ namespace neck.Controllers.DbEntity
 	public class ScaleController : EntityController<Scale>
 	{
 		// TODO: Replace this with note locator
-		private NoteRepository _noteRepo;
+		private Lazy<IRepository<Note>> _noteRepo;
 		private Lazy<IRepository<Scale>> _scaleRepo;
 
 		public ScaleController(IRepository<Scale> repository, IRepository<Note> noteRepository)
 			: base(repository)
 		{
 			_scaleRepo = new Lazy<IRepository<Scale>>(repository);
-			_noteRepo = (NoteRepository)noteRepository;
+			_noteRepo = new Lazy<IRepository<Note>>(noteRepository);
 		}
 
 		[HttpPost("byvalues")]
@@ -29,7 +29,7 @@ namespace neck.Controllers.DbEntity
 		{
 			var note = new Note(@params.value, @params.suffix);
 
-			var noteResult = await _noteRepo.GetOrCreate(note);
+			var noteResult = await _noteRepo.Value.GetOrCreate(note);
 			if (!noteResult.Success)
 			{
 				return BadRequest(new Response<Note>(noteResult));
