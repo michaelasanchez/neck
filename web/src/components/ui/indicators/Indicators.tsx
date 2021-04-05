@@ -1,10 +1,11 @@
-import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
+import { filter, findIndex, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
-import { Note } from '../../../models';
+import { Instrument, Note, Scale, Tuning, TuningNote } from '../../../models';
 import { FretIndicator } from '.';
+import { NoteUtils } from '../../../shared';
 
 export enum IndicatorsMode {
   Chord,
@@ -16,9 +17,33 @@ interface IndicatorsProps {
   mainRef: React.MutableRefObject<HTMLDivElement>;
 }
 
+export type FretMap = TuningNote[][];
+
+export const createFretMap = (instrument: Instrument, tuning: Tuning, scale: Scale): FretMap => {
+  if (!tuning) {
+    tuning = instrument.DefaultTuning;
+    if (!tuning) {
+      return null;
+    }
+  }
+
+
+  return times(instrument.NumStrings, s => {
+    const offset = tuning.Offsets[s];
+    const scaleIndex = findIndex(scale.Notes, n => NoteUtils.NotesAreEqual(n, offset));
+    
+    return times(instrument.NumFrets, f => {
+      return new TuningNote(0, 0, 0);
+    })
+  })
+
+  return new Array<Array<TuningNote>>();
+}
+
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { appOptions } = useAppOptionsContext();
   const {
+    key,
     indicatorsMode: mode = IndicatorsMode.Chord,
     chord,
     chordVariation,
@@ -29,20 +54,22 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     autoScroll,
   } = appOptions;
 
-  const { styles } = useStyles();
+  const { indicators } = useStyles();
 
   const [searchMatrix, setSearchMatrix] = useState<boolean[][]>();
 
   const { mainRef } = props;
+  const topRef = useRef<HTMLDivElement>();
+  const bottomRef = useRef<HTMLDivElement>();
 
-  const firstIndicatorRef = useRef();
-  const lastIndicatorRef = useRef();
+  console.log('KEY KEY KEY', key);
 
+  // Browser scroll position
   useEffect(() => {
-    if (!!mainRef?.current && !!firstIndicatorRef?.current) {
-      const first = firstIndicatorRef.current as HTMLDivElement;
-      const last = !!lastIndicatorRef?.current
-        ? (lastIndicatorRef.current as HTMLDivElement)
+    if (!!mainRef?.current && !!topRef?.current) {
+      const first = topRef.current;
+      const last = !!bottomRef?.current
+        ? (bottomRef.current)
         : first;
 
       const main = mainRef.current;
@@ -64,8 +91,12 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     }
   }, [chordVariation, scaleVariation, mode, autoScroll]);
 
+  // Reset search matrix
   useEffect(() => {
     if (mode === IndicatorsMode.Search) {
+
+      const test = createFretMap(instrument, tuning, scale);
+
       const matrix = times(instrument.NumStrings, (s) =>
         times(instrument.NumFrets, (f) => false)
       );
@@ -120,7 +151,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 label={note?.Label}
                 fretRef={
                   (open || muted) && i == firstFretIndex
-                    ? firstIndicatorRef
+                    ? topRef
                     : null
                 }
               />
@@ -130,10 +161,10 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 const ref =
                   show &&
                   (i == firstFretIndex
-                    ? firstIndicatorRef
+                    ? topRef
                     : i == lastFretIndex
-                    ? lastIndicatorRef
-                    : null);
+                      ? bottomRef
+                      : null);
 
                 return (
                   <FretIndicator
@@ -229,10 +260,10 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     }
                     fretRef={
                       i === 0 && f === fretStart
-                        ? firstIndicatorRef
+                        ? topRef
                         : i === tuning.Offsets.length - 1 && f === fretEnd
-                        ? lastIndicatorRef
-                        : null
+                          ? bottomRef
+                          : null
                     }
                   />
                 );
@@ -258,7 +289,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     toggle={true}
                     onClick={() => handleSetSearchMatrix(s, f)}
                     indicatorClass={
-                      !!searchMatrix && !!searchMatrix[s][f] ? ' degree-5' : ''
+                      !!searchMatrix && !!searchMatrix[s][f] ? ' degree-1' : ''
                     }
                   />
                 );
@@ -288,14 +319,14 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     } else if (mode == IndicatorsMode.Search) {
       return renderSearchIndicators();
     } else {
-      return null;
+      return <></>;
     }
   };
 
   return (
     <div
       className={`indicators${mode === IndicatorsMode.Search ? ' search' : ''}`}
-      style={styles.indicators}
+      style={indicators}
     >
       {renderIndicators()}
     </div>

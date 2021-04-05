@@ -24,10 +24,10 @@ export const FretNumbers: React.FunctionComponent<FretNumbersProps> = ({
   mode = FRET_NUMBERS_MODE,
   visible = FRET_NUMBERS_VISIBLE,
 }) => {
-  const { styles } = useStyles();
+  const { fretNumbers, fretNumberGroup } = useStyles();
 
   const renderNumberGroup = (
-    <div className="fret-number-group" style={styles.fretNumberGroup}>
+    <div className="fret-number-group" style={fretNumberGroup}>
       <div className="fret-number open"></div>
       {times(frets, (i) => (
         <div className="fret-number" key={i}>
@@ -56,10 +56,9 @@ export const FretNumbers: React.FunctionComponent<FretNumbersProps> = ({
 
   return (
     <div
-      className={`fretboard-numbers${
-        mode == FretNumbersMode.Right ? ' right' : ''
-      }`}
-      style={styles.fretNumbers}
+      className={`fretboard-numbers${mode == FretNumbersMode.Right ? ' right' : ''
+        }`}
+      style={fretNumbers}
     >
       {renderGroups()}
     </div>

@@ -55,6 +55,7 @@ namespace neck
 			services.AddScoped(typeof(IRepository<ChordVariation>), typeof(ChordVariationRepository));
 			services.AddScoped(typeof(IRepository<Formation>), typeof(FormationRepository));
 			services.AddScoped(typeof(IRepository<Instrument>), typeof(InstrumentRepository));
+			services.AddScoped(typeof(IRepository<Key>), typeof(KeyRepository));
 			services.AddScoped(typeof(IRepository<Note>), typeof(NoteRepository));
 			services.AddScoped(typeof(IRepository<Scale>), typeof(ScaleRepository));
 			services.AddScoped(typeof(IRepository<ScaleVariation>), typeof(ScaleVariationRepository));

@@ -2,15 +2,10 @@ import { every, map } from 'lodash';
 import { Note, NoteValue, TuningNote } from '../models';
 
 export class NoteUtils {
+
   static NotesAreEqual = (noteA: Note, noteB: Note): boolean => {
     if (!noteA || !noteB) return false;
     return noteA.Base == noteB.Base && noteA.Suffix == noteB.Suffix;
-  };
-
-  static OffsetsAreEqual = (offsetsA: TuningNote[], offsetsB: TuningNote[]) => {
-    return every(offsetsA, (o: TuningNote, i: number) =>
-      NoteUtils.TuningNotesAreEqual(o, offsetsB[i])
-    );
   };
 
   static TuningNotesAreEqual = (
@@ -22,6 +17,12 @@ export class NoteUtils {
       noteA.Base == noteB.Base &&
       noteA.Suffix == noteB.Suffix &&
       noteA.Octave == noteB.Octave
+    );
+  };
+
+  static OffsetsAreEqual = (offsetsA: TuningNote[], offsetsB: TuningNote[]) => {
+    return every(offsetsA, (o: TuningNote, i: number) =>
+      NoteUtils.TuningNotesAreEqual(o, offsetsB[i])
     );
   };
 

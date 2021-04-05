@@ -11,9 +11,9 @@ export const ENABLE_NECK_ANIMATION = false;
 
 // const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
-export interface NeckProps {}
+export interface NeckProps { }
 
-const getScale = (key: Key, mode: Mode) => new Scale(key.Tonic, mode);
+const getScale = (key: Key, mode: Mode) => key.Scale; //new Scale(key.Tonic, mode);
 
 export type NeckMap = TuningNote[][];
 
@@ -22,7 +22,7 @@ export const Neck: React.FunctionComponent<NeckProps> = () => {
   let fretDisplayMode = FretDisplayMode.Note;
 
   const { appOptions } = useAppOptionsContext();
-  const { styles } = useStyles();
+  const { neck } = useStyles();
 
   const { key, tuning, mode, instrument } = appOptions;
 
@@ -49,7 +49,7 @@ export const Neck: React.FunctionComponent<NeckProps> = () => {
   }, [key, mode]);
 
   return (
-    <div className="neck" style={styles.neck}>
+    <div className="neck" style={neck}>
       <div className={`neck-strings ${!!className ? className : ''}`}>
         {tuning &&
           times(instrument.NumStrings, (i) => (

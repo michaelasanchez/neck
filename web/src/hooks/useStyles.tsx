@@ -93,5 +93,5 @@ export const useStyles = () => {
 
   const [styles, setStyles] = useState<IStyles>(calcStyles());
 
-  return { styles };
+  return { ...styles };
 };

@@ -6,7 +6,7 @@ import {
   ButtonGroup,
   Dropdown,
   DropdownButton,
-  SplitButton,
+  SplitButton
 } from 'react-bootstrap';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
@@ -76,11 +76,12 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
     );
   };
 
+  const size = 'lg';
+
   return (
     <nav
-      className={`navbar navbar-dark bg-dark${
-        className ? ` ${className}` : ''
-      }`}
+      className={`navbar navbar-dark bg-dark${className ? ` ${className}` : ''
+        }`}
     >
       <a className="navbar-brand" href="#">
         Neck
@@ -89,7 +90,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
       <div className="navbar-nav">
         <form className="form-inline">
           <Button
-            size="lg"
+            size={size}
             variant="outline-success"
             className={`options${showing ? ' active' : ''}`}
             onClick={() => setShowing(!showing)}
@@ -102,7 +103,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             alignRight={true}
             className={`mode${indicatorsMode !== null ? ' active' : ''}`}
             drop="up"
-            size="lg"
+            size={size}
             variant={indicatorsMode !== null ? 'primary' : 'outline-primary'}
             title={getModeTitle(lastIndicatorsMode)}
             onClick={() =>
@@ -111,24 +112,25 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
               )
             }
           >
-            {map(IndicatorsMode, (m: IndicatorsMode, key: string) => (
-              <Dropdown.Item
-                eventKey={key}
-                key={key}
-                onClick={() => setIndicatorsMode(m)}
-              >
-                {getModeTitle(m)}
-              </Dropdown.Item>
-            ))}
+            {map(IndicatorsMode, (m: IndicatorsMode, key: string) => {
+              return !isNaN(m) && indicatorsMode !== m && lastIndicatorsMode !== m &&
+                <Dropdown.Item
+                  eventKey={key}
+                  key={key}
+                  onClick={() => setIndicatorsMode(m)}
+                >
+                  {getModeTitle(m)}
+                </Dropdown.Item>;
+            })}
           </SplitButton>
 
           <div className="nav-item btn-group dropup">
             <DropdownButton
-              size="lg"
+              size={size}
               as={ButtonGroup}
               id="key-dropdown"
               variant="secondary"
-              title={`Key of ${musicKey.Label}`}
+              title={`${musicKey.Label}`}
               disabled={showing}
             >
               <KeySlider setKey={(k: Key) => setKey(k)} />

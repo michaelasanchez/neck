@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace neck.Models.Entity.Variations
+namespace neck.Models
 {
     public class ScalePosition
     {

@@ -21,7 +21,7 @@ nav {
   button.options {
     margin-right: 0.75rem;
     opacity: 0.6;
-    transition: background-color opacity 100ms;
+    transition: background-color 100ms, opacity 100ms;
 
     &.active,
     &:hover {
@@ -38,7 +38,7 @@ nav {
       color: #fff;
       margin-left: -3px;
 
-      &:not(:active):not(:hover) {
+      &:not(:focus):not(:hover) {
         &:first-child {
           border-right-color: transparent;
         }
@@ -57,6 +57,9 @@ nav {
     .dropdown-menu {
       font-size: 1.25rem;
       min-width: unset;
+      inset: auto 0px 0px 0px !important;
+      transform: translate3d(0, -54px, 0) !important;
+      // width: 96%;
     }
   }
 

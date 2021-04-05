@@ -11,17 +11,15 @@ export class Key implements IOption {
 
   public Tonic: Note;
   public Type: KeyType;
+  
+  public Label: string;
 
-  private _scale: Scale;
+  public Scale: Scale;
 
   constructor(tonic: Note, type?: KeyType) {
     this.Tonic = tonic;
     this.Type = type || KeyType.Major;
   }
-
-  // TODO: this is weird
-  get Label(): string { return this.Tonic.Label; }
-  set Label(value: string) { this.Tonic.Label; }
 
   get RelativeMajor(): Key {
     if (this.Type === KeyType.Minor) return null;
