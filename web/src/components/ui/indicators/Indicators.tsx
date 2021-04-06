@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
 import { Instrument, Note, Scale, Tuning, TuningNote } from '../../../models';
-import { FretIndicator } from '.';
+import { FretIndicator, SearchIndicators } from '.';
 import { NoteUtils } from '../../../shared';
 
 export enum IndicatorsMode {
@@ -27,17 +27,31 @@ export const createFretMap = (instrument: Instrument, tuning: Tuning, scale: Sca
     }
   }
 
-
   return times(instrument.NumStrings, s => {
     const offset = tuning.Offsets[s];
-    const scaleIndex = findIndex(scale.Notes, n => NoteUtils.NotesAreEqual(n, offset));
+    if (!offset) return null;
 
+    console.log('---');
     return times(instrument.NumFrets, f => {
-      return new TuningNote(0, 0, 0);
-    })
-  })
 
-  return new Array<Array<TuningNote>>();
+      let offsetNoteValue = f + offset.Pitch;
+      let pitch = offsetNoteValue % Note.NUM_NOTES;
+      let octave = Math.floor(offsetNoteValue / Note.NUM_NOTES) + offset.Octave;
+
+      // Check if Note exists for current fret number
+      let current = filter(
+        scale.Notes,
+        (note: Note) => note.Pitch == pitch
+      );
+
+      let note = null;
+      if (!!current.length) {
+        note = current[0] as TuningNote;
+        note.Octave = octave;
+      }
+      return note;
+    });
+  });
 }
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
@@ -56,7 +70,11 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
   const { indicators } = useStyles();
 
-  const [searchMatrix, setSearchMatrix] = useState<boolean[][]>();
+  const [fretMap, setFretMap] = useState<FretMap>();
+
+  useEffect(() => {
+    setFretMap(createFretMap(instrument, tuning, key.Scale));
+  }, [instrument, tuning, key])
 
   const { mainRef } = props;
   const topRef = useRef<HTMLDivElement>();
@@ -88,25 +106,6 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
         main.scrollTo({ top: scrollPosition, behavior: 'smooth' });
     }
   }, [chordVariation, scaleVariation, mode, autoScroll]);
-
-  // Reset search matrix
-  useEffect(() => {
-    if (mode === IndicatorsMode.Search) {
-
-      const test = createFretMap(instrument, tuning, scale);
-
-      const matrix = times(instrument.NumStrings, (s) =>
-        times(instrument.NumFrets, (f) => false)
-      );
-      setSearchMatrix(matrix);
-    }
-  }, [mode]);
-
-  const handleSetSearchMatrix = (s: number, f: number, set: boolean = null) => {
-    const value = searchMatrix[s][f];
-    searchMatrix[s][f] = set === null ? !value : set;
-    setSearchMatrix([...searchMatrix]);
-  };
 
   const renderChordIndicators = () => {
     const positions = chordVariation.Formation.Positions;
@@ -205,17 +204,16 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
       [key: number]: Note;
     }
 
-    let noteMap: NoteMap = {};
+    let degreeMap: NoteMap = {};
     times(scale.Notes.length, (n) => {
       let current = scale.Notes[n];
-      noteMap[current.Degree] = current;
+      degreeMap[current.Degree] = current;
     });
 
     return (
       <>
         {map(tuning.Offsets, (o: Note, i: number) => {
           const positions = scaleVariation.Positions[i];
-          const open = scaleVariation.Offset === 0 && positions[0] !== null;
 
           return (
             <div className="string" key={i}>
@@ -228,7 +226,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                   degree = positions[f - fretStart];
 
                   if (degree) {
-                    label = noteMap[degree].Label;
+                    label = degreeMap[degree].Label;
                   }
 
                   show = !!degree;
@@ -273,32 +271,6 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     );
   };
 
-  const renderSearchIndicators = () => {
-    return (
-      <>
-        {map(tuning.Offsets, (o: Note, s: number) => {
-          return (
-            <div className="string" key={s}>
-              {times(instrument.NumFrets + 1, (f) => {
-                return (
-                  <FretIndicator
-                    key={f}
-                    show={true}
-                    toggle={true}
-                    onClick={() => handleSetSearchMatrix(s, f)}
-                    indicatorClass={
-                      !!searchMatrix && !!searchMatrix[s][f] ? ' degree-1' : ''
-                    }
-                  />
-                );
-              })}
-            </div>
-          );
-        })}
-      </>
-    );
-  };
-
   const renderIndicators = () => {
     if (
       mode == IndicatorsMode.Chord &&
@@ -315,7 +287,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     ) {
       return renderScaleIndicators();
     } else if (mode == IndicatorsMode.Search) {
-      return renderSearchIndicators();
+      return <SearchIndicators tuning={tuning} instrument={instrument} indicatorsMode={mode} fretMap={fretMap} />
     } else {
       return <></>;
     }
