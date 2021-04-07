@@ -2,6 +2,7 @@ import { filter, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { FretIndicator, FretMap, IndicatorsMode } from '.';
+import { useIndicatorsContext } from '../..';
 import { Instrument, Note, Tuning, TuningNote } from '../../../models';
 import { NoteUtils } from '../../../shared';
 
@@ -13,10 +14,11 @@ export interface SearchIndicatorsProps {
 }
 
 export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = (props) => {
+  const { indicatorsOptions, setIndicatorsOptions } = useIndicatorsContext();
   const { fretMap, indicatorsMode: mode, instrument, tuning } = props;
+  const { searchArray } = indicatorsOptions;
 
   const [selectedMatrix, setSelectedMatrix] = useState<boolean[][]>();
-  const [searchArray, setSearchArray] = useState<TuningNote[]>([]);
 
   // Reset search matrix
   useEffect(() => {
@@ -41,7 +43,11 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
   const handleSetSearchArray = (note: TuningNote) => {
     const found = filter(searchArray, n => NoteUtils.NotesAreEqual(n, note));
     if (!found.length) {
-      setSearchArray([...searchArray, note]);
+      const test = {
+        searchArray: [...searchArray, note],
+      };
+      console.log('we gon set this', test)
+      setIndicatorsOptions(test);
     }
   }
 

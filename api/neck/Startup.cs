@@ -12,6 +12,8 @@ using neck.Models;
 using neck.Models.Entity;
 using neck.Models.Entity.Variations;
 using neck.Repositories;
+using neck.Services;
+using neck.Services.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -60,6 +62,8 @@ namespace neck
 			services.AddScoped(typeof(IRepository<Scale>), typeof(ScaleRepository));
 			services.AddScoped(typeof(IRepository<ScaleVariation>), typeof(ScaleVariationRepository));
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
+
+			services.AddScoped(typeof(IKeyService), typeof(KeyService));
 
 			services.AddScoped(typeof(IVariationFactory<Chord, ChordVariation>), typeof(ChordVariationFactory));
 			services.AddScoped(typeof(IVariationFactory<Scale, ScaleVariation>), typeof(ScaleVariationFactory));

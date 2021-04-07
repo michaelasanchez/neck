@@ -31,8 +31,12 @@ const getModeTitle = (mode: IndicatorsMode) => {
       return 'Scale';
     case IndicatorsMode.Search:
       return 'Search';
+    default:
+      return '';
   }
 };
+
+const keys = Keys.DropdownValues();
 
 export const Navbar: React.FunctionComponent<NavbarProps> = ({
   showing,
@@ -45,14 +49,11 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
   const { appOptions } = useAppOptionsContext();
   const { indicatorsMode } = appOptions;
 
-  const keys = Keys.DropdownValues();
-
   const handleSetKey = (keyString: string) => setKey(keys[parseInt(keyString)]);
 
   const [lastIndicatorsMode, setLastIndicatorsMode] = useState<IndicatorsMode>(
-    IndicatorsMode.Chord
+    indicatorsMode
   );
-
   useEffect(() => {
     if (indicatorsMode !== null) {
       setLastIndicatorsMode(indicatorsMode);

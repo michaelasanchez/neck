@@ -37,7 +37,7 @@ namespace neck.Models.Entity
 
         public Key() { }
 
-        public Key(Note tonic, KeyType type)
+        public Key(Note tonic, KeyType type = KeyType.Major)
         {
             Tonic = tonic;
             Type = type;

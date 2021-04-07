@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Draggable from 'react-draggable';
 import { Navbar, Notifications, OptionsModal } from '.';
-import { useNotificationContext } from '..';
+import { IndicatorsProvider, useNotificationContext } from '..';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { FretDisplayMode } from '../neck';

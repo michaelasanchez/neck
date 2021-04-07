@@ -31,7 +31,6 @@ export const createFretMap = (instrument: Instrument, tuning: Tuning, scale: Sca
     const offset = tuning.Offsets[s];
     if (!offset) return null;
 
-    console.log('---');
     return times(instrument.NumFrets, f => {
 
       let offsetNoteValue = f + offset.Pitch;
@@ -58,7 +57,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { appOptions } = useAppOptionsContext();
   const {
     key,
-    indicatorsMode: mode = IndicatorsMode.Chord,
+    indicatorsMode: mode,
     chord,
     chordVariation,
     scale,

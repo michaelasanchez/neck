@@ -2,6 +2,7 @@ import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
+import { IndicatorsMode } from '../components/ui/indicators';
 import {
   Chord,
   ChordModifier,
@@ -142,7 +143,13 @@ export const useAppOptions = () => {
         chord,
         scale,
 
+
+        
         indicatorsMode: cookie.indicatorsMode,
+        // indicatorsMode: IndicatorsMode.Chord,
+
+
+
         leftHandMode: cookie.leftHandMode,
         leftHandUi: cookie.leftHandUi,
         autoScroll: cookie.autoScroll,

@@ -5,7 +5,10 @@ using neck.Interfaces;
 using neck.Models.Entity;
 using neck.Models.Results;
 using neck.Repositories;
+using neck.Services.Args;
+using neck.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using static neck.Enums.ChordEnums;
 
@@ -18,11 +21,15 @@ namespace neck.Controllers.DbEntity
 		private Lazy<IRepository<Note>> _noteRepo;
 		private Lazy<IRepository<Key>> _keyRepo;
 
-		public KeyController(IRepository<Key> repository, IRepository<Note> noteRepository)
+		private Lazy<IKeyService> _keyService;
+
+		public KeyController(IRepository<Key> repository, IRepository<Note> noteRepository, IKeyService keyService)
 			: base(repository)
 		{
 			_keyRepo = new Lazy<IRepository<Key>>(repository);
 			_noteRepo = new Lazy<IRepository<Note>>(noteRepository);
+
+			_keyService = new Lazy<IKeyService>(keyService);
 		}
 
 		[HttpPost("locate")]
@@ -46,6 +53,15 @@ namespace neck.Controllers.DbEntity
 
 			return Ok(keyResult.Result);
 		}
+
+		[HttpPost("search")]
+		public virtual async Task<ActionResult<List<Key>>> Search(KeySearchArgs args)
+        {
+
+
+			var keyResult = _keyService.Value.Search(args);
+			return Ok(keyResult.Result);
+        }
 	}
 
 	public class LocateKeyArgs
