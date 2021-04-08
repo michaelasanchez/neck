@@ -6,5 +6,5 @@ export const useIndicatorsOptions = () => {
     searchArray: []
   })
 
-  return { indicatorsOptions, setIndicatorsOptions };
+  return { ...indicatorsOptions, setIndicatorsOptions };
 };

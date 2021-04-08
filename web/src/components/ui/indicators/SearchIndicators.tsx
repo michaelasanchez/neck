@@ -14,9 +14,8 @@ export interface SearchIndicatorsProps {
 }
 
 export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = (props) => {
-  const { indicatorsOptions, setIndicatorsOptions } = useIndicatorsContext();
+  const { searchArray, setIndicatorsOptions } = useIndicatorsContext();
   const { fretMap, indicatorsMode: mode, instrument, tuning } = props;
-  const { searchArray } = indicatorsOptions;
 
   const [selectedMatrix, setSelectedMatrix] = useState<boolean[][]>();
 

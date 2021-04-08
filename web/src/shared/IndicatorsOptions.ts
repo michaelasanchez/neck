@@ -3,8 +3,6 @@ import { ChordVariation, ScaleVariation, TuningNote } from "../models";
 
 export interface IndicatorsOptions {
 
-  // indicatorsMode?: IndicatorsMode;
-
   chordVariation?: ChordVariation;
   scaleVariation?: ScaleVariation;
 

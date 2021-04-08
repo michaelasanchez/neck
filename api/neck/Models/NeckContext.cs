@@ -53,7 +53,8 @@ namespace neck.Models
 				.HasForeignKey<Instrument>(i => i.DefaultTuningId);
 
 			modelBuilder.Entity<Key>()
-				.HasIndex(k => new { k.Type, k.TonicId });
+				.HasIndex(k => new { k.Type, k.TonicId })
+				.IsUnique();
 
 			modelBuilder.Entity<Note>()
 				.HasIndex(n => new { n.Base, n.Suffix })

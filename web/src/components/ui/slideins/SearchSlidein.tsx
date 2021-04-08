@@ -11,8 +11,7 @@ import { ISlideInProps } from './SlideIn';
 export interface SearchSlideInProps extends Pick<ISlideInProps, 'collapse'> { }
 
 export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (props) => {
-  const { indicatorsOptions } = useIndicatorsContext();
-  const { searchArray } = indicatorsOptions;
+  const { searchArray } = useIndicatorsContext();
 
   const { req: getKeys } = useRequest(new KeyApi().Search);
 
@@ -32,6 +31,6 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (props
         ? map(searchArray, (n: TuningNote, i: number) => <label key={i}>{n.Label}</label>)
         : <>Select some notes!</>}
     </p>
-    <Button onClick={handleGetKeys}>Go</Button>
+    <Button onClick={() => handleGetKeys()}>Go</Button>
   </SlideIn>
 };
