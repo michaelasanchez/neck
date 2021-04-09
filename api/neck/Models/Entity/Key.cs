@@ -44,6 +44,21 @@ namespace neck.Models.Entity
             Type = type;
         }
 
-        public string Label => $"Key of {Tonic.Label}";
+        public string Label => getLabel();
+
+        private string getLabel(bool longLabel = false)
+        {
+            var typeString = string.Empty;
+            switch(Type)
+            {
+                case KeyType.Major:
+                    typeString = longLabel ? " Major" : "";
+                    break;
+                case KeyType.Minor:
+                    typeString = " Minor";
+                    break;
+            }
+            return $"Key of {Tonic.Label}{typeString}";
+        }
     }
 }

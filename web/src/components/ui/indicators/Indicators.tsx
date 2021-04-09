@@ -286,7 +286,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     ) {
       return renderScaleIndicators();
     } else if (mode == IndicatorsMode.Search) {
-      return <SearchIndicators tuning={tuning} instrument={instrument} indicatorsMode={mode} fretMap={fretMap} />
+      return <SearchIndicators fretMap={fretMap} />
     } else {
       return <></>;
     }

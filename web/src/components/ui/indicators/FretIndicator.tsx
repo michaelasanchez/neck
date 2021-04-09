@@ -49,7 +49,6 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
               muted ? ' muted' : ''
             }${
               degree ? ` degree degree-${degree}` : ''
-              //   ${barre ? (barreStart ? ' barre start' : ' barre') : ''}
             }${root ? ' root' : ''}`}
             onClick={onClick}
           >

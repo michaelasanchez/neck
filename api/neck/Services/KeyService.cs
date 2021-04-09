@@ -45,6 +45,13 @@ namespace neck.Services
 
         public async Task<OperationResult<List<Key>>> Search(KeySearchArgs args)
         {
+            // TODO: Again.. figure out where validation goes
+            //  Also, maybe we should be returning a different status code here. 300?
+            if (args.Notes.Count <= 0)
+            {
+                return OperationResult<List<Key>>.CreateSuccess(new List<Key>());
+            }
+
             var keysResult = await _keyRepo.Value.GetAll();
 
             if (!keysResult.Success)
