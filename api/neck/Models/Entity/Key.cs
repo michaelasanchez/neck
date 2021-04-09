@@ -40,6 +40,7 @@ namespace neck.Models.Entity
         public Key(Note tonic, KeyType type = KeyType.Major)
         {
             Tonic = tonic;
+            TonicId = tonic.Id;
             Type = type;
         }
 

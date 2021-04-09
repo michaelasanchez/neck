@@ -43,15 +43,20 @@ namespace neck.Services
             return keyResult;
         }
 
-        public Task<OperationResult<List<Key>>> Search(KeySearchArgs args)
+        public async Task<OperationResult<List<Key>>> Search(KeySearchArgs args)
         {
-            var testKey = new Key(Note.C());
+            var keysResult = await _keyRepo.Value.GetAll();
 
-
-            return Task.FromResult(new OperationResult<List<Key>>()
+            if (!keysResult.Success)
             {
-                Result = new List<Key>()
-            });
+                return OperationResult<List<Key>>.CreateFailure("Failed to get keys");
+            }
+
+            var allKeys = keysResult.Result;
+
+            var matchingKeys = allKeys.Where(x => args.Notes.All(y => x.Scale.Notes.Any(z => z.Pitch == y.Pitch)));
+
+            return OperationResult<List<Key>>.CreateSuccess(matchingKeys.ToList());
         }
     }
 }

@@ -42,7 +42,7 @@ namespace neck.Repositories
 			return BuildGetOperationResult(result);
 		}
 
-		public virtual async Task<OperationResult<TEntity>> Get(TEntity? entity)
+		public virtual async Task<OperationResult<TEntity>> Get(TEntity entity)
 		{
 			var result = await _set.FirstOrDefaultAsync(t => t.Id == entity.Id);
 			return BuildGetOperationResult(result);

@@ -14,6 +14,7 @@ namespace neck.Repositories
 		public KeyRepository(NeckContext context)
 			: base(context)
 		{
+			GetAllDefaultIncludes = true;
 		}
 
 		public override IQueryable<Key> DefaultIncludes()
