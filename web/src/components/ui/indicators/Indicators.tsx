@@ -1,11 +1,10 @@
-import { filter, findIndex, indexOf, lastIndexOf, map, times } from 'lodash';
+import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { FretIndicator, SearchIndicators } from '.';
 import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
 import { Instrument, Note, Scale, Tuning, TuningNote } from '../../../models';
-import { FretIndicator, SearchIndicators } from '.';
-import { NoteUtils } from '../../../shared';
 
 export enum IndicatorsMode {
   Chord,
@@ -19,7 +18,11 @@ interface IndicatorsProps {
 
 export type FretMap = TuningNote[][];
 
-export const createFretMap = (instrument: Instrument, tuning: Tuning, scale: Scale): FretMap => {
+export const createFretMap = (
+  instrument: Instrument,
+  tuning: Tuning,
+  scale: Scale
+): FretMap => {
   if (!tuning) {
     tuning = instrument.DefaultTuning;
     if (!tuning) {
@@ -27,21 +30,17 @@ export const createFretMap = (instrument: Instrument, tuning: Tuning, scale: Sca
     }
   }
 
-  return times(instrument.NumStrings, s => {
+  return times(instrument.NumStrings, (s) => {
     const offset = tuning.Offsets[s];
     if (!offset) return null;
 
-    return times(instrument.NumFrets, f => {
-
+    return times(instrument.NumFrets, (f) => {
       let offsetNoteValue = f + offset.Pitch;
       let pitch = offsetNoteValue % Note.NUM_NOTES;
       let octave = Math.floor(offsetNoteValue / Note.NUM_NOTES) + offset.Octave;
 
       // Check if Note exists for current fret number
-      let current = filter(
-        scale.Notes,
-        (note: Note) => note.Pitch == pitch
-      );
+      let current = filter(scale.Notes, (note: Note) => note.Pitch == pitch);
 
       let note = null;
       if (!!current.length) {
@@ -51,7 +50,7 @@ export const createFretMap = (instrument: Instrument, tuning: Tuning, scale: Sca
       return note;
     });
   });
-}
+};
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { appOptions } = useAppOptionsContext();
@@ -73,7 +72,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
 
   useEffect(() => {
     setFretMap(createFretMap(instrument, tuning, key.Scale));
-  }, [instrument, tuning, key])
+  }, [instrument, tuning, key]);
 
   const { mainRef } = props;
   const topRef = useRef<HTMLDivElement>();
@@ -83,9 +82,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   useEffect(() => {
     if (!!mainRef?.current && !!topRef?.current) {
       const first = topRef.current;
-      const last = !!bottomRef?.current
-        ? (bottomRef.current)
-        : first;
+      const last = !!bottomRef?.current ? bottomRef.current : first;
 
       const main = mainRef.current;
 
@@ -145,11 +142,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 root={note?.Degree === 1}
                 degree={note?.Degree}
                 label={note?.Label}
-                fretRef={
-                  (open || muted) && i == firstFretIndex
-                    ? topRef
-                    : null
-                }
+                fretRef={(open || muted) && i == firstFretIndex ? topRef : null}
               />
               {times(instrument.NumFrets, (f) => {
                 const fretNum = f + 1;
@@ -159,8 +152,8 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                   (i == firstFretIndex
                     ? topRef
                     : i == lastFretIndex
-                      ? bottomRef
-                      : null);
+                    ? bottomRef
+                    : null);
 
                 return (
                   <FretIndicator
@@ -257,8 +250,8 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                       i === 0 && f === fretStart
                         ? topRef
                         : i === tuning.Offsets.length - 1 && f === fretEnd
-                          ? bottomRef
-                          : null
+                        ? bottomRef
+                        : null
                     }
                   />
                 );
@@ -286,7 +279,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     ) {
       return renderScaleIndicators();
     } else if (mode == IndicatorsMode.Search) {
-      return <SearchIndicators fretMap={fretMap} />
+      return <SearchIndicators fretMap={fretMap} />;
     } else {
       return <></>;
     }

@@ -40,10 +40,10 @@ nav {
 
       &:not(:focus):not(:hover) {
         &:first-child {
-          border-right-color: transparent;
+          border-right-color: transparent !important;
         }
         &:last-child {
-          border-left-color: transparent;
+          border-left-color: transparent !important;
         }
       }
 

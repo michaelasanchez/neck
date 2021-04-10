@@ -185,14 +185,15 @@ $opacity-out: 0;
 
     .key-container {
       max-height: 200px;
-      overflow-y: scroll;
+      overflow-y: auto;
       padding-right: 0.5em;
       margin-bottom: 1rem;
       
-      p {
+      > div {
         border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         padding: 1em;
+        margin-bottom: 1rem;
 
         &:hover {
           cursor: pointer;
