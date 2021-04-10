@@ -1,10 +1,10 @@
-import { findIndex, map, times } from 'lodash';
+import { filter, findIndex, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { FretIndicator, FretMap, IndicatorsMode } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
-import { Note, TuningNote } from '../../../models';
+import { FretNote, Note, TuningNote } from '../../../models';
 
 export interface SearchIndicatorsProps {
   fretMap: FretMap;
@@ -20,11 +20,12 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
 
   const [selectedMatrix, setSelectedMatrix] = useState<boolean[][]>();
 
+
   // Reset search matrix
   useEffect(() => {
     if (mode === IndicatorsMode.Search) {
       const matrix = times(instrument.NumStrings, (s) =>
-        times(instrument.NumFrets, (f) => false)
+        times(instrument.NumFrets, (f) => filter(searchArray, n => n.String == s && n.Fret == f)?.length > 0 ? true : false)
       );
       setSelectedMatrix(matrix);
     }
@@ -32,16 +33,9 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
 
   useEffect(() => {
     // TODO: Need to translate search array to new key
-    const mappedSearchArray = map(searchArray, (n: TuningNote, i: number) => {
-      const index = findIndex(
-        key.Scale.Notes,
-        (m: TuningNote) => n.Pitch === m.Pitch
-      );
-      return index >= 0 ? key.Scale.Notes[index] : n;
-    });
+    const mappedSearchArray = map(searchArray, (n: FretNote, i: number) => fretMap[n.String][n.Fret]);
     setIndicatorsOptions({ searchArray: mappedSearchArray });
-    console.log('search array', searchArray, mappedSearchArray);
-  }, [key]);
+  }, [fretMap]);
 
   const handleSetSelectedMatrix = (
     s: number,
@@ -56,11 +50,11 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
     handleSetSearchArray(fretMap[s][f]);
   };
 
-  const handleSetSearchArray = (note: TuningNote) => {
+  const handleSetSearchArray = (note: FretNote) => {
     if (!!note) {
       const index = findIndex(
         searchArray,
-        (n: TuningNote) => n.Pitch == note.Pitch
+        (n: FretNote) => n.String == note.String && n.Fret == note.Fret
       );
       index < 0 ? searchArray.push(note) : searchArray.splice(index, 1);
       setIndicatorsOptions({ searchArray: [...searchArray] });

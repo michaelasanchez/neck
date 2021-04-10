@@ -10,3 +10,4 @@ export * from './Scale';
 export * from './ScaleVariation';
 export * from './Tuning';
 export * from './TuningNote';
+export * from './FretNote';

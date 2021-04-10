@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FretIndicator, SearchIndicators } from '.';
 import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
-import { Instrument, Note, Scale, Tuning, TuningNote } from '../../../models';
+import { FretNote, Instrument, Note, Scale, Tuning, TuningNote } from '../../../models';
 
 export enum IndicatorsMode {
   Chord,
@@ -16,7 +16,7 @@ interface IndicatorsProps {
   mainRef: React.MutableRefObject<HTMLDivElement>;
 }
 
-export type FretMap = TuningNote[][];
+export type FretMap = FretNote[][];
 
 export const createFretMap = (
   instrument: Instrument,
@@ -47,7 +47,7 @@ export const createFretMap = (
         note = current[0] as TuningNote;
         note.Octave = octave;
       }
-      return note;
+      return note ? new FretNote(note.Base, note.Suffix, note.Octave, s, f) : null;
     });
   });
 };

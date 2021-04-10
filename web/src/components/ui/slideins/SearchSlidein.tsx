@@ -1,4 +1,4 @@
-import { map } from 'lodash';
+import { filter, map, uniqBy } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
@@ -20,12 +20,10 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
 
   const [keys, setKeys] = useState<Key[]>();
 
-  const { req: getKeys } = useRequest(new KeyApi().Search);
+  const { req: searchKeys } = useRequest(new KeyApi().Search);
 
-  const handleGetKeys = () => {
-    getKeys(searchArray).then((keys) => {
-      setKeys(keys);
-    });
+  const handleSearchKeys = () => {
+    searchKeys(searchArray).then((keys) => setKeys(keys));
   };
 
   return (
@@ -37,7 +35,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
     >
       <p className="text-center">
         {searchArray.length ? (
-          map(searchArray, (n: TuningNote, i: number) => (
+          map(uniqBy(searchArray, 'Pitch'), (n: TuningNote, i: number) => (
             <label className="search-note" key={i}>
               {n.Label}
             </label>
@@ -63,7 +61,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
           </div>
         </>
       )}
-      <Button onClick={() => handleGetKeys()}>Go</Button>
+      <Button onClick={() => handleSearchKeys()}>Go</Button>
     </SlideIn>
   );
 };
