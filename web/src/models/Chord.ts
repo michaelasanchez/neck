@@ -1,7 +1,7 @@
-import { filter, map } from "lodash";
-
-import { Key, Mode, Note, Scale } from ".";
+import { Key, Note } from ".";
+import { IApiEntity } from "../interfaces";
 import { ApiEntity } from "../network/ApiEntity";
+
 
 export enum ChordModifier {
   Major,
@@ -52,7 +52,9 @@ export enum ChordModifier {
 //   });
 // }
 
-export class Chord extends ApiEntity {
+export class Chord implements IApiEntity {
+
+  public Id: string;
 
   public Root: Note;
   public Modifier: ChordModifier;
@@ -64,7 +66,6 @@ export class Chord extends ApiEntity {
   public Tones: Note[];
 
   constructor(root: Note, mod: ChordModifier) {
-    super();
 
     this.Root = root;
     this.Modifier = mod || ChordModifier.Major;

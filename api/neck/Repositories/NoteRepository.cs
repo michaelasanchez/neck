@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace neck.Repositories
 {
-	public class NoteRepository : GenericRepository<Note>
+    public class NoteRepository : GenericRepository<Note>
 	{
 		public NoteRepository(NeckContext context)
 			: base(context)

@@ -1,18 +1,27 @@
-import { Note, NoteSuffix, NoteValue, Scale, ScaleType } from "../models";
-import { ApiRequest } from "./ApiRequest";
+import { NoteSuffix, NoteValue } from '../enums';
+import { Scale, ScaleType } from '../models';
+import { ApiRequest } from './ApiRequest';
 
 export class ScaleApi extends ApiRequest<Scale> {
   constructor() {
     super('scale');
   }
 
-  LocateByValues = (value: NoteValue, suffix: NoteSuffix, type: ScaleType): Promise<Scale> => {
+  LocateByValues = (
+    value: NoteValue,
+    suffix: NoteSuffix,
+    type: ScaleType
+  ): Promise<Scale> => {
     this.Action = 'byvalues';
     return super.Post({ value, suffix, type }) as Promise<Scale>;
-  }
+  };
 
   Locate = (scale: Scale): Promise<Scale> => {
     this.Action = 'byvalues';
-    return super.Post({ value: scale.Tonic.Base, suffix: scale.Tonic.Suffix, type: scale.Type }) as Promise<Scale>;
-  }
+    return super.Post({
+      value: scale.Tonic.Base,
+      suffix: scale.Tonic.Suffix,
+      type: scale.Type,
+    }) as Promise<Scale>;
+  };
 }

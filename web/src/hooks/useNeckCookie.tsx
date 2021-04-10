@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useCookie } from '.';
-import { Cookie, Key, Mode, Note } from '../models';
+import { Cookie } from '../models';
 import { AppOptions } from '../shared';
 
 // Encode
 const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
   const cookie = new Cookie();
+
+  cookie.keyId = appOptions.key.Id;
+
   cookie.instrumentId = appOptions.instrument.Id;
   cookie.tuningId =
     appOptions.tuning?.Id === appOptions.instrument.DefaultTuningId
       ? null
       : appOptions.tuning.Id;
-
-  cookie.key = appOptions.key;
-  cookie.mode = appOptions.mode;
 
   cookie.chordId = appOptions.chord.Id;
   cookie.scaleId = appOptions.scale.Id;
@@ -34,14 +34,7 @@ const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
 // Decode
 const cookieFromCookieString = (cookieString: string): Cookie => {
   if (!cookieString) return null;
-
-  const cookie: Cookie = JSON.parse(cookieString);
-
-  const tonic = new Note(cookie.key.Tonic.Base, cookie.key.Tonic.Suffix);
-  cookie.key = new Key(tonic, cookie.key.Type);
-  cookie.mode = new Mode(cookie.mode.Label, cookie.mode.pattern);
-
-  return cookie;
+  return JSON.parse(cookieString);
 };
 
 export const useNeckCookie = () => {

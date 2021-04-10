@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useCallback } from 'react';
 
 import { Diagram, DiagramSpan, DiagramSymbol, DiagramSymbolMap } from '.';
-import { Note, NoteValue, ScaleVariation } from '../../../models';
+import { Note, ScaleVariation } from '../../../models';
 
 export interface ScaleDiagramProps {
   active: boolean;

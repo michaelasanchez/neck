@@ -4,20 +4,20 @@ import { NotificationType } from '../interfaces';
 import { BaseResponse } from '../network';
 
 export interface IUseRequest<T> {
-  req: (...params: Array<any>) => Promise<T>,
+  req: (...params: any[]) => Promise<T>,
   data: T,
   loading: boolean,
 }
 
 export function useRequest<T>(
-  request: (...params: Array<any>) => Promise<BaseResponse<T>>
+  request: (...params: any[]) => Promise<BaseResponse<T>>
 ) {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>();
 
   const { addNotification } = useNotificationContext();
 
-  const req = async (...params: Array<any>) => {
+  const req = async (...params: any[]) => {
     setLoading(true);
 
     try {

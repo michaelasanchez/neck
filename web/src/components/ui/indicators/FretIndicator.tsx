@@ -11,7 +11,9 @@ interface IndicatorProps {
   muted?: boolean;
   root?: boolean;
   barre?: boolean;
+  toggle?: boolean;
   fretRef?: React.MutableRefObject<HTMLDivElement>;
+  onClick?: (...e: any[]) => void;
 }
 
 export const FretIndicator: React.FC<IndicatorProps> = (props) => {
@@ -26,9 +28,10 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
     muted = false,
     root = false,
     barre = false,
-    fretRef: ref,
+    fretRef,
+    onClick,
   } = props;
-  let fretProps = ref ? { ref } : {};
+  let fretProps = fretRef ? { ref: fretRef } : {};
   return (
     <div
       className={`fret${open ? ' open' : ''}${
@@ -44,10 +47,8 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
           <div
             className={`indicator${indicatorClass ? ` ${indicatorClass}` : ''}${
               muted ? ' muted' : ''
-            }${
-              degree ? ` degree degree-${degree}` : ''
-              //   ${barre ? (barreStart ? ' barre start' : ' barre') : ''}
-            }${root ? ' root' : ''}`}
+            }${degree ? ` degree degree-${degree}` : ''}${root ? ' root' : ''}`}
+            onClick={onClick}
           >
             {muted && (
               <>

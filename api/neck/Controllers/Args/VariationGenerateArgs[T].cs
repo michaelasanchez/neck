@@ -1,13 +1,13 @@
 ﻿using neck.Interfaces;
 using neck.Interfaces.Args;
-using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
 using neck.Repositories;
 using System;
 
 namespace neck.Controllers.Args
 {
-	public class VariationGenerateArgs<TBase> : IVariationGenerateArgs<TBase>
+    public class VariationGenerateArgs<TBase> : IVariationGenerateArgs<TBase>
 	{
 		public const int DefaultOffset = 0;
 		public const int DefaultSpan = 4;

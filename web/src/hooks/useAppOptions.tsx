@@ -2,6 +2,7 @@ import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
+import { NoteSuffix, NoteValue } from '../enums';
 import {
   Chord,
   ChordModifier,
@@ -10,18 +11,22 @@ import {
   Key,
   KeyType,
   Note,
-  NoteSuffix,
-  NoteValue,
   Scale,
   ScaleType,
   Tuning,
 } from '../models';
-import { ChordApi, InstrumentApi, ScaleApi, TuningApi } from '../network';
+import {
+  ChordApi,
+  InstrumentApi,
+  KeyApi,
+  ScaleApi,
+  TuningApi,
+} from '../network';
 import { AppOptions } from '../shared';
 
 const validateAppOptions = (appOptions: AppOptions): IError => {
   //
-  const required = ['chord', 'instrument', 'key', 'mode', 'scale'];
+  const required = ['chord', 'instrument', 'key', 'scale'];
   const missing = filter(required, (r) => !appOptions[r]);
 
   if (missing.length > 0) {
@@ -31,6 +36,15 @@ const validateAppOptions = (appOptions: AppOptions): IError => {
   }
 
   return null;
+};
+
+const loadKey = (keyId?: string): Promise<Key> => {
+  if (!!keyId) {
+    return new KeyApi().GetById(keyId);
+  }
+
+  // TODO: static
+  return new KeyApi().Locate(KeyType.Major, NoteValue.C, NoteSuffix.Natural);
 };
 
 const loadChord = (chordId?: string): Promise<Chord> => {
@@ -72,6 +86,8 @@ const loadInstrument = (
   return new InstrumentApi().GetAll().then((i: Array<Instrument>) => i[0]);
 };
 
+// TODO: This operates pretty loosely right now and assumes that
+//  instrument is going to have a default tuning
 const loadTuning = (tuningId?: string): Promise<Tuning> => {
   if (tuningId) {
     return new TuningApi().GetById(tuningId);
@@ -101,6 +117,9 @@ export const useAppOptions = () => {
   const loadOptionsFromCookie = (cookie: Cookie) => {
     var requests: Promise<any>[] = [];
 
+    // Key
+    requests.push(loadKey(cookie.keyId));
+
     // Chord
     requests.push(loadChord(cookie.chordId));
 
@@ -115,20 +134,22 @@ export const useAppOptions = () => {
 
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
-      const [chord, scale, instrument, tuning] = values;
+      const [key, chord, scale, instrument, tuning] = values;
       instrument.NumFrets = parseInt(cookie.neck.numFrets);
 
       // Create app options
       const options = {
-        chord,
-        scale,
+        key,
+
         instrument,
         tuning: tuning || instrument.DefaultTuning,
 
-        key: cookie.key,
-        mode: cookie.mode,
+        chord,
+        scale,
 
         indicatorsMode: cookie.indicatorsMode,
+        // indicatorsMode: IndicatorsMode.Chord,
+
         leftHandMode: cookie.leftHandMode,
         leftHandUi: cookie.leftHandUi,
         autoScroll: cookie.autoScroll,

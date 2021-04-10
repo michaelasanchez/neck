@@ -22,7 +22,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
   const { appOptions } = useAppOptionsContext();
   const { instrument, tuning } = appOptions;
 
-  const { styles: styles } = useStyles();
+  const { shadow, overlay, fretboard, fretMarkers } = useStyles();
 
   const renderString = () => {
     return (
@@ -44,13 +44,13 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
     return (
       <>
         <div className="shadow-container">
-          <div className="shadow" style={styles.shadow}></div>
+          <div className="shadow" style={shadow}></div>
         </div>
         <div className="shadow-overlay-container">
-          <div className="shadow-overlay" style={styles.overlay}></div>
+          <div className="shadow-overlay" style={overlay}></div>
         </div>
         <div className="fretboard-container">
-          <div className="fretboard" style={styles.fretboard}></div>
+          <div className="fretboard" style={fretboard}></div>
         </div>
         {ENABLE_STRINGS && (
           <div className="strings-container">{renderString()}</div>
@@ -60,7 +60,7 @@ export const Backdrop: React.FunctionComponent<BackdropProps> = ({}) => {
         </div>
         <div className="fretboard-markers-container">
           {ENABLE_NECK_MARKERS && (
-            <div className="fretboard-markers" style={styles.fretMarkers}>
+            <div className="fretboard-markers" style={fretMarkers}>
               <FretMarkers markers={markers} frets={instrument.NumFrets} />
             </div>
           )}

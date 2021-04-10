@@ -1,2 +1,3 @@
 export * from './FretIndicator';
-export * from './FretToggleIndicator';
+export * from './Indicators';
+export * from './SearchIndicators';

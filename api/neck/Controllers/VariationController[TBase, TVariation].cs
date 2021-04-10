@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using neck.Controllers.Args;
 using neck.Interfaces;
+using neck.Models.Entity;
 using neck.Models.Results;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace neck.Controllers
 {
-	public abstract class VariationController<TBase, TVariation> : GenericController<TVariation>
+    public abstract class VariationController<TBase, TVariation> : EntityController<TVariation>
 		where TBase : IDbEntity
 		where TVariation : IVariation<TBase>
 	{
@@ -18,14 +19,14 @@ namespace neck.Controllers
 		protected IVariationFactory<TBase, TVariation> _factory;
 
 		protected IRepository<TBase> _baseRepo;
-		protected IRepository<Models.Tuning> _tuningRepo;
+		protected IRepository<Tuning> _tuningRepo;
 
 		public VariationController(
 			ILogger<VariationController<TBase, TVariation>> logger,
 			IVariationFactory<TBase, TVariation> factory,
 			IRepository<TVariation> repository,
 			IRepository<TBase> baseRepository,
-			IRepository<Models.Tuning> tuningRepository
+			IRepository<Tuning> tuningRepository
 		)
 			: base(repository)
 		{
@@ -170,7 +171,7 @@ namespace neck.Controllers
 			return OperationResult<TBase>.CreateSuccess(@base);
 		}
 
-		private async Task<OperationResult<Models.Tuning>> locateTuning(VariationGenerateArgs<TBase> args)
+		private async Task<OperationResult<Tuning>> locateTuning(VariationGenerateArgs<TBase> args)
 		{
 			var tuning = args.tuning;
 			if (tuning == null)
@@ -178,7 +179,7 @@ namespace neck.Controllers
 				var result = await _tuningRepo.GetById(args.tuningId);
 				if (!result.Success)
 				{
-					return OperationResult<Models.Tuning>.CreateFailure($"Failed to locate tuning with id {args.tuningId}");
+					return OperationResult<Tuning>.CreateFailure($"Failed to locate tuning with id {args.tuningId}");
 				}
 
 				tuning = result.Result;
@@ -186,10 +187,10 @@ namespace neck.Controllers
 
 			if (tuning == null)
 			{
-				return OperationResult<Models.Tuning>.CreateFailure("Failed to locate Tuning");
+				return OperationResult<Tuning>.CreateFailure("Failed to locate Tuning");
 			}
 
-			return OperationResult<Models.Tuning>.CreateSuccess(tuning);
+			return OperationResult<Tuning>.CreateSuccess(tuning);
 		}
 
 		#endregion

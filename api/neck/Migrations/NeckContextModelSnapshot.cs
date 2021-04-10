@@ -19,7 +19,7 @@ namespace neck.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("neck.Models.Chord", b =>
+            modelBuilder.Entity("neck.Models.Entity.Chord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace neck.Migrations
                     b.ToTable("Chords");
                 });
 
-            modelBuilder.Entity("neck.Models.Formation", b =>
+            modelBuilder.Entity("neck.Models.Entity.Formation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,7 +69,7 @@ namespace neck.Migrations
                     b.ToTable("Formations");
                 });
 
-            modelBuilder.Entity("neck.Models.Instrument", b =>
+            modelBuilder.Entity("neck.Models.Entity.Instrument", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -99,7 +99,35 @@ namespace neck.Migrations
                     b.ToTable("Instruments");
                 });
 
-            modelBuilder.Entity("neck.Models.Note", b =>
+            modelBuilder.Entity("neck.Models.Entity.Key", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("TonicId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset?>("Updated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TonicId");
+
+                    b.HasIndex("Type", "TonicId")
+                        .IsUnique();
+
+                    b.ToTable("Keys");
+                });
+
+            modelBuilder.Entity("neck.Models.Entity.Note", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -125,7 +153,7 @@ namespace neck.Migrations
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("neck.Models.Scale", b =>
+            modelBuilder.Entity("neck.Models.Entity.Scale", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -151,7 +179,7 @@ namespace neck.Migrations
                     b.ToTable("Scales");
                 });
 
-            modelBuilder.Entity("neck.Models.Tuning", b =>
+            modelBuilder.Entity("neck.Models.Entity.Tuning", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,7 +209,7 @@ namespace neck.Migrations
                     b.ToTable("Tunings");
                 });
 
-            modelBuilder.Entity("neck.Models.Variations.ChordVariation", b =>
+            modelBuilder.Entity("neck.Models.Entity.Variations.ChordVariation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,7 +241,7 @@ namespace neck.Migrations
                     b.ToTable("ChordVariations");
                 });
 
-            modelBuilder.Entity("neck.Models.Variations.ScaleVariation", b =>
+            modelBuilder.Entity("neck.Models.Entity.Variations.ScaleVariation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,9 +268,9 @@ namespace neck.Migrations
                     b.ToTable("ScaleVariations");
                 });
 
-            modelBuilder.Entity("neck.Models.Chord", b =>
+            modelBuilder.Entity("neck.Models.Entity.Chord", b =>
                 {
-                    b.HasOne("neck.Models.Note", "Root")
+                    b.HasOne("neck.Models.Entity.Note", "Root")
                         .WithMany()
                         .HasForeignKey("RootId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -251,18 +279,18 @@ namespace neck.Migrations
                     b.Navigation("Root");
                 });
 
-            modelBuilder.Entity("neck.Models.Instrument", b =>
+            modelBuilder.Entity("neck.Models.Entity.Instrument", b =>
                 {
-                    b.HasOne("neck.Models.Tuning", "DefaultTuning")
+                    b.HasOne("neck.Models.Entity.Tuning", "DefaultTuning")
                         .WithOne("InstrumentDefault")
-                        .HasForeignKey("neck.Models.Instrument", "DefaultTuningId");
+                        .HasForeignKey("neck.Models.Entity.Instrument", "DefaultTuningId");
 
                     b.Navigation("DefaultTuning");
                 });
 
-            modelBuilder.Entity("neck.Models.Scale", b =>
+            modelBuilder.Entity("neck.Models.Entity.Key", b =>
                 {
-                    b.HasOne("neck.Models.Note", "Tonic")
+                    b.HasOne("neck.Models.Entity.Note", "Tonic")
                         .WithMany()
                         .HasForeignKey("TonicId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -271,9 +299,20 @@ namespace neck.Migrations
                     b.Navigation("Tonic");
                 });
 
-            modelBuilder.Entity("neck.Models.Tuning", b =>
+            modelBuilder.Entity("neck.Models.Entity.Scale", b =>
                 {
-                    b.HasOne("neck.Models.Instrument", "Instrument")
+                    b.HasOne("neck.Models.Entity.Note", "Tonic")
+                        .WithMany()
+                        .HasForeignKey("TonicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tonic");
+                });
+
+            modelBuilder.Entity("neck.Models.Entity.Tuning", b =>
+                {
+                    b.HasOne("neck.Models.Entity.Instrument", "Instrument")
                         .WithMany("Tunings")
                         .HasForeignKey("InstrumentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -282,21 +321,21 @@ namespace neck.Migrations
                     b.Navigation("Instrument");
                 });
 
-            modelBuilder.Entity("neck.Models.Variations.ChordVariation", b =>
+            modelBuilder.Entity("neck.Models.Entity.Variations.ChordVariation", b =>
                 {
-                    b.HasOne("neck.Models.Chord", "Base")
+                    b.HasOne("neck.Models.Entity.Chord", "Base")
                         .WithMany()
                         .HasForeignKey("ChordId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("neck.Models.Formation", "Formation")
+                    b.HasOne("neck.Models.Entity.Formation", "Formation")
                         .WithMany()
                         .HasForeignKey("FormationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("neck.Models.Tuning", "Tuning")
+                    b.HasOne("neck.Models.Entity.Tuning", "Tuning")
                         .WithMany()
                         .HasForeignKey("TuningId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -309,15 +348,15 @@ namespace neck.Migrations
                     b.Navigation("Tuning");
                 });
 
-            modelBuilder.Entity("neck.Models.Variations.ScaleVariation", b =>
+            modelBuilder.Entity("neck.Models.Entity.Variations.ScaleVariation", b =>
                 {
-                    b.HasOne("neck.Models.Scale", "Base")
+                    b.HasOne("neck.Models.Entity.Scale", "Base")
                         .WithMany()
                         .HasForeignKey("ScaleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("neck.Models.Tuning", "Tuning")
+                    b.HasOne("neck.Models.Entity.Tuning", "Tuning")
                         .WithMany()
                         .HasForeignKey("TuningId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -328,12 +367,12 @@ namespace neck.Migrations
                     b.Navigation("Tuning");
                 });
 
-            modelBuilder.Entity("neck.Models.Instrument", b =>
+            modelBuilder.Entity("neck.Models.Entity.Instrument", b =>
                 {
                     b.Navigation("Tunings");
                 });
 
-            modelBuilder.Entity("neck.Models.Tuning", b =>
+            modelBuilder.Entity("neck.Models.Entity.Tuning", b =>
                 {
                     b.Navigation("InstrumentDefault");
                 });

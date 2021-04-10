@@ -1,40 +1,26 @@
 
-import { Mode, Note, Scale } from ".";
-import { IOption } from "../shared/AppOptions";
+import { Note, Scale } from ".";
+import { ApiEntity } from "../network";
 
 export enum KeyType {
   Major = 'Major',
   Minor = 'Minor',
 }
 
-export class Key implements IOption {
+export class Key extends ApiEntity {
 
   public Tonic: Note;
   public Type: KeyType;
+  
+  public Label: string;
 
-  private _scale: Scale;
+  public Scale: Scale;
 
   constructor(tonic: Note, type?: KeyType) {
+    super();
+    
     this.Tonic = tonic;
     this.Type = type || KeyType.Major;
-  }
-
-  // TODO: this is weird
-  get Label(): string { return this.Tonic.Label; }
-  set Label(value: string) { this.Tonic.Label; }
-
-  get RelativeMajor(): Key {
-    if (this.Type === KeyType.Minor) return null;
-
-    const scale = new Scale(this.Tonic, Mode.Dorian());
-    return new Key(scale.Notes[2]);
-  }
-
-  get RelativeMinor(): Key {
-    if (this.Type === KeyType.Major) return null;
-
-    const scale = new Scale(this.Tonic, Mode.Ionian());
-    return new Key(scale.Notes[5]);
   }
 
   public Sharp(): Key {

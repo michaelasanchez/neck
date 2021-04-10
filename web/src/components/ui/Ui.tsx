@@ -1,11 +1,12 @@
 import * as React from 'react';
 import Draggable from 'react-draggable';
-import { OptionsModal, Notifications, Navbar } from '.';
-import { useNotificationContext, IndicatorsMode } from '..';
+import { Navbar, Notifications, OptionsModal } from '.';
+import { IndicatorsProvider, useNotificationContext } from '..';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { FretDisplayMode } from '../neck';
-import { ScaleSlideIn, ChordSlideIn } from './slideins';
+import { IndicatorsMode } from './indicators';
+import { ChordSlideIn, ScaleSlideIn, SearchSlideIn } from './slideins';
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
 export interface UiProps {}
@@ -16,7 +17,7 @@ export interface UiState {
 
 export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { key } = appOptions;
+  const { indicatorsMode, key } = appOptions;
 
   const { notifications } = useNotificationContext();
 
@@ -60,12 +61,9 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
             appOptions.leftHandMode ? ' left' : ''
           }${appOptions.leftHandUi ? ' ui-left' : ''}`}
         >
-          <ScaleSlideIn
-            collapse={appOptions.indicatorsMode !== IndicatorsMode.Scale}
-          />
-          <ChordSlideIn
-            collapse={appOptions.indicatorsMode !== IndicatorsMode.Chord}
-          />
+          <ScaleSlideIn collapse={indicatorsMode !== IndicatorsMode.Scale} />
+          <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
+          <SearchSlideIn collapse={indicatorsMode !== IndicatorsMode.Search} />
         </div>
       </Draggable>
       <div className={`ui${appOptions.leftHandUi ? ' left' : ''}`}>

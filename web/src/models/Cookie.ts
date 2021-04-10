@@ -1,15 +1,13 @@
-import { Key, Mode } from '.';
-import { IndicatorsMode } from '../components';
+import { IndicatorsMode } from '../components/ui/indicators';
 
 export class Cookie {
+  keyId: string;
+
   instrumentId: string;
   tuningId: string;
 
   chordId: string;
   scaleId: string;
-
-  key: Key;
-  mode: Mode;
 
   neck: NeckOptions;
 
@@ -21,21 +19,20 @@ export class Cookie {
 
   static Default(): Cookie {
     return {
+      keyId: null,
+
       chordId: null,
       instrumentId: null,
       tuningId: null,
 
-      key: Key.C(),
-      mode: Mode.Ionian(),
-
-      indicatorsMode: IndicatorsMode.Chord,
+      indicatorsMode: null,
 
       leftHandMode: false,
       leftHandUi: false,
       autoScroll: true,
 
       neck: {
-        numFrets: "14",
+        numFrets: '14',
       },
     } as Cookie;
   }

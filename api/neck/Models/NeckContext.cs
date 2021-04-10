@@ -2,7 +2,8 @@
 using neck.Comparers;
 using neck.Converters;
 using neck.Interfaces;
-using neck.Models.Variations;
+using neck.Models.Entity;
+using neck.Models.Entity.Variations;
 using System;
 using System.Linq;
 using System.Threading;
@@ -11,12 +12,13 @@ using System.Threading.Tasks;
 namespace neck.Models
 {
 
-	public class NeckContext : DbContext
+    public class NeckContext : DbContext
 	{
 		public DbSet<Chord> Chords { get; set; }
 		public DbSet<ChordVariation> ChordVariations { get; set; }
 		public DbSet<Formation> Formations { get; set; }
 		public DbSet<Instrument> Instruments { get; set; }
+		public DbSet<Key> Keys { get; set; }
 		public DbSet<Note> Notes { get; set; }
 		public DbSet<Scale> Scales { get; set; }
 		public DbSet<ScaleVariation> ScaleVariations { get; set; }
@@ -49,6 +51,10 @@ namespace neck.Models
 				.HasOne(i => i.DefaultTuning)
 				.WithOne(t => t.InstrumentDefault)
 				.HasForeignKey<Instrument>(i => i.DefaultTuningId);
+
+			modelBuilder.Entity<Key>()
+				.HasIndex(k => new { k.Type, k.TonicId })
+				.IsUnique();
 
 			modelBuilder.Entity<Note>()
 				.HasIndex(n => new { n.Base, n.Suffix })

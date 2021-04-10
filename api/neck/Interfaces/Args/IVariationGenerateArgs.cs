@@ -1,4 +1,4 @@
-﻿using neck.Models;
+﻿using neck.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace neck.Interfaces.Args
 {
-	interface IVariationGenerateArgs<TBase>
+    interface IVariationGenerateArgs<TBase>
 	{
 		public Guid? baseId { get; set; }
 		public TBase @base { get; set; }

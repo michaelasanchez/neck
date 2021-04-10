@@ -1,8 +1,7 @@
-import { each, filter, findIndex, indexOf, keyBy, map } from 'lodash';
+import { filter, findIndex, map } from 'lodash';
 import * as React from 'react';
-import { useState } from 'react';
-
-import { Note, NoteValue } from '../models';
+import { NoteValue } from '../enums';
+import { Note } from '../models';
 import { NoteUtils } from '../shared';
 
 const ALLOW_MULTIPLE = true;
@@ -28,14 +27,16 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
   const handleSelectedUpdate = (value: Note) => {
     if (!ALLOW_MULTIPLE) {
       if (selected.length && selected[0].Base == value.Base) {
-        
         setSelected([]);
       } else {
         setSelected([value]);
       }
     } else {
       if (filter(selected, (v) => v.Base === value.Base).length) {
-        selected.splice(findIndex(selected, n => n.Base === value.Base), 1);
+        selected.splice(
+          findIndex(selected, (n) => n.Base === value.Base),
+          1
+        );
       } else {
         selected.push(value);
       }
@@ -54,7 +55,8 @@ export const NoteSelection: React.FC<INoteSelectionProps> = ({
                 naturalNoteValues.length
             ];
 
-          const currentSelected = findIndex(selected, n => n.Base === shiftedNoteValue) > -1;
+          const currentSelected =
+            findIndex(selected, (n) => n.Base === shiftedNoteValue) > -1;
           const activeValue = filter(notes, (n) => n.Base == shiftedNoteValue);
 
           // TODO:

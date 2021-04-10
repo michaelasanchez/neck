@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
 using System.Threading.Tasks;
 
 namespace neck.Repositories
 {
-	public class FormationRepository : GenericRepository<Formation>
+    public class FormationRepository : GenericRepository<Formation>
 	{
 		public FormationRepository(NeckContext context)
 			: base(context)

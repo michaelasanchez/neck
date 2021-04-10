@@ -6,12 +6,12 @@ import {
   ButtonGroup,
   Dropdown,
   DropdownButton,
-  SplitButton,
+  SplitButton
 } from 'react-bootstrap';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { Keys } from '../../shared';
-import { IndicatorsMode } from '../Indicators';
+import { IndicatorsMode } from './indicators/Indicators';
 import { KeySlider } from './KeySlider';
 
 export interface NavbarProps {
@@ -31,8 +31,12 @@ const getModeTitle = (mode: IndicatorsMode) => {
       return 'Scale';
     case IndicatorsMode.Search:
       return 'Search';
+    default:
+      return '';
   }
 };
+
+const keys = Keys.DropdownValues();
 
 export const Navbar: React.FunctionComponent<NavbarProps> = ({
   showing,
@@ -45,14 +49,11 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
   const { appOptions } = useAppOptionsContext();
   const { indicatorsMode } = appOptions;
 
-  const keys = Keys.DropdownValues();
-
   const handleSetKey = (keyString: string) => setKey(keys[parseInt(keyString)]);
 
   const [lastIndicatorsMode, setLastIndicatorsMode] = useState<IndicatorsMode>(
-    IndicatorsMode.Chord
+    indicatorsMode
   );
-
   useEffect(() => {
     if (indicatorsMode !== null) {
       setLastIndicatorsMode(indicatorsMode);
@@ -76,11 +77,12 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
     );
   };
 
+  const size = 'lg';
+
   return (
     <nav
-      className={`navbar navbar-dark bg-dark${
-        className ? ` ${className}` : ''
-      }`}
+      className={`navbar navbar-dark bg-dark${className ? ` ${className}` : ''
+        }`}
     >
       <a className="navbar-brand" href="#">
         Neck
@@ -89,7 +91,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
       <div className="navbar-nav">
         <form className="form-inline">
           <Button
-            size="lg"
+            size={size}
             variant="outline-success"
             className={`options${showing ? ' active' : ''}`}
             onClick={() => setShowing(!showing)}
@@ -102,7 +104,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             alignRight={true}
             className={`mode${indicatorsMode !== null ? ' active' : ''}`}
             drop="up"
-            size="lg"
+            size={size}
             variant={indicatorsMode !== null ? 'primary' : 'outline-primary'}
             title={getModeTitle(lastIndicatorsMode)}
             onClick={() =>
@@ -111,34 +113,25 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
               )
             }
           >
-            <Dropdown.Item
-              eventKey="1"
-              onClick={() => setIndicatorsMode(IndicatorsMode.Search)}
-            >
-              Search
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item
-              eventKey="2"
-              onClick={() => setIndicatorsMode(IndicatorsMode.Chord)}
-            >
-              Chord
-            </Dropdown.Item>
-            <Dropdown.Item
-              eventKey="3"
-              onClick={() => setIndicatorsMode(IndicatorsMode.Scale)}
-            >
-              Scale
-            </Dropdown.Item>
+            {map(IndicatorsMode, (m: IndicatorsMode, key: string) => {
+              return !isNaN(m) && indicatorsMode !== m && lastIndicatorsMode !== m &&
+                <Dropdown.Item
+                  eventKey={key}
+                  key={key}
+                  onClick={() => setIndicatorsMode(m)}
+                >
+                  {getModeTitle(m)}
+                </Dropdown.Item>;
+            })}
           </SplitButton>
 
           <div className="nav-item btn-group dropup">
             <DropdownButton
-              size="lg"
+              size={size}
               as={ButtonGroup}
               id="key-dropdown"
               variant="secondary"
-              title={`Key of ${musicKey.Label}`}
+              title={`${musicKey.Label}`}
               disabled={showing}
             >
               <KeySlider setKey={(k: Key) => setKey(k)} />

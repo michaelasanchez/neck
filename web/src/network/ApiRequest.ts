@@ -8,11 +8,12 @@ export type EntityType =
   | 'chord'
   | 'chordvariation'
   | 'instrument'
+  | 'key'
   | 'scale'
   | 'scalevariation'
   | 'tuning';
 
-export enum ApiAction {}
+export enum ApiAction { }
 
 export class ApiRequest<T = ApiEntity> extends BaseRequest<T> {
   protected _domain: string;
@@ -55,9 +56,8 @@ export class ApiRequest<T = ApiEntity> extends BaseRequest<T> {
   }
 
   protected calcUrl(): string {
-    return `${this.Domain}/${this.EntityType}${this.Action ? '/' : ''}${
-      this.Action
-    }`;
+    return `${this.Domain}/${this.EntityType}${this.Action ? '/' : ''}${this.Action
+      }`;
   }
 
   GetAll = (): Promise<Array<T>> => {

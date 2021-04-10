@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace neck.Repositories
 {
-	public class InstrumentRepository : GenericRepository<Instrument>
+    public class InstrumentRepository : GenericRepository<Instrument>
 	{
 		private Lazy<IRepository<Tuning>> _tuningRepo;
 

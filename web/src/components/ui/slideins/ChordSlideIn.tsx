@@ -1,17 +1,11 @@
-import { every, filter, map } from 'lodash';
+import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
 import { IGenerateResponseHeader } from '../../../interfaces';
-import {
-  Chord,
-  ChordModifier,
-  ChordVariation,
-  Note,
-  TuningNote,
-} from '../../../models';
+import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
 import { ChordVariationApi } from '../../../network';
 import { NoteUtils } from '../../../shared';
 import { NoteSelection } from '../../NoteSelection';
@@ -166,7 +160,14 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     ) : (
       <> Nope!</>
     );
-  }, [variations, currentIndex, selected, appOptions.leftHandMode, appOptions.leftHandUi, appOptions.autoScroll]);
+  }, [
+    variations,
+    currentIndex,
+    selected,
+    appOptions.leftHandMode,
+    appOptions.leftHandUi,
+    appOptions.autoScroll,
+  ]);
 
   return (
     <DropdownSlideIn

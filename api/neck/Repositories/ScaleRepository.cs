@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using neck.Interfaces;
 using neck.Models;
+using neck.Models.Entity;
 using neck.Models.Results;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace neck.Repositories
 {
-	public class ScaleRepository : GenericRepository<Scale>
+    public class ScaleRepository : GenericRepository<Scale>
 	{
 		private Lazy<IRepository<Note>> _noteRepo;
 

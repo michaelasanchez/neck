@@ -24,6 +24,14 @@ main.left {
 
 .navbar.left {
   flex-direction: row-reverse;
+
+  #key-dropdown {
+    margin-right: 0.75rem;
+  }
+
+  .form-inline {
+    flex-direction: row-reverse;
+  }
 }
 
 // Slide-Ins
