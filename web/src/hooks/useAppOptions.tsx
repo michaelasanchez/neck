@@ -2,7 +2,7 @@ import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
-import { IndicatorsMode } from '../components/ui/indicators';
+import { NoteSuffix, NoteValue } from '../enums';
 import {
   Chord,
   ChordModifier,
@@ -11,13 +11,17 @@ import {
   Key,
   KeyType,
   Note,
-  NoteSuffix,
-  NoteValue,
   Scale,
   ScaleType,
   Tuning,
 } from '../models';
-import { ChordApi, InstrumentApi, KeyApi, ScaleApi, TuningApi } from '../network';
+import {
+  ChordApi,
+  InstrumentApi,
+  KeyApi,
+  ScaleApi,
+  TuningApi,
+} from '../network';
 import { AppOptions } from '../shared';
 
 const validateAppOptions = (appOptions: AppOptions): IError => {
@@ -40,8 +44,8 @@ const loadKey = (keyId?: string): Promise<Key> => {
   }
 
   // TODO: static
-  return new KeyApi().Locate(KeyType.Major, NoteValue.C, NoteSuffix.Natural)
-}
+  return new KeyApi().Locate(KeyType.Major, NoteValue.C, NoteSuffix.Natural);
+};
 
 const loadChord = (chordId?: string): Promise<Chord> => {
   if (chordId) {
@@ -139,16 +143,12 @@ export const useAppOptions = () => {
 
         instrument,
         tuning: tuning || instrument.DefaultTuning,
-        
+
         chord,
         scale,
 
-
-        
         indicatorsMode: cookie.indicatorsMode,
         // indicatorsMode: IndicatorsMode.Chord,
-
-
 
         leftHandMode: cookie.leftHandMode,
         leftHandUi: cookie.leftHandUi,

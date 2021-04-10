@@ -1,4 +1,5 @@
-import { Note, NoteSuffix, NoteValue } from '.';
+import { Note } from '.';
+import { NoteValue, NoteSuffix } from '../enums';
 
 export class TuningNote extends Note {
   public Octave: number;

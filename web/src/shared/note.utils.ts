@@ -1,8 +1,8 @@
 import { every, map } from 'lodash';
-import { Note, NoteValue, TuningNote } from '../models';
+import { NoteValue } from '../enums';
+import { Note, TuningNote } from '../models';
 
 export class NoteUtils {
-
   static NotesAreEqual = (noteA: Note, noteB: Note): boolean => {
     if (!noteA || !noteB) return false;
     return noteA.Base == noteB.Base && noteA.Suffix == noteB.Suffix;

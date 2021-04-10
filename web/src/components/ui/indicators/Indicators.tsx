@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FretIndicator, SearchIndicators } from '.';
 import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
-import { FretNote, Instrument, Note, Scale, Tuning, TuningNote } from '../../../models';
+import { FretMap, Note } from '../../../models';
 
 export enum IndicatorsMode {
   Chord,
@@ -15,42 +15,6 @@ export enum IndicatorsMode {
 interface IndicatorsProps {
   mainRef: React.MutableRefObject<HTMLDivElement>;
 }
-
-export type FretMap = FretNote[][];
-
-export const createFretMap = (
-  instrument: Instrument,
-  tuning: Tuning,
-  scale: Scale
-): FretMap => {
-  if (!tuning) {
-    tuning = instrument.DefaultTuning;
-    if (!tuning) {
-      return null;
-    }
-  }
-
-  return times(instrument.NumStrings, (s) => {
-    const offset = tuning.Offsets[s];
-    if (!offset) return null;
-
-    return times(instrument.NumFrets, (f) => {
-      let offsetNoteValue = f + offset.Pitch;
-      let pitch = offsetNoteValue % Note.NUM_NOTES;
-      let octave = Math.floor(offsetNoteValue / Note.NUM_NOTES) + offset.Octave;
-
-      // Check if Note exists for current fret number
-      let current = filter(scale.Notes, (note: Note) => note.Pitch == pitch);
-
-      let note = null;
-      if (!!current.length) {
-        note = current[0] as TuningNote;
-        note.Octave = octave;
-      }
-      return note ? new FretNote(note.Base, note.Suffix, note.Octave, s, f) : null;
-    });
-  });
-};
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { appOptions } = useAppOptionsContext();
@@ -71,7 +35,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const [fretMap, setFretMap] = useState<FretMap>();
 
   useEffect(() => {
-    setFretMap(createFretMap(instrument, tuning, key.Scale));
+    setFretMap(new FretMap(instrument, tuning, key.Scale));
   }, [instrument, tuning, key]);
 
   const { mainRef } = props;

@@ -7,17 +7,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { every, filter, findIndex, isUndefined, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { OptionCardProps, FormAction, FormMode, InlineOptionsForm, OptionCard } from '.';
+import {
+  FormAction,
+  FormMode,
+  InlineOptionsForm,
+  OptionCard,
+  OptionCardProps,
+} from '.';
 import { useNotificationContext } from '../..';
+import { NoteValue } from '../../../enums';
 import { useRequest } from '../../../hooks';
 import { NotificationType } from '../../../interfaces';
-import {
-  Instrument,
-  Note,
-  NoteValue,
-  Tuning,
-  TuningNote,
-} from '../../../models';
+import { Instrument, Note, Tuning, TuningNote } from '../../../models';
 import { TuningApi } from '../../../network';
 import { DropOver, DropOverOption } from '../DropOver';
 

@@ -1,10 +1,10 @@
 import { filter, findIndex, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { FretIndicator, FretMap, IndicatorsMode } from '.';
+import { FretIndicator, IndicatorsMode } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
-import { FretNote, Note, TuningNote } from '../../../models';
+import { FretMap, FretNote, TuningNote } from '../../../models';
 
 export interface SearchIndicatorsProps {
   fretMap: FretMap;
@@ -14,26 +14,31 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
   props
 ) => {
   const { appOptions } = useAppOptionsContext();
-  const { indicatorsMode: mode, instrument, key, tuning } = appOptions;
+  const { indicatorsMode: mode, instrument, tuning } = appOptions;
   const { searchArray, setIndicatorsOptions } = useIndicatorsContext();
   const { fretMap } = props;
 
   const [selectedMatrix, setSelectedMatrix] = useState<boolean[][]>();
 
-
   // Reset search matrix
   useEffect(() => {
     if (mode === IndicatorsMode.Search) {
       const matrix = times(instrument.NumStrings, (s) =>
-        times(instrument.NumFrets, (f) => filter(searchArray, n => n.String == s && n.Fret == f)?.length > 0 ? true : false)
+        times(instrument.NumFrets, (f) =>
+          filter(searchArray, (n) => n.String == s && n.Fret == f)?.length > 0
+            ? true
+            : false
+        )
       );
       setSelectedMatrix(matrix);
     }
-  }, [mode]);
+  }, []);
 
   useEffect(() => {
-    // TODO: Need to translate search array to new key
-    const mappedSearchArray = map(searchArray, (n: FretNote, i: number) => fretMap[n.String][n.Fret]);
+    const mappedSearchArray = map(
+      searchArray,
+      (n: FretNote, i: number) => fretMap.Notes[n.String][n.Fret]
+    );
     setIndicatorsOptions({ searchArray: mappedSearchArray });
   }, [fretMap]);
 
@@ -47,7 +52,7 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
     selectedMatrix[s][f] = newValue;
 
     setSelectedMatrix([...selectedMatrix]);
-    handleSetSearchArray(fretMap[s][f]);
+    handleSetSearchArray(fretMap.Notes[s][f]);
   };
 
   const handleSetSearchArray = (note: FretNote) => {
@@ -75,7 +80,7 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
                   show={true}
                   toggle={true}
                   onClick={() => handleSetSelectedMatrix(s, f)}
-                  label={selected ? fretMap[s][f]?.Label : null}
+                  label={selected ? fretMap.Notes[s][f]?.Note.Label : null}
                   indicatorClass={selected ? ' degree-1' : ''}
                 />
               );

@@ -1,12 +1,12 @@
 import { filter, map, uniqBy } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Badge, Button } from 'react-bootstrap';
 import { SlideIn } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
-import { Key, Note, TuningNote } from '../../../models';
+import { FretNote, Key, Note, TuningNote } from '../../../models';
 import { KeyApi } from '../../../network';
 import { ISlideInProps } from './SlideIn';
 
@@ -18,12 +18,16 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
   const { setAppOptions } = useAppOptionsContext();
   const { searchArray } = useIndicatorsContext();
 
-  const [keys, setKeys] = useState<Key[]>();
+  const [keysQuery, setKeysQuery] = useState<FretNote[]>();
+  const [keysResult, setKeysResult] = useState<Key[]>();
 
   const { req: searchKeys } = useRequest(new KeyApi().Search);
 
   const handleSearchKeys = () => {
-    searchKeys(searchArray).then((keys) => setKeys(keys));
+    searchKeys(searchArray).then((keys) => {
+      setKeysQuery([...searchArray]);
+      setKeysResult(keys);
+    });
   };
 
   return (
@@ -44,13 +48,23 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
           <>Select some notes!</>
         )}
       </p>
-      {!!keys && (
+      {!!keysResult && (
         <>
-          <h5>
-            Matching Keys <span className="text-muted">({keys.length})</span>
-          </h5>
-          <div className="key-container">
-            {map(keys, (k: Key, i: number) => (
+          <div className="key-header">
+            <h5>
+              Matching Keys{' '}
+              <span className="text-muted">({keysResult.length})</span>
+            </h5>
+            <div>
+              {map(keysQuery, (n) => (
+                <Badge pill variant="light">
+                  {n.Note.Label}
+                </Badge>
+              ))}
+            </div>
+          </div>
+          <div className="key-result">
+            {map(keysResult, (k: Key, i: number) => (
               <div key={i} onClick={() => setAppOptions({ key: k })}>
                 <h6>{k.Label}</h6>
                 {map(k.Scale.Notes, (n: Note, j: number) => (

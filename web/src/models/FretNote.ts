@@ -1,8 +1,11 @@
-import { NoteSuffix, NoteValue, TuningNote } from '.';
+import { TuningNote } from '.';
+import { NoteSuffix, NoteValue } from '../enums';
 
-export class FretNote extends TuningNote {
+export class FretNote {
+  public Note: TuningNote;
   public String: number;
   public Fret: number;
+
   constructor(
     value: NoteValue,
     suffix: NoteSuffix,
@@ -10,7 +13,7 @@ export class FretNote extends TuningNote {
     string: number,
     fret: number
   ) {
-    super(value, suffix, octave);
+    this.Note = new TuningNote(value, suffix, octave);
     this.String = string;
     this.Fret = fret;
   }
