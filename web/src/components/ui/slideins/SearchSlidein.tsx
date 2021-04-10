@@ -12,6 +12,10 @@ import { ISlideInProps } from './SlideIn';
 
 export interface SearchSlideInProps extends Pick<ISlideInProps, 'collapse'> {}
 
+const getDisplayArray = (searchArray: FretNote[]): FretNote[] => {
+  return uniqBy(searchArray, (n: FretNote) => n?.Note.Pitch);
+};
+
 export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
   props
 ) => {
@@ -24,8 +28,8 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
   const { req: searchKeys } = useRequest(new KeyApi().Search);
 
   const handleSearchKeys = () => {
-    searchKeys(searchArray).then((keys) => {
-      setKeysQuery([...searchArray]);
+    searchKeys(map(searchArray, n => n.Note)).then((keys) => {
+      setKeysQuery([...getDisplayArray(searchArray)]);
       setKeysResult(keys);
     });
   };
@@ -39,9 +43,9 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
     >
       <p className="text-center">
         {searchArray.length ? (
-          map(uniqBy(searchArray, 'Pitch'), (n: TuningNote, i: number) => (
+          map(getDisplayArray(searchArray), (n: FretNote, i: number) => (
             <label className="search-note" key={i}>
-              {n.Label}
+              {n.Note.Label}
             </label>
           ))
         ) : (
@@ -56,8 +60,8 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
               <span className="text-muted">({keysResult.length})</span>
             </h5>
             <div>
-              {map(keysQuery, (n) => (
-                <Badge pill variant="light">
+              {map(keysQuery, (n: FretNote, i: number) => (
+                <Badge pill variant="light" key={i}>
                   {n.Note.Label}
                 </Badge>
               ))}

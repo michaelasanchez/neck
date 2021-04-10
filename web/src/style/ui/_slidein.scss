@@ -186,14 +186,14 @@ $opacity-out: 0;
     .key-header {
       display: flex;
       justify-content: space-between;
-      
+
       > div {
         position: relative;
       }
     }
 
     .key-result {
-      max-height: 200px;
+      max-height: 300px;
       overflow-y: auto;
       padding-right: 0.5em;
       margin-bottom: 1rem;
