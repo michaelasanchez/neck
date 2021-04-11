@@ -26,7 +26,7 @@ export interface AppOptions {
   indicatorsMode?: IndicatorsMode;
 
   chordVariation?: ChordVariation; // Indicators
-  scaleVariation?: ScaleVariation;
+  // scaleVariation?: ScaleVariation;
 
   // Validation
   [key: string]: any;

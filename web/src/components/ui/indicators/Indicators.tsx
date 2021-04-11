@@ -2,6 +2,7 @@ import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { FretIndicator, SearchIndicators } from '.';
+import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
 import { FretMap, Note } from '../../../models';
@@ -17,6 +18,7 @@ interface IndicatorsProps {
 }
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
+  const { scaleVariation } = useIndicatorsContext();
   const { appOptions } = useAppOptionsContext();
   const {
     key,
@@ -24,20 +26,12 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     chord,
     chordVariation,
     scale,
-    scaleVariation,
     tuning,
     instrument,
     autoScroll,
   } = appOptions;
 
   const { indicators } = useStyles();
-
-  const [fretMap, setFretMap] = useState<FretMap>();
-
-  useEffect(() => {
-    setFretMap(new FretMap(instrument, tuning, key.Scale));
-  }, [instrument, tuning, key]);
-
   const { mainRef } = props;
   const topRef = useRef<HTMLDivElement>();
   const bottomRef = useRef<HTMLDivElement>();
@@ -243,7 +237,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
     ) {
       return renderScaleIndicators();
     } else if (mode == IndicatorsMode.Search) {
-      return <SearchIndicators fretMap={fretMap} />;
+      return <SearchIndicators />;
     } else {
       return <></>;
     }

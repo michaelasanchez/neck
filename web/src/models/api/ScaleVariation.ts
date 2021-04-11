@@ -12,5 +12,5 @@ export class ScaleVariation extends ApiEntity {
 
   public Offset: number;
 
-  public Positions: Array<Array<number>>;
+  public Positions: number[][];
 }

@@ -17,7 +17,18 @@ export class KeyApi extends ApiRequest<Key> {
     return super.Post({ type, base, suffix }) as Promise<Key>;
   };
 
-  Search = (notes: TuningNote[]): Promise<BaseResponse<Key[]>> => {
+  LocateAsync = (
+    type: KeyType,
+    base: NoteValue,
+    suffix: NoteSuffix
+  ): Promise<BaseResponse<Key>> => {
+    this.Action = 'locate';
+    return super.PostAsync({ type, base, suffix }) as Promise<
+      BaseResponse<Key>
+    >;
+  };
+
+  SearchAsync = (notes: TuningNote[]): Promise<BaseResponse<Key[]>> => {
     this.Action = 'search';
     return super.PostAsync({ notes }) as Promise<BaseResponse<Key[]>>;
   };

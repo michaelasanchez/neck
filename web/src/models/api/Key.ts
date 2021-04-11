@@ -2,9 +2,18 @@ import { Note, Scale } from '..';
 import { ApiEntity } from '../../network';
 
 export enum KeyType {
-  Major = 'Major',
-  Minor = 'Minor',
+  Major,
+  Minor,
 }
+
+export const getKeyTypeLabel = (type: KeyType): string => {
+  switch (type) {
+    case KeyType.Major:
+      return 'Major';
+    case KeyType.Minor:
+      return 'Minor';
+  }
+};
 
 export class Key extends ApiEntity {
   public Tonic: Note;

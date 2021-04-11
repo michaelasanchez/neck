@@ -1,45 +1,56 @@
-import { filter, findIndex, map, times } from 'lodash';
+import { filter, findIndex, map, reduce, sum, times } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { FretIndicator, IndicatorsMode } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
-import { FretMap, FretNote, TuningNote } from '../../../models';
+import { FretMap, FretNote, Instrument, TuningNote } from '../../../models';
 
-export interface SearchIndicatorsProps {
-  fretMap: FretMap;
-}
+export interface SearchIndicatorsProps {}
+
+const getEmptyMatrix = (instrument: Instrument, searchArray: FretNote[]) => {
+  return times(instrument.NumStrings, (s) =>
+    times(instrument.NumFrets, (f) =>
+      filter(searchArray, (n) => n.String == s && n.Fret == f)?.length > 0
+        ? true
+        : false
+    )
+  );
+};
 
 export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = (
   props
 ) => {
   const { appOptions } = useAppOptionsContext();
   const { indicatorsMode: mode, instrument, tuning } = appOptions;
-  const { searchArray, setIndicatorsOptions } = useIndicatorsContext();
-  const { fretMap } = props;
+  const { fretMap, searchArray, setSearchArray } = useIndicatorsContext();
 
   const [selectedMatrix, setSelectedMatrix] = useState<boolean[][]>();
 
   // Reset search matrix
   useEffect(() => {
     if (mode === IndicatorsMode.Search) {
-      const matrix = times(instrument.NumStrings, (s) =>
-        times(instrument.NumFrets, (f) =>
-          filter(searchArray, (n) => n.String == s && n.Fret == f)?.length > 0
-            ? true
-            : false
-        )
-      );
-      setSelectedMatrix(matrix);
+      setSelectedMatrix(getEmptyMatrix(instrument, searchArray));
     }
   }, []);
+
+  useEffect(() => {
+    const selected = sum(
+      map(selectedMatrix, (s) =>
+        reduce(s, (prev, curr, index) => prev + (curr ? 1 : 0), 0)
+      )
+    );
+    if (!searchArray.length && !!selected) {
+      setSelectedMatrix(getEmptyMatrix(instrument, searchArray));
+    }
+  }, [searchArray]);
 
   useEffect(() => {
     const mappedSearchArray = map(
       searchArray,
       (n: FretNote, i: number) => fretMap.Notes[n.String][n.Fret]
     );
-    setIndicatorsOptions({ searchArray: mappedSearchArray });
+    setSearchArray(mappedSearchArray);
   }, [fretMap]);
 
   const handleSetSelectedMatrix = (
@@ -62,14 +73,14 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
         (n: FretNote) => n.String == note.String && n.Fret == note.Fret
       );
       index < 0 ? searchArray.push(note) : searchArray.splice(index, 1);
-      setIndicatorsOptions({ searchArray: [...searchArray] });
+      setSearchArray(searchArray);
     } else {
     }
   };
 
   return (
     <>
-      {map(tuning.Offsets, (o: TuningNote, s: number) => {
+      {map(tuning?.Offsets, (o: TuningNote, s: number) => {
         return (
           <div className="string" key={s}>
             {times(instrument.NumFrets + 1, (f) => {

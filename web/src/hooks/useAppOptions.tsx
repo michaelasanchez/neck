@@ -159,7 +159,6 @@ export const useAppOptions = () => {
     });
   };
 
-  // TODO: Combine with loadChord by keeping track of chordIds?
   const reloadChord = (options: AppOptions) => {
     new ChordApi().Locate(options.chord).then((chord) => {
       options.chord = chord;
@@ -170,13 +169,6 @@ export const useAppOptions = () => {
   const reloadScale = (options: AppOptions) => {
     new ScaleApi().Locate(options.scale).then((scale) => {
       options.scale = scale;
-
-      // TODO: Neck still depends on scales generated from Note
-      options.key = new Key(
-        new Note(scale.Tonic.Base, scale.Tonic.Suffix),
-        scale.Type == ScaleType.NaturalMinor ? KeyType.Minor : KeyType.Major
-      );
-
       finishSetAppOptions(options);
     });
   };

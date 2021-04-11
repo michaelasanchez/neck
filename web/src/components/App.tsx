@@ -30,6 +30,7 @@ const App: React.FunctionComponent<AppProps> = () => {
     return (
       <>
         <IndicatorsProvider>
+          <NotificationsProvider>
           <main ref={mainRef} className={appOptions.leftHandMode ? 'left' : ''}>
             <Backdrop />
             <div className="neck-container">
@@ -41,7 +42,6 @@ const App: React.FunctionComponent<AppProps> = () => {
               </div>
             )}
           </main>
-          <NotificationsProvider>
             <Ui />
           </NotificationsProvider>
         </IndicatorsProvider>

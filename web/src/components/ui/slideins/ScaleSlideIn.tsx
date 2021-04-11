@@ -2,7 +2,7 @@ import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
-import { NoteSelection } from '../..';
+import { NoteSelection, useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { ScaleType } from '../../../enums';
 import { useRequest } from '../../../hooks';
@@ -51,6 +51,7 @@ const getScaleTypeLabel = (type: ScaleType) => {
 
 export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
+  const { setScaleVariation } = useIndicatorsContext();
 
   const { instrument, scale, tuning } = appOptions;
   const { collapse } = props;
@@ -59,7 +60,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
     IGenerateResponseHeader<ScaleVariation>
   >();
 
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [currentIndex, setCurrentIndex] = useState<number>();
   const [variations, setVariations] = useState<ScaleVariation[]>();
 
   const [selected, setSelected] = useState<Note[]>();
@@ -106,7 +107,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
 
   useEffect(() => {
     if (variations?.length) {
-      setAppOptions({ scaleVariation: variations[0] });
+      handleSetScaleVariation(variations[0], 0);
     }
   }, [variations]);
 
@@ -139,7 +140,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
     variation: ScaleVariation,
     index: number
   ) => {
-    setAppOptions({ scaleVariation: variation });
+    setScaleVariation(variation);
     setCurrentIndex(index);
   };
 

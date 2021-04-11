@@ -20,17 +20,22 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
   props
 ) => {
   const { setAppOptions } = useAppOptionsContext();
-  const { searchArray, setIndicatorsOptions } = useIndicatorsContext();
+  const { searchArray, setSearchArray } = useIndicatorsContext();
 
   const [keysQuery, setKeysQuery] = useState<FretNote[]>();
   const [keysResult, setKeysResult] = useState<Key[]>();
 
-  const { req: searchKeys } = useRequest(new KeyApi().Search);
+  const { req: searchKeys } = useRequest(new KeyApi().SearchAsync);
 
   const handleSetKey = (k: Key) => {
     // setIndicatorsOptions({ searchArray: map(searchArray, n => fretMap[n.])})
+    // TODO: this is duplicated until we move props to indicatorsOptions
+    // const mappedSearchArray = map(
+    //   searchArray,
+    //   (n: FretNote, i: number) => fretMap.Notes[n.String][n.Fret]
+    // );
     setAppOptions({ key: k });
-  }
+  };
 
   const handleSetKeys = () => {
     if (!!searchArray.length) {
@@ -40,9 +45,6 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
       });
     }
   };
-
-  const handleClearSearchArray = () =>
-    setIndicatorsOptions({ searchArray: [] });
 
   return (
     <SlideIn
@@ -66,7 +68,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
         <Button
           disabled={!searchArray.length}
           variant="outline-secondary"
-          onClick={() => handleClearSearchArray}
+          onClick={() => setSearchArray([])}
         >
           Clear
         </Button>
