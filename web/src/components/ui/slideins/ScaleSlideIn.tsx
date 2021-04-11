@@ -1,14 +1,13 @@
-import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { NoteSelection } from '../..';
 import { useAppOptionsContext } from '../../..';
+import { ScaleType } from '../../../enums';
 import { useRequest } from '../../../hooks';
 import { IGenerateResponseHeader } from '../../../interfaces';
-import { Note, Scale, ScaleType, ScaleVariation } from '../../../models';
+import { Note, Scale, ScaleVariation } from '../../../models';
 import { ScaleVariationApi } from '../../../network/ScaleVariationApi';
 import { NoteUtils } from '../../../shared';
 import { ScaleDiagram } from '../diagrams';
@@ -154,7 +153,14 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
         setVariation={(v) => handleSetScaleVariation(v, i)}
       />
     ));
-  }, [variations, currentIndex, selected, appOptions.leftHandMode, appOptions.leftHandUi, appOptions.autoScroll]);
+  }, [
+    variations,
+    currentIndex,
+    selected,
+    appOptions.leftHandMode,
+    appOptions.leftHandUi,
+    appOptions.autoScroll,
+  ]);
 
   return (
     <DropdownSlideIn

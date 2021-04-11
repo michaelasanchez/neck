@@ -2,7 +2,7 @@ import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
-import { NoteSuffix, NoteValue } from '../enums';
+import { NoteSuffix, NoteValue, ScaleType } from '../enums';
 import {
   Chord,
   ChordModifier,
@@ -12,7 +12,6 @@ import {
   KeyType,
   Note,
   Scale,
-  ScaleType,
   Tuning,
 } from '../models';
 import {

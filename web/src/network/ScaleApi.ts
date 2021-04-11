@@ -1,5 +1,5 @@
-import { NoteSuffix, NoteValue } from '../enums';
-import { Scale, ScaleType } from '../models';
+import { NoteSuffix, NoteValue, ScaleType } from '../enums';
+import { Scale } from '../models';
 import { ApiRequest } from './ApiRequest';
 
 export class ScaleApi extends ApiRequest<Scale> {

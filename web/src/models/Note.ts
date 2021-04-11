@@ -1,7 +1,5 @@
 import { isUndefined } from 'lodash';
-
-import { ScaleDegree } from '.';
-import { NoteInterval, NoteSuffix, NoteValue } from '../enums';
+import { NoteInterval, NoteSuffix, NoteValue, ScaleDegree } from '../enums';
 
 //  C           D           E     F           G           A           B
 //        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb

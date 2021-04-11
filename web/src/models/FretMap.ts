@@ -1,5 +1,6 @@
-import { filter, times } from 'lodash';
+import { filter, isUndefined, times } from 'lodash';
 import { FretNote, Instrument, Note, Scale, Tuning, TuningNote } from '.';
+import { NoteSuffix, NoteValue } from '../enums';
 
 const calcNotes = (instrument: Instrument, tuning: Tuning, scale: Scale) => {
   if (!tuning) {
@@ -26,9 +27,20 @@ const calcNotes = (instrument: Instrument, tuning: Tuning, scale: Scale) => {
         note = current[0] as TuningNote;
         note.Octave = octave;
       }
-      return note
-        ? new FretNote(note.Base, note.Suffix, note.Octave, s, f)
-        : null;
+
+      if (note == null && !isUndefined(NoteValue[pitch])) {
+        note = new TuningNote(pitch, 0, octave);
+      }
+
+      let notes = null;
+      if (isUndefined(NoteValue[pitch])) {
+        notes = [
+          new TuningNote(pitch - 1, NoteSuffix.Sharp, octave),
+          new TuningNote(pitch + 1, NoteSuffix.Flat, octave),
+        ];
+      }
+
+      return new FretNote(!!note ? [note] : notes, s, f);
     });
   });
 };

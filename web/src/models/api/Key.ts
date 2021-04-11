@@ -1,6 +1,5 @@
-
-import { Note, Scale } from ".";
-import { ApiEntity } from "../network";
+import { Note, Scale } from '..';
+import { ApiEntity } from '../../network';
 
 export enum KeyType {
   Major = 'Major',
@@ -8,17 +7,16 @@ export enum KeyType {
 }
 
 export class Key extends ApiEntity {
-
   public Tonic: Note;
   public Type: KeyType;
-  
+
   public Label: string;
 
   public Scale: Scale;
 
   constructor(tonic: Note, type?: KeyType) {
     super();
-    
+
     this.Tonic = tonic;
     this.Type = type || KeyType.Major;
   }
@@ -74,4 +72,4 @@ export class Key extends ApiEntity {
 
 Key.prototype.toString = function () {
   return this.Name;
-}
+};

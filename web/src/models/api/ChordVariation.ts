@@ -1,15 +1,8 @@
 import { map } from 'lodash';
-import { Tuning } from '.';
-import { Formation } from './Formation';
-import { Note } from './Note';
+import { Formation, Note, Tuning } from '..';
+import { ApiEntity } from '../../network';
 
-export class Format {
-  public Barres: Array<number>;
-
-  public Positions: Array<number>;
-}
-
-export class ChordVariation {
+export class ChordVariation extends ApiEntity {
   public Offset: number;
 
   public Formation: Formation;
@@ -26,17 +19,19 @@ export class ChordVariation {
     formation: Formation,
     tuning: Tuning
   ) {
+    super();
+
     this.ChordId = chordId;
 
     this.Offset = offset;
-    
-    this.Formation = formation;;
+
+    this.Formation = formation;
 
     this.TuningId = tuning.Id;
 
     this.Pitches = map(tuning.Offsets, (o: Note, i: number) => {
       const pos = this.Formation.Positions[i];
-      if (pos === null) return pos; 
+      if (pos === null) return pos;
       return (o.Pitch + pos) % Note.NUM_NOTES;
     });
   }

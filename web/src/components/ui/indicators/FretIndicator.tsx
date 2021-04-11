@@ -37,6 +37,7 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
       className={`fret${open ? ' open' : ''}${
         fretClass ? ` ${fretClass}` : ''
       }`}
+      onClick={onClick}
       {...fretProps}
     >
       {barre && (
@@ -48,7 +49,6 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
             className={`indicator${indicatorClass ? ` ${indicatorClass}` : ''}${
               muted ? ' muted' : ''
             }${degree ? ` degree degree-${degree}` : ''}${root ? ' root' : ''}`}
-            onClick={onClick}
           >
             {muted && (
               <>

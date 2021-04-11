@@ -1,7 +1,5 @@
-import { Key, Note } from ".";
-import { IApiEntity } from "../interfaces";
-import { ApiEntity } from "../network/ApiEntity";
-
+import { Key, Note } from '..';
+import { IApiEntity } from '../../interfaces';
 
 export enum ChordModifier {
   Major,
@@ -53,7 +51,6 @@ export enum ChordModifier {
 // }
 
 export class Chord implements IApiEntity {
-
   public Id: string;
 
   public Root: Note;
@@ -66,7 +63,6 @@ export class Chord implements IApiEntity {
   public Tones: Note[];
 
   constructor(root: Note, mod: ChordModifier) {
-
     this.Root = root;
     this.Modifier = mod || ChordModifier.Major;
 
@@ -76,7 +72,7 @@ export class Chord implements IApiEntity {
   }
 
   get Label(): string {
-    return `${this.Root.Label} ${Chord.getModifierLabel(this.Modifier)}`
+    return `${this.Root.Label} ${Chord.getModifierLabel(this.Modifier)}`;
   }
 
   get Abbreviated(): string {
@@ -113,7 +109,7 @@ export class Chord implements IApiEntity {
       case ChordModifier.AugmentedSeventh:
         return 'Aug7';
     }
-  }
+  };
 
   static getModifierAbbreviation = (mod: ChordModifier): any => {
     switch (mod) {
@@ -140,5 +136,5 @@ export class Chord implements IApiEntity {
       case ChordModifier.AugmentedSeventh:
         return 'aug7';
     }
-  }
+  };
 }

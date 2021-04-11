@@ -1,4 +1,4 @@
-import { filter, map, uniqBy } from 'lodash';
+import { map, uniqBy } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
 import { Badge, Button } from 'react-bootstrap';
@@ -6,14 +6,14 @@ import { SlideIn } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
-import { FretNote, Key, Note, TuningNote } from '../../../models';
+import { FretNote, Key, Note } from '../../../models';
 import { KeyApi } from '../../../network';
 import { ISlideInProps } from './SlideIn';
 
 export interface SearchSlideInProps extends Pick<ISlideInProps, 'collapse'> {}
 
 const getDisplayArray = (searchArray: FretNote[]): FretNote[] => {
-  return uniqBy(searchArray, (n: FretNote) => n?.Note.Pitch);
+  return uniqBy(searchArray, (n: FretNote) => n.Note?.Pitch);
 };
 
 export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
@@ -28,7 +28,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
   const { req: searchKeys } = useRequest(new KeyApi().Search);
 
   const handleSearchKeys = () => {
-    searchKeys(map(searchArray, n => n.Note)).then((keys) => {
+    searchKeys(map(searchArray, (n) => n.Note)).then((keys) => {
       setKeysQuery([...getDisplayArray(searchArray)]);
       setKeysResult(keys);
     });
@@ -45,7 +45,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
         {searchArray.length ? (
           map(getDisplayArray(searchArray), (n: FretNote, i: number) => (
             <label className="search-note" key={i}>
-              {n.Note.Label}
+              {n.Note?.Label}
             </label>
           ))
         ) : (
@@ -62,7 +62,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
             <div>
               {map(keysQuery, (n: FretNote, i: number) => (
                 <Badge pill variant="light" key={i}>
-                  {n.Note.Label}
+                  {n.Note?.Label}
                 </Badge>
               ))}
             </div>

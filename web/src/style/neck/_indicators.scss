@@ -95,6 +95,13 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
           }
         }
 
+        &.selected {
+          background: nth($colors, 8);
+          & + label {
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+          }
+        }
+
         /* Muted */
         &.muted {
           background: none;
@@ -180,7 +187,8 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
   }
 
   &.search {
-    .indicator {
+    .indicator,
+    label {
       cursor: pointer;
     }
   }

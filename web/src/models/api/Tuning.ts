@@ -1,5 +1,5 @@
-import { TuningNote } from '.';
-import { ApiEntity } from '../network/ApiEntity';
+import { TuningNote } from '..';
+import { ApiEntity } from '../../network/ApiEntity';
 
 export class Tuning extends ApiEntity {
 

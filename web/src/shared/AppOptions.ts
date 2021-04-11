@@ -1,6 +1,5 @@
 import { IndicatorsMode } from '../components/ui/indicators';
 import {
-  Chord,
   ChordVariation,
   Instrument,
   Key,
@@ -8,6 +7,7 @@ import {
   ScaleVariation,
   Tuning,
 } from '../models';
+import { Chord } from '../models/api';
 
 export interface AppOptions {
   key: Key;

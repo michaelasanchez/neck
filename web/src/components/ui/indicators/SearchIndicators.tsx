@@ -80,8 +80,8 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
                   show={true}
                   toggle={true}
                   onClick={() => handleSetSelectedMatrix(s, f)}
-                  label={selected ? fretMap.Notes[s][f]?.Note.Label : null}
-                  indicatorClass={selected ? ' degree-1' : ''}
+                  label={selected ? fretMap.Notes[s][f]?.Label : null}
+                  indicatorClass={selected ? ' selected' : ''}
                 />
               );
             })}
