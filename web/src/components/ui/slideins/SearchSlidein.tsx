@@ -20,19 +20,29 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
   props
 ) => {
   const { setAppOptions } = useAppOptionsContext();
-  const { searchArray } = useIndicatorsContext();
+  const { searchArray, setIndicatorsOptions } = useIndicatorsContext();
 
   const [keysQuery, setKeysQuery] = useState<FretNote[]>();
   const [keysResult, setKeysResult] = useState<Key[]>();
 
   const { req: searchKeys } = useRequest(new KeyApi().Search);
 
-  const handleSearchKeys = () => {
-    searchKeys(map(searchArray, (n) => n.Note)).then((keys) => {
-      setKeysQuery([...getDisplayArray(searchArray)]);
-      setKeysResult(keys);
-    });
+  const handleSetKey = (k: Key) => {
+    // setIndicatorsOptions({ searchArray: map(searchArray, n => fretMap[n.])})
+    setAppOptions({ key: k });
+  }
+
+  const handleSetKeys = () => {
+    if (!!searchArray.length) {
+      searchKeys(map(searchArray, (n) => n.Note)).then((keys) => {
+        setKeysQuery(getDisplayArray(searchArray));
+        setKeysResult(keys);
+      });
+    }
   };
+
+  const handleClearSearchArray = () =>
+    setIndicatorsOptions({ searchArray: [] });
 
   return (
     <SlideIn
@@ -52,13 +62,23 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
           <>Select some notes!</>
         )}
       </p>
+      <div className="search-controls">
+        <Button
+          disabled={!searchArray.length}
+          variant="outline-secondary"
+          onClick={() => handleClearSearchArray}
+        >
+          Clear
+        </Button>
+        <Button disabled={!searchArray.length} onClick={() => handleSetKeys()}>
+          Go
+        </Button>
+      </div>
+
       {!!keysResult && (
         <>
-          <div className="key-header">
-            <h5>
-              Matching Keys{' '}
-              <span className="text-muted">({keysResult.length})</span>
-            </h5>
+          <div className="results-header">
+            <h4>Results</h4>
             <div>
               {map(keysQuery, (n: FretNote, i: number) => (
                 <Badge pill variant="light" key={i}>
@@ -67,9 +87,12 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
               ))}
             </div>
           </div>
+          <h5>
+            Keys <span className="text-muted">({keysResult.length})</span>
+          </h5>
           <div className="key-result">
             {map(keysResult, (k: Key, i: number) => (
-              <div key={i} onClick={() => setAppOptions({ key: k })}>
+              <div key={i} onClick={() => handleSetKey(k)}>
                 <h6>{k.Label}</h6>
                 {map(k.Scale.Notes, (n: Note, j: number) => (
                   <span key={j}>{n.Label}</span>
@@ -79,7 +102,6 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
           </div>
         </>
       )}
-      <Button onClick={() => handleSearchKeys()}>Go</Button>
     </SlideIn>
   );
 };

@@ -183,7 +183,19 @@ $opacity-out: 0;
       padding: 0.5rem 1rem;
     }
 
-    .key-header {
+    .search-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1em;
+
+      button:not(:last-child) {
+        margin-right: 0.5em;
+      }
+    }
+
+    .results-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      margin-bottom: 0.5em;
       display: flex;
       justify-content: space-between;
 
@@ -196,7 +208,6 @@ $opacity-out: 0;
       max-height: 300px;
       overflow-y: auto;
       padding-right: 0.5em;
-      margin-bottom: 1rem;
 
       > div {
         border: 1px solid rgba(0, 0, 0, 0.1);

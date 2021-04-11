@@ -63,11 +63,6 @@ namespace neck.Controllers.DbEntity
 				return BadRequest(new Response<List<Key>>(keyResult));
 			}
 
-			if (keyResult.Result.Count == 0)
-            {
-				return NoContent();
-            }
-
 			return Ok(keyResult.Result);
         }
 	}
