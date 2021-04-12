@@ -46,9 +46,11 @@ export const useIndicatorsOptions = () => {
   };
 
   return {
+    chordVariation,
     scaleVariation,
     searchArray,
     fretMap,
+    setChordVariation,
     setScaleVariation,
     setSearchArray: handleSetSearchArray,
   };

@@ -13,13 +13,13 @@ const SHOW_INDICATORS = true;
 
 export interface AppProps { }
 
-export const [IndicatorsProvider, useIndicatorsContext] = constate(
-  useIndicatorsOptions
-)
-
 export const [NotificationsProvider, useNotificationContext] = constate(
   useNotification
 );
+
+export const [IndicatorsProvider, useIndicatorsContext] = constate(
+  useIndicatorsOptions
+)
 
 const App: React.FunctionComponent<AppProps> = () => {
   const { loading, errors, appOptions } = useAppOptionsContext();
@@ -29,22 +29,22 @@ const App: React.FunctionComponent<AppProps> = () => {
   if (!loading) {
     return (
       <>
-        <IndicatorsProvider>
-          <NotificationsProvider>
-          <main ref={mainRef} className={appOptions.leftHandMode ? 'left' : ''}>
-            <Backdrop />
-            <div className="neck-container">
-              <Neck />
-            </div>
-            {SHOW_INDICATORS && (
-              <div className="indicators-container">
-                <Indicators mainRef={mainRef} />
+        <NotificationsProvider>
+          <IndicatorsProvider>
+            <main ref={mainRef} className={appOptions.leftHandMode ? 'left' : ''}>
+              <Backdrop />
+              <div className="neck-container">
+                <Neck />
               </div>
-            )}
-          </main>
+              {SHOW_INDICATORS && (
+                <div className="indicators-container">
+                  <Indicators mainRef={mainRef} />
+                </div>
+              )}
+            </main>
             <Ui />
-          </NotificationsProvider>
-        </IndicatorsProvider>
+          </IndicatorsProvider>
+        </NotificationsProvider>
       </>
     );
   }

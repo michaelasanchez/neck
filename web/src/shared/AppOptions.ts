@@ -1,12 +1,5 @@
 import { IndicatorsMode } from '../components/ui/indicators';
-import {
-  ChordVariation,
-  Instrument,
-  Key,
-  Scale,
-  ScaleVariation,
-  Tuning,
-} from '../models';
+import { ChordVariation, Instrument, Key, Scale, Tuning } from '../models';
 import { Chord } from '../models/api';
 
 export interface AppOptions {
@@ -24,9 +17,6 @@ export interface AppOptions {
 
   // Ui?
   indicatorsMode?: IndicatorsMode;
-
-  chordVariation?: ChordVariation; // Indicators
-  // scaleVariation?: ScaleVariation;
 
   // Validation
   [key: string]: any;

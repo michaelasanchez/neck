@@ -18,13 +18,12 @@ interface IndicatorsProps {
 }
 
 export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
-  const { scaleVariation } = useIndicatorsContext();
+  const { chordVariation, scaleVariation } = useIndicatorsContext();
   const { appOptions } = useAppOptionsContext();
   const {
     key,
     indicatorsMode: mode,
     chord,
-    chordVariation,
     scale,
     tuning,
     instrument,

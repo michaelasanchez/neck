@@ -2,6 +2,7 @@ import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { DropdownSlideIn, ISlideInProps } from '.';
+import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
 import { IGenerateResponseHeader } from '../../../interfaces';
@@ -14,7 +15,7 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> {}
+export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> { }
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));
@@ -42,6 +43,7 @@ const notes = [
 
 export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
+  const { setChordVariation } = useIndicatorsContext();
 
   // Props
   const { collapse } = props;
@@ -105,7 +107,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
 
   useEffect(() => {
     if (variations?.length) {
-      setAppOptions({ chordVariation: variations[0] });
+      handleSetChordVariation(variations[0], 0);
     }
   }, [variations]);
 
@@ -141,7 +143,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     variation: ChordVariation,
     index: number
   ) => {
-    setAppOptions({ chordVariation: variation });
+    setChordVariation(variation);
     setCurrentIndex(index);
   };
 

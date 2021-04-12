@@ -9,17 +9,15 @@ import {
   Cookie,
   Instrument,
   Key,
-  KeyType,
-  Note,
-  Scale,
-  Tuning,
+  KeyType, Scale,
+  Tuning
 } from '../models';
 import {
   ChordApi,
   InstrumentApi,
   KeyApi,
   ScaleApi,
-  TuningApi,
+  TuningApi
 } from '../network';
 import { AppOptions } from '../shared';
 
@@ -147,7 +145,6 @@ export const useAppOptions = () => {
         scale,
 
         indicatorsMode: cookie.indicatorsMode,
-        // indicatorsMode: IndicatorsMode.Chord,
 
         leftHandMode: cookie.leftHandMode,
         leftHandUi: cookie.leftHandUi,
