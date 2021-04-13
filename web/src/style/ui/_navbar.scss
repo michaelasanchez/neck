@@ -63,6 +63,12 @@ nav {
     }
   }
 
+  .dropup.key {
+    .dropdown-menu {
+      min-width: unset !important;
+    }
+  }
+
   .dropup button:disabled {
     cursor: unset;
   }

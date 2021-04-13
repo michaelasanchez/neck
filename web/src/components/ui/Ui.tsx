@@ -49,7 +49,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         musicKey={key}
         showing={showOptions}
         setShowing={setShowOptions}
-        setKey={(k: Key) => setAppOptions({ key: k })}
         setIndicatorsMode={(mode: IndicatorsMode) =>
           setAppOptions({ indicatorsMode: mode })
         }

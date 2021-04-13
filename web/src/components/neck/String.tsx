@@ -17,14 +17,13 @@ const calcNote = (f: number, offset: Note, scale: Scale) => {
   let offsetNoteValue = (f + offset.Pitch) % Note.NUM_NOTES;
 
   // Check if Note exists for current fret number
-  let note = filter(
-    scale.Notes,
-    (note: Note) => note.Pitch == offsetNoteValue
-  );
+  let note = filter(scale.Notes, (note: Note) => note.Pitch == offsetNoteValue);
   return note.length ? note[0] : null;
 };
 
-export const StringComponent: React.FunctionComponent<StringProps> = (props) => {
+export const StringComponent: React.FunctionComponent<StringProps> = (
+  props
+) => {
   const { fretmode, frets, offset, scale } = props;
 
   return (
@@ -38,7 +37,7 @@ export const StringComponent: React.FunctionComponent<StringProps> = (props) => 
             key={f}
             fretMode={fretmode}
             note={note}
-            root={note?.Value == scale.Tonic.Value}
+            root={note?.Pitch == scale.Tonic.Pitch}
           />
         );
       })}

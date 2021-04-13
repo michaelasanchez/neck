@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRequest } from '.';
 import { useAppOptionsContext } from '..';
+import { FretDisplayMode } from '../components/neck';
 import { ScaleType } from '../enums';
 import {
   ChordVariation,

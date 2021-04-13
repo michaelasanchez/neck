@@ -21,6 +21,8 @@ export class Key extends ApiEntity {
 
   public Label: string;
 
+  public LongLabel: string;
+
   public Scale: Scale;
 
   constructor(tonic: Note, type?: KeyType) {

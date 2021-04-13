@@ -1,25 +1,17 @@
 import { map } from 'lodash';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  ButtonGroup,
-  Dropdown,
-  DropdownButton,
-  SplitButton
-} from 'react-bootstrap';
+import { Button, Dropdown, DropdownButton, SplitButton } from 'react-bootstrap';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { Keys } from '../../shared';
 import { IndicatorsMode } from './indicators/Indicators';
-import { KeySlider } from './KeySlider';
 
 export interface NavbarProps {
   musicKey: Key;
   showing: boolean;
   className: string;
   setIndicatorsMode: (mode: IndicatorsMode) => void;
-  setKey: (key: Key) => void;
   setShowing: (showing: boolean) => void;
 }
 
@@ -36,23 +28,18 @@ const getModeTitle = (mode: IndicatorsMode) => {
   }
 };
 
-const keys = Keys.DropdownValues();
-
 export const Navbar: React.FunctionComponent<NavbarProps> = ({
   showing,
   setShowing,
-  setKey,
   setIndicatorsMode,
   musicKey,
   className,
 }) => {
-  const { appOptions } = useAppOptionsContext();
+  const { appOptions, setAppOptions } = useAppOptionsContext();
   const { indicatorsMode } = appOptions;
 
-  const handleSetKey = (keyString: string) => setKey(keys[parseInt(keyString)]);
-
   const [lastIndicatorsMode, setLastIndicatorsMode] = useState<IndicatorsMode>(
-    indicatorsMode
+    indicatorsMode || IndicatorsMode.Chord
   );
   useEffect(() => {
     if (indicatorsMode !== null) {
@@ -60,29 +47,13 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
     }
   }, [indicatorsMode]);
 
-  const renderKeyDropdownMenu = () => {
-    return (
-      <Dropdown.Menu className="dropdown-menu dropdown-menu-right">
-        {map(keys, (key, index) => (
-          <Dropdown.Item
-            className="dropdown-item"
-            key={index}
-            eventKey={index.toString()}
-            onSelect={(keyString: string) => handleSetKey(keyString)}
-          >
-            {key.Tonic.Label}
-          </Dropdown.Item>
-        ))}
-      </Dropdown.Menu>
-    );
-  };
-
   const size = 'lg';
 
   return (
     <nav
-      className={`navbar navbar-dark bg-dark${className ? ` ${className}` : ''
-        }`}
+      className={`navbar navbar-dark bg-dark${
+        className ? ` ${className}` : ''
+      }`}
     >
       <a className="navbar-brand" href="#">
         Neck
@@ -98,7 +69,6 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
           >
             Options
           </Button>
-
           <SplitButton
             id="mode-select"
             alignRight={true}
@@ -114,29 +84,41 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             }
           >
             {map(IndicatorsMode, (m: IndicatorsMode, key: string) => {
-              return !isNaN(m) && indicatorsMode !== m && lastIndicatorsMode !== m &&
-                <Dropdown.Item
-                  eventKey={key}
-                  key={key}
-                  onClick={() => setIndicatorsMode(m)}
-                >
-                  {getModeTitle(m)}
-                </Dropdown.Item>;
+              return (
+                !isNaN(m) &&
+                indicatorsMode !== m &&
+                lastIndicatorsMode !== m && (
+                  <Dropdown.Item
+                    eventKey={key}
+                    key={key}
+                    onClick={() => setIndicatorsMode(m)}
+                  >
+                    {getModeTitle(m)}
+                  </Dropdown.Item>
+                )
+              );
             })}
           </SplitButton>
 
-          <div className="nav-item btn-group dropup">
-            <DropdownButton
-              size={size}
-              as={ButtonGroup}
-              id="key-dropdown"
-              variant="secondary"
-              title={`${musicKey.Label}`}
-              disabled={showing}
-            >
-              <KeySlider setKey={(k: Key) => setKey(k)} />
-            </DropdownButton>
-          </div>
+          <DropdownButton
+            drop="up"
+            alignRight={true}
+            className="key"
+            size={size}
+            title={musicKey.Label}
+            variant="secondary"
+          >
+            {map(Keys.DropdownValues(), (k: Key, i: number) => {
+              return (
+                <Dropdown.Item
+                  key={i}
+                  onClick={() => setAppOptions({ key: k })}
+                >
+                  {k.Tonic.Label}
+                </Dropdown.Item>
+              );
+            })}
+          </DropdownButton>
         </form>
       </div>
     </nav>

@@ -16,13 +16,11 @@ export interface NeckProps { }
 export type NeckMap = TuningNote[][];
 
 export const Neck: React.FunctionComponent<NeckProps> = () => {
-  // TODO: static
-  let fretDisplayMode = FretDisplayMode.Note;
 
   const { appOptions } = useAppOptionsContext();
   const { neck } = useStyles();
 
-  const { key, tuning, instrument } = appOptions;
+  const { fretDisplayMode, key, tuning, instrument } = appOptions;
 
   const [scale, setScale] = useState<Scale>(key.Scale);
   const [className, setClassName] = useState<string>();

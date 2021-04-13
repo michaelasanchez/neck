@@ -1,3 +1,4 @@
+import { FretDisplayMode } from '../components/neck';
 import { IndicatorsMode } from '../components/ui/indicators';
 
 export class Cookie {
@@ -11,6 +12,7 @@ export class Cookie {
 
   neck: NeckOptions;
 
+  fretDisplayMode: FretDisplayMode;
   indicatorsMode: IndicatorsMode;
 
   leftHandMode: boolean;
@@ -25,6 +27,7 @@ export class Cookie {
       instrumentId: null,
       tuningId: null,
 
+      fretDisplayMode: FretDisplayMode.Note,
       indicatorsMode: null,
 
       leftHandMode: false,

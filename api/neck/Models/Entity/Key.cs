@@ -46,6 +46,8 @@ namespace neck.Models.Entity
 
         public string Label => getLabel();
 
+        public string LongLabel => getLabel(true);
+
         private string getLabel(bool longLabel = false)
         {
             var typeString = string.Empty;
@@ -58,7 +60,8 @@ namespace neck.Models.Entity
                     typeString = " Minor";
                     break;
             }
-            return $"Key of {Tonic.Label}{typeString}";
+            var preText = longLabel == true ? "Key of " : "";
+            return $"{preText}{Tonic.Label}{typeString}";
         }
     }
 }

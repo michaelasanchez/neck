@@ -9,15 +9,16 @@ import {
   Cookie,
   Instrument,
   Key,
-  KeyType, Scale,
-  Tuning
+  KeyType,
+  Scale,
+  Tuning,
 } from '../models';
 import {
   ChordApi,
   InstrumentApi,
   KeyApi,
   ScaleApi,
-  TuningApi
+  TuningApi,
 } from '../network';
 import { AppOptions } from '../shared';
 
@@ -156,6 +157,19 @@ export const useAppOptions = () => {
     });
   };
 
+  const reloadKey = (options: AppOptions) => {
+    new KeyApi()
+      .Locate(
+        options.key.Type,
+        options.key.Tonic.Base,
+        options.key.Tonic.Suffix
+      )
+      .then((key) => {
+        options.key = key;
+        finishSetAppOptions(options);
+      });
+  };
+
   const reloadChord = (options: AppOptions) => {
     new ChordApi().Locate(options.chord).then((chord) => {
       options.chord = chord;
@@ -180,6 +194,8 @@ export const useAppOptions = () => {
       reloadChord(newOptions);
     } else if (appOptions?.scale && updated?.scale) {
       reloadScale(newOptions);
+    } else if (appOptions?.key && updated?.key) {
+      reloadKey(newOptions);
     } else {
       finishSetAppOptions(newOptions);
     }
@@ -195,6 +211,7 @@ export const useAppOptions = () => {
       // addNotification(validationError.message);
       setErrors([validationError]);
     } else {
+      console.log('oh', newOptions);
       setAppOptions(newOptions);
       setCookie(newOptions);
     }

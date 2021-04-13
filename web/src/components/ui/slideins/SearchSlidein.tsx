@@ -95,7 +95,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
           <div className="key-result">
             {map(keysResult, (k: Key, i: number) => (
               <div key={i} onClick={() => handleSetKey(k)}>
-                <h6>{k.Label}</h6>
+                <h6>{k.LongLabel}</h6>
                 {map(k.Scale.Notes, (n: Note, j: number) => (
                   <span key={j}>{n.Label}</span>
                 ))}

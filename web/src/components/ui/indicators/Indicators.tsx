@@ -1,11 +1,22 @@
-import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
+import {
+  filter,
+  findIndex,
+  first,
+  indexOf,
+  lastIndexOf,
+  map,
+  times,
+} from 'lodash';
 import * as React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { FretIndicator, SearchIndicators } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
+import { ScaleDegree } from '../../../enums';
 import { useStyles } from '../../../hooks';
 import { FretMap, Note } from '../../../models';
+
+const DISPLAY_MULTIPLE_SCALES = false;
 
 export enum IndicatorsMode {
   Chord,
@@ -153,11 +164,22 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
       [key: number]: Note;
     }
 
-    let degreeMap: NoteMap = {};
+    let degreeLookup: NoteMap = {};
     times(scale.Notes.length, (n) => {
       let current = scale.Notes[n];
-      degreeMap[current.Degree] = current;
+      degreeLookup[current.Degree] = current;
     });
+
+    let tonicLookup = map(
+      scaleVariation.Positions,
+      (s) => indexOf(s, ScaleDegree.Tonic) >= 0
+    );
+    const firstTonicString = indexOf(tonicLookup, true);
+    const lastTonicString = DISPLAY_MULTIPLE_SCALES
+      ? lastIndexOf(tonicLookup, true)
+      : indexOf(tonicLookup, true, firstTonicString + 1)
+    console.log(firstTonicString, lastTonicString);
+    
 
     return (
       <>
@@ -175,17 +197,16 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                   degree = positions[f - fretStart];
 
                   if (degree) {
-                    label = degreeMap[degree].Label;
+                    label = degreeLookup[degree].Label;
                   }
 
                   show = !!degree;
                 }
 
                 if (degree == 1) {
-                  if (!scaleStarted) {
+                  if (!scaleStarted && i == firstTonicString) {
                     scaleStarted = true;
-                  } else {
-                    // TODO: Only accounts for single scale
+                  } else if (!scaleEnded && i == lastTonicString) {
                     scaleEnded = true;
                   }
                 }

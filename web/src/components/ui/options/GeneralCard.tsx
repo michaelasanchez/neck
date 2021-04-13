@@ -1,13 +1,27 @@
-import { join } from 'lodash';
+import { filter, indexOf, join, map } from 'lodash';
 import * as React from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { OptionCard, OptionCardProps } from '.';
 import { CardKey } from '..';
 import { useAppOptionsContext } from '../../..';
+import { FretDisplayMode } from '../../neck';
 
 export interface GeneralCardProps extends Pick<OptionCardProps, 'active'> {
   eventKey: CardKey;
 }
+
+const getFretDisplayModeLabel = (mode: FretDisplayMode) => {
+  switch (mode) {
+    case FretDisplayMode.Degree:
+      return 'Degree';
+    case FretDisplayMode.Marker:
+      return 'Marker';
+    case FretDisplayMode.Note:
+      return 'Note';
+    default:
+      return 'None';
+  }
+};
 
 const getSubtitle = (
   leftHandMode: boolean,
@@ -36,9 +50,11 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
   props
 ) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { leftHandMode, leftHandUi, autoScroll } = appOptions;
+  const { fretDisplayMode, leftHandMode, leftHandUi, autoScroll } = appOptions;
   const { active, eventKey } = props;
 
+  const displayModeOptions = filter(FretDisplayMode, (m) => !isNaN(m));
+  console.log('DEFAULTER 197', indexOf(displayModeOptions, fretDisplayMode));
   return (
     <OptionCard
       active={active}
@@ -61,6 +77,24 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
                 checked={autoScroll}
                 onChange={() => {}}
               />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Fret Display Mode</Form.Label>
+              <Form.Control
+                as="select"
+                value={2}
+                onChange={(e) =>
+                  setAppOptions({ fretDisplayMode: parseInt(e.target.value) })
+                }
+              >
+                {map(displayModeOptions, (m: FretDisplayMode, i: number) => {
+                  return (
+                    <option key={i} value={m}>
+                      {getFretDisplayModeLabel(m)}
+                    </option>
+                  );
+                })}
+              </Form.Control>
             </Form.Group>
           </Col>
           <Col>
