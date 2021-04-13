@@ -15,6 +15,7 @@ import { useAppOptionsContext } from '../../..';
 import { ScaleDegree } from '../../../enums';
 import { useStyles } from '../../../hooks';
 import { FretMap, Note } from '../../../models';
+import { FretDisplayMode } from '../../neck';
 
 const DISPLAY_MULTIPLE_SCALES = false;
 
@@ -32,7 +33,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { chordVariation, scaleVariation } = useIndicatorsContext();
   const { appOptions } = useAppOptionsContext();
   const {
-    key,
+    fretDisplayMode,
     indicatorsMode: mode,
     chord,
     scale,
@@ -101,6 +102,17 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
           const pitch = chordVariation.Pitches[i];
           const note = filter(chord.Tones, (n) => n.Pitch === pitch)[0];
 
+          const getLabel = (note: Note): React.ReactElement => {
+            switch (fretDisplayMode) {
+              case FretDisplayMode.Degree:
+                return <>{note?.Degree}</>;
+              case FretDisplayMode.Marker:
+                return <span></span>;
+              case FretDisplayMode.Note:
+                return <>{note?.Label}</>;
+            }
+          };
+
           return (
             <div className="string" key={i}>
               <FretIndicator
@@ -109,7 +121,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 muted={muted}
                 root={note?.Degree === 1}
                 degree={note?.Degree}
-                label={note?.Label}
+                label={getLabel(note)}
                 fretRef={(open || muted) && i == firstFretIndex ? topRef : null}
               />
               {times(instrument.NumFrets, (f) => {
@@ -128,7 +140,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     key={f}
                     show={show}
                     root={note?.Degree === 1}
-                    label={note?.Label}
+                    label={getLabel(note)}
                     degree={note?.Degree}
                     fretRef={ref}
                     barre={
@@ -174,12 +186,11 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
       scaleVariation.Positions,
       (s) => indexOf(s, ScaleDegree.Tonic) >= 0
     );
+
     const firstTonicString = indexOf(tonicLookup, true);
     const lastTonicString = DISPLAY_MULTIPLE_SCALES
       ? lastIndexOf(tonicLookup, true)
-      : indexOf(tonicLookup, true, firstTonicString + 1)
-    console.log(firstTonicString, lastTonicString);
-    
+      : indexOf(tonicLookup, true, firstTonicString + 1);
 
     return (
       <>
@@ -211,6 +222,20 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                   }
                 }
 
+                const getLabel = (
+                  label: string,
+                  degree: number
+                ): React.ReactElement => {
+                  switch (fretDisplayMode) {
+                    case FretDisplayMode.Degree:
+                      return <>{degree.toString()}</>;
+                    case FretDisplayMode.Marker:
+                      return <span></span>;
+                    case FretDisplayMode.Note:
+                      return <>{label}</>;
+                  }
+                };
+
                 return (
                   <FretIndicator
                     open={f === 0}
@@ -218,7 +243,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     key={f}
                     degree={scaleEnded && degree === 1 ? degree + 7 : degree}
                     root={degree === 1}
-                    label={label}
+                    label={getLabel(label, degree)}
                     fretClass={
                       (!scaleStarted || scaleEnded) && degree != 1
                         ? 'faded'

@@ -54,7 +54,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
   const { active, eventKey } = props;
 
   const displayModeOptions = filter(FretDisplayMode, (m) => !isNaN(m));
-  console.log('DEFAULTER 197', indexOf(displayModeOptions, fretDisplayMode));
+  
   return (
     <OptionCard
       active={active}
@@ -82,7 +82,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
               <Form.Label>Fret Display Mode</Form.Label>
               <Form.Control
                 as="select"
-                value={2}
+                value={fretDisplayMode}
                 onChange={(e) =>
                   setAppOptions({ fretDisplayMode: parseInt(e.target.value) })
                 }

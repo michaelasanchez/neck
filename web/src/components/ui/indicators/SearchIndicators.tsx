@@ -5,6 +5,7 @@ import { FretIndicator, IndicatorsMode } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { FretMap, FretNote, Instrument, TuningNote } from '../../../models';
+import { FretDisplayMode } from '../../neck';
 
 export interface SearchIndicatorsProps {}
 
@@ -22,7 +23,12 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
   props
 ) => {
   const { appOptions } = useAppOptionsContext();
-  const { indicatorsMode: mode, instrument, tuning } = appOptions;
+  const {
+    fretDisplayMode,
+    indicatorsMode: mode,
+    instrument,
+    tuning,
+  } = appOptions;
   const { fretMap, searchArray, setSearchArray } = useIndicatorsContext();
 
   const [selectedMatrix, setSelectedMatrix] = useState<boolean[][]>();
@@ -85,13 +91,25 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
           <div className="string" key={s}>
             {times(instrument.NumFrets + 1, (f) => {
               const selected = !!selectedMatrix && !!selectedMatrix[s][f];
+
+              const getLabel = (note: FretNote): React.ReactElement => {
+                switch (fretDisplayMode) {
+                  case FretDisplayMode.Degree:
+                    return <>{note?.Note?.Degree}</>;
+                  case FretDisplayMode.Marker:
+                    return <span></span>;
+                  case FretDisplayMode.Note:
+                    return <>{note?.Label}</>;
+                }
+              };
+
               return (
                 <FretIndicator
                   key={f}
                   show={true}
                   toggle={true}
                   onClick={() => handleSetSelectedMatrix(s, f)}
-                  label={selected ? fretMap.Notes[s][f]?.Label : null}
+                  label={selected ? getLabel(fretMap.Notes[s][f]) : null}
                   indicatorClass={selected ? ' selected' : ''}
                 />
               );

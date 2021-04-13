@@ -101,9 +101,6 @@ export const useAppOptions = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<IError[]>();
 
-  // TODO: this doesn't work here.. hmm...
-  // const { addNotification } = useNotificationContext();
-
   // Init
   useEffect(() => {
     if (!cookieLoading) {
@@ -211,7 +208,6 @@ export const useAppOptions = () => {
       // addNotification(validationError.message);
       setErrors([validationError]);
     } else {
-      console.log('oh', newOptions);
       setAppOptions(newOptions);
       setCookie(newOptions);
     }

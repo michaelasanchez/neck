@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FretDisplayMode } from '../../neck';
 
 interface IndicatorProps {
   show: boolean;
@@ -6,7 +7,7 @@ interface IndicatorProps {
   fretClass?: string;
   indicatorClass?: string;
   degree?: number;
-  label?: string;
+  label?: React.ReactElement;
   open?: boolean;
   muted?: boolean;
   root?: boolean;
@@ -31,7 +32,9 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
     fretRef,
     onClick,
   } = props;
+
   let fretProps = fretRef ? { ref: fretRef } : {};
+
   return (
     <div
       className={`fret${open ? ' open' : ''}${
