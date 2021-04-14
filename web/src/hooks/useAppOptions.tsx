@@ -142,6 +142,8 @@ export const useAppOptions = () => {
         chord,
         scale,
 
+        fretDisplayMode: cookie.fretDisplayMode,
+        indicatorsDisplayMode: cookie.indicatorsDisplayMode,
         indicatorsMode: cookie.indicatorsMode,
 
         leftHandMode: cookie.leftHandMode,

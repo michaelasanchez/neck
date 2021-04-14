@@ -1,20 +1,12 @@
-import {
-  filter,
-  findIndex,
-  first,
-  indexOf,
-  lastIndexOf,
-  map,
-  times,
-} from 'lodash';
+import { filter, indexOf, lastIndexOf, map, times } from 'lodash';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { FretIndicator, SearchIndicators } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { ScaleDegree } from '../../../enums';
 import { useStyles } from '../../../hooks';
-import { FretMap, Note } from '../../../models';
+import { Note } from '../../../models';
 import { FretDisplayMode } from '../../neck';
 
 const DISPLAY_MULTIPLE_SCALES = false;
@@ -33,7 +25,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
   const { chordVariation, scaleVariation } = useIndicatorsContext();
   const { appOptions } = useAppOptionsContext();
   const {
-    fretDisplayMode,
+    indicatorsDisplayMode,
     indicatorsMode: mode,
     chord,
     scale,
@@ -103,7 +95,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
           const note = filter(chord.Tones, (n) => n.Pitch === pitch)[0];
 
           const getLabel = (note: Note): React.ReactElement => {
-            switch (fretDisplayMode) {
+            switch (indicatorsDisplayMode) {
               case FretDisplayMode.Degree:
                 return <>{note?.Degree}</>;
               case FretDisplayMode.Marker:
@@ -226,9 +218,9 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                   label: string,
                   degree: number
                 ): React.ReactElement => {
-                  switch (fretDisplayMode) {
+                  switch (indicatorsDisplayMode) {
                     case FretDisplayMode.Degree:
-                      return <>{degree.toString()}</>;
+                      return <>{degree}</>;
                     case FretDisplayMode.Marker:
                       return <span></span>;
                     case FretDisplayMode.Note:

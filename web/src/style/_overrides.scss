@@ -15,6 +15,10 @@
       border-color: #80bdff !important;
       color: #212529 !important;
     }
+
+    &:disabled {
+      border-color: #ced4da !important;
+    }
   }
 }
 
@@ -26,7 +30,8 @@
 
 /* Forms / Inputs */
 .form-group.clickable {
-  &, * {
+  &,
+  * {
     cursor: pointer;
   }
 }

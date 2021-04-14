@@ -50,7 +50,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
   props
 ) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { fretDisplayMode, leftHandMode, leftHandUi, autoScroll } = appOptions;
+  const { fretDisplayMode, indicatorsDisplayMode, leftHandMode, leftHandUi, autoScroll } = appOptions;
   const { active, eventKey } = props;
 
   const displayModeOptions = filter(FretDisplayMode, (m) => !isNaN(m));
@@ -85,6 +85,24 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
                 value={fretDisplayMode}
                 onChange={(e) =>
                   setAppOptions({ fretDisplayMode: parseInt(e.target.value) })
+                }
+              >
+                {map(displayModeOptions, (m: FretDisplayMode, i: number) => {
+                  return (
+                    <option key={i} value={m}>
+                      {getFretDisplayModeLabel(m)}
+                    </option>
+                  );
+                })}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Indicators Display Mode</Form.Label>
+              <Form.Control
+                as="select"
+                value={indicatorsDisplayMode}
+                onChange={(e) =>
+                  setAppOptions({ indicatorsDisplayMode: parseInt(e.target.value) })
                 }
               >
                 {map(displayModeOptions, (m: FretDisplayMode, i: number) => {

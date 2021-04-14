@@ -13,6 +13,7 @@ export class Cookie {
   neck: NeckOptions;
 
   fretDisplayMode: FretDisplayMode;
+  indicatorsDisplayMode: FretDisplayMode;
   indicatorsMode: IndicatorsMode;
 
   leftHandMode: boolean;
@@ -28,6 +29,7 @@ export class Cookie {
       tuningId: null,
 
       fretDisplayMode: FretDisplayMode.Note,
+      indicatorsDisplayMode: FretDisplayMode.Note,
       indicatorsMode: null,
 
       leftHandMode: false,

@@ -18,6 +18,7 @@ export interface AppOptions {
 
   // Ui?
   fretDisplayMode?: FretDisplayMode;
+  indicatorsDisplayMode?: FretDisplayMode;
   indicatorsMode?: IndicatorsMode;
 
   // Validation

@@ -1,4 +1,4 @@
-import { map, uniqBy } from 'lodash';
+import { filter, map, uniqBy } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
 import { Badge, Button } from 'react-bootstrap';
@@ -6,7 +6,7 @@ import { SlideIn } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
-import { FretNote, Key, Note } from '../../../models';
+import { FretNote, Key, Note, TuningNote } from '../../../models';
 import { KeyApi } from '../../../network';
 import { ISlideInProps } from './SlideIn';
 
@@ -20,7 +20,13 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
   props
 ) => {
   const { setAppOptions } = useAppOptionsContext();
-  const { searchArray, setSearchArray } = useIndicatorsContext();
+  const {
+    fretMap,
+    searchArray,
+    selectedMatrix,
+    setSearchArray,
+    setSelectedMatrix,
+  } = useIndicatorsContext();
 
   const [keysQuery, setKeysQuery] = useState<FretNote[]>();
   const [keysResult, setKeysResult] = useState<Key[]>();
@@ -46,6 +52,20 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
     }
   };
 
+  const handleSetSelectedMatrix = (note: TuningNote) => {
+    const filteredMatrix = map(selectedMatrix, (string: boolean[], s: number) =>
+      map(string, (selected: boolean, f: number) => {
+        return fretMap.Notes[s][f]?.Note.Pitch == note.Pitch ? false : selected;
+      })
+    );
+    const filteredArray = filter(
+      searchArray,
+      (n) => n.Note.Pitch != note.Pitch
+    );
+    setSearchArray(filteredArray);
+    setSelectedMatrix(filteredMatrix);
+  };
+
   return (
     <SlideIn
       {...props}
@@ -53,10 +73,14 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
       title={<h2>Search</h2>}
       loading={false}
     >
-      <p className="text-center">
+      <p className="search-query">
         {searchArray.length ? (
           map(getDisplayArray(searchArray), (n: FretNote, i: number) => (
-            <label className="search-note" key={i}>
+            <label
+              className="search-note"
+              key={i}
+              onClick={() => handleSetSelectedMatrix(n.Note)}
+            >
               {n.Note?.Label}
             </label>
           ))
