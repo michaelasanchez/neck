@@ -6,7 +6,7 @@ interface IndicatorProps {
   barreClass?: string;
   fretClass?: string;
   indicatorClass?: string;
-  degree?: number;
+  pitch?: number;
   label?: React.ReactElement;
   open?: boolean;
   muted?: boolean;
@@ -24,7 +24,7 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
     barreClass,
     fretClass,
     indicatorClass,
-    degree,
+    pitch,
     label,
     muted = false,
     root = false,
@@ -51,7 +51,7 @@ export const FretIndicator: React.FC<IndicatorProps> = (props) => {
           <div
             className={`indicator${indicatorClass ? ` ${indicatorClass}` : ''}${
               muted ? ' muted' : ''
-            }${degree ? ` degree degree-${degree}` : ''}${root ? ' root' : ''}`}
+            }${pitch != null && pitch != undefined ? ` pitch-${pitch}` : ''}${root ? ' root' : ''}`}
           >
             {muted && (
               <>

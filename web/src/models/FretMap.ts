@@ -40,7 +40,11 @@ const calcNotes = (instrument: Instrument, tuning: Tuning, scale: Scale) => {
         ];
       }
 
-      return new FretNote(!!note ? [note] : notes, s, f);
+      // TODO: should this go in FretNote constructor?
+      const open = f == 0;
+      const root = (note || notes[0]).Pitch == scale.Tonic.Pitch;
+
+      return new FretNote(!!note ? [note] : notes, s, f, open, root, pitch);
     });
   });
 };

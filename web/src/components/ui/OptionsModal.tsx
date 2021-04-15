@@ -3,7 +3,13 @@ import { useEffect, useState } from 'react';
 import { Accordion, Modal } from 'react-bootstrap';
 import { useAppOptionsContext } from '../..';
 import { Instrument, Tuning } from '../../models';
-import { CardAction, GeneralCard, InstrumentCard, TuningCard } from './options';
+import {
+  CardAction,
+  DisplayCard,
+  GeneralCard,
+  InstrumentCard,
+  TuningCard,
+} from './options';
 
 export interface OptionsModalProps {
   showing: boolean;
@@ -12,8 +18,9 @@ export interface OptionsModalProps {
 
 export enum CardKey {
   General = '0',
-  Instrument = '1',
-  Tuning = '2',
+  Display = '1',
+  Instrument = '2',
+  Tuning = '3',
 }
 
 export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
@@ -69,6 +76,10 @@ export const OptionsModal: React.FunctionComponent<OptionsModalProps> = ({
             <GeneralCard
               active={activeKey === CardKey.General}
               eventKey={CardKey.General}
+            />
+            <DisplayCard
+              active={activeKey === CardKey.Display}
+              eventKey={CardKey.Display}
             />
             <InstrumentCard
               active={activeKey === CardKey.Instrument}

@@ -28,7 +28,7 @@ export class Cookie {
       instrumentId: null,
       tuningId: null,
 
-      fretDisplayMode: FretDisplayMode.Note,
+      fretDisplayMode: FretDisplayMode.Marker,
       indicatorsDisplayMode: FretDisplayMode.Note,
       indicatorsMode: null,
 

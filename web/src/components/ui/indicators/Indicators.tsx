@@ -112,7 +112,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                 show={open || muted}
                 muted={muted}
                 root={note?.Degree === 1}
-                degree={note?.Degree}
+                pitch={note?.Pitch}
                 label={getLabel(note)}
                 fretRef={(open || muted) && i == firstFretIndex ? topRef : null}
               />
@@ -133,7 +133,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     show={show}
                     root={note?.Degree === 1}
                     label={getLabel(note)}
-                    degree={note?.Degree}
+                    pitch={note?.Pitch}
                     fretRef={ref}
                     barre={
                       barre &&
@@ -233,7 +233,7 @@ export const Indicators: React.FunctionComponent<IndicatorsProps> = (props) => {
                     open={f === 0}
                     show={show}
                     key={f}
-                    degree={scaleEnded && degree === 1 ? degree + 7 : degree}
+                    pitch={scaleEnded && degree === 1 ? degree + 7 : degree}
                     root={degree === 1}
                     label={getLabel(label, degree)}
                     fretClass={

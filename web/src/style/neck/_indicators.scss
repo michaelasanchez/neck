@@ -71,6 +71,17 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
         border-radius: 50%;
         box-shadow: 0 4px 6px -2px #00000044;
 
+        @keyframes indicator-fade-in {
+          0% {
+            opacity: 0;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+
+        animation: indicator-fade-in 100ms ease-in-out;
+
         /* Root */
         &.root {
           border-radius: 9px;
@@ -87,16 +98,15 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
         $colors: $blues;
 
         /* Debug */
-        @for $i from 1 through 8 {
-          &.degree-#{$i} {
-            $color: mix(nth($colors, 3), nth($colors, 8), 100% * ($i / 8));
+        @for $i from 0 through 12 {
+          &.pitch-#{$i} {
+            $color: mix(nth($colors, 3), nth($colors, 8), 100% * ($i / 12));
             background: $color;
             // border-color: darken($color, 2%);
           }
         }
 
         &.selected {
-          background: nth($colors, 8);
           & + label {
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
           }
@@ -190,6 +200,10 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
     .indicator,
     label {
       cursor: pointer;
+    }
+
+    .string .fret .indicator:not(.selected) {
+      background: unset;
     }
   }
 }

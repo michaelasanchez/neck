@@ -10,19 +10,6 @@ export interface GeneralCardProps extends Pick<OptionCardProps, 'active'> {
   eventKey: CardKey;
 }
 
-const getFretDisplayModeLabel = (mode: FretDisplayMode) => {
-  switch (mode) {
-    case FretDisplayMode.Degree:
-      return 'Degree';
-    case FretDisplayMode.Marker:
-      return 'Marker';
-    case FretDisplayMode.Note:
-      return 'Note';
-    default:
-      return 'None';
-  }
-};
-
 const getSubtitle = (
   leftHandMode: boolean,
   leftHandUi: boolean,
@@ -50,11 +37,9 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
   props
 ) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { fretDisplayMode, indicatorsDisplayMode, leftHandMode, leftHandUi, autoScroll } = appOptions;
+  const { leftHandMode, leftHandUi, autoScroll } = appOptions;
   const { active, eventKey } = props;
 
-  const displayModeOptions = filter(FretDisplayMode, (m) => !isNaN(m));
-  
   return (
     <OptionCard
       active={active}
@@ -64,6 +49,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
       body={
         <Row>
           <Col>
+            {/* Auto-Scroll */}
             <Form.Group
               onClick={(e: any) => {
                 setAppOptions({ autoScroll: !autoScroll });
@@ -78,44 +64,9 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
                 onChange={() => {}}
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Fret Display Mode</Form.Label>
-              <Form.Control
-                as="select"
-                value={fretDisplayMode}
-                onChange={(e) =>
-                  setAppOptions({ fretDisplayMode: parseInt(e.target.value) })
-                }
-              >
-                {map(displayModeOptions, (m: FretDisplayMode, i: number) => {
-                  return (
-                    <option key={i} value={m}>
-                      {getFretDisplayModeLabel(m)}
-                    </option>
-                  );
-                })}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Indicators Display Mode</Form.Label>
-              <Form.Control
-                as="select"
-                value={indicatorsDisplayMode}
-                onChange={(e) =>
-                  setAppOptions({ indicatorsDisplayMode: parseInt(e.target.value) })
-                }
-              >
-                {map(displayModeOptions, (m: FretDisplayMode, i: number) => {
-                  return (
-                    <option key={i} value={m}>
-                      {getFretDisplayModeLabel(m)}
-                    </option>
-                  );
-                })}
-              </Form.Control>
-            </Form.Group>
           </Col>
           <Col>
+            {/* Left-hand Modes */}
             <Form.Group
               onClick={(e: any) =>
                 setAppOptions({
@@ -133,6 +84,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
                 onChange={() => {}}
               />
             </Form.Group>
+            {/* Left-hand Guitar */}
             <Form.Group
               onClick={(e: any) =>
                 setAppOptions({
@@ -149,6 +101,7 @@ export const GeneralCard: React.FunctionComponent<GeneralCardProps> = (
                 onChange={() => {}}
               />
             </Form.Group>
+            {/* Left-hand Ui */}
             <Form.Group
               onClick={(e: any) => {
                 setAppOptions({ leftHandUi: !leftHandUi });

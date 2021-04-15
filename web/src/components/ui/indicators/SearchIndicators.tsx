@@ -41,6 +41,8 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
                   key={f}
                   show={true}
                   toggle={true}
+                  pitch={fretMap?.Notes[s][f]?.Pitch || 4}
+                  root={fretMap?.Notes[s][f]?.Root}
                   onClick={() => toggleSelectedMatrix(s, f)}
                   label={selected ? getLabel(fretMap.Notes[s][f]) : null}
                   indicatorClass={selected ? ' selected' : ''}
