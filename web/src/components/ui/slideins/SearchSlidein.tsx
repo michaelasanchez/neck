@@ -2,7 +2,7 @@ import { filter, map, uniqBy } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
 import { Badge, Button } from 'react-bootstrap';
-import { SlideIn } from '.';
+import { SearchNote, SlideIn } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
 import { useRequest } from '../../../hooks';
@@ -73,25 +73,23 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
       title={<h2>Search</h2>}
       loading={false}
     >
-      <p className="search-query">
+      <div className="search-query">
         {searchArray.length ? (
           map(getDisplayArray(searchArray), (n: FretNote, i: number) => (
-            <label
-              className="search-note"
+            <SearchNote
               key={i}
-              onClick={() => handleSetSelectedMatrix(n.Note)}
-            >
-              {n.Note?.Label}
-            </label>
+              note={n}
+              updateMatrix={handleSetSelectedMatrix}
+            />
           ))
         ) : (
           <>Select some notes!</>
         )}
-      </p>
+      </div>
       <div className="search-controls">
         <Button
           disabled={!searchArray.length}
-          variant="outline-secondary"
+          variant="outline"
           onClick={() => setSearchArray([])}
         >
           Clear

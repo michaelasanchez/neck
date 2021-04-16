@@ -4,3 +4,4 @@ export * from './KeySlideIn';
 export * from './ScaleSlideIn';
 export * from './SearchSlidein';
 export * from './SlideIn';
+export * from './SearchNote';

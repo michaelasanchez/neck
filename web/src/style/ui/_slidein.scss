@@ -185,6 +185,7 @@ $opacity-out: 0;
     overflow: visible;
 
     .search-note {
+      position: relative;
       background: #fff;
       border: 3px solid rgba(0, 0, 0, 0.1);
       border-radius: 50px;
@@ -192,6 +193,31 @@ $opacity-out: 0;
       padding: 0.5rem 1rem;
 
       cursor: pointer;
+
+      .close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translate(40%, -30%);
+
+        background: $theme-bg;
+        border: 2px solid $bs-gray;
+        border-radius: 50%;
+        line-height: 0;
+        opacity: 0;
+
+        svg {
+          height: 16px;
+          width: 16px;
+          
+          color: #dc3545;
+          padding: 2px;
+        }
+      }
+
+      &:hover .close {
+        opacity: 1;
+      }
     }
 
     .search-controls {
