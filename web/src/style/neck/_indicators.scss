@@ -10,6 +10,8 @@ $indicator-border-width: 3px;
 $indicator-border-color: #fff; //$selector-border-color;
 $indicator-border: $indicator-border-width solid $indicator-border-color;
 
+$indicator-faded-opacity: 0.3;
+
 $indicator-muted-border: $indicator-border;
 $indicator-muted-length: 46px;
 $indicator-muted-width: 12px;
@@ -33,6 +35,24 @@ $greens: #203000, #306010, #407020, #508030, #609040, #70a050, #80b060, #90c070,
 $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0,
   #a080d0;
 
+@keyframes indicator-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes indicator-fade-in-faded {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: $indicator-faded-opacity;
+  }
+}
+
 .indicators {
   display: flex;
   justify-content: space-evenly;
@@ -48,16 +68,23 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
       // Easiest way to match neck fret
       border-bottom: $fret-border-bottom-width solid transparent;
 
-      &.open {
-        border-bottom: $fret-open-border-bottom-width solid transparent;
-      }
-
       label {
         margin-bottom: 0;
         position: absolute;
 
         color: white;
         font-weight: bold;
+      }
+
+      &.open {
+        border-bottom: $fret-open-border-bottom-width solid transparent;
+      }
+
+      &.faded {
+        .indicator {
+          animation: indicator-fade-in-faded 200ms ease-in-out;
+          opacity: $indicator-faded-opacity;
+        }
       }
 
       /* Indicator */
@@ -70,15 +97,6 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
         border: $indicator-border;
         border-radius: 50%;
         box-shadow: 0 4px 6px -2px #00000044;
-
-        @keyframes indicator-fade-in {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
 
         animation: indicator-fade-in 200ms ease-in-out;
         transition: all 200ms;
@@ -168,12 +186,6 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
             height: $indicator-muted-length - ($indicator-border-width * 2);
             width: $indicator-muted-width - ($indicator-border-width * 2);
           }
-        }
-      }
-
-      &.faded {
-        .indicator {
-          opacity: 0.3;
         }
       }
     }

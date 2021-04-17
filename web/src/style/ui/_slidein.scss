@@ -199,6 +199,7 @@ $opacity-out: 0;
         right: 0;
         top: 0;
         transform: translate(40%, -30%);
+        transition: opacity 200ms;
 
         background: $theme-bg;
         border: 2px solid $bs-gray;
