@@ -29,14 +29,14 @@ namespace neck.Controllers.DbEntity
 		{
 			var note = new Note(@params.value, @params.suffix);
 
-			var noteResult = await _noteRepo.Value.GetOrCreate(note);
+			var noteResult = await _noteRepo.Value.Locate(note);
 			if (!noteResult.Success)
 			{
 				return BadRequest(new Response<Note>(noteResult));
 			}
 
 			var scale = new Scale(noteResult.Result, @params.type);
-			var scaleResult = await _scaleRepo.Value.GetOrCreate(scale);
+			var scaleResult = await _scaleRepo.Value.Locate(scale);
 
 			if (!scaleResult.Success)
 			{

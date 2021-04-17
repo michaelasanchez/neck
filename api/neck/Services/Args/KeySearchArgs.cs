@@ -9,5 +9,10 @@ namespace neck.Services.Args
     public class KeySearchArgs
     {
         public List<Note> Notes { get; set; }
+
+        public KeySearchArgs(List<Note> notes)
+        {
+            Notes = notes;
+        }
     }
 }

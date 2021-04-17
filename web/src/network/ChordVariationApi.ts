@@ -5,9 +5,7 @@ import { ApiRequest } from './ApiRequest';
 
 export interface ChordVariationGenerateParams {
   baseId?: string;
-  base?: Partial<Chord>;
   tuningId?: string;
-  tuning?: Partial<Tuning>;
   offset?: number;
   span?: number;
 }

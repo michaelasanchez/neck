@@ -5,9 +5,7 @@ import { ApiRequest } from './ApiRequest';
 
 export interface ScaleVariationGenerateParams {
   baseId?: string;
-  base?: Partial<Scale>;
   tuningId?: string;
-  tuning?: Partial<Tuning>;
   offset?: number;
   span?: number;
 }

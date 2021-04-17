@@ -4,6 +4,7 @@ using neck.Controllers.Args;
 using neck.Interfaces;
 using neck.Models.Entity;
 using neck.Models.Results;
+using neck.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,26 +17,17 @@ namespace neck.Controllers
 	{
 		private readonly ILogger<VariationController<TBase, TVariation>> _logger;
 
-		protected IVariationFactory<TBase, TVariation> _factory;
-
-		protected IRepository<TBase> _baseRepo;
-		protected IRepository<Tuning> _tuningRepo;
+		protected readonly IVariationService<TBase, TVariation> _service;
 
 		public VariationController(
 			ILogger<VariationController<TBase, TVariation>> logger,
-			IVariationFactory<TBase, TVariation> factory,
 			IRepository<TVariation> repository,
-			IRepository<TBase> baseRepository,
-			IRepository<Tuning> tuningRepository
+			IVariationService<TBase, TVariation> service
 		)
 			: base(repository)
 		{
 			_logger = logger;
-
-			_factory = factory;
-
-			_baseRepo = baseRepository;
-			_tuningRepo = tuningRepository;
+			_service = service;
 		}
 
 		[HttpPost("Generate")]
@@ -47,38 +39,16 @@ namespace neck.Controllers
 				return BadRequest(new Response(validateResult));
 			}
 
-			var offset = (int)args.offset;
-			var span = (int)args.span;
-
-			var baseResult = await locateBase(args);
-			if (!baseResult.Success)
-			{
-				return BadRequest(new Response(baseResult));
-			}
-
-			var @base = baseResult.Result;
-
-			var tuningResult = await locateTuning(args);
-			if (!tuningResult.Success)
-			{
-				return BadRequest(new Response(tuningResult));
-			}
-
-			var tuning = tuningResult.Result;
-
 			try
 			{
-				var variations = _factory.GenerateVariations(@base, tuning, offset, span);
+				var variationsResult = await _service.Generate(args.baseId.Value, args.tuningId.Value, (int)args.offset, (int)args.span);
 
-				return Ok(new GenerateResponseHeader<TVariation>()
+				if (!variationsResult.Success)
 				{
-					BaseId = @base.Id,
-					InstrumentId = tuning.InstrumentId,
-					TuningId = tuning.Id,
-					Offset = offset,
-					Span = span,
-					Variations = variations
-				});
+					return BadRequest(new Response(variationsResult));
+				}
+
+				return Ok(variationsResult.Result);
 			}
 			catch (Exception ex)
 			{
@@ -95,104 +65,21 @@ namespace neck.Controllers
 				return BadRequest(new Response(validateResult));
 			}
 
-			var offset = (int)args.offset;
-			var range = (int)args.range;
-			var span = (int)args.span;
-
-			var baseResult = await locateBase(args);
-			if (!baseResult.Success)
-			{
-				return BadRequest(new Response(baseResult));
-			}
-
-			var @base = baseResult.Result;
-
-			var tuningResult = await locateTuning(args);
-			if (!tuningResult.Success)
-			{
-				return BadRequest(new Response(tuningResult));
-			}
-
-			var tuning = tuningResult.Result;
-
 			try
 			{
-				var variations = _factory.GenerateRange(@base, tuning, offset, range, span);
+				var variationsResult = await _service.GenerateRange(args.baseId.Value, args.tuningId.Value, (int)args.offset, (int)args.range, (int)args.span);
 
-				return Ok(new GenerateResponseHeader<TVariation>()
+				if (!variationsResult.Success)
 				{
-					BaseId = @base.Id,
-					InstrumentId = tuning.InstrumentId,
-					TuningId = tuning.Id,
-					Offset = offset,
-					Range = range,
-					Span = span,
-					Variations = variations
-				});
+					return BadRequest(new Response(variationsResult));
+				}
+
+				return Ok(variationsResult.Result);
 			}
 			catch (Exception ex)
 			{
 				return BadRequest(new Response($"An error occured while generating variations:\n\n{ex.Message}"));
 			}
 		}
-
-		#region Private Methods
-
-		private async Task<OperationResult<TBase>> locateBase(VariationGenerateArgs<TBase> args)
-		{
-			var @base = args.@base;
-			if (@base == null)
-			{
-				var result = await _baseRepo.GetById(args.baseId);
-				if (!result.Success)
-				{
-					// TODO: Should we still check if @base exists?
-					return result;
-				}
-
-				@base = result.Result;
-			}
-			else
-			{
-				var result = await _baseRepo.GetOrCreate(args.@base);
-				if (!result.Success)
-				{
-					return result;
-				}
-
-				@base = result.Result;
-			}
-
-			if (@base == null)
-			{
-				return OperationResult<TBase>.CreateFailure("Failed to locate chord");
-			}
-
-			return OperationResult<TBase>.CreateSuccess(@base);
-		}
-
-		private async Task<OperationResult<Tuning>> locateTuning(VariationGenerateArgs<TBase> args)
-		{
-			var tuning = args.tuning;
-			if (tuning == null)
-			{
-				var result = await _tuningRepo.GetById(args.tuningId);
-				if (!result.Success)
-				{
-					return OperationResult<Tuning>.CreateFailure($"Failed to locate tuning with id {args.tuningId}");
-				}
-
-				tuning = result.Result;
-			}
-
-			if (tuning == null)
-			{
-				return OperationResult<Tuning>.CreateFailure("Failed to locate Tuning");
-			}
-
-			return OperationResult<Tuning>.CreateSuccess(tuning);
-		}
-
-		#endregion
 	}
 }

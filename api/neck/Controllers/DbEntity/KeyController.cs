@@ -1,20 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using neck.Controllers.Args;
 using neck.Enums;
 using neck.Interfaces;
 using neck.Models.Entity;
 using neck.Models.Results;
-using neck.Repositories;
 using neck.Services.Args;
 using neck.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static neck.Enums.ChordEnums;
 
 namespace neck.Controllers.DbEntity
 {
-    [ApiController]
+	[ApiController]
 	[Route("[controller]")]
 	public class KeyController : EntityController<Key>
 	{
@@ -37,14 +34,14 @@ namespace neck.Controllers.DbEntity
 		{
 			var note = new Note(args.Base, args.Suffix);
 
-			var noteResult = await _noteRepo.Value.GetOrCreate(note);
+			var noteResult = await _noteRepo.Value.Locate(note);
 			if (!noteResult.Success)
 			{
 				return BadRequest(new Response<Note>(noteResult));
 			}
 
 			var key = new Key(noteResult.Result, args.Type);
-			var keyResult = await _keyRepo.Value.GetOrCreate(key);
+			var keyResult = await _keyRepo.Value.Locate(key);
 
 			if (!keyResult.Success)
 			{

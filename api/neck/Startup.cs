@@ -64,6 +64,8 @@ namespace neck
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 
 			services.AddScoped(typeof(IKeyService), typeof(KeyService));
+			services.AddScoped(typeof(IVariationService<Chord, ChordVariation>), typeof(ChordVariationService));
+			services.AddScoped(typeof(IVariationService<Scale, ScaleVariation>), typeof(ScaleVariationService));
 
 			services.AddScoped(typeof(IVariationFactory<Chord, ChordVariation>), typeof(ChordVariationFactory));
 			services.AddScoped(typeof(IVariationFactory<Scale, ScaleVariation>), typeof(ScaleVariationFactory));

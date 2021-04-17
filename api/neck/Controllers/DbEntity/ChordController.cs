@@ -30,14 +30,14 @@ namespace neck.Controllers.DbEntity
 		{
 			var note = new Note(@params.value, @params.suffix);
 
-			var noteResult = await _noteRepo.Value.GetOrCreate(note);
+			var noteResult = await _noteRepo.Value.Locate(note);
 			if (!noteResult.Success)
 			{
 				return BadRequest(new Response<Note>(noteResult));
 			}
 
 			var chord = new Chord(noteResult.Result, @params.modifier);
-			var chordResult = await _chordRepo.Value.GetOrCreate(chord);
+			var chordResult = await _chordRepo.Value.Locate(chord);
 
 			if (!chordResult.Success)
 			{

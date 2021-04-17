@@ -3,11 +3,12 @@ using Microsoft.Extensions.Logging;
 using neck.Interfaces;
 using neck.Models.Entity;
 using neck.Models.Entity.Variations;
+using neck.Services.Interfaces;
 
 namespace neck.Controllers.DbEntity
 {
 
-    [ApiController]
+	[ApiController]
 	[Route("[controller]")]
 	public class ScaleVariationController : VariationController<Scale, ScaleVariation>
 	{
@@ -15,12 +16,10 @@ namespace neck.Controllers.DbEntity
 
 		public ScaleVariationController(
 			ILogger<ScaleVariationController> logger,
-			IVariationFactory<Scale, ScaleVariation> factory,
 			IRepository<ScaleVariation> repository,
-			IRepository<Scale> baseRepository,
-			IRepository<Tuning> tuningRepository
+			IVariationService<Scale, ScaleVariation> service
 		)
-			: base(logger, factory, repository, baseRepository, tuningRepository)
+			: base(logger, repository, service)
 		{
 			_logger = logger;
 		}

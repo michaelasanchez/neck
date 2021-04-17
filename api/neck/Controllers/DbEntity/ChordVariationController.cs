@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using neck.Interfaces;
 using neck.Models.Entity;
 using neck.Models.Entity.Variations;
+using neck.Services.Interfaces;
 
 namespace neck.Controllers.DbEntity
 {
@@ -14,12 +15,10 @@ namespace neck.Controllers.DbEntity
 
 		public ChordVariationController(
 			ILogger<ChordVariationController> logger,
-			IVariationFactory<Chord, ChordVariation> factory,
 			IRepository<ChordVariation> repository,
-			IRepository<Chord> baseRepository,
-			IRepository<Tuning> tuningRepository
+			IVariationService<Chord, ChordVariation> service
 		)
-			: base(logger, factory, repository, baseRepository, tuningRepository)
+			: base(logger, repository, service)
 		{
 			_logger = logger;
 		}

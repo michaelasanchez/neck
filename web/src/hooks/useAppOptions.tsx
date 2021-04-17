@@ -1,4 +1,4 @@
-import { filter } from 'lodash';
+import { every, filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
@@ -129,30 +129,35 @@ export const useAppOptions = () => {
 
     // TODO: figure out what this returns
     Promise.all(requests).then((values: any[]) => {
-      const [key, chord, scale, instrument, tuning] = values;
-      instrument.NumFrets = parseInt(cookie.neck.numFrets);
+      if (every(values, (v) => !v)) {
+        setErrors([{ message: 'Whoops! Something went wrong...' }]);
+      } else {
+        const [key, chord, scale, instrument, tuning] = values;
+        instrument.NumFrets = parseInt(cookie.neck.numFrets);
 
-      // Create app options
-      const options = {
-        key,
+        // Create app options
+        const options = {
+          key,
 
-        instrument,
-        tuning: tuning || instrument.DefaultTuning,
+          instrument,
+          tuning: tuning || instrument.DefaultTuning,
 
-        chord,
-        scale,
+          chord,
+          scale,
 
-        fretDisplayMode: cookie.fretDisplayMode,
-        indicatorsDisplayMode: cookie.indicatorsDisplayMode,
-        indicatorsMode: cookie.indicatorsMode,
+          fretDisplayMode: cookie.fretDisplayMode,
+          indicatorsDisplayMode: cookie.indicatorsDisplayMode,
+          indicatorsMode: cookie.indicatorsMode,
 
-        leftHandMode: cookie.leftHandMode,
-        leftHandUi: cookie.leftHandUi,
-        autoScroll: cookie.autoScroll,
-      } as AppOptions;
+          leftHandMode: cookie.leftHandMode,
+          leftHandUi: cookie.leftHandUi,
+          autoScroll: cookie.autoScroll,
+        } as AppOptions;
 
-      setAppOptions(options);
-      setLoading(false);
+        setAppOptions(options);
+        setLoading(false);
+      }
+
     });
   };
 

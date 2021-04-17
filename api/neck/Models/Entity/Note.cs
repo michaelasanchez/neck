@@ -22,7 +22,12 @@ namespace neck.Models.Entity
         public string PlainLabel => $"{Base}{SuffixPlainSymbol(Suffix)}";
 
         [NotMapped]
-        public int Pitch { get => ((int)Base + (int)Suffix + Notes.Count) % Notes.Count; }
+        public string SuffixLabel => $"{SuffixSymbol(Suffix)}";
+
+        [NotMapped]
+        public int Pitch {
+            get => ((int)Base + (int)Suffix + Notes.Count) % Notes.Count;
+        }
 
         // The difference in pitch between two notes,
         //	one being the root note of a scale

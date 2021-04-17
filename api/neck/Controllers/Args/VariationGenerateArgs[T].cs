@@ -13,35 +13,24 @@ namespace neck.Controllers.Args
 		public const int DefaultSpan = 4;
 
 		public Guid? baseId { get; set; }
-		public TBase @base { get; set; }
 
 		public Guid? tuningId { get; set; }
-		public Tuning tuning { get; set; }
 
 		public int? offset { get; set; }
+
 		public int? span { get; set; }
 
 		public virtual IOperationResult Validate()
 		{
-			if (@base == null && baseId == null)
+			if (baseId == null)
 			{
 				var cl = OperationResult.trimType(typeof(TBase));
-				return OperationResult.CreateFailure($"{cl} and {cl}Id cannot both be null");
+				return OperationResult.CreateFailure($"{cl}Id is required");
 			}
 
-			if (tuning == null)
+			if (tuningId == null)
 			{
-				if (tuningId == null)
-				{
-					return OperationResult.CreateFailure("Tuning and TuningId cannot both be null");
-				}
-			}
-			else
-			{
-				if (tuning.Offsets == null || tuning.Offsets.Count < 1)
-				{
-					return OperationResult.CreateFailure("Tuning offsets are missing");
-				}
+				return OperationResult.CreateFailure("Tuning and TuningId cannot both be null");
 			}
 
 			offset = offset == null || offset < DefaultOffset ? 0 : offset;

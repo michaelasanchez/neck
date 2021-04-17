@@ -60,7 +60,7 @@ namespace neck.Repositories
 			return Task.FromResult(BuildGetOperationResult(result));
 		}
 
-		public virtual async Task<OperationResult<TEntity>> GetOrCreate(TEntity entity)
+		public virtual async Task<OperationResult<TEntity>> Locate(TEntity entity)
 		{
 			var getResult = await Get(entity);
 			if (!getResult.Success)

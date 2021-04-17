@@ -16,6 +16,8 @@ enum NoteSuffixLabel {
 export class Note {
   public static NUM_NOTES = 12;
 
+  public SuffixLabel: string;
+
   public Base: NoteValue;
   public Suffix: NoteSuffix;
 
@@ -35,7 +37,7 @@ export class Note {
     return this.Base + this.Suffix;
   }
 
-  private SuffixLabel(suffix: NoteSuffix, long = false) {
+  private suffixLabel(suffix: NoteSuffix, long = false) {
     switch (suffix) {
       case NoteSuffix.DoubleFlat:
         return long ? 'Double Flat' : `${NoteSuffixLabel.DoubleFlat}`;
@@ -52,13 +54,13 @@ export class Note {
 
   get Label(): string {
     return NoteValue[this.Base]
-      ? `${NoteValue[this.Base]}${this.SuffixLabel(this.Suffix)}`
+      ? `${NoteValue[this.Base]}${this.suffixLabel(this.Suffix)}`
       : 'ERROR';
   }
 
   get LongLabel(): string {
     return NoteValue[this.Base]
-      ? `${NoteValue[this.Base]} ${this.SuffixLabel(this.Suffix, true)}`
+      ? `${NoteValue[this.Base]} ${this.suffixLabel(this.Suffix, true)}`
       : 'ERROR';
   }
 

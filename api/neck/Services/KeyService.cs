@@ -26,7 +26,7 @@ namespace neck.Services
         {
             var note = new Note(args.Base, args.Suffix);
 
-            var noteResult = await _noteRepo.Value.GetOrCreate(note);
+            var noteResult = await _noteRepo.Value.Locate(note);
             if (!noteResult.Success)
             {
                 return OperationResult<Key>.CreateFailure(noteResult.Message);
@@ -34,7 +34,7 @@ namespace neck.Services
 
             var key = new Key(noteResult.Result, args.Type);
 
-            var keyResult = await _keyRepo.Value.GetOrCreate(key);
+            var keyResult = await _keyRepo.Value.Locate(key);
             if (!keyResult.Success)
             {
                 return OperationResult<Key>.CreateFailure(keyResult.Message);

@@ -19,7 +19,7 @@ namespace neck.Interfaces
 
         public Task<OperationResult<IEnumerable<T>>> GetAll();
 
-        public Task<OperationResult<T>> GetOrCreate(T entity);
+        public Task<OperationResult<T>> Locate(T entity);
 
         public Task<OperationResult<T>> Create(T entity);
 

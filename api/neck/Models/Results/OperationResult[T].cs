@@ -1,18 +1,12 @@
 ﻿using neck.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace neck.Models.Results
 {
 	public class OperationResult<TResult> : IOperationResult<TResult>
 	{
-		public OperationResult()
-		{
-		}
+		public OperationResult() { }
 
 		public bool Success { get; set; }
 		public TResult Result { get; set; }
@@ -27,6 +21,11 @@ namespace neck.Models.Results
 		public static OperationResult<TResult> CreateFailure(string failureMessage)
 		{
 			return new OperationResult<TResult> { Success = false, Message = failureMessage };
+		}
+
+		public static OperationResult CreateFailuree<TResult>(string failureMessage)
+		{
+			return new OperationResult { Success = false, Message = failureMessage };
 		}
 
 		public static OperationResult<TResult> CreateFailure(Exception ex)
