@@ -1,6 +1,6 @@
 import { filter, map, uniqBy } from 'lodash';
 import * as React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Badge, Button } from 'react-bootstrap';
 import { SearchNote, SlideIn } from '.';
 import { useIndicatorsContext } from '../..';
@@ -79,7 +79,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
             <SearchNote
               key={i}
               note={n}
-              updateMatrix={handleSetSelectedMatrix}
+              onClose={() => handleSetSelectedMatrix(n?.Note)}
             />
           ))
         ) : (
@@ -89,7 +89,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
       <div className="search-controls">
         <Button
           disabled={!searchArray.length}
-          variant="outline"
+          variant="outline-secondary"
           onClick={() => setSearchArray([])}
         >
           Clear
@@ -106,7 +106,7 @@ export const SearchSlideIn: React.FunctionComponent<SearchSlideInProps> = (
             <div>
               {map(keysQuery, (n: FretNote, i: number) => (
                 <Badge pill variant="light" key={i}>
-                  {n.Note?.Label}
+                  {n?.Label}
                 </Badge>
               ))}
             </div>

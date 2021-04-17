@@ -80,7 +80,8 @@ $purples: #200030, #301060, #402070, #503080, #604090, #7050a0, #8060b0, #9070c0
           }
         }
 
-        animation: indicator-fade-in 100ms ease-in-out;
+        animation: indicator-fade-in 200ms ease-in-out;
+        transition: all 200ms;
 
         /* Root */
         &.root {

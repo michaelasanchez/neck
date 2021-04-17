@@ -45,6 +45,7 @@ export const useIndicatorsOptions = () => {
     setSelectedMatrix(getEmptyMatrix(instrument, searchArray));
   }, []);
 
+  //
   useEffect(() => {
     const selected = sum(
       map(selectedMatrix, (s) =>
@@ -56,9 +57,21 @@ export const useIndicatorsOptions = () => {
     }
   }, [searchArray]);
 
+  // Update FretMap
   useEffect(() => {
+    const mappedSearchArray = map(
+      searchArray,
+      (n) => fretMap.Notes[n.String][n.Fret]
+    );
+    setSearchArray(mappedSearchArray);
+    setSelectedMatrix(getEmptyMatrix(instrument, mappedSearchArray));
     setFretMap(new FretMap(instrument, tuning, key.Scale));
-  }, [instrument, tuning, key]);
+  }, [key]);
+
+  useEffect(() => {
+    setSearchArray([]);
+    setSelectedMatrix(getEmptyMatrix(instrument, []));
+  }, [instrument, tuning]);
 
   // TODO: Probably shouldn't be here
   useEffect(() => {
@@ -70,13 +83,6 @@ export const useIndicatorsOptions = () => {
       ).then((k) => setAppOptions({ key: k }));
     }
   }, [scale]);
-  useEffect(() => {
-    const mappedSearchArray = map(
-      searchArray,
-      (n: FretNote, i: number) => fretMap.Notes[n.String][n.Fret]
-    );
-    setSearchArray(mappedSearchArray);
-  }, [fretMap]);
 
   const toggleSelectedMatrix = (s: number, f: number, set: boolean = null) => {
     const currentValue = selectedMatrix[s][f];

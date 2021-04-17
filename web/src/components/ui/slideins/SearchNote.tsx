@@ -1,21 +1,20 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as React from 'react';
-import { Button } from 'react-bootstrap';
 import { FretNote, TuningNote } from '../../../models';
 
 interface SearchNoteProps {
   note: FretNote;
-  updateMatrix: (tuningNote: TuningNote) => void;
+  onClose: () => void;
 }
 
 export const SearchNote: React.FunctionComponent<SearchNoteProps> = (props) => {
-  const { note, updateMatrix } = props;
+  const { note, onClose: handleClose } = props;
   return (
     <>
-      <div className="search-note" onClick={() => updateMatrix(note.Note)}>
-        {note.Note?.Label}
-        <button className="close">
+      <div className="search-note">
+        {note?.Label}
+        <button className="close" onClick={() => handleClose()}>
           <FontAwesomeIcon icon={faTimes} />
         </button>
       </div>

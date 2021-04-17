@@ -175,7 +175,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     <DropdownSlideIn
       {...props}
       className="chord"
-      title={<h2>Chord</h2>}
+      title={<h2>Chords</h2>}
       header={
         <NoteSelection
           notes={chord.Tones}

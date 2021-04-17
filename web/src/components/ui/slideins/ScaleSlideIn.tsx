@@ -167,7 +167,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
     <DropdownSlideIn
       {...props}
       className="scale"
-      title={<h2>Scale</h2>}
+      title={<h2>Scales</h2>}
       loading={loading}
       header={
         <NoteSelection

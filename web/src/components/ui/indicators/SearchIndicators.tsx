@@ -17,13 +17,19 @@ export const SearchIndicators: React.FunctionComponent<SearchIndicatorsProps> = 
     toggleSelectedMatrix,
   } = useIndicatorsContext();
 
+  // TODO: HACK
+  const skip = selectedMatrix?.length != instrument?.NumStrings;
+
   return (
     <>
       {map(tuning?.Offsets, (o: TuningNote, s: number) => {
         return (
           <div className="string" key={s}>
             {times(instrument.NumFrets + 1, (f) => {
-              const selected = !!selectedMatrix && !!selectedMatrix[s][f];
+              // TODO: HACK
+              const selected = skip
+                ? false
+                : !!selectedMatrix && !!selectedMatrix[s][f];
 
               const getLabel = (note: FretNote): React.ReactElement => {
                 switch (indicatorsDisplayMode) {

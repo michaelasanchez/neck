@@ -193,7 +193,8 @@ export const useAppOptions = () => {
       reloadChord(newOptions);
     } else if (appOptions?.scale && updated?.scale) {
       reloadScale(newOptions);
-    } else if (appOptions?.key && updated?.key) {
+    } else if (appOptions?.key && updated?.key && !updated.key.Scale) {
+      // TODO: Navbar uses Keys.DropdownValues which is missing
       reloadKey(newOptions);
     } else {
       finishSetAppOptions(newOptions);

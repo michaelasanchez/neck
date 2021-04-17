@@ -14,7 +14,7 @@ namespace neck.Generators
 		private bool INSERT_OPEN_NOTES = true;
 		private bool INSERT_MUTED_NOTES = true;
 
-		private bool FILTER_INVERSIONS = false;
+		private bool FILTER_INVERSIONS = true;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
 
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
@@ -81,6 +81,7 @@ namespace neck.Generators
 					return note;
 				}).ToList();
 
+				// TODO: decide what this is called or if this should require INSERT_MUTED_NOTES
 				// Remove variations that do not begin with root tone
 				if (FILTER_INVERSIONS)
 				{

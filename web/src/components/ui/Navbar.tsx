@@ -18,9 +18,9 @@ export interface NavbarProps {
 const getModeTitle = (mode: IndicatorsMode) => {
   switch (mode) {
     case IndicatorsMode.Chord:
-      return 'Chord';
+      return 'Chords';
     case IndicatorsMode.Scale:
-      return 'Scale';
+      return 'Scales';
     case IndicatorsMode.Search:
       return 'Search';
     default:
