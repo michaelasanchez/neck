@@ -1,6 +1,6 @@
 export * from './ChordSlideIn';
 export * from './DropdownSlideIn';
-export * from './KeySlideIn';
+export * from './KeySelector';
 export * from './ScaleSlideIn';
 export * from './SearchSlidein';
 export * from './SlideIn';

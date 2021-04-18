@@ -1,0 +1,53 @@
+$ks-diameter: 400px;
+
+$ks-current-divisor: 3;
+
+.key-selector {
+  position: absolute;
+
+  // DEBUG
+  bottom: 88px;
+  left: 20px;
+
+  height: $ks-diameter;
+  width: $ks-diameter;
+
+  background: $theme-bg;
+  border-radius: 50%;
+  box-shadow: $l2-box-shadow;
+
+  .current {
+    position: absolute;
+    top: 100% / $ks-current-divisor;
+    left: 100% / $ks-current-divisor;
+
+    height: $ks-diameter / $ks-current-divisor;
+    width: $ks-diameter / $ks-current-divisor;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid $bs-gray;
+    border-radius: 50%;
+  }
+
+  .key {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: rotate(0deg);
+
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: visible;
+
+      path {
+        fill: red;
+      }
+    }
+  }
+}

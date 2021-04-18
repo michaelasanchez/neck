@@ -65,7 +65,7 @@ $opacity-out: 0;
   min-width: 400px;
 
   background: white;
-  box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: $l2-box-shadow;
   border-radius: 8px;
 
   .title,
@@ -172,6 +172,7 @@ $opacity-out: 0;
     }
   }
 
+  /* Chord */
   &.chord {
     .contents {
       &.loading {
@@ -180,6 +181,9 @@ $opacity-out: 0;
     }
   }
 
+  /* Key */
+
+  /* Search */
   &.search {
     // TODO: see if this is necessary
     overflow: visible;
