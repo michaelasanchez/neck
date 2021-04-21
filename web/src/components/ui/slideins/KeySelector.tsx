@@ -1,6 +1,8 @@
-import { times } from 'lodash';
+import { map, times } from 'lodash';
 import * as React from 'react';
 import { useAppOptionsContext } from '../../..';
+import { Key } from '../../../models';
+import { Keys } from '../../../shared';
 
 export interface KeySelectorProps {}
 
@@ -13,15 +15,13 @@ interface Ring {
   center: Point;
   sections: Section[];
   innerRadius: number;
-  innerPoints: Point[];
+  // innerPoints: Point[];
   outerRadius: number;
-  outerPoints: Point[];
+  // outerPoints: Point[];
 }
 
 interface Section {
-  // center: Point;
-  // innerRadius: number;
-  // outerRadius: number;
+  center: Point;
   innerStart: Point;
   outerStart: Point;
   innerEnd: Point;
@@ -30,104 +30,102 @@ interface Section {
 
 const calcPoint = (center: Point, radians: number, radius: number): Point => {
   return {
-    x: center.x + Math.sin(radians) * radius,
-    y: center.y + -Math.cos(radians) * radius,
+    x: -center.x + Math.sin(radians) * radius,
+    y: -center.y + -Math.cos(radians) * radius,
   };
 };
 
 const calcRing = (
-  center: Point,
+  ringCenter: Point,
   innerRadius: number,
   outerRadius: number,
   numSections: number
 ): Ring => {
   const sectionRadians = (2 * Math.PI) / numSections;
-  const midRadius = outerRadius - innerRadius;
-
-  // const radians: number[] = [];
-  const inner: Point[] = [];
-  const outer: Point[] = [];
-
-  times(numSections, (i) => {
-    const r = sectionRadians * i;
-
-    const midRadians = r + sectionRadians / 2;
-
-    const sectionCenter = {
-      x: Math.sin(midRadians) * midRadius,
-      y: -Math.cos(midRadians) * midRadius,
-    };
-
-    const iPoint = calcPoint(center, r, innerRadius);
-    const oPoint = calcPoint(center, r, outerRadius);
-
-    console.log(iPoint,oPoint)
-
-    // radians.push(r);
-    inner.push(iPoint);
-    outer.push(oPoint);
-  });
+  const halfSectionRadians = sectionRadians / 2;
+  const midRadius = (outerRadius + innerRadius) / 2;
 
   const sections = times(numSections, (i) => {
-    const c = i;
-    const n = c >= outer.length - 1 ? (c + 1) % outer.length : c + 1;
+    const startRadian = sectionRadians * i - halfSectionRadians;
+    
+    const midpoint = startRadian + halfSectionRadians;
+    const endRadian = startRadian + sectionRadians;
+
+    const sectionCenter = calcPoint(ringCenter, midpoint, midRadius);
 
     return {
-      // center: sectionCenter,
-      innerStart: inner[c],
-      outerStart: outer[c],
-      innerEnd: inner[n],
-      outerEnd: outer[n],
+      center: sectionCenter,
+      innerStart: calcPoint(sectionCenter, startRadian, innerRadius),
+      outerStart: calcPoint(sectionCenter, startRadian, outerRadius),
+      innerEnd: calcPoint(sectionCenter, endRadian, innerRadius),
+      outerEnd: calcPoint(sectionCenter, endRadian, outerRadius),
     };
   });
 
   return {
-    center,
+    center: ringCenter,
     sections,
     innerRadius,
-    innerPoints: inner,
     outerRadius,
-    outerPoints: outer,
   };
 };
 
+const radius = 200;
 const center = { x: 0, y: 0 };
-const innerRing = calcRing(center, 200 / 3, 400 / 3, 12);
-const outerRing = calcRing(center, 400 / 3, 200, 12);
-
-const renderSection = (ring: Ring, section: number) => (
-  <div className="key">
-    what
-    <svg>{renderSectionPath(ring, section)}</svg>
-  </div>
-);
-
-const renderSectionPath = (ring: Ring, current: number) => {
-  const next =
-    current >= ring.outerPoints.length - 1
-      ? (current + 1) % ring.outerPoints.length
-      : current + 1;
-
-  console.log(ring.sections[current]);
-  const section = ring.sections[current];
-  return (
-    <path
-      d={`M${section.innerStart.x},${section.innerStart.y} L${section.outerStart.x},${section.outerStart.y} A${ring.outerRadius},${ring.outerRadius} 1 0,1 ${section.outerEnd.x},${section.outerEnd.y} L${section.innerEnd.x},${section.innerEnd.y} A${ring.innerRadius},${ring.innerRadius} 1 0,0 ${section.innerStart.x},${section.innerStart.y} z`}
-    ></path>
-  );
-};
+const innerRing = calcRing(center, radius / 3, (2 * radius) / 3, 12);
+const outerRing = calcRing(center, (2 * radius) / 3, radius, 12);
 
 export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
   props
 ) => {
-  const { appOptions } = useAppOptionsContext();
+  const { appOptions, setAppOptions } = useAppOptionsContext();
   const { key } = appOptions;
 
   return (
     <div className="key-selector">
-      <div className="current">{key.Label}</div>
-      {renderSection(innerRing, 0)}
-      {renderSection(outerRing, 2)}
+      <div className="current">
+        <h3>{key.Label}</h3>
+      </div>
+      <div className="major">
+        {map(Keys.Major(), (k: Key, i: number) => (
+          <KeySection key={i} ring={outerRing} sectionNum={i} musicKey={k} />
+        ))}
+      </div>
+      <div className="minor">
+        {map(Keys.Minor(), (k: Key, i: number) => (
+          <KeySection key={i} ring={innerRing} sectionNum={i} musicKey={k} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+interface KeySectionProps {
+  active?: boolean;
+  ring: Ring;
+  sectionNum: number;
+  musicKey: Key;
+}
+
+const KeySection: React.FunctionComponent<KeySectionProps> = (props) => {
+  const { ring, sectionNum, musicKey: key, active = false } = props;
+  const section = ring.sections[sectionNum];
+
+  return (
+    <div
+      className="key"
+      key={sectionNum}
+      style={{
+        top: `${section.center.y + radius}px`,
+        left: `${section.center.x + radius}px`,
+      }}
+    >
+      <svg>
+        <path
+          d={`M${section.innerStart.x},${section.innerStart.y} L${section.outerStart.x},${section.outerStart.y} A${ring.outerRadius},${ring.outerRadius} 1 0,1 ${section.outerEnd.x},${section.outerEnd.y} L${section.innerEnd.x},${section.innerEnd.y} A${ring.innerRadius},${ring.innerRadius} 1 0,0 ${section.innerStart.x},${section.innerStart.y} z`}
+        ></path>
+      </svg>
+      <div>{key.Tonic.Label}</div>
     </div>
   );
 };

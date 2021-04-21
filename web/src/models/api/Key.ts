@@ -32,6 +32,16 @@ export class Key extends ApiEntity {
     this.Type = type || KeyType.Major;
   }
 
+  public Major(): Key {
+    this.Type = KeyType.Major;
+    return this;
+  }
+
+  public Minor(): Key {
+    this.Type = KeyType.Minor;
+    return this;
+  }
+
   public Sharp(): Key {
     this.Tonic = this.Tonic.Sharp();
     return this;

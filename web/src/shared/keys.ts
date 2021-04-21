@@ -1,11 +1,10 @@
-import { Key } from "../models";
+import { Key } from '../models';
 
 interface KeyValues {
   [arrayKey: number]: Key[];
 }
 
 export class Keys {
-
   static DropdownValues(): Key[] {
     return [
       Key.C().Sharp(),
@@ -27,22 +26,48 @@ export class Keys {
   }
 
   static Whole(): Key[] {
+    return [Key.C(), Key.D(), Key.E(), Key.F(), Key.G(), Key.A(), Key.B()];
+  }
+  static Major() {
     return [
       Key.C(),
-      Key.D(),
-      Key.E(),
-      Key.F(),
       Key.G(),
+      Key.D(),
       Key.A(),
+      Key.E(),
       Key.B(),
+      Key.G().Flat(),
+      // [Key.G().Flat(), Key.F().Sharp()],
+      Key.D().Flat(),
+      Key.A().Flat(),
+      Key.E().Flat(),
+      Key.B().Flat(),
+      Key.F(),
+    ];
+  }
+  static Minor() {
+    return [
+      Key.A().Minor(),
+      Key.E().Minor(),
+      Key.B().Minor(),
+      Key.F().Sharp().Minor(),
+      Key.C().Sharp().Minor(),
+      Key.G().Sharp().Minor(),
+      Key.E().Flat().Minor(),
+      // [Key.E().Flat().Minor(), Key.D().Sharp().Minor()],
+      Key.B().Flat().Minor(),
+      Key.F().Minor(),
+      Key.C().Minor(),
+      Key.G().Minor(),
+      Key.D().Minor(),
     ];
   }
 
-  //  C           D           E     F           G           A           B   
+  //  C           D           E     F           G           A           B
   //        C#/Db       D#/Eb             F#/Gb       G#/Ab       A#/Bb
-  //                                                                    
+  //
   //  B#                      Fb    E#                                  Cb
-  //  0     1     2     3     4     5     6     7     8     9     10    11  
+  //  0     1     2     3     4     5     6     7     8     9     10    11
 
   static SliderValues(): KeyValues {
     return {
@@ -58,7 +83,7 @@ export class Keys {
       9: [Key.A()],
       10: [Key.B().Flat()],
       11: [Key.B(), Key.C().Flat()],
-    }
+    };
   }
 
   static SliderValueWithTheoretical(): KeyValues {
@@ -75,7 +100,6 @@ export class Keys {
       9: [Key.A()],
       10: [Key.A().Sharp(), Key.B().Flat()],
       11: [Key.B(), Key.C().Flat()],
-    }
+    };
   }
-
 }
