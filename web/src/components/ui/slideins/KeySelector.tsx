@@ -1,5 +1,6 @@
 import { map, times } from 'lodash';
 import * as React from 'react';
+import { KeySection } from '.';
 import { useAppOptionsContext } from '../../..';
 import { Key } from '../../../models';
 import { Keys } from '../../../shared';
@@ -11,20 +12,18 @@ interface Point {
   y: number;
 }
 
-interface Ring {
+export interface Ring {
   center: Point;
-  sections: Section[];
   innerRadius: number;
-  // innerPoints: Point[];
   outerRadius: number;
-  // outerPoints: Point[];
+  sections: Section[];
 }
 
 interface Section {
   center: Point;
   innerStart: Point;
-  outerStart: Point;
   innerEnd: Point;
+  outerStart: Point;
   outerEnd: Point;
 }
 
@@ -47,7 +46,7 @@ const calcRing = (
 
   const sections = times(numSections, (i) => {
     const startRadian = sectionRadians * i - halfSectionRadians;
-    
+
     const midpoint = startRadian + halfSectionRadians;
     const endRadian = startRadian + sectionRadians;
 
@@ -75,6 +74,15 @@ const center = { x: 0, y: 0 };
 const innerRing = calcRing(center, radius / 3, (2 * radius) / 3, 12);
 const outerRing = calcRing(center, (2 * radius) / 3, radius, 12);
 
+interface KeyMap {
+  [key: string]: { keys: Key[]; ring: Ring };
+}
+
+const keys: KeyMap = {
+  major: { keys: Keys.Major(), ring: outerRing },
+  minor: { keys: Keys.Minor(), ring: innerRing },
+};
+
 export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
   props
 ) => {
@@ -83,49 +91,24 @@ export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
 
   return (
     <div className="key-selector">
+      {map(keys, (keyObj: { keys: Key[]; ring: Ring }, label: string) => (
+        <div className={label} key={label}>
+          {map(keyObj.keys, (k: Key, i: number) => (
+            <KeySection
+              active={key.Label == k.Label}
+              key={i}
+              ring={keyObj.ring}
+              sectionNum={i}
+              musicKey={k}
+              radius={radius}
+              setKey={(key: Key) => setAppOptions({ key })}
+            />
+          ))}
+        </div>
+      ))}
       <div className="current">
-        <h3>{key.Label}</h3>
+        <h2>{key.Label}</h2>
       </div>
-      <div className="major">
-        {map(Keys.Major(), (k: Key, i: number) => (
-          <KeySection key={i} ring={outerRing} sectionNum={i} musicKey={k} />
-        ))}
-      </div>
-      <div className="minor">
-        {map(Keys.Minor(), (k: Key, i: number) => (
-          <KeySection key={i} ring={innerRing} sectionNum={i} musicKey={k} />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-interface KeySectionProps {
-  active?: boolean;
-  ring: Ring;
-  sectionNum: number;
-  musicKey: Key;
-}
-
-const KeySection: React.FunctionComponent<KeySectionProps> = (props) => {
-  const { ring, sectionNum, musicKey: key, active = false } = props;
-  const section = ring.sections[sectionNum];
-
-  return (
-    <div
-      className="key"
-      key={sectionNum}
-      style={{
-        top: `${section.center.y + radius}px`,
-        left: `${section.center.x + radius}px`,
-      }}
-    >
-      <svg>
-        <path
-          d={`M${section.innerStart.x},${section.innerStart.y} L${section.outerStart.x},${section.outerStart.y} A${ring.outerRadius},${ring.outerRadius} 1 0,1 ${section.outerEnd.x},${section.outerEnd.y} L${section.innerEnd.x},${section.innerEnd.y} A${ring.innerRadius},${ring.innerRadius} 1 0,0 ${section.innerStart.x},${section.innerStart.y} z`}
-        ></path>
-      </svg>
-      <div>{key.Tonic.Label}</div>
     </div>
   );
 };

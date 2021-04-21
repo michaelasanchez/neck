@@ -51,13 +51,16 @@ namespace neck.Models.Entity
         private string getLabel(bool longLabel = false)
         {
             var typeString = string.Empty;
+            var label = string.Empty;
             switch(Type)
             {
                 case KeyType.Major:
                     typeString = longLabel ? " Major" : "";
+                    label = Tonic.Label;
                     break;
                 case KeyType.Minor:
-                    typeString = " Minor";
+                    typeString = longLabel ? " Minor" : "";
+                    label = Tonic.Label.ToLower();
                     break;
             }
             var preText = longLabel == true ? "Key of " : "";
