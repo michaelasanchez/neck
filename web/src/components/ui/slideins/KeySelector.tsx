@@ -1,9 +1,9 @@
-import { map, times } from 'lodash';
+import { isArray, map, round, times } from 'lodash';
 import * as React from 'react';
 import { KeySection } from '.';
 import { useAppOptionsContext } from '../../..';
 import { Key } from '../../../models';
-import { Keys } from '../../../shared';
+import { Keys, NoteUtils } from '../../../shared';
 
 export interface KeySelectorProps {}
 
@@ -28,9 +28,11 @@ interface Section {
 }
 
 const calcPoint = (center: Point, radians: number, radius: number): Point => {
+  const x = -center.x + Math.sin(radians) * radius;
+  const y = -center.y + -Math.cos(radians) * radius;
   return {
-    x: -center.x + Math.sin(radians) * radius,
-    y: -center.y + -Math.cos(radians) * radius,
+    x: round(x, 2),
+    y: round(y, 2),
   };
 };
 
@@ -69,13 +71,20 @@ const calcRing = (
   };
 };
 
-const radius = 200;
 const center = { x: 0, y: 0 };
-const innerRing = calcRing(center, radius / 3, (2 * radius) / 3, 12);
-const outerRing = calcRing(center, (2 * radius) / 3, radius, 12);
+const radius = 150;
+
+const innerRadius = radius / 3;
+const outerRadius = (2 * radius) / 3;
+
+// const outerRadius = radius / 1.8;
+// const outerRadius = radius / 1.3;
+
+const innerRing = calcRing(center, innerRadius, outerRadius, 12);
+const outerRing = calcRing(center, outerRadius, radius, 12);
 
 interface KeyMap {
-  [key: string]: { keys: Key[]; ring: Ring };
+  [key: string]: { keys: (Key | Key[])[]; ring: Ring };
 }
 
 const keys: KeyMap = {
@@ -91,19 +100,21 @@ export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
 
   return (
     <div className="key-selector">
-      {map(keys, (keyObj: { keys: Key[]; ring: Ring }, label: string) => (
+      {map(keys, (keyObj: { keys: Key[][]; ring: Ring }, label: string) => (
         <div className={label} key={label}>
-          {map(keyObj.keys, (k: Key, i: number) => (
-            <KeySection
-              active={key.Label == k.Label}
-              key={i}
-              ring={keyObj.ring}
-              sectionNum={i}
-              musicKey={k}
-              radius={radius}
-              setKey={(key: Key) => setAppOptions({ key })}
-            />
-          ))}
+          {map(keyObj.keys, (k: Key[], i: number) => {
+            return (
+              <KeySection
+                active={key.Type == k[0].Type && NoteUtils.NotesAreEqual(key.Tonic, k[0].Tonic)}
+                key={i}
+                ring={keyObj.ring}
+                sectionNum={i}
+                keyGroup={k}
+                radius={radius}
+                setKey={(key: Key) => setAppOptions({ key })}
+              />
+            );
+          })}
         </div>
       ))}
       <div className="current">

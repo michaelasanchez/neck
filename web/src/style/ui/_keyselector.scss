@@ -1,4 +1,4 @@
-$ks-diameter: 400px;
+$ks-diameter: 300px;
 
 $ks-current-divisor: 3;
 
@@ -60,6 +60,7 @@ $ks-current-divisor: 3;
 
     > div {
       transform: translate(-50%, -50%);
+      user-select: none;
     }
 
     svg {

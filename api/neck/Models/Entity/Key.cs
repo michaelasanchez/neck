@@ -60,11 +60,11 @@ namespace neck.Models.Entity
                     break;
                 case KeyType.Minor:
                     typeString = longLabel ? " Minor" : "";
-                    label = Tonic.Label.ToLower();
+                    label = longLabel ? Tonic.Label : Tonic.Label.ToLower();
                     break;
             }
             var preText = longLabel == true ? "Key of " : "";
-            return $"{preText}{Tonic.Label}{typeString}";
+            return $"{preText}{label}{typeString}";
         }
     }
 }
