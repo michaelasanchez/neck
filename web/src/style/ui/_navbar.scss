@@ -17,6 +17,12 @@ nav {
     border-width: 3px;
   }
 
+  span.key-label {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+  }
+
   .dropup.mode,
   button.options {
     margin-right: 0.75rem;
@@ -64,9 +70,13 @@ nav {
   }
 
   .dropup.key {
-    min-width: 80px;
-    
+    > button {
+      min-width: 140px;
+    }
+
     .dropdown-menu {
+      background: none;
+      border: none;
       min-width: unset !important;
     }
   }

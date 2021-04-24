@@ -1,4 +1,4 @@
-import { isArray, map, round, times } from 'lodash';
+import { filter, findIndex, isArray, map, round, times } from 'lodash';
 import * as React from 'react';
 import { KeySection } from '.';
 import { useAppOptionsContext } from '../../..';
@@ -102,14 +102,21 @@ export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
     <div className="key-selector">
       {map(keys, (keyObj: { keys: Key[][]; ring: Ring }, label: string) => (
         <div className={label} key={label}>
-          {map(keyObj.keys, (k: Key[], i: number) => {
+          {map(keyObj.keys, (keyArray: Key[], i: number) => {
+            const activeIndex = findIndex(
+              keyArray,
+              (k) =>
+                k.Type == key.Type &&
+                NoteUtils.NotesAreEqual(k.Tonic, key.Tonic)
+            );
             return (
               <KeySection
-                active={key.Type == k[0].Type && NoteUtils.NotesAreEqual(key.Tonic, k[0].Tonic)}
+                active={activeIndex >= 0}
+                activeIndex={activeIndex >= 0 && activeIndex}
                 key={i}
                 ring={keyObj.ring}
                 sectionNum={i}
-                keyGroup={k}
+                keyGroup={keyArray}
                 radius={radius}
                 setKey={(key: Key) => setAppOptions({ key })}
               />
