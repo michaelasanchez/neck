@@ -54,7 +54,6 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         }
         className={`${appOptions.leftHandUi ? 'left' : ''}`}
       />
-      <KeySelector />
       <Draggable>
         <div
           className={`slidein-container${

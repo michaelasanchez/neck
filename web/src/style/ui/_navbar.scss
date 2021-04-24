@@ -64,6 +64,8 @@ nav {
   }
 
   .dropup.key {
+    min-width: 80px;
+    
     .dropdown-menu {
       min-width: unset !important;
     }

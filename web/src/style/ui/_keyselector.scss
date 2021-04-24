@@ -2,13 +2,34 @@ $ks-diameter: 300px;
 
 $ks-current-divisor: 3;
 
+.key.dropup .dropdown-menu {
+  // Bootstrap overrides
+  display: block !important;
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
+  top: unset !important;
+  left: unset !important;
+  bottom: unset !important;
+
+  &.show {
+    .key-selector {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  .key-selector {
+    position: absolute;
+    bottom: 100px !important;
+    right: -40px !important;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 200ms, transform 200ms ease-out;
+  }
+}
+
 .key-selector {
-  position: absolute;
-
-  // DEBUG
-  bottom: 88px;
-  left: 20px;
-
   height: $ks-diameter;
   width: $ks-diameter;
 
