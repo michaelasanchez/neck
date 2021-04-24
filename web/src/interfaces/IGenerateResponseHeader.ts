@@ -2,7 +2,7 @@ import { Key, Tuning } from '../models';
 
 export interface IGenerateResponseHeader<TVariation> {
   BaseId: string;
-  // InstrumentId: string;
+  InstrumentId: string;
   TuningId: string;
   Tuning: Tuning;
   Offset: number;

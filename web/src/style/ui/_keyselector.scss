@@ -1,0 +1,108 @@
+$ks-diameter: 300px;
+
+$ks-current-divisor: 3;
+
+.key.dropup .dropdown-menu {
+  // Bootstrap overrides
+  display: block !important;
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
+  top: unset !important;
+  left: unset !important;
+  bottom: unset !important;
+
+  &.show {
+    .key-selector {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  .key-selector {
+    position: absolute;
+    bottom: 100px !important;
+    right: -120px !important;
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 200ms, transform 200ms ease-out;
+  }
+}
+
+.key-selector {
+  height: $ks-diameter;
+  width: $ks-diameter;
+
+  background: $theme-bg;
+  border-radius: 50%;
+  box-shadow: $l2-box-shadow;
+
+  .current {
+    position: absolute;
+    top: 100% / $ks-current-divisor;
+    left: 100% / $ks-current-divisor;
+
+    height: $ks-diameter / $ks-current-divisor;
+    width: $ks-diameter / $ks-current-divisor;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid $bs-gray;
+    border-radius: 50%;
+
+    > * {
+      margin-bottom: 0;
+    }
+  }
+
+  .minor {
+    font-size: 0.9rem;
+  }
+
+  .key {
+    position: absolute;
+    cursor: pointer;
+
+    transition: transform 200ms;
+    transform: rotate(0deg);
+
+    &.active {
+      svg path {
+        fill: #f4f4f4;
+      }
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      z-index: 100;
+
+      svg path {
+        fill: #fafafa;
+      }
+    }
+
+    > div {
+      transform: translate(-50%, -50%);
+      user-select: none;
+    }
+
+    strong {
+      font-weight: 900;
+    }
+
+    svg {
+      position: absolute;
+      height: 2px;
+      width: 2px;
+      overflow: visible;
+
+      path {
+        fill: white; //$theme-bg-seconary;
+        stroke: $bs-gray;
+        transition: fill 200ms;
+      }
+    }
+  }
+}

@@ -3,22 +3,28 @@
 // $debug-border-right: none; //1px solid red;
 // $debug-border-bottom: none; //1px solid red;
 
-$theme-bg: #fff;
+// Neck Ui
+$white: #fff;
+
+$theme-bg: $white;
+$theme-bg-seconary: #f8f9fa;
 
 $body-background-color: #fafafa;
+
+$l2-box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.1);
+
+$bs-gray: #ced4da;
+$bs-danger: #dc3545;
+
 
 // $fretboard-background-color: #fff;
 
 // $debug-border-left: none; //1px solid red;
 
 // /* Colors */
-$white: #fff;
 $blue: rgb(135, 206, 235); //rgb(135, 206, 235);
 $green: rgb(135, 235, 197);
 $orange: rgb(241, 172, 42);
-
-$bs-gray: #ced4da;
-$bs-danger: #dc3545;
 
 /* Theme */
 $neck-primary: $blue;

@@ -6,7 +6,7 @@ import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { FretDisplayMode } from '../neck';
 import { IndicatorsMode } from './indicators';
-import { ChordSlideIn, ScaleSlideIn, SearchSlideIn } from './slideins';
+import { ChordSlideIn, KeySelector, ScaleSlideIn, SearchSlideIn } from './slideins';
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
 export interface UiProps {}

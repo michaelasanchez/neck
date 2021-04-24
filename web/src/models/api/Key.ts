@@ -30,25 +30,43 @@ export class Key extends ApiEntity {
 
     this.Tonic = tonic;
     this.Type = type || KeyType.Major;
+
+    this.calcLabel();
+  }
+
+  public Major(): Key {
+    this.Type = KeyType.Major;
+    this.calcLabel();
+    return this;
+  }
+
+  public Minor(): Key {
+    this.Type = KeyType.Minor;
+    this.calcLabel();
+    return this;
   }
 
   public Sharp(): Key {
     this.Tonic = this.Tonic.Sharp();
+    this.calcLabel();
     return this;
   }
 
   public DoubleSharp(): Key {
     this.Tonic = this.Tonic.DoubleSharp();
+    this.calcLabel();
     return this;
   }
 
   public Flat(): Key {
     this.Tonic = this.Tonic.Flat();
+    this.calcLabel();
     return this;
   }
 
   public DoubleFlat(): Key {
     this.Tonic = this.Tonic.DoubleFlat();
+    this.calcLabel();
     return this;
   }
 
@@ -78,6 +96,13 @@ export class Key extends ApiEntity {
 
   static G(): Key {
     return new this(Note.G());
+  }
+
+  private calcLabel() {
+    this.Label =
+      this.Type == KeyType.Minor
+        ? this.Tonic.Label.toLowerCase()
+        : this.Tonic.Label;
   }
 }
 

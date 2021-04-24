@@ -6,6 +6,7 @@ import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
 import { Keys } from '../../shared';
 import { IndicatorsMode } from './indicators/Indicators';
+import { KeySelector } from './slideins';
 
 export interface NavbarProps {
   musicKey: Key;
@@ -100,15 +101,22 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             })}
           </SplitButton>
 
+          {/* <span className="key-label"> */}
+            {/* <span className="text-muted">in the</span> */}
+            {/* Key of
+          </span> */}
+
           <DropdownButton
             drop="up"
             alignRight={true}
             className="key"
             size={size}
-            title={musicKey.Label}
+            title={`Key of ${musicKey.Label}`}
             variant="secondary"
+            renderMenuOnMount={true}
           >
-            {map(Keys.DropdownValues(), (k: Key, i: number) => {
+            <KeySelector />
+            {/* {map(Keys.DropdownValues(), (k: Key, i: number) => {
               return (
                 <Dropdown.Item
                   key={i}
@@ -117,7 +125,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
                   {k.Tonic.Label}
                 </Dropdown.Item>
               );
-            })}
+            })} */}
           </DropdownButton>
         </form>
       </div>
