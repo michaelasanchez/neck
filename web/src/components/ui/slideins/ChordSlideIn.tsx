@@ -1,6 +1,9 @@
-import { filter, map } from 'lodash';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { filter, isEqual, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
+import { Button, Collapse, Form, Row } from 'react-bootstrap';
 import { DropdownSlideIn, ISlideInProps } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
@@ -15,7 +18,7 @@ import { ChordDiagram } from '../diagrams';
 export const FILTER_BY_CHORD_FORM = false;
 export const FILTER_DUPLICATES = false;
 
-export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> { }
+export interface IChordSlideInProps extends Pick<ISlideInProps, 'collapse'> {}
 
 // Badge Chord Modifier
 const modifiers = filter(ChordModifier, (m) => !isNaN(m));
@@ -41,8 +44,23 @@ const notes = [
   Note.B(),
 ];
 
+const getOptionsLabel = (key: string) => {
+  switch (key) {
+    case 'enforceChord':
+      return 'Enforce chord tones';
+    case 'filterInversions':
+      return 'Filter inversions';
+    case 'insertOpen':
+      return 'Insert open';
+    case 'insertMuted':
+      return 'Insert muted';
+    default:
+      return 'error';
+  }
+};
+
 export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
-  const { appOptions, setAppOptions } = useAppOptionsContext();
+  const { appOptions, setAppOptions, generateOptions, setGenerateOptions } = useAppOptionsContext();
   const { setChordVariation } = useIndicatorsContext();
 
   // Props
@@ -57,6 +75,8 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   const [variations, setVariations] = useState<ChordVariation[]>();
 
   const [selected, setSelected] = useState<Note[]>();
+
+  const [showOptions, setShowOptions] = useState<boolean>(true);
 
   const { req: generateVariations, loading } = useRequest(
     new ChordVariationApi().GenerateRange
@@ -175,7 +195,15 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     <DropdownSlideIn
       {...props}
       className="chord"
-      title={<h2>Chords</h2>}
+      title={
+        <>
+          <h2>Chords</h2>
+          <FontAwesomeIcon
+            icon={faCog}
+            onClick={() => setShowOptions(!showOptions)}
+          />
+        </>
+      }
       header={
         <NoteSelection
           notes={chord.Tones}
@@ -206,6 +234,42 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       ]}
       loading={variations == null}
     >
+      <div className="options">
+        <Collapse in={showOptions}>
+          <div>
+            <div className="options-container">
+              <h5>Options</h5>
+              <Form>
+                {map(
+                  generateOptions,
+                  (optionValue: boolean, optionKey: string) => {
+                    return (
+                      <Form.Group
+                        key={optionKey}
+                        onClick={() => {
+                          generateOptions[optionKey] = !optionValue;
+                          setGenerateOptions({ ...generateOptions });
+                        }}
+                      >
+                        <Form.Check
+                          type="checkbox"
+                          custom
+                          label={getOptionsLabel(optionKey)}
+                          checked={optionValue}
+                          onChange={() => {}}
+                        />
+                      </Form.Group>
+                    );
+                  }
+                )}
+              </Form>
+              <Button size="sm" variant={'success'}>
+                Update
+              </Button>
+            </div>
+          </div>
+        </Collapse>
+      </div>
       <div className="variations">{renderVariations()}</div>
     </DropdownSlideIn>
   );

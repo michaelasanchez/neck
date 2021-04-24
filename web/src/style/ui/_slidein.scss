@@ -159,6 +159,44 @@ $opacity-out: 0;
       transition: all 300ms;
     }
 
+    $option-height: 30px;
+
+    .options {
+      margin-bottom: 0.5rem;
+    }
+
+    .options-container {
+      display: flex;
+      flex-direction: column;
+
+      background: $theme-bg-secondary;
+      border-radius: 6px;
+      padding: 1rem;
+
+      button {
+        align-self: flex-end;
+      }
+
+      > form {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+
+        height: $option-height * 2;
+        margin-bottom: 0.5rem;
+
+        > .form-group {
+          height: $option-height;
+          margin-bottom: 0;
+
+          &,
+          * {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
     .variations {
       display: flex;
       flex-wrap: wrap;
@@ -174,6 +212,21 @@ $opacity-out: 0;
 
   /* Chord */
   &.chord {
+    .title {
+      display: flex;
+      align-items: center;
+
+      h2 {
+        margin-right: 0.25em;
+      }
+
+      svg {
+        color: var(--gray);
+        margin-top: 8px; // magic
+
+        cursor: pointer;
+      }
+    }
     .contents {
       &.loading {
         justify-content: center;

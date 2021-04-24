@@ -54,7 +54,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
         }
         className={`${appOptions.leftHandUi ? 'left' : ''}`}
       />
-      <Draggable>
+      {/* <Draggable> */}
         <div
           className={`slidein-container${
             appOptions.leftHandMode ? ' left' : ''
@@ -64,7 +64,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
           <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
           <SearchSlideIn collapse={indicatorsMode !== IndicatorsMode.Search} />
         </div>
-      </Draggable>
+      {/* </Draggable> */}
       <div className={`ui${appOptions.leftHandUi ? ' left' : ''}`}>
         <div className="modal-container">
           <OptionsModal

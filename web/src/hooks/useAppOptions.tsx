@@ -36,6 +36,25 @@ const validateAppOptions = (appOptions: AppOptions): IError => {
   return null;
 };
 
+interface IGenerateOptions {
+  [key: string]: boolean;
+}
+
+export interface GenerateOptions extends IGenerateOptions{
+  enforceChord: boolean;
+  filterInversions: boolean;
+  insertOpen: boolean;
+  insertMuted: boolean;
+}
+
+const DefaultGenerateOptions = {
+  enforceChord: false,
+  filterInversions: false,
+  insertOpen: false,
+  insertMuted: false,
+};
+
+
 const loadKey = (keyId?: string): Promise<Key> => {
   if (!!keyId) {
     return new KeyApi().GetById(keyId);
@@ -98,6 +117,10 @@ export const useAppOptions = () => {
 
   const [appOptions, setAppOptions] = useState<AppOptions>();
 
+  const [generateOptions, setGenerateOptions] = useState<GenerateOptions>(
+    DefaultGenerateOptions
+  );
+
   const [loading, setLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<IError[]>();
 
@@ -152,6 +175,8 @@ export const useAppOptions = () => {
           leftHandMode: cookie.leftHandMode,
           leftHandUi: cookie.leftHandUi,
           autoScroll: cookie.autoScroll,
+
+
         } as AppOptions;
 
         setAppOptions(options);
@@ -220,5 +245,6 @@ export const useAppOptions = () => {
       setCookie(newOptions);
     }
   };
-  return { appOptions, setAppOptions: handleSetAppOptions, errors, loading };
+
+  return { appOptions, setAppOptions: handleSetAppOptions, generateOptions, setGenerateOptions, errors, loading };
 };
