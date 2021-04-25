@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using neck.Interfaces;
 using neck.Models;
 using neck.Models.Results;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -17,14 +15,14 @@ namespace neck.Repositories
 	{
 		private NeckContext _context;
 
-		protected DbSet<TEntity> _set;
+		protected DbSet<TEntity> _set { get; set; }
 
-		protected bool GetAllDefaultIncludes = false;
+		protected static bool GetAllDefaultIncludes = false;
 
-		protected string DefaultFailureMessage = "Operation failed";
+		protected static string DefaultFailureMessage = "Operation failed";
 
-		protected string OldDefaultSuccessMessage = $"{TrimType(typeof(TEntity))} found";
-		protected string OldDefaultFailureMessage = $"Could not find {TrimType(typeof(TEntity))}";
+		protected static string OldDefaultSuccessMessage = $"{TrimType(typeof(TEntity))} found";
+		protected static string OldDefaultFailureMessage = $"Could not find {TrimType(typeof(TEntity))}";
 
 		static Func<Type, string> TrimType = (Type type) => OperationResult.trimType(type);
 

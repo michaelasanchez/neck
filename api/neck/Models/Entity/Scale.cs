@@ -17,7 +17,7 @@ namespace neck.Models.Entity
         [NotMapped]
         public string Label => $"{Tonic.Label} {Type} Scale";
 
-        public Guid TonicId;
+        public Guid TonicId { get; set; }
 
         public Note Tonic { get; set; }
 

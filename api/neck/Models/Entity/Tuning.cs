@@ -17,7 +17,7 @@ namespace neck.Models.Entity
         [JsonIgnore]
         public Instrument InstrumentDefault { get; set; }
 
-        public List<Note> Offsets;
+        public List<Note> Offsets { get; set; }
 
         public Tuning() { }
 

@@ -7,34 +7,32 @@ using System;
 
 namespace neck.Controllers.Args
 {
-    public class VariationGenerateArgs<TBase> : IVariationGenerateArgs<TBase>
+	public abstract class VariationGenerateArgs<TBase> : IVariationGenerateArgs<TBase>
 	{
-		public const int DefaultOffset = 0;
-		public const int DefaultSpan = 4;
+		private static int _defaultOffset = 0;
+		private static int _defaultSpan = 4;
 
-		public Guid? baseId { get; set; }
+		public Guid? BaseId { get; set; }
+		public Guid? TuningId { get; set; }
 
-		public Guid? tuningId { get; set; }
-
-		public int? offset { get; set; }
-
-		public int? span { get; set; }
+		public int? Offset { get; set; }
+		public int? Span { get; set; }
 
 		public virtual IOperationResult Validate()
 		{
-			if (baseId == null)
+			if (BaseId == null)
 			{
 				var cl = OperationResult.trimType(typeof(TBase));
 				return OperationResult.CreateFailure($"{cl}Id is required");
 			}
 
-			if (tuningId == null)
+			if (TuningId == null)
 			{
 				return OperationResult.CreateFailure("Tuning and TuningId cannot both be null");
 			}
 
-			offset = offset == null || offset < DefaultOffset ? 0 : offset;
-			span = span == null || span < 1 ? DefaultSpan : span;
+			Offset = Offset == null || Offset < _defaultOffset ? _defaultOffset : Offset;
+			Span = Span == null || Span < 1 ? _defaultSpan : Span;
 
 			return OperationResult.CreateSuccess();
 		}

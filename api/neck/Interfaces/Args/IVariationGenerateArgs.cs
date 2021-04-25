@@ -8,12 +8,12 @@ namespace neck.Interfaces.Args
 {
     interface IVariationGenerateArgs<TBase>
 	{
-		public Guid? baseId { get; set; }
+		public Guid? BaseId { get; set; }
 
-		public Guid? tuningId { get; set; }
+		public Guid? TuningId { get; set; }
 
-		public int? offset { get; set; }
+		public int? Offset { get; set; }
 
-		public int? span { get; set; }
+		public int? Span { get; set; }
 	}
 }

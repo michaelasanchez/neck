@@ -49,9 +49,9 @@ namespace neck.Controllers.DbEntity
 
 	public class QuickScaleArgs
 	{
-		public NoteValue value;
-		public NoteSuffix suffix;
-		public ScaleType type;
+		public NoteValue value { get; set; }
+		public NoteSuffix suffix { get; set; }
+		public ScaleType type { get; set; }
 	}
 
 }

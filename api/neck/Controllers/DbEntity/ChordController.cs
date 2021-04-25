@@ -3,14 +3,13 @@ using neck.Enums;
 using neck.Interfaces;
 using neck.Models.Entity;
 using neck.Models.Results;
-using neck.Repositories;
 using System;
 using System.Threading.Tasks;
 using static neck.Enums.ChordEnums;
 
 namespace neck.Controllers.DbEntity
 {
-    [ApiController]
+	[ApiController]
 	[Route("[controller]")]
 	public class ChordController : EntityController<Chord>
 	{
@@ -28,7 +27,7 @@ namespace neck.Controllers.DbEntity
 		[HttpPost("byvalues")]
 		public virtual async Task<ActionResult<Chord>> GetByValues(QuickChordArgs @params)
 		{
-			var note = new Note(@params.value, @params.suffix);
+			var note = new Note(@params.Value, @params.Suffix);
 
 			var noteResult = await _noteRepo.Value.Locate(note);
 			if (!noteResult.Success)
@@ -36,7 +35,7 @@ namespace neck.Controllers.DbEntity
 				return BadRequest(new Response<Note>(noteResult));
 			}
 
-			var chord = new Chord(noteResult.Result, @params.modifier);
+			var chord = new Chord(noteResult.Result, @params.Modifier);
 			var chordResult = await _chordRepo.Value.Locate(chord);
 
 			if (!chordResult.Success)
@@ -50,9 +49,9 @@ namespace neck.Controllers.DbEntity
 
 	public class QuickChordArgs
 	{
-		public NoteValue value;
-		public NoteSuffix suffix;
-		public ChordModifier modifier;
+		public NoteValue Value { get; set; }
+		public NoteSuffix Suffix { get; set; }
+		public ChordModifier Modifier { get; set; }
 	}
 
 }

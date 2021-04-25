@@ -10,7 +10,7 @@ namespace neck.Models.Entity
     public class Formation : DbEntity
     {
         // Position from string nut or open note
-        public List<int?> Positions;
+        public List<int?> Positions { get; set; }
 
         // List of frets that can be barred
         //	ints correspond to beginning string index, if any

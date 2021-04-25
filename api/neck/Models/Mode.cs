@@ -23,11 +23,11 @@ namespace neck.Models
          * 
          */
 
-        public string Label;
+        public string Label { get; set; }
 
-        public ModeType Type;
+        public ModeType Type { get; set; }
 
-        public List<Step> Steps;
+        public List<Step> Steps { get; set; }
 
         public Mode(ModeType type)
 		{

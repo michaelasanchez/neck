@@ -10,7 +10,7 @@ namespace neck.Controllers
 	public class EntityController<TEntity> : ControllerBase, IController<TEntity>
 		where TEntity : IDbEntity
 	{
-		protected IRepository<TEntity> _repository;
+		protected IRepository<TEntity> _repository { get; set; }
 
 		public EntityController(IRepository<TEntity> repository)
 		{

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using neck.Factories;
+using neck.Factories.Interfaces;
 using neck.Generators;
 using neck.Interfaces;
 using neck.Models;
@@ -19,7 +20,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace neck
 {
-    public class Startup
+	public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
@@ -64,11 +65,11 @@ namespace neck
 			services.AddScoped(typeof(IRepository<Tuning>), typeof(TuningRepository));
 
 			services.AddScoped(typeof(IKeyService), typeof(KeyService));
-			services.AddScoped(typeof(IVariationService<Chord, ChordVariation>), typeof(ChordVariationService));
-			services.AddScoped(typeof(IVariationService<Scale, ScaleVariation>), typeof(ScaleVariationService));
+			services.AddScoped(typeof(IChordVariationService), typeof(ChordVariationService));
+			services.AddScoped(typeof(IScaleVariationService), typeof(ScaleVariationService));
 
-			services.AddScoped(typeof(IVariationFactory<Chord, ChordVariation>), typeof(ChordVariationFactory));
-			services.AddScoped(typeof(IVariationFactory<Scale, ScaleVariation>), typeof(ScaleVariationFactory));
+			services.AddScoped(typeof(IChordVariationFactory), typeof(ChordVariationFactory));
+			services.AddScoped(typeof(IScaleVariationFactory), typeof(ScaleVariationFactory));
 
 			services.AddDbContext<NeckContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("NeckDatabase")));

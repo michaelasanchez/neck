@@ -66,8 +66,8 @@ namespace neck.Controllers.DbEntity
 
 	public class LocateKeyArgs
 	{
-		public KeyType Type;
-		public NoteValue Base;
-		public NoteSuffix Suffix;
+		public KeyType Type { get; set; }
+		public NoteValue Base { get; set; }
+		public NoteSuffix Suffix { get; set; }
 	}
 }

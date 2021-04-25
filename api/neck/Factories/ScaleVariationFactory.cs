@@ -1,5 +1,6 @@
 ﻿using neck.Enums;
-using neck.Interfaces;
+using neck.Factories.Interfaces;
+using neck.Factories.Options;
 using neck.Models;
 using neck.Models.Entity;
 using neck.Models.Entity.Variations;
@@ -8,32 +9,30 @@ using System.Linq;
 
 namespace neck.Factories
 {
-    public class ScaleVariationFactory : IVariationFactory<Scale, ScaleVariation>
+	public class ScaleVariationFactory : IScaleVariationFactory
 	{
 
 		public const bool ENFORCE_OCTAVE = false;
 
-		public List<ScaleVariation> GenerateVariations(Scale @base, Tuning tuning, int offset, int span)
+		public List<ScaleVariation> GenerateVariations(Scale scale, Tuning tuning, int fretOffset, int fretSpan, ScaleVariationGenerateOptions options)
 		{
-			Scale scale = @base;
+			var noteSpan = mapNoteSpan(scale, tuning, fretOffset, fretSpan);
+			var positions = generateDegreePositions(noteSpan, scale, fretOffset, fretSpan, new List<List<ScaleDegree?>>());
 
-			var noteSpan = mapNoteSpan(scale, tuning, offset, span);
-			var positions = generateDegreePositions(noteSpan, scale, offset, span, new List<List<ScaleDegree?>>());
-
-			var variations = positions.Select(p => new ScaleVariation(scale, tuning.Id, offset, p));
+			var variations = positions.Select(p => new ScaleVariation(scale, tuning.Id, fretOffset, p));
 			variations = adjustDegreePositions(variations);
 
 			return variations.ToList();
 		}
 
-		public List<ScaleVariation> GenerateRange(Scale @base, Tuning tuning, int start, int end, int fretSpan)
+		public List<ScaleVariation> GenerateRange(Scale scale, Tuning tuning, int fretOffset, int fretSpan, int fretRange, ScaleVariationGenerateOptions options)
 		{
 			var variations = new List<ScaleVariation>();
 			var variationStrings = new List<string>();
 
-			for (var i = start; i <= end - fretSpan + 1; i++)
+			for (var i = fretOffset; i <= fretRange - fretSpan + 1; i++)
 			{
-				var newVariations = GenerateVariations(@base, tuning, i, fretSpan);
+				var newVariations = GenerateVariations(scale, tuning, i, fretSpan, options);
 
 				for (var j = 0; j < newVariations.Count; j++)
 				{

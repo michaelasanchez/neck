@@ -1,4 +1,5 @@
-﻿using neck.Interfaces;
+﻿using neck.Factories.Interfaces;
+using neck.Factories.Options;
 using neck.Models;
 using neck.Models.Entity;
 using neck.Models.Entity.Variations;
@@ -7,22 +8,14 @@ using System.Linq;
 
 namespace neck.Generators
 {
-    public class ChordVariationFactory : IVariationFactory<Chord, ChordVariation>
+	public class ChordVariationFactory : IChordVariationFactory
 	{
-		private bool ENFORCE_CHORD_TONES = true;
-
-		private bool INSERT_OPEN_NOTES = true;
-		private bool INSERT_MUTED_NOTES = true;
-
-		private bool FILTER_INVERSIONS = true;
 		private bool FILTER_DUPLICATE_VARIATIONS = true;
 
 		private bool VARIATION_SPAN_INCLUDES_OPEN = false;
 
-		public List<ChordVariation> GenerateVariations(Chord @base, Tuning tuning, int fretOffset, int fretSpan)
+		public List<ChordVariation> GenerateVariations(Chord chord, Tuning tuning, int fretOffset, int fretSpan, ChordVariationGenerateOptions options)
 		{
-			var chord = @base;
-
 			if (fretOffset == 0 && VARIATION_SPAN_INCLUDES_OPEN == true) fretSpan++;
 
 			// Matches will contain a set of notes for each string (tuning offset)
@@ -40,12 +33,12 @@ namespace neck.Generators
 					if (noteCounts[i] == 0)
 					{
 						// Add open note if it fits in our chord
-						if (INSERT_OPEN_NOTES && containsNote(chord.Tones, tuning.Offsets[i]))
+						if (options.InsertOpen && containsNote(chord.Tones, tuning.Offsets[i]))
 						{
 							matches[i] = new List<Note> { tuning.Offsets[i].Copy() };
 							noteCounts[i] = 1;
 						}
-						else if (INSERT_MUTED_NOTES)
+						else if (options.InsertMuted)
 						{
 							noteCounts[i] = 1;
 						}
@@ -83,7 +76,7 @@ namespace neck.Generators
 
 				// TODO: decide what this is called or if this should require INSERT_MUTED_NOTES
 				// Remove variations that do not begin with root tone
-				if (FILTER_INVERSIONS)
+				if (options.FilterInversions)
 				{
 					for (int i = 0; i < notes.Count; i++)
 					{
@@ -107,7 +100,7 @@ namespace neck.Generators
 				}).ToList();
 
 				// Validate & add variation
-				if (!ENFORCE_CHORD_TONES || toneCheck.All(c => c == true))
+				if (!options.EnforceTones || toneCheck.All(c => c == true))
 				{
 					// Remove non-open, empty fret rows
 					var offset = positions.Select(z => z == 0 ? null : z).Min() ?? fretOffset;
@@ -119,13 +112,13 @@ namespace neck.Generators
 			return variations;
 		}
 
-		public List<ChordVariation> GenerateRange(Chord @base, Tuning tuning, int start, int end, int fretSpan)
+		public List<ChordVariation> GenerateRange(Chord chord, Tuning tuning, int fretOffset, int fretSpan, int fretRange, ChordVariationGenerateOptions options)
 		{
 			var variations = new List<ChordVariation>();
 
-			for (var i = start; i <= end - fretSpan + 1; i++)
+			for (var i = fretOffset; i <= fretRange - fretSpan + 1; i++)
 			{
-				var newVariations = GenerateVariations(@base, tuning, i, fretSpan);
+				var newVariations = GenerateVariations(chord, tuning, i, fretSpan, options);
 
 				for (var j = 0; j < newVariations.Count; j++)
 				{

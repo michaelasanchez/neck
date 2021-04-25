@@ -6,14 +6,14 @@ using System.Diagnostics;
 
 namespace neck.Models.Entity
 {
-    public class Note : DbEntity, ILabelled, IEquatable<Note>
+	public class Note : DbEntity, ILabelled, IEquatable<Note>
     {
-        public NoteValue Base;
+        public NoteValue Base { get; set; }
 
-        public NoteSuffix Suffix;
+        public NoteSuffix Suffix { get; set; }
 
         [NotMapped]
-        public int? Octave;
+        public int? Octave { get; set; }
 
         [NotMapped]
         public string Label => $"{Base}{SuffixSymbol(Suffix)}";
@@ -32,12 +32,12 @@ namespace neck.Models.Entity
         // The difference in pitch between two notes,
         //	one being the root note of a scale
         [NotMapped]
-        public Interval? Interval;
+        public Interval? Interval { get; set; }
 
         // Refers to the position of a particular note
         //	on a scale realtive to the tonic
         [NotMapped]
-        public ScaleDegree? Degree;
+        public ScaleDegree? Degree { get; set; }
 
         public Note() { }
 
