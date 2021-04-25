@@ -8,16 +8,11 @@ export interface ScaleVariationGenerateParams {
   tuningId?: string;
   offset?: number;
   span?: number;
-}
-
-export interface ScaleVariationGenerateRangeParams
-  extends ScaleVariationGenerateParams {
   range?: number;
 }
 
 enum ScaleVariationAction {
   Generate = 'generate',
-  GenerateRange = 'generaterange',
 }
 
 export class ScaleVariationApi extends ApiRequest<ScaleVariation> {
@@ -28,17 +23,9 @@ export class ScaleVariationApi extends ApiRequest<ScaleVariation> {
   Generate = (
     params: ScaleVariationGenerateParams
   ): Promise<BaseResponse<IGenerateResponseHeader<ScaleVariation>>> => {
-    return super.PostAsync(params, ScaleVariationAction.Generate) as Promise<
-      BaseResponse<IGenerateResponseHeader<ScaleVariation>>
-    >;
-  };
-
-  GenerateRange = (
-    params: ScaleVariationGenerateRangeParams
-  ): Promise<BaseResponse<IGenerateResponseHeader<ScaleVariation>>> => {
     return super.PostAsync(
       params,
-      ScaleVariationAction.GenerateRange
+      ScaleVariationAction.Generate
     ) as Promise<BaseResponse<IGenerateResponseHeader<ScaleVariation>>>;
   };
 }

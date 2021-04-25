@@ -43,15 +43,17 @@ interface IGenerateOptions {
 export interface GenerateOptions extends IGenerateOptions{
   enforceChord: boolean;
   filterInversions: boolean;
+  insertFirstOpen: boolean;
   insertOpen: boolean;
   insertMuted: boolean;
 }
 
 const DefaultGenerateOptions = {
-  enforceChord: false,
-  filterInversions: false,
-  insertOpen: false,
-  insertMuted: false,
+  enforceChord: true,
+  filterInversions: true,
+  insertFirstOpen: true,
+  insertOpen: true,
+  insertMuted: true,
 };
 
 

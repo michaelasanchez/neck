@@ -66,7 +66,7 @@ export const ScaleSlideIn: React.FC<IScaleSlideInProps> = (props) => {
   const [selected, setSelected] = useState<Note[]>();
 
   const { req: generateVariations, loading } = useRequest(
-    new ScaleVariationApi().GenerateRange
+    new ScaleVariationApi().Generate
   );
 
   useEffect(() => {
