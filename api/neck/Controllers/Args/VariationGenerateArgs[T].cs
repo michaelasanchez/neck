@@ -17,13 +17,14 @@ namespace neck.Controllers.Args
 
 		public int? Offset { get; set; }
 		public int? Span { get; set; }
+		public int? Range { get; set; }
 
 		public virtual IOperationResult Validate()
 		{
 			if (BaseId == null)
 			{
-				var cl = OperationResult.trimType(typeof(TBase));
-				return OperationResult.CreateFailure($"{cl}Id is required");
+				var className = OperationResult.trimType(typeof(TBase));
+				return OperationResult.CreateFailure($"{className}Id is required");
 			}
 
 			if (TuningId == null)
@@ -33,6 +34,8 @@ namespace neck.Controllers.Args
 
 			Offset = Offset == null || Offset < _defaultOffset ? _defaultOffset : Offset;
 			Span = Span == null || Span < 1 ? _defaultSpan : Span;
+
+			Range = Range.HasValue && Range < Span ? Span : Range;
 
 			return OperationResult.CreateSuccess();
 		}

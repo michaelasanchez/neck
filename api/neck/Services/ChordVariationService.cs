@@ -35,7 +35,7 @@ namespace neck.Services
 			return await _keyService.Search(new Args.KeySearchArgs(@base.Tones));
 		}
 
-		public async Task<OperationResult<GenerateResponseHeader<ChordVariation>>> Generate(Guid baseId, Guid tuningId, int offset, int span, ChordVariationGenerateOptions options)
+		public async Task<OperationResult<GenerateResponseHeader<ChordVariation>>> Generate(Guid baseId, Guid tuningId, int offset, int span, int range, ChordVariationGenerateOptions options)
 		{
 			var baseResult = await _baseRepo.GetById(baseId);
 			if (!baseResult.Success)
@@ -55,7 +55,7 @@ namespace neck.Services
 				return CreateFailure(keysResult);
 			}
 
-			var variations = _factory.GenerateVariations(baseResult.Result, tuningResult.Result, offset, span, options);
+			var variations = _factory.Generate(baseResult.Result, tuningResult.Result, offset, span, range, options);
 
 			return OperationResult<GenerateResponseHeader<ChordVariation>>.CreateSuccess(new GenerateResponseHeader<ChordVariation>()
 			{
@@ -64,41 +64,7 @@ namespace neck.Services
 				TuningId = tuningResult.Result.Id,
 				Offset = offset,
 				Span = span,
-				Keys = keysResult.Result,
-				Variations = variations
-			});
-		}
-
-		public async Task<OperationResult<GenerateResponseHeader<ChordVariation>>> GenerateRange(Guid baseId, Guid tuningId, int offset, int span, int range, ChordVariationGenerateOptions options)
-		{
-			var baseResult = await _baseRepo.GetById(baseId);
-			if (!baseResult.Success)
-			{
-				return CreateFailure(baseResult);
-			}
-
-			var tuningResult = await _tuningRepo.GetById(tuningId);
-			if (!tuningResult.Success)
-			{
-				return CreateFailure(tuningResult);
-			}
-
-			var keysResult = await GetKeys(baseResult.Result);
-			if (!keysResult.Success)
-			{
-				return CreateFailure(keysResult);
-			}
-			
-			var variations = _factory.GenerateRange(baseResult.Result, tuningResult.Result, offset, span, range, options);
-
-			return OperationResult<GenerateResponseHeader<ChordVariation>>.CreateSuccess(new GenerateResponseHeader<ChordVariation>()
-			{
-				BaseId = baseResult.Result.Id,
-				InstrumentId = tuningResult.Result.InstrumentId,
-				TuningId = tuningResult.Result.Id,
-				Offset = offset,
 				Range = range,
-				Span = span,
 				Keys = keysResult.Result,
 				Variations = variations
 			});

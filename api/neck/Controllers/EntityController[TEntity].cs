@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using neck.Controllers.Interfaces;
 using neck.Interfaces;
 using neck.Models.Results;
 using System;
@@ -30,7 +31,7 @@ namespace neck.Controllers
 		}
 
 		[HttpPost]
-		public virtual async Task<IActionResult> Create(TEntity entity)
+		public virtual async Task<ActionResult<TEntity>> Create(TEntity entity)
 		{
 			var createResult = await _repository.Create(entity);
 

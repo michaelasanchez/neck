@@ -7,8 +7,6 @@ namespace neck.Factories.Interfaces
 {
 	public interface IScaleVariationFactory
 	{
-		public List<ScaleVariation> GenerateVariations(Scale scale, Tuning tuning, int fretOffset, int fretSpan, ScaleVariationGenerateOptions options);
-
-		public List<ScaleVariation> GenerateRange(Scale scale, Tuning tuning, int fretOffset, int fretSpan, int fretRange, ScaleVariationGenerateOptions options);
+		public List<ScaleVariation> Generate(Scale scale, Tuning tuning, int fretOffset, int fretSpan, int fretRange, ScaleVariationGenerateOptions options);
 	}
 }

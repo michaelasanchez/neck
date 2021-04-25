@@ -11,28 +11,18 @@ namespace neck.Factories
 {
 	public class ScaleVariationFactory : IScaleVariationFactory
 	{
+		private ScaleVariationGenerateOptions _options { get; set; }
 
-		public const bool ENFORCE_OCTAVE = false;
-
-		public List<ScaleVariation> GenerateVariations(Scale scale, Tuning tuning, int fretOffset, int fretSpan, ScaleVariationGenerateOptions options)
+		public List<ScaleVariation> Generate(Scale scale, Tuning tuning, int fretOffset, int fretSpan, int fretRange, ScaleVariationGenerateOptions options)
 		{
-			var noteSpan = mapNoteSpan(scale, tuning, fretOffset, fretSpan);
-			var positions = generateDegreePositions(noteSpan, scale, fretOffset, fretSpan, new List<List<ScaleDegree?>>());
+			_options = options;
 
-			var variations = positions.Select(p => new ScaleVariation(scale, tuning.Id, fretOffset, p));
-			variations = adjustDegreePositions(variations);
-
-			return variations.ToList();
-		}
-
-		public List<ScaleVariation> GenerateRange(Scale scale, Tuning tuning, int fretOffset, int fretSpan, int fretRange, ScaleVariationGenerateOptions options)
-		{
 			var variations = new List<ScaleVariation>();
 			var variationStrings = new List<string>();
 
 			for (var i = fretOffset; i <= fretRange - fretSpan + 1; i++)
 			{
-				var newVariations = GenerateVariations(scale, tuning, i, fretSpan, options);
+				var newVariations = generateSpan(scale, tuning, i, fretSpan);
 
 				for (var j = 0; j < newVariations.Count; j++)
 				{
@@ -54,6 +44,17 @@ namespace neck.Factories
 		//  0     1     2     3     4     5     6     7     8     9     10    11 
 
 		#region Private Methods
+
+		private List<ScaleVariation> generateSpan(Scale scale, Tuning tuning, int fretOffset, int fretSpan)
+		{
+			var noteSpan = mapNoteSpan(scale, tuning, fretOffset, fretSpan);
+			var positions = generateDegreePositions(noteSpan, scale, fretOffset, fretSpan, new List<List<ScaleDegree?>>());
+
+			var variations = positions.Select(p => new ScaleVariation(scale, tuning.Id, fretOffset, p));
+			variations = adjustDegreePositions(variations);
+
+			return variations.ToList();
+		}
 
 		private string variationString(ScaleVariation variation)
 		{
@@ -121,7 +122,7 @@ namespace neck.Factories
 					// Validate next note
 					var note = noteSpan[o][p];
 					if (note != null && (prevNote == null ||
-						(note.Degree == calcNextDegree(scale, prevNote) && (ENFORCE_OCTAVE == false || note.Octave == calcNextOctave(scale, prevNote)))))
+						(note.Degree == calcNextDegree(scale, prevNote) && (_options.EnforceOctave == false || note.Octave == calcNextOctave(scale, prevNote)))))
 					{
 						prevNote = note;
 						currentDegree = note.Degree;
@@ -135,7 +136,7 @@ namespace neck.Factories
 						// First note on next string
 						if (o < noteSpan.Count - 1)
 						{
-							var nextStringIndex = noteSpan[o + 1].FindIndex(n => n != null && n.Degree == nextDegree && (ENFORCE_OCTAVE == false || n.Octave == nextOctave));
+							var nextStringIndex = noteSpan[o + 1].FindIndex(n => n != null && n.Degree == nextDegree && (_options.EnforceOctave == false || n.Octave == nextOctave));
 							if (nextStringIndex > -1)
 							{
 								var currentDup = currentDegrees.Select(d => d).ToList();

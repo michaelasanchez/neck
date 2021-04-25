@@ -7,12 +7,15 @@ namespace neck.Controllers.Args
 	{
 		private static bool _defaultEnforceTones = true;
 		private static bool _defaultFilterInversions = true;
+		private static bool _defaultInsertFirstOpen = true;
 		private static bool _defaultInsertOpen = true;
 		private static bool _defaultInsertMuted = true;
 
 		public bool? EnforceTones { get; set; }
 
 		public bool? FilterInversions { get; set; }
+
+		public bool? InsertFirstOpen { get; set; }
 
 		public bool? InsertOpen { get; set; }
 
@@ -22,6 +25,7 @@ namespace neck.Controllers.Args
 		{
 			EnforceTones = EnforceTones == null ? _defaultEnforceTones : EnforceTones;
 			FilterInversions = FilterInversions == null ? _defaultFilterInversions : FilterInversions;
+			InsertFirstOpen = InsertFirstOpen == null ? _defaultInsertOpen : InsertFirstOpen;
 			InsertOpen = InsertOpen == null ? _defaultInsertOpen : InsertOpen;
 			InsertMuted = InsertMuted == null ? _defaultInsertMuted : InsertMuted;
 

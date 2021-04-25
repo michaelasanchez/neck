@@ -35,7 +35,7 @@ namespace neck.Services
 			return await _keyService.Search(new Args.KeySearchArgs(@base.Notes));
 		}
 
-		public async Task<OperationResult<GenerateResponseHeader<ScaleVariation>>> Generate(Guid baseId, Guid tuningId, int offset, int span, ScaleVariationGenerateOptions options)
+		public async Task<OperationResult<GenerateResponseHeader<ScaleVariation>>> Generate(Guid baseId, Guid tuningId, int offset, int span, int range, ScaleVariationGenerateOptions options)
 		{
 			var baseResult = await _baseRepo.GetById(baseId);
 			if (!baseResult.Success)
@@ -55,7 +55,7 @@ namespace neck.Services
 				return CreateFailure(keysResult);
 			}
 
-			var variations = _factory.GenerateVariations(baseResult.Result, tuningResult.Result, offset, span, options);
+			var variations = _factory.Generate(baseResult.Result, tuningResult.Result, offset, span, range, options);
 
 			return OperationResult<GenerateResponseHeader<ScaleVariation>>.CreateSuccess(new GenerateResponseHeader<ScaleVariation>()
 			{
@@ -64,40 +64,7 @@ namespace neck.Services
 				TuningId = tuningResult.Result.Id,
 				Offset = offset,
 				Span = span,
-				Keys = keysResult.Result,
-				Variations = variations
-			});
-		}
-
-		public async Task<OperationResult<GenerateResponseHeader<ScaleVariation>>> GenerateRange(Guid baseId, Guid tuningId, int offset, int span, int range, ScaleVariationGenerateOptions options)
-		{
-			var baseResult = await _baseRepo.GetById(baseId);
-			if (!baseResult.Success)
-			{
-				return CreateFailure(baseResult);
-			}
-
-			var tuningResult = await _tuningRepo.GetById(tuningId);
-			if (!tuningResult.Success)
-			{
-				return CreateFailure(tuningResult);
-			}
-
-			var keysResult = await GetKeys(baseResult.Result);
-			if (!keysResult.Success)
-			{
-				return CreateFailure(keysResult);
-			}
-
-			var variations = _factory.GenerateRange(baseResult.Result, tuningResult.Result, offset, span, range, options);
-
-			return OperationResult<GenerateResponseHeader<ScaleVariation>>.CreateSuccess(new GenerateResponseHeader<ScaleVariation>()
-			{
-				BaseId = baseResult.Result.Id,
-				InstrumentId = tuningResult.Result.InstrumentId,
-				TuningId = tuningResult.Result.Id,
-				Offset = offset,
-				Span = span,
+				Range = range,
 				Keys = keysResult.Result,
 				Variations = variations
 			});

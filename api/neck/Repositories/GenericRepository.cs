@@ -21,8 +21,8 @@ namespace neck.Repositories
 
 		protected static string DefaultFailureMessage = "Operation failed";
 
-		protected static string OldDefaultSuccessMessage = $"{TrimType(typeof(TEntity))} found";
-		protected static string OldDefaultFailureMessage = $"Could not find {TrimType(typeof(TEntity))}";
+		protected string OldDefaultSuccessMessage => $"{TrimType(typeof(TEntity))} found";
+		protected string OldDefaultFailureMessage => $"Could not find {TrimType(typeof(TEntity))}";
 
 		static Func<Type, string> TrimType = (Type type) => OperationResult.trimType(type);
 

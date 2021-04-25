@@ -33,7 +33,7 @@ namespace neck.Controllers.DbEntity
 		}
 
 		[HttpPost("Generate")]
-		public async Task<ActionResult<GenerateResponseHeader<ChordVariation>>> Generate([FromBody] VariationGenerateArgs<Chord> args)
+		public async Task<ActionResult<GenerateResponseHeader<ChordVariation>>> Generate([FromBody] ChordVariationGenerateArgs args)
 		{
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
@@ -43,7 +43,18 @@ namespace neck.Controllers.DbEntity
 
 			try
 			{
-				var variationsResult = await _service.Generate(args.BaseId.Value, args.TuningId.Value, (int)args.Offset, (int)args.Span, options);
+				// TODO: setup AutoMapper
+				var options = new ChordVariationGenerateOptions
+				{
+					EnforceTones = args.EnforceTones.Value,
+					FilterInversions = args.FilterInversions.Value,
+					InsertFirstOpen = args.InsertFirstOpen.Value,
+					InsertMuted = args.InsertMuted.Value,
+					InsertOpen = args.InsertOpen.Value
+				};
+
+				// TODO NOW: this needs a validator to pass options without nullable types
+				var variationsResult = await _service.Generate(args.BaseId.Value, args.TuningId.Value, (int)args.Offset, (int)args.Span, (int)args.Range, options);
 
 				if (!variationsResult.Success)
 				{
@@ -55,32 +66,6 @@ namespace neck.Controllers.DbEntity
 			catch (Exception ex)
 			{
 				return BadRequest(new Response($"An error occurred while generation variations:\n\n{ex.Message}"));
-			}
-		}
-
-		[HttpPost("GenerateRange")]
-		public async Task<ActionResult<GenerateResponseHeader<ChordVariation>>> GenerateRange([FromBody] VariationGenerateRangeArgs<Chord> args)
-		{
-			var validateResult = args.Validate();
-			if (!validateResult.Success)
-			{
-				return BadRequest(new Response(validateResult));
-			}
-
-			try
-			{
-				var variationsResult = await _service.GenerateRange(args.BaseId.Value, args.TuningId.Value, (int)args.Offset, (int)args.Span, (int)args.range, options);
-
-				if (!variationsResult.Success)
-				{
-					return BadRequest(new Response(variationsResult));
-				}
-
-				return Ok(variationsResult.Result);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(new Response($"An error occured while generating variations:\n\n{ex.Message}"));
 			}
 		}
 	}

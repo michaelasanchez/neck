@@ -35,7 +35,7 @@ namespace neck.Controllers.DbEntity
 		}
 
 		[HttpPost("Generate")]
-		public async Task<ActionResult<GenerateResponseHeader<ScaleVariation>>> Generate([FromBody] VariationGenerateArgs<Scale> args, [FromBody] ScaleVariationGenerateOptions options)
+		public async Task<ActionResult<GenerateResponseHeader<ScaleVariation>>> Generate([FromBody] ScaleVariationGenerateArgs args)
 		{
 			var validateResult = args.Validate();
 			if (!validateResult.Success)
@@ -45,7 +45,13 @@ namespace neck.Controllers.DbEntity
 
 			try
 			{
-				var variationsResult = await _service.Generate(args.BaseId.Value, args.TuningId.Value, (int)args.Offset, (int)args.Span, options);
+				var options = new ScaleVariationGenerateOptions
+				{
+					EnforceOctave = args.EnforceOctave.Value,
+				};
+
+				// TODO NOW: same comment
+				var variationsResult = await _service.Generate(args.BaseId.Value, args.TuningId.Value, (int)args.Offset, (int)args.Span, (int)args.Range, options);
 
 				if (!variationsResult.Success)
 				{
@@ -57,32 +63,6 @@ namespace neck.Controllers.DbEntity
 			catch (Exception ex)
 			{
 				return BadRequest(new Response($"An error occurred while generation variations:\n\n{ex.Message}"));
-			}
-		}
-
-		[HttpPost("GenerateRange")]
-		public async Task<ActionResult<GenerateResponseHeader<ScaleVariation>>> GenerateRange([FromBody] VariationGenerateRangeArgs<Scale> args, [FromBody] ScaleVariationGenerateOptions options)
-		{
-			var validateResult = args.Validate();
-			if (!validateResult.Success)
-			{
-				return BadRequest(new Response(validateResult));
-			}
-
-			try
-			{
-				var variationsResult = await _service.GenerateRange(args.BaseId.Value, args.TuningId.Value, (int)args.Offset, (int)args.Span, (int)args.range, options);
-
-				if (!variationsResult.Success)
-				{
-					return BadRequest(new Response(variationsResult));
-				}
-
-				return Ok(variationsResult.Result);
-			}
-			catch (Exception ex)
-			{
-				return BadRequest(new Response($"An error occured while generating variations:\n\n{ex.Message}"));
 			}
 		}
 	}
