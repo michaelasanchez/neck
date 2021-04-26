@@ -36,26 +36,6 @@ const validateAppOptions = (appOptions: AppOptions): IError => {
   return null;
 };
 
-interface IGenerateOptions {
-  [key: string]: boolean;
-}
-
-export interface GenerateOptions extends IGenerateOptions{
-  enforceChord: boolean;
-  filterInversions: boolean;
-  insertFirstOpen: boolean;
-  insertOpen: boolean;
-  insertMuted: boolean;
-}
-
-const DefaultGenerateOptions = {
-  enforceChord: true,
-  filterInversions: true,
-  insertFirstOpen: true,
-  insertOpen: true,
-  insertMuted: true,
-};
-
 
 const loadKey = (keyId?: string): Promise<Key> => {
   if (!!keyId) {
@@ -118,10 +98,6 @@ export const useAppOptions = () => {
   const { loading: cookieLoading, cookie, setCookie } = useNeckCookie();
 
   const [appOptions, setAppOptions] = useState<AppOptions>();
-
-  const [generateOptions, setGenerateOptions] = useState<GenerateOptions>(
-    DefaultGenerateOptions
-  );
 
   const [loading, setLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<IError[]>();
@@ -248,5 +224,5 @@ export const useAppOptions = () => {
     }
   };
 
-  return { appOptions, setAppOptions: handleSetAppOptions, generateOptions, setGenerateOptions, errors, loading };
+  return { appOptions, setAppOptions: handleSetAppOptions, errors, loading };
 };

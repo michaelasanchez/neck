@@ -9,6 +9,8 @@ export interface ScaleVariationGenerateParams {
   offset?: number;
   span?: number;
   range?: number;
+
+  enforceOctave?: boolean;
 }
 
 enum ScaleVariationAction {

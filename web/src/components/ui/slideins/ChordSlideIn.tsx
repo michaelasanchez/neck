@@ -1,6 +1,6 @@
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { filter, map } from 'lodash';
+import { filter, isEqual, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
@@ -61,48 +61,80 @@ const getOptionsLabel = (key: string) => {
   }
 };
 
+interface IGenerateOptions {
+  [key: string]: boolean;
+}
+
+export interface GenerateOptions extends IGenerateOptions {
+  enforceChord: boolean;
+  filterInversions: boolean;
+  insertFirstOpen: boolean;
+  insertOpen: boolean;
+  insertMuted: boolean;
+}
+
+const DefaultGenerateOptions = {
+  enforceChord: true,
+  filterInversions: true,
+  insertFirstOpen: false,
+  insertOpen: true,
+  insertMuted: true,
+};
+
 export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
-  const {
-    appOptions,
-    setAppOptions,
-    generateOptions,
-    setGenerateOptions,
-  } = useAppOptionsContext();
+  const { appOptions, setAppOptions } = useAppOptionsContext();
   const { setChordVariation } = useIndicatorsContext();
 
   // Props
   const { collapse } = props;
   const { chord, instrument, tuning } = appOptions;
 
-  // State
+  // Variation
   const [header, setHeader] = useState<
     IGenerateResponseHeader<ChordVariation>
   >();
+
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [variations, setVariations] = useState<ChordVariation[]>();
 
+  // Note Selection
   const [selected, setSelected] = useState<Note[]>();
 
+  // Options
   const [showOptions, setShowOptions] = useState<boolean>(true);
+
+  const [generateOptions, setGenerateOptions] = useState<GenerateOptions>(
+    DefaultGenerateOptions
+  );
+  const [pendingOptions, setPendingOptions] = useState<GenerateOptions>();
 
   const { req: generateVariations, loading } = useRequest(
     new ChordVariationApi().Generate
   );
 
+  // TODO: Options should really be returned on the header so we can check against them for changes
+  // until then I'm just going to put a flag here
+  const [optionsUpdateFlag, setOptionsUpdateFlag] = useState<boolean>(false);
+
   // Generate
   useEffect(() => {
     if (
-      !!chord &&
-      !collapse &&
-      !loading &&
-      !!tuning &&
-      (!variations ||
-        header?.BaseId != chord.Id ||
-        header?.TuningId != tuning.Id ||
-        header?.Range != instrument.NumFrets ||
-        (!!header.Tuning &&
-          !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets)))
+      optionsUpdateFlag ||
+      (!!chord &&
+        !collapse &&
+        !loading &&
+        !!tuning &&
+        (!variations ||
+          header?.BaseId != chord.Id ||
+          header?.TuningId != tuning.Id ||
+          header?.Range != instrument.NumFrets ||
+          (!!header.Tuning &&
+            !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets))))
     ) {
+      if (!!optionsUpdateFlag) {
+        setOptionsUpdateFlag(false);
+      }
+      console.log('golfing', optionsUpdateFlag);
       // Handle new instrument
       if (tuning.Offsets.length === 0) {
         setSelected([]);
@@ -112,8 +144,6 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
         generateVariations({
           baseId: chord.Id,
           tuningId: tuning.Id,
-          // offset: 8,
-          // span: 9,
           range: instrument.NumFrets,
           ...generateOptions,
         }).then((newHeader: IGenerateResponseHeader<ChordVariation>) => {
@@ -137,14 +167,21 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     tuning,
     tuning?.Offsets,
     collapse,
-    generateOptions,
+    optionsUpdateFlag,
   ]);
 
+  // Handle current variation update
   useEffect(() => {
     if (variations?.length) {
       handleSetChordVariation(variations[0], 0);
     }
   }, [variations]);
+
+  useEffect(() => {
+    if (!!showOptions) {
+      setPendingOptions({ ...generateOptions });
+    }
+  }, [showOptions]);
 
   // Header Badge Actions
   const handleRootUpdate = (root: Note) => handleChordUpdate(root);
@@ -183,6 +220,11 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     setCurrentIndex(index);
   };
 
+  const handleSetGenerateOptions = (options: GenerateOptions) => {
+    setGenerateOptions({ ...options });
+    setOptionsUpdateFlag(true);
+  };
+
   /* Title */
   const renderTitle = (
     <>
@@ -205,44 +247,52 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   );
 
   /* Options */
-  const renderOptions = (
-    <div className="options">
-      <Collapse in={showOptions}>
-        <div>
-          <div className="options-container">
-            <h5>Options</h5>
-            <Form>
-              {map(
-                generateOptions,
-                (optionValue: boolean, optionKey: string) => {
-                  return (
-                    <Form.Group
-                      key={optionKey}
-                      onClick={() => {
-                        generateOptions[optionKey] = !optionValue;
-                        setGenerateOptions({ ...generateOptions });
-                      }}
-                    >
-                      <Form.Check
-                        type="checkbox"
-                        custom
-                        label={getOptionsLabel(optionKey)}
-                        checked={optionValue}
-                        onChange={() => {}}
-                      />
-                    </Form.Group>
-                  );
-                }
-              )}
-            </Form>
-            <Button size="sm" variant={'success'}>
-              Update
-            </Button>
+  const renderOptions = () => {
+    const hasPendingChanges = !isEqual(generateOptions, pendingOptions);
+    return (
+      <div className="options">
+        <Collapse in={showOptions}>
+          <div>
+            <div className="options-container">
+              <h5>Options</h5>
+              <Form>
+                {map(
+                  pendingOptions,
+                  (optionValue: boolean, optionKey: string) => {
+                    return (
+                      <Form.Group
+                        key={optionKey}
+                        onClick={() => {
+                          pendingOptions[optionKey] = !optionValue;
+                          setPendingOptions({ ...pendingOptions });
+                        }}
+                      >
+                        <Form.Check
+                          type="checkbox"
+                          custom
+                          label={getOptionsLabel(optionKey)}
+                          checked={optionValue}
+                          onChange={() => {}}
+                        />
+                      </Form.Group>
+                    );
+                  }
+                )}
+              </Form>
+              <Button
+                size="sm"
+                disabled={!hasPendingChanges}
+                variant={hasPendingChanges ? 'success' : 'outline-success'}
+                onClick={() => handleSetGenerateOptions(pendingOptions)}
+              >
+                Update
+              </Button>
+            </div>
           </div>
-        </div>
-      </Collapse>
-    </div>
-  );
+        </Collapse>
+      </div>
+    );
+  };
 
   /* Variations */
   const renderVariations = useCallback(() => {
@@ -298,7 +348,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       ]}
       loading={variations == null}
     >
-      {renderOptions}
+      {renderOptions()}
       <div className="variations">{renderVariations()}</div>
     </DropdownSlideIn>
   );

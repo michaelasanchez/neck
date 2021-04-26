@@ -88,6 +88,7 @@ namespace neck.Generators
 			var variations = new List<ChordVariation>();
 			for (var v = 0; v < numVariations; v++)
 			{
+				var excludeFlag = false;
 
 				var multiplier = 1;
 				var notes = noteCounts.Select((count, countIndex) =>
@@ -110,10 +111,18 @@ namespace neck.Generators
 				// Remove variations that do not begin with root tone
 				if (_options.FilterInversions)
 				{
-					for (int i = 0; i < notes.Count; i++)
+					if (_options.InsertMuted)
 					{
-						if (notes[i] != null && notes[i].Base == chord.Root.Base) break;
-						notes[i] = null;
+						for (int i = 0; i < notes.Count; i++)
+						{
+							if (notes[i] != null && notes[i].Base == chord.Root.Base) break;
+							notes[i] = null;
+						}
+					}
+					else
+					{
+						// TODO: there is probably a better way to do this
+						excludeFlag = true;
 					}
 				}
 
@@ -132,7 +141,7 @@ namespace neck.Generators
 				}).ToList();
 
 				// Validate & add variation
-				if (!_options.EnforceTones || toneCheck.All(c => c == true))
+				if (!excludeFlag && (!_options.EnforceTones || toneCheck.All(c => c == true)))
 				{
 					// Remove non-open, empty fret rows
 					var offset = positions.Select(z => z == 0 ? null : z).Min() ?? fretOffset;
