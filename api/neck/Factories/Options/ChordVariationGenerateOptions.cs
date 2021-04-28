@@ -8,9 +8,9 @@ namespace neck.Factories.Options
 
 		public bool FilterInversions { get; set; }
 
-		public bool InsertFirstOpen { get; set; }
-
 		public bool InsertOpen { get; set; }
+
+		public bool InsertFirstMuted { get; set; }
 
 		public bool InsertMuted { get; set; }
 	}

@@ -177,12 +177,24 @@ $opacity-out: 0;
         align-self: flex-end;
       }
 
-      > form {
+      h5 + .form-group {
+        display: flex;
+        align-items: baseline;
+        width: 200px;
+
+        input {
+          margin-left: 0.5em;
+          width: 80px;
+        }
+      }
+
+      .option-checks {
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
 
-        height: $option-height * 3;
+        // TODO: static - based on # options
+        height: $option-height * 2;
         margin-bottom: 0.5rem;
 
         > .form-group {
@@ -222,7 +234,7 @@ $opacity-out: 0;
 
       svg {
         color: var(--gray);
-        margin-top: 8px; // magic
+        margin-top: 8px;
 
         cursor: pointer;
 

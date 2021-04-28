@@ -58,30 +58,30 @@ namespace neck.Generators
 			var noteCounts = matches.Select(m => m.Count()).ToList();
 
 			// Attempt to fill spans with no note matches
-			if (noteCounts.Where(m => m == 0).Count() > 0)
+			if (noteCounts.Where(count => count == 0).Count() > 0)
 			{
-				for (var i = 0; i < noteCounts.Count; i++)
+				for (var s = 0; s < noteCounts.Count; s++)
 				{
-					if (noteCounts[i] == 0)
+					if (noteCounts[s] == 0)
 					{
 						// Add open note if it fits in our chord
-						if (_options.InsertOpen && containsNote(chord.Tones, tuning.Offsets[i]))
+						if (_options.InsertOpen && containsNote(chord.Tones, tuning.Offsets[s]))
 						{
-							matches[i] = new List<Note> { tuning.Offsets[i].Copy() };
-							noteCounts[i] = 1;
+							matches[s] = new List<Note> { tuning.Offsets[s].Copy() };
+							noteCounts[s] = 1;
 						}
 						else if (_options.InsertMuted)
 						{
-							noteCounts[i] = 1;
+							noteCounts[s] = 1;
 						}
 
 						// Need this for open & forced mutes
-						noteCounts[i] = 1;
+						//noteCounts[i] = 1;
 					}
 				}
 			}
 
-			//
+			// 
 			var numVariations = noteCounts.Aggregate((acc, count) => acc * count);
 
 			// Calculate variations
@@ -107,28 +107,22 @@ namespace neck.Generators
 					return note;
 				}).ToList();
 
-				// TODO: decide what this is called or if this should require INSERT_MUTED_NOTES
-				// Remove variations that do not begin with root tone
-				if (_options.FilterInversions)
-				{
-					if (_options.InsertMuted)
-					{
-						for (int i = 0; i < notes.Count; i++)
-						{
-							if (notes[i] != null && notes[i].Base == chord.Root.Base) break;
-							notes[i] = null;
-						}
-					}
-					else
-					{
-						// TODO: there is probably a better way to do this
-						excludeFlag = true;
-					}
-				}
+                // TODO: This is actually making the chord begin iwht lblabh blah blah
+                if (_options.FilterInversions)
+                {
+                    if (_options.InsertMuted)
+                    {
+                        for (int i = 0; i < notes.Count; i++)
+                        {
+                            if (notes[i] != null && notes[i].Base == chord.Root.Base) break;
+                            notes[i] = null;
+                        }
+                    }
+                }
 
-				// Ensure notes contain all chord tones &
-				//	map to positions
-				var toneCheck = chord.Tones.Select(n => false).ToList();
+                // Ensure notes contain all chord tones &
+                //	map to positions
+                var toneCheck = chord.Tones.Select(n => false).ToList();
 				var positions = notes.Select((n, i) =>
 				{
 					if (n != null)
@@ -141,7 +135,7 @@ namespace neck.Generators
 				}).ToList();
 
 				// Validate & add variation
-				if (!excludeFlag && (!_options.EnforceTones || toneCheck.All(c => c == true)))
+				if ((!_options.EnforceTones || toneCheck.All(c => c == true)))
 				{
 					// Remove non-open, empty fret rows
 					var offset = positions.Select(z => z == 0 ? null : z).Min() ?? fretOffset;

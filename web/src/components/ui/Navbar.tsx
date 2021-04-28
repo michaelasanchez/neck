@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Button, Dropdown, DropdownButton, SplitButton } from 'react-bootstrap';
 import { useAppOptionsContext } from '../..';
 import { Key } from '../../models';
-import { Keys } from '../../shared';
 import { IndicatorsMode } from './indicators/Indicators';
 import { KeySelector } from './slideins';
 
@@ -102,8 +101,8 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
           </SplitButton>
 
           {/* <span className="key-label"> */}
-            {/* <span className="text-muted">in the</span> */}
-            {/* Key of
+          {/* <span className="text-muted">in the</span> */}
+          {/* Key of
           </span> */}
 
           <DropdownButton

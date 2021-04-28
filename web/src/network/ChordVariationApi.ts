@@ -12,7 +12,7 @@ export interface ChordVariationGenerateParams {
 
   enforceTones?: boolean;
   filterInversions?: boolean;
-  insertFirstOpen?: boolean;
+  insertFirstMuted?: boolean;
   insertOpen?: boolean;
   insertMuted?: boolean;
 }

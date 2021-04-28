@@ -48,7 +48,7 @@ namespace neck.Controllers.DbEntity
 				{
 					EnforceTones = args.EnforceTones.Value,
 					FilterInversions = args.FilterInversions.Value,
-					InsertFirstOpen = args.InsertFirstOpen.Value,
+					InsertFirstMuted = args.InsertFirstMuted.Value,
 					InsertMuted = args.InsertMuted.Value,
 					InsertOpen = args.InsertOpen.Value
 				};

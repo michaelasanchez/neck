@@ -49,11 +49,11 @@ const getOptionsLabel = (key: string) => {
     case 'enforceChord':
       return 'Enforce chord tones';
     case 'filterInversions':
-      return 'Filter inversions';
-    case 'insertFirstOpen':
-      return 'Insert first open';
+      return 'Require root base';
     case 'insertOpen':
       return 'Insert open';
+    case 'insertFirstMuted':
+      return 'Insert first muted';
     case 'insertMuted':
       return 'Insert muted';
     default:
@@ -62,21 +62,23 @@ const getOptionsLabel = (key: string) => {
 };
 
 interface IGenerateOptions {
-  [key: string]: boolean;
+  [key: string]: boolean | number;
 }
 
 export interface GenerateOptions extends IGenerateOptions {
+  span: number;
   enforceChord: boolean;
   filterInversions: boolean;
-  insertFirstOpen: boolean;
+  // insertFirstMuted: boolean;
   insertOpen: boolean;
   insertMuted: boolean;
 }
 
 const DefaultGenerateOptions = {
+  span: 5,
   enforceChord: true,
   filterInversions: true,
-  insertFirstOpen: false,
+  // insertFirstMuted: false,
   insertOpen: true,
   insertMuted: true,
 };
@@ -134,7 +136,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
       if (!!optionsUpdateFlag) {
         setOptionsUpdateFlag(false);
       }
-      console.log('golfing', optionsUpdateFlag);
+
       // Handle new instrument
       if (tuning.Offsets.length === 0) {
         setSelected([]);
@@ -225,6 +227,12 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
     setOptionsUpdateFlag(true);
   };
 
+  const handleSetPendingOptions = (options: Partial<GenerateOptions>) => {
+    if (!options.span || options.span >= 1) {
+      setPendingOptions({ ...pendingOptions, ...options });
+    }
+  };
+
   /* Title */
   const renderTitle = (
     <>
@@ -255,30 +263,44 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
           <div>
             <div className="options-container">
               <h5>Options</h5>
-              <Form>
+              <Form.Group>
+                <Form.Label>Max Frets</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={pendingOptions?.span}
+                  onChange={(e: any) =>
+                    handleSetPendingOptions({
+                      span: parseInt(e.target.value),
+                    })
+                  }
+                />
+              </Form.Group>
+              <div className="option-checks">
                 {map(
                   pendingOptions,
                   (optionValue: boolean, optionKey: string) => {
-                    return (
-                      <Form.Group
-                        key={optionKey}
-                        onClick={() => {
-                          pendingOptions[optionKey] = !optionValue;
-                          setPendingOptions({ ...pendingOptions });
-                        }}
-                      >
-                        <Form.Check
-                          type="checkbox"
-                          custom
-                          label={getOptionsLabel(optionKey)}
-                          checked={optionValue}
-                          onChange={() => {}}
-                        />
-                      </Form.Group>
-                    );
+                    if (optionKey != 'span') {
+                      return (
+                        <Form.Group
+                          key={optionKey}
+                          onClick={() => {
+                            pendingOptions[optionKey] = !optionValue;
+                            setPendingOptions({ ...pendingOptions });
+                          }}
+                        >
+                          <Form.Check
+                            type="checkbox"
+                            custom
+                            label={getOptionsLabel(optionKey)}
+                            checked={optionValue}
+                            onChange={() => {}}
+                          />
+                        </Form.Group>
+                      );
+                    }
                   }
                 )}
-              </Form>
+              </div>
               <Button
                 size="sm"
                 disabled={!hasPendingChanges}
