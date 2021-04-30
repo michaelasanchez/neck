@@ -1,12 +1,15 @@
 import { reduce, times } from 'lodash';
 import { CSSProperties, useEffect, useState } from 'react';
 import { useAppOptionsContext } from '..';
+import { Instrument } from '../models';
 
-const mobileHMargin = 60; // Used for fret number width
+const mobileHMargin = 40; // Used for fret number width
 const mobileVMargin = 100;
 
 const fretHeight = 100;
 const fretWidth = 66;
+
+const fretNumberWidth = 60;
 
 export interface IStyles {
   neck: CSSProperties;
@@ -22,17 +25,12 @@ export interface IStyles {
   shadow: CSSProperties;
 }
 
-// const mobile = window && window.matchMedia
-//   ? window.matchMedia("(max-width: 768px)")
-//   : {} as MediaQueryList;
-// function getNumbersWidth(x: MediaQueryList) {
-//   return x.matches ? FRET_NUMBERS_WIDTH_MOBILE : FRET_NUMBERS_WIDTH_DESKTOP;
-// }
+const getWidth = () =>
+  window.innerWidth ||
+  document.documentElement.clientWidth ||
+  document.body.clientWidth;
 
-export const useStyles = () => {
-  const { appOptions } = useAppOptionsContext();
-  const { instrument } = appOptions;
-
+const calcStyles = (instrument: Instrument, mobile: boolean) => {
   const fretHeights = times(instrument.NumFrets, (f) => fretHeight - f);
 
   const neckHeight =
@@ -44,54 +42,77 @@ export const useStyles = () => {
       0
     );
 
+  const neckHMargin = mobile ? mobileHMargin : fretNumberWidth;
+
   const neckWidth = instrument.NumStrings * fretWidth;
-  const neckMaxWidth = `calc(100% - ${mobileHMargin * 2}px)`;
+  const neckMaxWidth = `calc(100% - ${neckHMargin * 2}px)`;
+
+  return {
+    neck: {
+      width: neckWidth,
+      maxWidth: neckMaxWidth,
+    },
+    indicators: {
+      width: neckWidth,
+      maxWidth: neckMaxWidth,
+    },
+    frets: fretHeights,
+    fretMarkers: {
+      margin: `0 ${neckHMargin}px`,
+      width: neckWidth,
+      maxWidth: neckMaxWidth,
+    },
+    fretNumbers: {
+      maxWidth: neckWidth + neckHMargin * 2,
+    },
+    fretNumberGroup: {
+      width: neckHMargin,
+    },
+    shadow: {
+      height: neckHeight,
+      width: neckWidth,
+      maxWidth: neckMaxWidth,
+    },
+    overlay: {
+      height: neckHeight + mobileVMargin * 2,
+      width: neckWidth,
+      maxWidth: neckMaxWidth,
+    },
+    fretboard: {
+      height: neckHeight + mobileVMargin * 2,
+      width: neckWidth,
+      maxWidth: neckMaxWidth,
+    },
+  };
+};
+
+const MOBILE_WIDTH = 576;
+
+const getMobile = () => getWidth() <= MOBILE_WIDTH;
+
+export const useStyles = () => {
+  const { appOptions } = useAppOptionsContext();
+  const { instrument } = appOptions;
+
+  const [mobile, setMobile] = useState<boolean>(getMobile());
+  const [styles, setStyles] = useState<IStyles>(
+    calcStyles(instrument, getMobile())
+  );
 
   useEffect(() => {
-    setStyles(calcStyles());
-  }, [appOptions]);
-
-  const calcStyles = () => {
-    return {
-      neck: {
-        width: neckWidth,
-        maxWidth: neckMaxWidth,
-      },
-      indicators: {
-        width: neckWidth,
-        maxWidth: neckMaxWidth,
-      },
-      frets: fretHeights,
-      fretMarkers: {
-        margin: `0 ${mobileHMargin}px`,
-        width: neckWidth,
-        maxWidth: neckMaxWidth,
-      },
-      fretNumbers: {
-        maxWidth: neckWidth + mobileHMargin * 2,
-      },
-      fretNumberGroup: {
-        width: mobileHMargin,
-      },
-      shadow: {
-        height: neckHeight,
-        width: neckWidth,
-        maxWidth: neckMaxWidth,
-      },
-      overlay: {
-        height: neckHeight + mobileVMargin * 2,
-        width: neckWidth,
-        maxWidth: neckMaxWidth,
-      },
-      fretboard: {
-        height: neckHeight + mobileVMargin * 2,
-        width: neckWidth,
-        maxWidth: neckMaxWidth,
-      },
+    const resizeListener = () => {
+      setMobile(getMobile());
     };
-  };
 
-  const [styles, setStyles] = useState<IStyles>(calcStyles());
+    window.addEventListener('resize', resizeListener);
 
-  return { ...styles };
+    // clean up
+    return () => window.removeEventListener('resize', resizeListener);
+  }, []);
+
+  useEffect(() => {
+    setStyles(calcStyles(instrument, mobile));
+  }, [instrument, mobile]);
+
+  return { ...styles, mobile };
 };

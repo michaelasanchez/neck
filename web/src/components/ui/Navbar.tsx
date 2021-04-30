@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Button, Dropdown, DropdownButton, SplitButton } from 'react-bootstrap';
 import { useAppOptionsContext } from '../..';
+import { useStyles } from '../../hooks';
 import { Key } from '../../models';
 import { IndicatorsMode } from './indicators/Indicators';
 import { KeySelector } from './slideins';
@@ -38,6 +39,8 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
   const { appOptions, setAppOptions } = useAppOptionsContext();
   const { indicatorsMode } = appOptions;
 
+  const { mobile } = useStyles();
+
   const [lastIndicatorsMode, setLastIndicatorsMode] = useState<IndicatorsMode>(
     indicatorsMode || IndicatorsMode.Chord
   );
@@ -47,7 +50,7 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
     }
   }, [indicatorsMode]);
 
-  const size = 'lg';
+  const size = mobile ? null : 'lg';
 
   return (
     <nav

@@ -56,7 +56,6 @@ $opacity-out: 0;
 
 .slidein {
   position: absolute;
-  // top: 500px;
   left: 20px;
 
   display: flex;
@@ -161,7 +160,7 @@ $opacity-out: 0;
 
     $option-height: 30px;
 
-    .options {
+    .options.show {
       margin-bottom: 0.5rem;
     }
 

@@ -3,7 +3,7 @@
     max-height: calc(100vh - #{$modal-margin-top} - #{$modal-margin-bottom});
     max-width: 400px;
     width: calc(100vw - 30px);
-    margin: $modal-margin-top 15px $modal-margin-bottom;
+    margin: $modal-margin 15px ($modal-margin + $navbar-height);
 
     position: absolute;
     bottom: 0;
@@ -103,5 +103,11 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+  }
+}
+
+@media only screen and (min-width: $mobile-breakpoint + 1px) {
+  .modal #options {
+    margin: $modal-margin 15px ($modal-margin + $navbar-height-lg);
   }
 }

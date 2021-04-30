@@ -30,6 +30,7 @@ nav {
     transition: background-color 100ms, opacity 100ms;
 
     &.active,
+    &.show,
     &:hover {
       opacity: 1;
     }
@@ -61,17 +62,16 @@ nav {
       }
     }
     .dropdown-menu {
-      font-size: 1.25rem;
       min-width: unset;
       inset: auto 0px 0px 0px !important;
+      text-align: center;
       transform: translate3d(0, -54px, 0) !important;
-      // width: 96%;
     }
   }
 
   .dropup.key {
     > button {
-      min-width: 140px;
+      min-width: 110px;
     }
 
     .dropdown-menu {
@@ -89,5 +89,18 @@ nav {
   &.navbar-expand .navbar-nav .dropdown-menu {
     right: -19px !important;
     top: -2px !important;
+  }
+}
+
+@media only screen and (min-width: $mobile-breakpoint + 1px) {
+  nav .dropup.mode {
+    .dropdown-menu {
+      font-size: 1.25rem;
+    }
+  }
+  nav .dropup.key {
+    > button {
+      min-width: 140px;
+    }
   }
 }

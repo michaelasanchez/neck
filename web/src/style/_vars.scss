@@ -16,6 +16,7 @@ $l2-box-shadow: 0px 6px 10px 0px rgba(0, 0, 0, 0.1);
 $bs-gray: #ced4da;
 $bs-danger: #dc3545;
 
+$mobile-breakpoint: 576px;
 
 // $fretboard-background-color: #fff;
 
@@ -33,9 +34,11 @@ $neck-primary: $blue;
 $font-merriweather: 'Merriweather', serif;
 
 // /* Navbar */
-$navbar-height: 67.6px;
+$navbar-height: 56px;
+$navbar-height-lg: 67.6px;
 
 // /* Options */
+$modal-margin: 15px;
 $modal-margin-top: 15px;
 $modal-margin-bottom: $navbar-height + 15px;
 

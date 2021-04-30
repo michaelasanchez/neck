@@ -21,7 +21,13 @@ main {
   overflow-y: auto;
 
   // Prevent scrollbar + nav overlap
-  max-height: calc(100vh - #{$navbar-height});
+  max-height: calc(100vh - #{$navbar-height-lg});
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  main {
+    max-height: calc(100vh - #{$navbar-height});
+  }
 }
 
 main > [class$=container] {

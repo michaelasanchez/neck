@@ -103,7 +103,7 @@ export const ChordSlideIn: React.FC<IChordSlideInProps> = (props) => {
   const [selected, setSelected] = useState<Note[]>();
 
   // Options
-  const [showOptions, setShowOptions] = useState<boolean>(true);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
 
   const [generateOptions, setGenerateOptions] = useState<GenerateOptions>(
     DefaultGenerateOptions

@@ -44,16 +44,7 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
 
   return (
     <>
-      <Navbar
-        musicKey={key}
-        showing={showOptions}
-        setShowing={setShowOptions}
-        setIndicatorsMode={(mode: IndicatorsMode) =>
-          setAppOptions({ indicatorsMode: mode })
-        }
-        className={`${appOptions.leftHandUi ? 'left' : ''}`}
-      />
-      <Draggable>
+      <Draggable cancel=".contents">
         <div
           className={`slidein-container${
             appOptions.leftHandMode ? ' left' : ''
@@ -64,6 +55,15 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
           <SearchSlideIn collapse={indicatorsMode !== IndicatorsMode.Search} />
         </div>
       </Draggable>
+      <Navbar
+        musicKey={key}
+        showing={showOptions}
+        setShowing={setShowOptions}
+        setIndicatorsMode={(mode: IndicatorsMode) =>
+          setAppOptions({ indicatorsMode: mode })
+        }
+        className={`${appOptions.leftHandUi ? 'left' : ''}`}
+      />
       <div className={`ui${appOptions.leftHandUi ? ' left' : ''}`}>
         <div className="modal-container">
           <OptionsModal
