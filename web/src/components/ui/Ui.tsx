@@ -1,11 +1,11 @@
 import * as React from 'react';
 import Draggable from 'react-draggable';
 import { Navbar, Notifications, OptionsModal } from '.';
-import { useNotificationContext } from '..';
 import { useAppOptionsContext } from '../..';
 import { FretDisplayMode } from '../neck';
 import { IndicatorsMode } from './indicators';
 import { ChordSlideIn, ScaleSlideIn, SearchSlideIn } from './slideins';
+import { PanelContainer } from './tools';
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
 export interface UiProps {}
@@ -18,33 +18,11 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
   const { indicatorsMode, key } = appOptions;
 
-  const { notifications } = useNotificationContext();
-
-  // TODO: static
-  let fretDisplayMode: FretDisplayMode = FretDisplayMode.Note;
-
   const [showOptions, setShowOptions] = React.useState<boolean>(false);
-
-  React.useEffect(() => {}, [notifications]);
-
-  const handleFretDisplayModeUpdate = (fretMode: FretDisplayMode) => {
-    let updated: FretDisplayMode;
-    switch (fretDisplayMode) {
-      case FretDisplayMode.Degree:
-        updated = FretDisplayMode.Marker;
-        break;
-      case FretDisplayMode.Marker:
-        updated = FretDisplayMode.Note;
-        break;
-      case FretDisplayMode.Note:
-        updated = FretDisplayMode.Degree;
-        break;
-    }
-  };
 
   return (
     <>
-      <Draggable cancel=".contents">
+      {/* <Draggable cancel=".contents">
         <div
           className={`slidein-container${
             appOptions.leftHandMode ? ' left' : ''
@@ -54,7 +32,8 @@ export const Ui: React.FunctionComponent<UiProps> = ({}) => {
           <ChordSlideIn collapse={indicatorsMode !== IndicatorsMode.Chord} />
           <SearchSlideIn collapse={indicatorsMode !== IndicatorsMode.Search} />
         </div>
-      </Draggable>
+      </Draggable> */}
+      <PanelContainer />
       <Navbar
         musicKey={key}
         showing={showOptions}

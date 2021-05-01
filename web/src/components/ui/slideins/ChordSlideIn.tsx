@@ -75,7 +75,7 @@ export interface GenerateOptions extends IGenerateOptions {
 }
 
 const DefaultGenerateOptions = {
-  span: 5,
+  span: 4,
   enforceChord: true,
   filterInversions: true,
   // insertFirstMuted: false,

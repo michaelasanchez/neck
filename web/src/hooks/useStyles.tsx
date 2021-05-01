@@ -31,7 +31,7 @@ const getWidth = () =>
   document.body.clientWidth;
 
 const calcStyles = (instrument: Instrument, mobile: boolean) => {
-  const fretHeights = times(instrument.NumFrets, (f) => fretHeight - f);
+  const fretHeights = times(instrument.NumFrets, (f) => fretHeight - (f * 1.1));
 
   const neckHeight =
     fretHeight +

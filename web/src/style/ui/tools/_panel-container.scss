@@ -1,0 +1,12 @@
+$panel-height: 600px;
+$panel-width: 400px;
+
+.panel-container {
+  position: absolute;
+
+  top: 600px;
+  left: 20px;
+
+  // height: $panel-height;
+  width: $panel-width;
+}
