@@ -66,22 +66,17 @@ $panel-content-max-height: 600px;
   height: fit-content;
   width: 100%;
 
-  // .panel {
-    background: $theme-bg;
-    border-radius: 8px;
-    box-shadow: $l2-box-shadow;
+  background: $theme-bg;
+  border-radius: 8px;
+  box-shadow: $l2-box-shadow;
 
-    padding: 1rem;
+  padding: 1rem;
 
-    .content {
-      transition: all $short-duration ease-out 0s;
-      max-height: 0;
-      overflow: hidden;
-    }
-  // }
-
-  // transform: scale(0.1) translate(-600px, 0);
-  // transition: transform 400ms;
+  .content {
+    transition: all $short-duration ease-out 0s;
+    max-height: 0;
+    overflow: hidden;
+  }
 
   transition: all $duration;
   transform: translate(0, 0);
@@ -89,27 +84,26 @@ $panel-content-max-height: 600px;
   opacity: 0;
 
   &.active {
-    // transform: translate(0, 0);
     animation: swap-in $duration ease-in-out;
     opacity: 1;
 
-     .content {
+    .content {
       transition: all $short-duration ease-in 0s;
       max-height: $panel-content-max-height;
     }
   }
 
   &.previous {
-    // transform: translate(300px, -300px);
     animation: swap-out $duration ease-in-out;
   }
 
   &.expand {
     animation: expand $short-duration;
-    // transition: all $short-duration, opacity $short-duration ease-out;
+    opacity: 1;
+
     .content {
-      transition: all $shorter-duration ease-in 0s;
-      // max-height: $panel-content-max-height;
+      transition: all $short-duration ease-in 0s;
+      max-height: $panel-content-max-height;
     }
   }
 
@@ -119,11 +113,8 @@ $panel-content-max-height: 600px;
 
     animation: collapse $short-duration;
     transition: none;
-    // opacity: 0;
-    // transition: all $short-duration, opacity $short-duration ease-in;
-.content {
+    .content {
       transition: all $shorter-duration ease-out;
-      // max-height: $panel-content-max-height;
     }
   }
 }

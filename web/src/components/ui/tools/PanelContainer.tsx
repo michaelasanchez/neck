@@ -48,7 +48,7 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
   const getActiveClassName = (panelMode: IndicatorsMode) => {
     switch (panelMode) {
       case indicatorsMode:
-        return transitionState ? 'active expand' : 'active';
+        return transitionState ? 'expand' : 'active';
       case previousActiveMode:
         return transitionState ? 'collapse' : 'previous';
       default:
