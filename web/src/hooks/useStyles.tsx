@@ -3,6 +3,9 @@ import { CSSProperties, useEffect, useState } from 'react';
 import { useAppOptionsContext } from '..';
 import { Instrument } from '../models';
 
+const navbarHeight = 67.6;
+const navbarMobileHeight = 56;
+
 const mobileHMargin = 40; // Used for fret number width
 const mobileVMargin = 100;
 
@@ -12,6 +15,8 @@ const fretWidth = 66;
 const fretNumberWidth = 60;
 
 export interface IStyles {
+  navbar: CSSProperties;
+
   neck: CSSProperties;
   indicators: CSSProperties;
 
@@ -31,7 +36,7 @@ const getWidth = () =>
   document.body.clientWidth;
 
 const calcStyles = (instrument: Instrument, mobile: boolean) => {
-  const fretHeights = times(instrument.NumFrets, (f) => fretHeight - (f * 1.1));
+  const fretHeights = times(instrument.NumFrets, (f) => fretHeight - f * 1.1);
 
   const neckHeight =
     fretHeight +
@@ -48,6 +53,9 @@ const calcStyles = (instrument: Instrument, mobile: boolean) => {
   const neckMaxWidth = `calc(100% - ${neckHMargin * 2}px)`;
 
   return {
+    navbar: {
+      height: mobile ? navbarMobileHeight : navbarHeight,
+    },
     neck: {
       width: neckWidth,
       maxWidth: neckMaxWidth,

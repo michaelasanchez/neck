@@ -1,120 +1,134 @@
-$duration: 800ms;
-$short-duration: $duration / 2;
-$shorter-duration: $duration / 3;
-
-$perspective: 100px;
-
 $panel-content-max-height: 600px;
 
-@keyframes expand {
-  0% {
-    opacity: 0;
-    transform: perspective($perspective) translate3d(0px, -60px, -5px);
-  }
-  100% {
-    opacity: 1;
-    transform: perspective($perspective) translate3d(0px, 0px, 0px);
-  }
-}
-
-@keyframes collapse {
-  0% {
-    opacity: 1;
-    transform: perspective($perspective) translate3d(0px, 0px, 0px);
-  }
-  100% {
-    opacity: 0;
-    transform: perspective($perspective) translate3d(0px, -60px, -5px);
-  }
-}
-
-@keyframes swap-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.7) translate(0, 50px);
-    z-index: 10;
-  }
-  40% {
-    transform: scale(0.8) translate(0, 100px);
-    z-index: 20;
-  }
-  100% {
-    transform: scale(1) translate(0, 0);
-    z-index: 20;
-  }
-}
-
-@keyframes swap-out {
-  0% {
-    opacity: 1;
-    z-index: 20;
-  }
-  40% {
-    opacity: 0.6;
-    transform: perspective($perspective) translate3d(0px, -80px, -20px);
-    z-index: 10;
-  }
-  100% {
-    opacity: 0;
-    transform: perspective($perspective) translate3d(0px, 100px, -200px);
-    z-index: 10;
-  }
-}
-
 .tool-panel {
-  position: absolute;
-  height: fit-content;
-  width: 100%;
-
   background: $theme-bg;
   border-radius: 8px;
   box-shadow: $l2-box-shadow;
-
   padding: 1rem;
-
-  .content {
-    transition: all $short-duration ease-out 0s;
-    max-height: 0;
-    overflow: hidden;
-  }
-
-  transition: all $duration;
-  transform: translate(0, 0);
 
   opacity: 0;
 
+  cursor: all-scroll;
+
   &.active {
-    animation: swap-in $duration ease-in-out;
     opacity: 1;
+  }
+}
+
+.panel-container:not(.docked) {
+  .tool-panel {
+    position: absolute;
+    height: fit-content;
+    width: 100%;
+
+    transition: all $duration;
+    transform: translate(0, 0);
 
     .content {
-      transition: all $short-duration ease-in 0s;
-      max-height: $panel-content-max-height;
+      transition: all $short-duration ease-out 0s;
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    &.active {
+      animation: swap-in $duration ease-in-out;
+
+      .content {
+        transition: all $short-duration ease-in 0s;
+        max-height: $panel-content-max-height;
+      }
+    }
+
+    &.previous {
+      animation: swap-out $duration ease-in-out;
+    }
+
+    &.expand {
+      animation: expand $short-duration;
+      opacity: 1;
+
+      .content {
+        transition: all $short-duration ease-in 0s;
+        max-height: $panel-content-max-height;
+      }
+    }
+
+    &.collapse {
+      // BS override
+      display: block !important;
+
+      animation: collapse $short-duration;
+      transition: none;
+      .content {
+        transition: all $shorter-duration ease-out;
+      }
+    }
+  }
+}
+
+$debugHeightWidth: 120px;
+
+.panel-container.docked {
+  transform: translate(0, 0) !important;
+
+  &.top,
+  &.bottom {
+    right: $debugScrollBarWidth;
+    left: 0;
+
+    height: $debugHeightWidth;
+    width: 100%;
+
+    .tool-panel {
+      height: 100%;
+      display: flex;
     }
   }
 
-  &.previous {
-    animation: swap-out $duration ease-in-out;
+  &.right,
+  &.left {
+    top: 0;
+    bottom: $navbar-height;
+
+    width: $debugHeightWidth;
   }
 
-  &.expand {
-    animation: expand $short-duration;
+  &.top {
+    top: 0;
+  }
+
+  &.right {
+    left: unset;
+    right: $debugScrollBarWidth;
+  }
+
+  &.bottom {
+    top: unset;
+    bottom: $navbar-height;
+  }
+
+  &.left {
+    left: 0;
+  }
+
+  .tool-panel.docked {
     opacity: 1;
 
     .content {
-      transition: all $short-duration ease-in 0s;
       max-height: $panel-content-max-height;
     }
   }
+}
 
-  &.collapse {
-    // BS override
-    display: block !important;
+@media only screen and (min-width: $mobile-breakpoint + 1px) {
+  .panel-container.docked {
+    &.right,
+    &.left {
+      bottom: $navbar-height-lg;
+    }
 
-    animation: collapse $short-duration;
-    transition: none;
-    .content {
-      transition: all $shorter-duration ease-out;
+    &.bottom {
+      bottom: $navbar-height-lg;
     }
   }
 }

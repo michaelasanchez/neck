@@ -1,0 +1,61 @@
+$dock-margin: 80px;
+
+$debugScrollBarWidth: 20px;
+
+.dock-zones {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: $navbar-height;
+  left: 0;
+
+  &.show {
+    display: block;
+  }
+
+  .zone {
+    position: absolute;
+
+    border-radius: 4px;
+    margin: 0.25rem;
+
+    opacity: 0;
+
+    &.hover {
+      border: 1px dotted red;
+      background: rgba(255, 0, 0, 0.3);
+      opacity: 1;
+    }
+
+    &.top {
+      top: 0;
+      right: $debugScrollBarWidth;
+      left: 0;
+    }
+
+    &.right {
+      top: 0;
+      right: $debugScrollBarWidth;
+      bottom: 0;
+    }
+
+    &.bottom {
+      right: $debugScrollBarWidth;
+      bottom: 0;
+      left: 0;
+    }
+
+    &.left {
+      top: 0;
+      bottom: 0;
+      left: 0;
+    }
+  }
+}
+
+@media only screen and (min-width: $mobile-breakpoint + 1px) {
+  .dock-zones {
+    bottom: $navbar-height-lg;
+  }
+}
