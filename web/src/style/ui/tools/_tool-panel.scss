@@ -1,6 +1,8 @@
 $panel-content-max-height: 600px;
 
 .tool-panel {
+  position: absolute;
+
   background: $theme-bg;
   border-radius: 8px;
   box-shadow: $l2-box-shadow;
@@ -17,7 +19,6 @@ $panel-content-max-height: 600px;
 
 .panel-container:not(.docked) {
   .tool-panel {
-    position: absolute;
     height: fit-content;
     width: 100%;
 
@@ -77,12 +78,7 @@ $debugHeightWidth: 120px;
     left: 0;
 
     height: $debugHeightWidth;
-    width: 100%;
-
-    .tool-panel {
-      height: 100%;
-      display: flex;
-    }
+    width: calc(100% - #{$debugScrollBarWidth});
   }
 
   &.right,
@@ -90,6 +86,7 @@ $debugHeightWidth: 120px;
     top: 0;
     bottom: $navbar-height;
 
+    height: 100%;
     width: $debugHeightWidth;
   }
 
@@ -111,11 +108,20 @@ $debugHeightWidth: 120px;
     left: 0;
   }
 
-  .tool-panel.docked {
-    opacity: 1;
+  .tool-panel {
+    height: 100%;
+    width: 100%;
 
-    .content {
-      max-height: $panel-content-max-height;
+    &:not(.active) {
+      display: none;
+    }
+
+    &.docked {
+      opacity: 1;
+
+      .content {
+        max-height: $panel-content-max-height;
+      }
     }
   }
 }

@@ -6,6 +6,45 @@ import { useAppOptionsContext } from '../../..';
 import { IndicatorsMode } from '../indicators';
 import { DockState, DefaultDockState } from './DockZones';
 
+const getPanelTypeClassName = (mode: IndicatorsMode) => {
+  switch (mode) {
+    case IndicatorsMode.Chord:
+      return 'chord';
+    case IndicatorsMode.Scale:
+      return 'scale';
+    case IndicatorsMode.Search:
+      return 'search';
+    default:
+      return '';
+  }
+};
+
+const getDockDirectionClassName = (direction: DockDirection) => {
+  switch (direction) {
+    case DockDirection.Top:
+      return 'top';
+    case DockDirection.Right:
+      return 'right';
+    case DockDirection.Bottom:
+      return 'bottom';
+    case DockDirection.Left:
+      return 'left';
+    default:
+      return '';
+  }
+};
+
+const filler = (
+  <>
+    do do do do do do do do do dod od od od od od od od odo od od odo do do do
+    do do do do do do do do do do do do dod od d odo do dod od odo do do do do
+    dod od od od odo do do do do do do do do do do do do do do do do do do d od
+    od od do dod od do do do do do do do do do do do do do do do do d odo do dod
+    od od od od od odo d od od od od od od od od od od od od od od odo do d od
+    od odo do d od od od odo do do do do do do do do do do
+  </>
+);
+
 interface PanelContainerProps {}
 
 export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
@@ -45,52 +84,19 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
     };
   }, [indicatorsMode]);
 
-  const filler = (
-    <>
-      do do do do do do do do do dod od od od od od od od odo od od odo do do do
-      do do do do do do do do do do do do dod od d odo do dod od odo do do do do
-      dod od od od odo do do do do do do do do do do do do do do do do do do d
-      od od od do dod od do do do do do do do do do do do do do do do do d odo
-      do dod od od od od od odo d od od od od od od od od od od od od od od odo
-      do d od od odo do d od od od odo do do do do do do do do do do
-    </>
-  );
-
-  const getPanelTypeClassName = (mode: IndicatorsMode) => {
-    switch (mode) {
-      case IndicatorsMode.Chord:
-        return 'chord';
-      case IndicatorsMode.Scale:
-        return 'scale';
-      case IndicatorsMode.Search:
-        return 'search';
-      default:
-        return '';
+  // Hack to keep expand animation after undocking
+  useEffect(() => {
+    if (!!dockState.docked && !transitionState) {
+      setPreviousActiveMode(null);
+      setTransitionState(true);
     }
-  };
-
-  const getDockDirectionClassName = (direction: DockDirection) => {
-    switch (direction) {
-      case DockDirection.Top:
-        return 'top';
-      case DockDirection.Right:
-        return 'right';
-      case DockDirection.Bottom:
-        return 'bottom';
-      case DockDirection.Left:
-        return 'left';
-      default:
-        return '';
-    }
-  };
+  }, [dockState]);
 
   const getPanelClassName = (
     panelMode: IndicatorsMode,
     dockState: DockState
   ) => {
     const typeClass = getPanelTypeClassName(panelMode);
-
-    let dockedClass = '';
 
     let transitionClass = '';
     if (panelMode === indicatorsMode) {
@@ -109,12 +115,6 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
   const handleDrag = (e: DraggableEvent, data: DraggableData) => {
     const { pageX, pageY } = e as MouseEvent;
     setDragState({ ...dragState, pageX, pageY });
-  };
-
-  const handleDragStart = (e: DraggableEvent, data: DraggableData) =>
-    setDragState({ ...dragState, dragging: true });
-  const handleDragStop = (e: DraggableEvent, data: DraggableData) => {
-    setDragState({ ...dragState, dragging: false });
 
     if (
       pendingDockState.docked != dockState.docked ||
@@ -123,6 +123,11 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
       setDockState({ ...pendingDockState });
     }
   };
+
+  const handleDragStart = (e: DraggableEvent, data: DraggableData) =>
+    setDragState({ ...dragState, dragging: true });
+  const handleDragStop = (e: DraggableEvent, data: DraggableData) =>
+    setDragState({ ...dragState, dragging: false });
 
   return (
     <>

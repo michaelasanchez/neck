@@ -20,7 +20,7 @@ export interface DockState {
   direction?: DockDirection;
 }
 
-const DockMargin = 80;
+const DockMargin = 120;
 
 export const DefaultDockState: DockState = {
   docked: false,
@@ -62,6 +62,7 @@ export const DockZones: React.FunctionComponent<DockZonesProps> = (props) => {
       direction = DockDirection.Left;
     }
 
+    
     if (dockState.docked != docked || dockState.direction !== direction) {
       setDockState({
         docked: docked ? true : false,

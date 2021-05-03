@@ -1,5 +1,3 @@
-$dock-margin: 80px;
-
 $debugScrollBarWidth: 20px;
 
 .dock-zones {
@@ -17,16 +15,14 @@ $debugScrollBarWidth: 20px;
   .zone {
     position: absolute;
 
-    border-radius: 4px;
-    margin: 0.25rem;
+    // border-radius: 8px;
+    // margin: 0.25rem;
 
-    opacity: 0;
-
-    &.hover {
-      border: 1px dotted red;
-      background: rgba(255, 0, 0, 0.3);
-      opacity: 1;
-    }
+    // &.hover {
+    //   border: 1px dotted red;
+    //   background: rgba(255, 0, 0, 0.3);
+    //   opacity: 1;
+    // }
 
     &.top {
       top: 0;
