@@ -1,10 +1,8 @@
 import * as React from 'react';
-import Draggable from 'react-draggable';
 import { Navbar, Notifications, OptionsModal } from '.';
 import { useAppOptionsContext } from '../..';
 import { FretDisplayMode } from '../neck';
 import { IndicatorsMode } from './indicators';
-import { ChordSlideIn, ScaleSlideIn, SearchSlideIn } from './slideins';
 import { PanelContainer } from './tools';
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
@@ -14,7 +12,7 @@ export interface UiState {
   showOptions: boolean;
 }
 
-export const Ui: React.FunctionComponent<UiProps> = ({}) => {
+export const Ui: React.FunctionComponent<UiProps> = (props) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
   const { indicatorsMode, key } = appOptions;
 

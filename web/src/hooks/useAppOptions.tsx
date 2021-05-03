@@ -2,6 +2,7 @@ import { every, filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
+import { DefaultDockState, DockState } from '../components/ui/tools';
 import { NoteSuffix, NoteValue, ScaleType } from '../enums';
 import {
   Chord,
@@ -11,14 +12,14 @@ import {
   Key,
   KeyType,
   Scale,
-  Tuning,
+  Tuning
 } from '../models';
 import {
   ChordApi,
   InstrumentApi,
   KeyApi,
   ScaleApi,
-  TuningApi,
+  TuningApi
 } from '../network';
 import { AppOptions } from '../shared';
 
@@ -146,6 +147,7 @@ export const useAppOptions = () => {
           chord,
           scale,
 
+          dockState: cookie.dockState,
           fretDisplayMode: cookie.fretDisplayMode,
           indicatorsDisplayMode: cookie.indicatorsDisplayMode,
           indicatorsMode: cookie.indicatorsMode,

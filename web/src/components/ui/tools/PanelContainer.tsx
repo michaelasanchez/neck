@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { DockDirection, DockZones, DragState, ToolPanel } from '.';
 import { useAppOptionsContext } from '../../..';
+import { useStyles } from '../../../hooks';
 import { IndicatorsMode } from '../indicators';
 import { DockState, DefaultDockState } from './DockZones';
 
@@ -50,11 +51,10 @@ interface PanelContainerProps {}
 export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
   props
 ) => {
-  const { appOptions } = useAppOptionsContext();
-  const { indicatorsMode } = appOptions;
+  const { appOptions, setAppOptions } = useAppOptionsContext();
+  const { dockState, indicatorsMode } = appOptions;
 
   const [dragState, setDragState] = useState<DragState>();
-  const [dockState, setDockState] = useState<DockState>(DefaultDockState);
   const [pendingDockState, setPendingDockState] = useState<DockState>(
     DefaultDockState
   );
@@ -120,7 +120,7 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
       pendingDockState.docked != dockState.docked ||
       pendingDockState.direction !== dockState.direction
     ) {
-      setDockState({ ...pendingDockState });
+      setAppOptions({ dockState: { ...pendingDockState } });
     }
   };
 
@@ -134,15 +134,14 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
       <DockZones
         dockState={pendingDockState}
         dragState={dragState}
-        setDockState={(updated: DockState) => {
-          setPendingDockState(updated);
-        }}
+        setPendingDockState={setPendingDockState}
       />
       <Draggable
         cancel=".content"
         onDrag={handleDrag}
         onStart={handleDragStart}
         onStop={handleDragStop}
+        defaultPosition={{ x: 30, y: 30 }}
       >
         <div
           className={`panel-container${

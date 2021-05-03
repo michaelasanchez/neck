@@ -1,6 +1,7 @@
 import { reduce, times } from 'lodash';
 import { CSSProperties, useEffect, useState } from 'react';
 import { useAppOptionsContext } from '..';
+import { DefaultDockState, DockState } from '../components/ui/tools';
 import { Instrument } from '../models';
 
 const navbarHeight = 67.6;
@@ -103,6 +104,7 @@ export const useStyles = () => {
   const { instrument } = appOptions;
 
   const [mobile, setMobile] = useState<boolean>(getMobile());
+
   const [styles, setStyles] = useState<IStyles>(
     calcStyles(instrument, getMobile())
   );

@@ -18,6 +18,7 @@ const cookieStringFromAppOptions = (appOptions: AppOptions): string => {
   cookie.chordId = appOptions.chord.Id;
   cookie.scaleId = appOptions.scale.Id;
 
+  cookie.dockState = appOptions.dockState;
   cookie.fretDisplayMode = appOptions.fretDisplayMode;
   cookie.indicatorsDisplayMode = appOptions.indicatorsDisplayMode;
   cookie.indicatorsMode = appOptions.indicatorsMode;

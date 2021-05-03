@@ -20,7 +20,7 @@ export interface DockState {
   direction?: DockDirection;
 }
 
-const DockMargin = 120;
+const DockMargin = 40;
 
 export const DefaultDockState: DockState = {
   docked: false,
@@ -33,11 +33,11 @@ const debugWidth = { width: DockMargin };
 interface DockZonesProps {
   dockState: DockState;
   dragState: DragState;
-  setDockState: (updated: DockState) => void;
+  setPendingDockState: (updated: DockState) => void;
 }
 
 export const DockZones: React.FunctionComponent<DockZonesProps> = (props) => {
-  const { dockState, dragState, setDockState } = props;
+  const { dockState, dragState, setPendingDockState: setDockState } = props;
 
   const { navbar } = useStyles();
 
@@ -62,7 +62,7 @@ export const DockZones: React.FunctionComponent<DockZonesProps> = (props) => {
       direction = DockDirection.Left;
     }
 
-    
+
     if (dockState.docked != docked || dockState.direction !== direction) {
       setDockState({
         docked: docked ? true : false,

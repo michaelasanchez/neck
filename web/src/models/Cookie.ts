@@ -1,5 +1,6 @@
 import { FretDisplayMode } from '../components/neck';
 import { IndicatorsMode } from '../components/ui/indicators';
+import { DefaultDockState, DockState } from '../components/ui/tools';
 
 export class Cookie {
   keyId: string;
@@ -12,6 +13,7 @@ export class Cookie {
 
   neck: NeckOptions;
 
+  dockState: DockState;
   fretDisplayMode: FretDisplayMode;
   indicatorsDisplayMode: FretDisplayMode;
   indicatorsMode: IndicatorsMode;
@@ -28,6 +30,7 @@ export class Cookie {
       instrumentId: null,
       tuningId: null,
 
+      dockState: DefaultDockState,
       fretDisplayMode: FretDisplayMode.Marker,
       indicatorsDisplayMode: FretDisplayMode.Note,
       indicatorsMode: null,
