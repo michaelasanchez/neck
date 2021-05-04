@@ -1,5 +1,7 @@
-$panel-height: 600px;
+// $panel-height: 600px;
 $panel-width: 400px;
+
+$debugHeightWidth: 120px;
 
 .panel-container {
   position: absolute;
@@ -9,4 +11,58 @@ $panel-width: 400px;
 
   // height: $panel-height;
   width: $panel-width;
+
+  &.docked {
+    transform: translate(0, 0) !important;
+
+    &.top,
+    &.bottom {
+      right: 0;
+      left: 0;
+
+      height: $debugHeightWidth;
+      width: 100%;
+    }
+
+    &.right,
+    &.left {
+      top: 0;
+      bottom: $navbar-height;
+
+      height: 100%;
+      width: $debugHeightWidth;
+    }
+
+    &.top {
+      top: 0;
+    }
+
+    &.right {
+      left: unset;
+      right: 0;
+    }
+
+    &.bottom {
+      top: unset;
+      bottom: $navbar-height;
+    }
+
+    &.left {
+      left: 0;
+    }
+  }
+}
+
+@media only screen and (min-width: $mobile-breakpoint + 1px) {
+  /* Docked */
+  .panel-container.docked {
+    &.right,
+    &.left {
+      bottom: $navbar-height-lg;
+    }
+
+    &.bottom {
+      bottom: $navbar-height-lg;
+    }
+  }
 }

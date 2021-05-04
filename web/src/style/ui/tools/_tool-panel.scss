@@ -17,6 +17,10 @@ $debug-scrollbar-width: 20px;
   &.active {
     opacity: 1;
   }
+
+  .content {
+    cursor: auto;
+  }
 }
 
 /* Undocked */
@@ -72,48 +76,8 @@ $debug-scrollbar-width: 20px;
   }
 }
 
-$debugHeightWidth: 120px;
-
 /* Docked */
 .panel-container.docked {
-  transform: translate(0, 0) !important;
-
-  &.top,
-  &.bottom {
-    right: 0;
-    left: 0;
-
-    height: $debugHeightWidth;
-    width: 100%;
-  }
-
-  &.right,
-  &.left {
-    top: 0;
-    bottom: $navbar-height;
-
-    height: 100%;
-    width: $debugHeightWidth;
-  }
-
-  &.top {
-    top: 0;
-  }
-
-  &.right {
-    left: unset;
-    right: 0;
-  }
-
-  &.bottom {
-    top: unset;
-    bottom: $navbar-height;
-  }
-
-  &.left {
-    left: 0;
-  }
-
   .tool-panel {
     height: 100%;
     width: 100%;
@@ -128,20 +92,6 @@ $debugHeightWidth: 120px;
       .content {
         max-height: $panel-content-max-height;
       }
-    }
-  }
-}
-
-@media only screen and (min-width: $mobile-breakpoint + 1px) {
-  /* Docked */
-  .panel-container.docked {
-    &.right,
-    &.left {
-      bottom: $navbar-height-lg;
-    }
-
-    &.bottom {
-      bottom: $navbar-height-lg;
     }
   }
 }

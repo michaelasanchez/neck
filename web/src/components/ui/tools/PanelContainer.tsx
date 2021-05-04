@@ -6,6 +6,7 @@ import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
 import { IndicatorsMode } from '../indicators';
 import { DockState, DefaultDockState } from './DockZones';
+import { SearchPanel } from './SearchPanel';
 
 const getPanelTypeClassName = (mode: IndicatorsMode) => {
   switch (mode) {
@@ -96,8 +97,6 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
     panelMode: IndicatorsMode,
     dockState: DockState
   ) => {
-    const typeClass = getPanelTypeClassName(panelMode);
-
     let transitionClass = '';
     if (panelMode === indicatorsMode) {
       if (dockState.docked) {
@@ -109,7 +108,7 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
       transitionClass = transitionState ? 'collapse' : 'previous';
     }
 
-    return `${typeClass} ${transitionClass}`;
+    return transitionClass;
   };
 
   const handleDrag = (e: DraggableEvent, data: DraggableData) => {
@@ -151,23 +150,26 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
           }`}
         >
           <ToolPanel
-            className={`${getPanelClassName(IndicatorsMode.Chord, dockState)}`}
+            className={`${getPanelTypeClassName(
+              IndicatorsMode.Scale
+            )} ${getPanelClassName(IndicatorsMode.Chord, dockState)}`}
             title="Chords"
           >
             {filler}
           </ToolPanel>
           <ToolPanel
-            className={`${getPanelClassName(IndicatorsMode.Scale, dockState)}`}
+            className={`${getPanelTypeClassName(
+              IndicatorsMode.Scale
+            )} ${getPanelClassName(IndicatorsMode.Scale, dockState)}`}
             title="Scales"
           >
             {filler}
           </ToolPanel>
-          <ToolPanel
-            className={`${getPanelClassName(IndicatorsMode.Search, dockState)}`}
-            title="Search"
+          <SearchPanel
+            className={getPanelClassName(IndicatorsMode.Search, dockState)}
           >
             {filler}
-          </ToolPanel>
+          </SearchPanel>
         </div>
       </Draggable>
     </>
