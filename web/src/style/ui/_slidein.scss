@@ -266,7 +266,7 @@ $opacity-out: 0;
       margin: 0.5rem;
       padding: 0.5rem 1rem;
 
-      cursor: pointer;
+      cursor: default;
 
       .close {
         position: absolute;
@@ -274,6 +274,8 @@ $opacity-out: 0;
         top: 0;
         transform: translate(40%, -30%);
         transition: opacity 200ms;
+
+        cursor: pointer;
 
         background: $theme-bg;
         border: 2px solid $bs-gray;

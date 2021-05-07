@@ -62,4 +62,26 @@ export class NoteUtils {
       NoteValue.G,
     ];
   }
+
+  static StandardNotes(): Note[] {
+    return [
+      Note.C(),
+      Note.C().Sharp(),
+      // Note.D().Flat(),
+      Note.D(),
+      Note.D().Sharp(),
+      // Note.E().Flat(),
+      Note.E(),
+      Note.F(),
+      Note.F().Sharp(),
+      // Note.G().Flat(),
+      Note.G(),
+      Note.G().Sharp(),
+      // Note.A().Flat(),
+      Note.A(),
+      Note.A().Sharp(),
+      // Note.B().Flat(),
+      Note.B(),
+    ];
+  }
 }

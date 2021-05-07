@@ -50,9 +50,9 @@ namespace neck.Generators
 		{
 			if (fretOffset == 0 && VARIATION_SPAN_INCLUDES_OPEN == true) fretSpan++;
 
-			// Matches will contain a set of notes for each string (tuning offset)
-			//  Each note is a component of chord
-			var matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o?.Pitch, fretOffset, fretSpan)).ToList()).ToList();
+			// Matches will contain a set of notes on each instrument string
+			//  Each note is a chord component
+			List<List<Note>> matches = tuning.Offsets.Select(o => chord.Tones.Where(n => isNoteInRange(n, o?.Pitch, fretOffset, fretSpan)).ToList()).ToList();
 
 			// Calculate number of combinations from matched notes
 			var noteCounts = matches.Select(m => m.Count()).ToList();

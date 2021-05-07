@@ -14,8 +14,15 @@ $debug-scrollbar-width: 20px;
 
   cursor: all-scroll;
 
-  &.active {
+  &.active,
+  &.expand {
     opacity: 1;
+  }
+
+  > .btn-group {
+    position: absolute;
+    top: 10px;
+    right: -10px;
   }
 
   .content {
@@ -31,9 +38,6 @@ $debug-scrollbar-width: 20px;
 
     transition: all $duration;
 
-    // Default position
-    transform: translate(0px, 0px);
-
     .content {
       transition: all $short-duration ease-out 0s;
       max-height: 0;
@@ -42,6 +46,7 @@ $debug-scrollbar-width: 20px;
 
     &.active {
       animation: swap-in $duration ease-in-out;
+      z-index: 1;
 
       .content {
         transition: all $short-duration ease-in 0s;
@@ -55,7 +60,6 @@ $debug-scrollbar-width: 20px;
 
     &.expand {
       animation: expand $short-duration;
-      opacity: 1;
 
       .content {
         transition: all $short-duration ease-in 0s;

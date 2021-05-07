@@ -1,11 +1,14 @@
-import { filter, findIndex, isArray, map, round, times } from 'lodash';
+import { findIndex, map, round, times } from 'lodash';
 import * as React from 'react';
 import { KeySection } from '.';
 import { useAppOptionsContext } from '../../..';
 import { Key } from '../../../models';
 import { Keys, NoteUtils } from '../../../shared';
 
-export interface KeySelectorProps {}
+export interface KeySelectorProps {
+  active?: Key;
+  setActive: (key: Key) => void;
+}
 
 interface Point {
   x: number;
@@ -77,9 +80,6 @@ const radius = 150;
 const innerRadius = radius / 3;
 const outerRadius = (2 * radius) / 3;
 
-// const outerRadius = radius / 1.8;
-// const outerRadius = radius / 1.3;
-
 const innerRing = calcRing(center, innerRadius, outerRadius, 12);
 const outerRing = calcRing(center, outerRadius, radius, 12);
 
@@ -95,8 +95,7 @@ const keys: KeyMap = {
 export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
   props
 ) => {
-  const { appOptions, setAppOptions } = useAppOptionsContext();
-  const { key } = appOptions;
+  const { active, setActive } = props;
 
   return (
     <div className="key-selector">
@@ -106,8 +105,8 @@ export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
             const activeIndex = findIndex(
               keyArray,
               (k) =>
-                k.Type == key.Type &&
-                NoteUtils.NotesAreEqual(k.Tonic, key.Tonic)
+                k.Type == active.Type &&
+                NoteUtils.NotesAreEqual(k.Tonic, active.Tonic)
             );
             return (
               <KeySection
@@ -118,14 +117,14 @@ export const KeySelector: React.FunctionComponent<KeySelectorProps> = (
                 sectionNum={i}
                 keyGroup={keyArray}
                 radius={radius}
-                setKey={(key: Key) => setAppOptions({ key })}
+                setKey={(key: Key) => setActive(key)}
               />
             );
           })}
         </div>
       ))}
       <div className="current">
-        <h2>{key.Label}</h2>
+        <h2>{active.Label}</h2>
       </div>
     </div>
   );

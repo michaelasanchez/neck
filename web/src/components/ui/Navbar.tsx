@@ -5,15 +5,18 @@ import { Button, Dropdown, DropdownButton, SplitButton } from 'react-bootstrap';
 import { useAppOptionsContext } from '../..';
 import { useStyles } from '../../hooks';
 import { Key } from '../../models';
+import { Keys } from '../../shared';
 import { IndicatorsMode } from './indicators/Indicators';
 import { KeySelector } from './slideins';
 
+export const USE_CIRCLE_OF_5THS = true;
+
 export interface NavbarProps {
   musicKey: Key;
-  showing: boolean;
+  showOptions: boolean;
   className: string;
   setIndicatorsMode: (mode: IndicatorsMode) => void;
-  setShowing: (showing: boolean) => void;
+  setShowOptions: (showing: boolean) => void;
 }
 
 const getModeTitle = (mode: IndicatorsMode) => {
@@ -30,16 +33,18 @@ const getModeTitle = (mode: IndicatorsMode) => {
 };
 
 export const Navbar: React.FunctionComponent<NavbarProps> = ({
-  showing,
-  setShowing,
-  setIndicatorsMode,
-  musicKey,
   className,
+  musicKey,
+  showOptions,
+  setShowOptions,
+  setIndicatorsMode,
 }) => {
   const { appOptions, setAppOptions } = useAppOptionsContext();
   const { indicatorsMode } = appOptions;
 
   const { mobile } = useStyles();
+
+  const [showKeySelector, setShowKeySelector] = useState<boolean>(false);
 
   const [lastIndicatorsMode, setLastIndicatorsMode] = useState<IndicatorsMode>(
     indicatorsMode || IndicatorsMode.Chord
@@ -67,8 +72,8 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
           <Button
             size={size}
             variant="outline-success"
-            className={`options${showing ? ' active' : ''}`}
-            onClick={() => setShowing(!showing)}
+            className={`options${showOptions ? ' active' : ''}`}
+            onClick={() => setShowOptions(!showOptions)}
           >
             Options
           </Button>
@@ -114,20 +119,28 @@ export const Navbar: React.FunctionComponent<NavbarProps> = ({
             className="key"
             size={size}
             title={`Key of ${musicKey.Label}`}
-            variant="secondary"
+            variant={showKeySelector ? 'secondary' : 'outline-secondary'}
             renderMenuOnMount={true}
+            show={showKeySelector}
+            onToggle={(updated) => setShowKeySelector(updated)}
           >
-            <KeySelector />
-            {/* {map(Keys.DropdownValues(), (k: Key, i: number) => {
-              return (
-                <Dropdown.Item
-                  key={i}
-                  onClick={() => setAppOptions({ key: k })}
-                >
-                  {k.Tonic.Label}
-                </Dropdown.Item>
-              );
-            })} */}
+            {USE_CIRCLE_OF_5THS ? (
+              <KeySelector
+                active={musicKey}
+                setActive={(k) => setAppOptions({ key: k })}
+              />
+            ) : (
+              map(Keys.DropdownValues(), (k: Key, i: number) => {
+                return (
+                  <Dropdown.Item
+                    key={i}
+                    onClick={() => setAppOptions({ key: k })}
+                  >
+                    {k.Tonic.Label}
+                  </Dropdown.Item>
+                );
+              })
+            )}
           </DropdownButton>
         </form>
       </div>

@@ -24,7 +24,8 @@ nav {
   }
 
   .dropup.mode,
-  button.options {
+  button.options,
+  .dropup.key {
     margin-right: 0.75rem;
     opacity: 0.6;
     transition: background-color 100ms, opacity 100ms;
@@ -71,6 +72,7 @@ nav {
 
   .dropup.key {
     > button {
+      color: $white;
       min-width: 110px;
     }
 

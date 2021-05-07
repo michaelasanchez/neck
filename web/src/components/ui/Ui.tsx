@@ -34,8 +34,8 @@ export const Ui: React.FunctionComponent<UiProps> = (props) => {
       <PanelContainer />
       <Navbar
         musicKey={key}
-        showing={showOptions}
-        setShowing={setShowOptions}
+        showOptions={showOptions}
+        setShowOptions={setShowOptions}
         setIndicatorsMode={(mode: IndicatorsMode) =>
           setAppOptions({ indicatorsMode: mode })
         }

@@ -1,25 +1,12 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { DockDirection, DockZones, DragState, ToolPanel } from '.';
+import { ChordPanel, DockDirection, DockZones, DragState, ToolPanel } from '.';
 import { useAppOptionsContext } from '../../..';
 import { useStyles } from '../../../hooks';
 import { IndicatorsMode } from '../indicators';
 import { DockState, DefaultDockState } from './DockZones';
 import { SearchPanel } from './SearchPanel';
-
-const getPanelTypeClassName = (mode: IndicatorsMode) => {
-  switch (mode) {
-    case IndicatorsMode.Chord:
-      return 'chord';
-    case IndicatorsMode.Scale:
-      return 'scale';
-    case IndicatorsMode.Search:
-      return 'search';
-    default:
-      return '';
-  }
-};
 
 const getDockDirectionClassName = (direction: DockDirection) => {
   switch (direction) {
@@ -136,7 +123,7 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
         setPendingDockState={setPendingDockState}
       />
       <Draggable
-        cancel=".content"
+        cancel="button, .content"
         onDrag={handleDrag}
         onStart={handleDragStart}
         onStop={handleDragStop}
@@ -149,27 +136,23 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
               : ''
           }`}
         >
+          <ChordPanel
+            className={getPanelClassName(IndicatorsMode.Chord, dockState)}
+            collapse={IndicatorsMode.Chord != indicatorsMode}
+          />
           <ToolPanel
-            className={`${getPanelTypeClassName(
-              IndicatorsMode.Scale
-            )} ${getPanelClassName(IndicatorsMode.Chord, dockState)}`}
-            title="Chords"
-          >
-            {filler}
-          </ToolPanel>
-          <ToolPanel
-            className={`${getPanelTypeClassName(
-              IndicatorsMode.Scale
-            )} ${getPanelClassName(IndicatorsMode.Scale, dockState)}`}
+            className={`scale ${getPanelClassName(
+              IndicatorsMode.Scale,
+              dockState
+            )}`}
             title="Scales"
           >
             {filler}
           </ToolPanel>
           <SearchPanel
             className={getPanelClassName(IndicatorsMode.Search, dockState)}
-          >
-            {filler}
-          </SearchPanel>
+            collapse={IndicatorsMode.Search != indicatorsMode}
+          />
         </div>
       </Draggable>
     </>

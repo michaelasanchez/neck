@@ -1,8 +1,7 @@
 import { filter, map, uniqBy } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
-import { Badge } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
+import { Badge, Button } from 'react-bootstrap';
 import { ToolPanel } from '.';
 import { useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
@@ -10,10 +9,10 @@ import { useRequest } from '../../../hooks';
 import { FretNote, Key, Note, TuningNote } from '../../../models';
 import { KeyApi } from '../../../network';
 import { SearchNote } from '../slideins/SearchNote';
+import { ToolPanelProps } from './ToolPanel';
 
-export interface SearchPanelProps {
-  className: string;
-}
+export interface SearchPanelProps
+  extends Pick<ToolPanelProps, 'className' | 'collapse'> {}
 
 const getDisplayArray = (searchArray: FretNote[]): FretNote[] => {
   return uniqBy(searchArray, (n: FretNote) => n.Note?.Pitch);
@@ -62,12 +61,6 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
   };
 
   return (
-    // <SlideIn
-    //   {...props}
-    //   className="search"
-    //   title={<h2>Search</h2>}
-    //   loading={false}
-    // >
     <ToolPanel className={`search ${props.className}`} title="Search">
       <div className="search-query">
         {searchArray.length ? (
@@ -123,6 +116,5 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
         </>
       )}
     </ToolPanel>
-    // </SlideIn>
   );
 };
