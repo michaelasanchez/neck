@@ -17,12 +17,42 @@ $debug-scrollbar-width: 20px;
   &.active,
   &.expand {
     opacity: 1;
+    z-index: 1;
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+
+    svg {
+      cursor: pointer;
+      height: 2rem;
+      width: 2rem;
+
+      color: var(--gray);
+      padding: 0.5rem 0;
+
+      transition: color 200ms;
+
+      &.active {
+        color: var(--primary);
+      }
+    }
   }
 
   > .btn-group {
     position: absolute;
     top: 10px;
     right: -10px;
+
+    > .btn-group {
+      &:first-child button {
+        padding-right: 0.6rem;
+      }
+      &:last-child button {
+        padding-left: 0.6rem;
+      }
+    }
   }
 
   .content {
@@ -46,7 +76,6 @@ $debug-scrollbar-width: 20px;
 
     &.active {
       animation: swap-in $duration ease-in-out;
-      z-index: 1;
 
       .content {
         transition: all $short-duration ease-in 0s;

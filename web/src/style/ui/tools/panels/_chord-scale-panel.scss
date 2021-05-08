@@ -1,0 +1,70 @@
+.tool-panel {
+  &.chord,
+  &.scale {
+    // TODO: .diagram uses this too
+    > .header {
+      display: flex;
+      justify-content: flex-end;
+
+      padding: 1em 0;
+    }
+
+    .content {
+      $option-height: 30px;
+
+      .options.show {
+        margin-bottom: 0.5rem;
+      }
+
+      .options-container {
+        display: flex;
+        flex-direction: column;
+
+        background: $theme-bg-secondary;
+        border-radius: 6px;
+        padding: 1rem;
+
+        button {
+          align-self: flex-end;
+        }
+
+        h5 + .form-group {
+          display: flex;
+          align-items: baseline;
+          width: 200px;
+
+          input {
+            margin-left: 0.5em;
+            width: 80px;
+          }
+        }
+
+        .option-checks {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+
+          // TODO: static - based on # options
+          height: $option-height * 2;
+          margin-bottom: 0.5rem;
+
+          > .form-group {
+            height: $option-height;
+            margin-bottom: 0;
+
+            &,
+            * {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .variations {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+    }
+  }
+}

@@ -8,40 +8,32 @@ export interface PanelDropdownItem {
 }
 
 interface PanelDropdownProps {
-  active?: PanelDropdownItem;
+  active: PanelDropdownItem;
   options: PanelDropdownItem[];
-  optionsEqual?: (
-    firstOption: PanelDropdownItem,
-    secondOption: PanelDropdownItem
-  ) => boolean;
+  optionsEqual?: (firstOption: any, secondOption: any) => boolean;
+  onSelect?: (selected: any) => void;
 }
 
-const defaultOptionsEqual = (
-  firstOption: PanelDropdownItem,
-  secondOption: PanelDropdownItem
-) => firstOption.value == secondOption.value;
+const defaultOptionsEqual = (firstOption: any, secondOption: any) =>
+  firstOption == secondOption;
 
 export const PanelDropdown: React.FunctionComponent<PanelDropdownProps> = (
   props
 ) => {
-  const { active, options, optionsEqual } = props;
+  const { active, options, optionsEqual, onSelect } = props;
 
   const equal = optionsEqual || defaultOptionsEqual;
 
   return (
-    <DropdownButton
-      variant="secondary"
-      as={ButtonGroup}
-      title={'hey'}
-      // id="dropdown-note"
-    >
-      {map(options, (v, i) => (
+    <DropdownButton variant="secondary" as={ButtonGroup} title={active.label}>
+      {map(options, (o, i) => (
         <Dropdown.Item
-          eventKey={v.label}
+          eventKey={o.label}
           key={i}
-          active={!!active && equal(v, active.value)}
+          active={!!active && equal(o.value, active.value)}
+          onSelect={() => onSelect(o.value)}
         >
-          {v.label}
+          {o.label}
         </Dropdown.Item>
       ))}
     </DropdownButton>

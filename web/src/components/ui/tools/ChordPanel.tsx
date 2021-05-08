@@ -1,9 +1,7 @@
-import { faCog } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { filter, isEqual, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Collapse, Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { PanelDropdown } from '.';
 import { NoteSelection, useIndicatorsContext } from '../..';
 import { useAppOptionsContext } from '../../..';
@@ -73,13 +71,12 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   // Note Selection
   const [selected, setSelected] = useState<Note[]>();
 
-  // Options
-  const [showOptions, setShowOptions] = useState<boolean>(false);
-
   const [generateOptions, setGenerateOptions] = useState<GenerateOptions>(
     DefaultGenerateOptions
   );
-  const [pendingOptions, setPendingOptions] = useState<GenerateOptions>();
+  const [pendingOptions, setPendingOptions] = useState<GenerateOptions>(
+    DefaultGenerateOptions
+  );
 
   const { req: generateVariations, loading } = useRequest(
     new ChordVariationApi().Generate
@@ -150,12 +147,6 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
     }
   }, [variations]);
 
-  useEffect(() => {
-    if (!!showOptions) {
-      setPendingOptions({ ...generateOptions });
-    }
-  }, [showOptions]);
-
   // Header Badge Actions
   const handleRootUpdate = (root: Note) => handleChordUpdate(root);
   const handleModifierUpdate = (mod: ChordModifier) =>
@@ -195,6 +186,7 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
 
   const handleSetGenerateOptions = (options: GenerateOptions) => {
     setGenerateOptions({ ...options });
+    setPendingOptions({ ...options });
     setOptionsUpdateFlag(true);
   };
 
@@ -203,18 +195,6 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
       setPendingOptions({ ...pendingOptions, ...options });
     }
   };
-
-  /* Title */
-  const renderTitle = (
-    <>
-      <h2>Chords</h2>
-      <FontAwesomeIcon
-        icon={faCog}
-        className={showOptions ? 'active' : ''}
-        onClick={() => setShowOptions(!showOptions)}
-      />
-    </>
-  );
 
   /* Note Selection */
   const renderNoteSelection = (
@@ -229,61 +209,52 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   const renderOptions = () => {
     const hasPendingChanges = !isEqual(generateOptions, pendingOptions);
     return (
-      <div className="options">
-        <Collapse in={showOptions}>
-          <div>
-            <div className="options-container">
-              <h5>Options</h5>
-              <Form.Group>
-                <Form.Label>Max Frets</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={pendingOptions?.span}
-                  onChange={(e: any) =>
-                    handleSetPendingOptions({
-                      span: parseInt(e.target.value),
-                    })
-                  }
-                />
-              </Form.Group>
-              <div className="option-checks">
-                {map(
-                  pendingOptions,
-                  (optionValue: boolean, optionKey: string) => {
-                    if (optionKey != 'span') {
-                      return (
-                        <Form.Group
-                          key={optionKey}
-                          onClick={() => {
-                            pendingOptions[optionKey] = !optionValue;
-                            setPendingOptions({ ...pendingOptions });
-                          }}
-                        >
-                          <Form.Check
-                            type="checkbox"
-                            custom
-                            label={getOptionsLabel(optionKey)}
-                            checked={optionValue}
-                            onChange={() => {}}
-                          />
-                        </Form.Group>
-                      );
-                    }
-                  }
-                )}
-              </div>
-              <Button
-                size="sm"
-                disabled={!hasPendingChanges}
-                variant={hasPendingChanges ? 'success' : 'outline-success'}
-                onClick={() => handleSetGenerateOptions(pendingOptions)}
-              >
-                Update
-              </Button>
-            </div>
-          </div>
-        </Collapse>
-      </div>
+      <>
+        <h5>Options</h5>
+        <Form.Group>
+          <Form.Label>Max Frets</Form.Label>
+          <Form.Control
+            type="number"
+            value={pendingOptions?.span}
+            onChange={(e: any) =>
+              handleSetPendingOptions({
+                span: parseInt(e.target.value),
+              })
+            }
+          />
+        </Form.Group>
+        <div className="option-checks">
+          {map(pendingOptions, (optionValue: boolean, optionKey: string) => {
+            if (optionKey != 'span') {
+              return (
+                <Form.Group
+                  key={optionKey}
+                  onClick={() => {
+                    pendingOptions[optionKey] = !optionValue;
+                    setPendingOptions({ ...pendingOptions });
+                  }}
+                >
+                  <Form.Check
+                    type="checkbox"
+                    custom
+                    label={getOptionsLabel(optionKey)}
+                    checked={optionValue}
+                    onChange={() => {}}
+                  />
+                </Form.Group>
+              );
+            }
+          })}
+        </div>
+        <Button
+          size="sm"
+          disabled={!hasPendingChanges}
+          variant={hasPendingChanges ? 'success' : 'outline-success'}
+          onClick={() => handleSetGenerateOptions(pendingOptions)}
+        >
+          Update
+        </Button>
+      </>
     );
   };
 
@@ -317,12 +288,17 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
     <>
       <PanelDropdown
         options={noteOptions}
-        active={{ label: chord.Label, value: chord.Root }}
-        // optionsEqual={NoteUtils.NotesAreEqual}
+        active={{ label: chord.Root.Label, value: chord.Root }}
+        optionsEqual={NoteUtils.NotesAreEqual}
+        onSelect={handleRootUpdate}
       />
       <PanelDropdown
         options={modifierOptions}
-        active={{ label: chord.ModifierLabel, value: chord.Modifier }}
+        active={{
+          label: Chord.getModifierLabel(chord.Modifier),
+          value: chord.Modifier,
+        }}
+        onSelect={handleModifierUpdate}
       />
     </>
   );
@@ -330,10 +306,11 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   return (
     <ToolPanel
       className={`chord ${props.className}`}
-      title="Chord"
+      title="Chords"
       buttonGroup={buttonGroup}
+      header={renderNoteSelection}
+      options={renderOptions()}
     >
-      {renderOptions()}
       <div className="variations">{renderVariations()}</div>
     </ToolPanel>
   );
