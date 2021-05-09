@@ -11,7 +11,19 @@ import { Chord, ChordModifier, ChordVariation, Note } from '../../../../models';
 import { ChordVariationApi } from '../../../../network';
 import { NoteUtils } from '../../../../shared';
 import { ChordDiagram } from '../../diagrams';
-import { GenerateOptions } from '../../slideins';
+
+interface IGenerateOptions {
+  [key: string]: boolean | number;
+}
+
+export interface GenerateOptions extends IGenerateOptions {
+  span: number;
+  enforceChord: boolean;
+  filterInversions: boolean;
+  // insertFirstMuted: boolean;
+  insertOpen: boolean;
+  insertMuted: boolean;
+}
 
 const DefaultGenerateOptions = () => {
   return {
