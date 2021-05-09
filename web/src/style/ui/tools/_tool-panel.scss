@@ -56,6 +56,9 @@ $debug-scrollbar-width: 20px;
   }
 
   .content {
+    display: flex;
+    flex-direction: column;
+ 
     cursor: auto;
   }
 }
@@ -78,7 +81,7 @@ $debug-scrollbar-width: 20px;
       animation: swap-in $duration ease-in-out;
 
       .content {
-        transition: all $short-duration ease-in 0s;
+        transition: all $duration ease-in-out $shortest-duration;
         max-height: $panel-content-max-height;
       }
     }
@@ -91,6 +94,7 @@ $debug-scrollbar-width: 20px;
       animation: expand $short-duration;
 
       .content {
+        animation: expand-content $short-duration ease-in-out;
         transition: all $short-duration ease-in 0s;
         max-height: $panel-content-max-height;
       }

@@ -12,8 +12,8 @@
     .content {
       $option-height: 30px;
 
-      .options.show {
-        margin-bottom: 0.5rem;
+      .options .show {
+        margin-bottom: 1rem;
       }
 
       .options-container {
@@ -66,6 +66,13 @@
         justify-content: space-around;
 
         overflow-y: auto;
+      }
+    }
+
+    &.collapse,
+    &.previous {
+      .variations {
+        overflow-y: hidden;
       }
     }
   }
