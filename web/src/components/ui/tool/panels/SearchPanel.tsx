@@ -2,15 +2,13 @@ import { filter, map, uniqBy } from 'lodash';
 import * as React from 'react';
 import { useState } from 'react';
 import { Badge, Button } from 'react-bootstrap';
-import { ToolPanel } from '.';
-import { useIndicatorsContext } from '../..';
-import { useAppOptionsContext } from '../../..';
-import { useRequest } from '../../../hooks';
-import { FretNote, Key, Note, TuningNote } from '../../../models';
-import { KeyApi } from '../../../network';
-import { SearchNote } from '../slideins/SearchNote';
-import { ToolPanelProps } from './ToolPanel';
-
+import { ToolPanel, ToolPanelProps } from '.';
+import { useIndicatorsContext } from '../../..';
+import { useAppOptionsContext } from '../../../..';
+import { useRequest } from '../../../../hooks';
+import { FretNote, Key, Note, TuningNote } from '../../../../models';
+import { KeyApi } from '../../../../network';
+import { SearchNote } from '../../slideins/SearchNote';
 export interface SearchPanelProps
   extends Pick<ToolPanelProps, 'className' | 'collapse'> {}
 

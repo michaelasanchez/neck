@@ -63,7 +63,9 @@
       .variations {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: space-around;
+
+        overflow-y: auto;
       }
     }
   }

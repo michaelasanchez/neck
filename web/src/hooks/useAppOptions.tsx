@@ -2,7 +2,7 @@ import { every, filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
-import { DefaultDockState, DockState } from '../components/ui/tools';
+import { DefaultDockState, DockState } from '../components/ui/tool';
 import { NoteSuffix, NoteValue, ScaleType } from '../enums';
 import {
   Chord,

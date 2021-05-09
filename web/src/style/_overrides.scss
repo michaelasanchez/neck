@@ -1,23 +1,26 @@
 /* Button */
-main .btn {
-  // Outline-Secondary
-  &.btn-outline-secondary {
-    border-color: #ced4da;
-    color: #212529;
+main,
+.ui {
+  .btn {
+    // Outline-Secondary
+    &.btn-outline-secondary {
+      border-color: #ced4da;
+      color: #212529;
 
-    &:focus {
-      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
-    }
-    &:active,
-    &:focus,
-    &:hover {
-      background-color: unset !important;
-      border-color: #80bdff !important;
-      color: #212529 !important;
-    }
+      &:focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+      }
+      &:active,
+      &:focus,
+      &:hover {
+        background-color: unset !important;
+        border-color: #80bdff !important;
+        color: #212529 !important;
+      }
 
-    &:disabled {
-      border-color: #ced4da !important;
+      &:disabled {
+        border-color: #ced4da !important;
+      }
     }
   }
 }

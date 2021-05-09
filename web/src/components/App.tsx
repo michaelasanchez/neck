@@ -8,7 +8,7 @@ import { Loading } from './Loading';
 import { Neck } from './neck';
 import { Ui } from './ui';
 import { Indicators } from './ui/indicators';
-import { DockDirection } from './ui/tools';
+import { DockDirection } from './ui/tool';
 
 const SHOW_INDICATORS = true;
 

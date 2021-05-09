@@ -2,25 +2,26 @@ import { filter, isEqual, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { PanelDropdown } from '.';
-import { NoteSelection, useIndicatorsContext } from '../..';
-import { useAppOptionsContext } from '../../..';
-import { useRequest } from '../../../hooks';
-import { IGenerateResponseHeader } from '../../../interfaces';
-import { Chord, ChordModifier, ChordVariation, Note } from '../../../models';
-import { ChordVariationApi } from '../../../network';
-import { NoteUtils } from '../../../shared';
-import { ChordDiagram } from '../diagrams';
-import { GenerateOptions } from '../slideins';
-import { ToolPanel, ToolPanelProps } from './ToolPanel';
+import { PanelDropdown, ToolPanel, ToolPanelProps } from '..';
+import { NoteSelection, useIndicatorsContext } from '../../..';
+import { useAppOptionsContext } from '../../../..';
+import { useRequest } from '../../../../hooks';
+import { IGenerateResponseHeader } from '../../../../interfaces';
+import { Chord, ChordModifier, ChordVariation, Note } from '../../../../models';
+import { ChordVariationApi } from '../../../../network';
+import { NoteUtils } from '../../../../shared';
+import { ChordDiagram } from '../../diagrams';
+import { GenerateOptions } from '../../slideins';
 
-const DefaultGenerateOptions = {
-  span: 4,
-  enforceChord: true,
-  filterInversions: true,
-  // insertFirstMuted: false,
-  insertOpen: true,
-  insertMuted: true,
+const DefaultGenerateOptions = () => {
+  return {
+    span: 4,
+    enforceChord: true,
+    filterInversions: true,
+    // insertFirstMuted: false,
+    insertOpen: true,
+    insertMuted: true,
+  };
 };
 
 const modifierOptions = filter(ChordModifier, (m) => !isNaN(m)).map((m) => {
@@ -72,10 +73,10 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   const [selected, setSelected] = useState<Note[]>();
 
   const [generateOptions, setGenerateOptions] = useState<GenerateOptions>(
-    DefaultGenerateOptions
+    DefaultGenerateOptions()
   );
   const [pendingOptions, setPendingOptions] = useState<GenerateOptions>(
-    DefaultGenerateOptions
+    DefaultGenerateOptions()
   );
 
   const { req: generateVariations, loading } = useRequest(
@@ -287,17 +288,17 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   const buttonGroup = (
     <>
       <PanelDropdown
-        options={noteOptions}
         active={{ label: chord.Root.Label, value: chord.Root }}
+        options={noteOptions}
         optionsEqual={NoteUtils.NotesAreEqual}
         onSelect={handleRootUpdate}
       />
       <PanelDropdown
-        options={modifierOptions}
         active={{
           label: Chord.getModifierLabel(chord.Modifier),
           value: chord.Modifier,
         }}
+        options={modifierOptions}
         onSelect={handleModifierUpdate}
       />
     </>

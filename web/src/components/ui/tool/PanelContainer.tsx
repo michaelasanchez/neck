@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-import { ChordPanel, DockDirection, DockZones, DragState, ToolPanel } from '.';
+import {
+  ChordPanel,
+  DockDirection,
+  DockZones,
+  DragState,
+  SearchPanel,
+  ToolPanel,
+} from '.';
 import { useAppOptionsContext } from '../../..';
-import { useStyles } from '../../../hooks';
 import { IndicatorsMode } from '../indicators';
-import { DockState, DefaultDockState } from './DockZones';
-import { SearchPanel } from './SearchPanel';
+import { DefaultDockState, DockState } from './DockZones';
+import { ScalePanel } from './panels/ScalePanel';
 
 const getDockDirectionClassName = (direction: DockDirection) => {
   switch (direction) {
@@ -22,18 +28,6 @@ const getDockDirectionClassName = (direction: DockDirection) => {
       return '';
   }
 };
-
-const filler = (
-  <>
-    do do do do do do do do do dod od od od od od od od odo od od odo do do do
-    do do do do do do do do do do do do dod od d odo do dod od odo do do do do
-    dod od od od odo do do do do do do do do do do do do do do do do do do d od
-    od od do dod od do do do do do do do do do do do do do do do do d odo do dod
-    od od od od od odo d od od od od od od od od od od od od od od odo do d od
-    od odo do d od od od odo do do do do do do do do do do
-  </>
-);
-
 interface PanelContainerProps {}
 
 export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
@@ -140,15 +134,10 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
             className={getPanelClassName(IndicatorsMode.Chord, dockState)}
             collapse={IndicatorsMode.Chord != indicatorsMode}
           />
-          <ToolPanel
-            className={`scale ${getPanelClassName(
-              IndicatorsMode.Scale,
-              dockState
-            )}`}
-            title="Scales"
-          >
-            {filler}
-          </ToolPanel>
+          <ScalePanel
+            className={getPanelClassName(IndicatorsMode.Scale, dockState)}
+            collapse={IndicatorsMode.Scale != indicatorsMode}
+          />
           <SearchPanel
             className={getPanelClassName(IndicatorsMode.Search, dockState)}
             collapse={IndicatorsMode.Search != indicatorsMode}

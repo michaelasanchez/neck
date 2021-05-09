@@ -13,4 +13,17 @@ export class Scale extends ApiEntity {
   public Tonic: Note;
 
   public Notes: Note[];
+
+  static GetScaleTypeLabel = (type: ScaleType) => {
+    switch (type) {
+      case ScaleType.Diatonic:
+        return 'Major';
+      case ScaleType.NaturalMinor:
+        return 'Minor';
+      case ScaleType.Chromatic:
+        return 'Chromatic';
+      case ScaleType.Pentatonic:
+        return 'Pentatonic';
+    }
+  };
 }

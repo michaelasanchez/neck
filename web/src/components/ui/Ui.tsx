@@ -3,7 +3,7 @@ import { Navbar, Notifications, OptionsModal } from '.';
 import { useAppOptionsContext } from '../..';
 import { FretDisplayMode } from '../neck';
 import { IndicatorsMode } from './indicators';
-import { PanelContainer } from './tools';
+import { PanelContainer } from './tool';
 const STATIC_FRET_DISPLAY_MODE = FretDisplayMode.Note;
 
 export interface UiProps {}

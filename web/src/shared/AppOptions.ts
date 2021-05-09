@@ -1,6 +1,6 @@
 import { FretDisplayMode } from '../components/neck';
 import { IndicatorsMode } from '../components/ui/indicators';
-import { DockState } from '../components/ui/tools';
+import { DockState } from '../components/ui/tool';
 import { Instrument, Key, Scale, Tuning } from '../models';
 import { Chord } from '../models/api';
 

@@ -1,6 +1,6 @@
 import { FretDisplayMode } from '../components/neck';
 import { IndicatorsMode } from '../components/ui/indicators';
-import { DefaultDockState, DockState } from '../components/ui/tools';
+import { DefaultDockState, DockState } from '../components/ui/tool';
 
 export class Cookie {
   keyId: string;
