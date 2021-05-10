@@ -12,8 +12,9 @@
     .content {
       $option-height: 30px;
 
+      /* Options */
       .options .show {
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
       }
 
       .options-container {
@@ -60,12 +61,23 @@
         }
       }
 
+      /* Variations */
       .variations {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
 
         overflow-y: auto;
+        &::-webkit-scrollbar {
+          width: 5px;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: #666;
+          border-radius: 4px;
+        }
+        &::-webkit-scrollbar-track {
+          background: #999;
+        }
       }
     }
 

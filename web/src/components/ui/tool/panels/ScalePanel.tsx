@@ -1,14 +1,11 @@
-import { render } from 'enzyme';
 import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { NoteSelection, useIndicatorsContext } from '../../..';
 import { useAppOptionsContext } from '../../../..';
 import { ScaleType } from '../../../../enums';
-import { useRequest } from '../../../../hooks';
-import { IGenerateResponseHeader } from '../../../../interfaces';
 import { Note, Scale, ScaleVariation } from '../../../../models';
-import { ScaleVariationApi } from '../../../../network';
+import { useScaleVariationService } from '../../../../services';
 import { NoteUtils } from '../../../../shared';
 import { ScaleDiagram } from '../../diagrams';
 import { PanelDropdown } from '../PanelDropdown';
@@ -32,18 +29,17 @@ export const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
 
   const { instrument, scale, tuning } = appOptions;
   const { collapse } = props;
-  const [header, setHeader] = useState<
-    IGenerateResponseHeader<ScaleVariation>
-  >();
+
+  const {
+    header,
+    variations,
+    generate,
+    loading,
+  } = useScaleVariationService();
 
   const [currentIndex, setCurrentIndex] = useState<number>();
-  const [variations, setVariations] = useState<ScaleVariation[]>();
 
   const [selected, setSelected] = useState<Note[]>();
-
-  const { req: generateVariations, loading } = useRequest(
-    new ScaleVariationApi().Generate
-  );
 
   useEffect(() => {
     if (
@@ -58,28 +54,20 @@ export const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
         (!!header.Tuning &&
           !NoteUtils.OffsetsAreEqual(tuning.Offsets, header.Tuning.Offsets)))
     ) {
-      // Handle new instrument
-      if (tuning.Offsets.length === 0) {
-        setSelected([]);
-        setVariations([]);
-      } else {
-        setSelected([]);
-        generateVariations({
-          baseId: scale.Id,
-          tuningId: tuning.Id,
-          span: 5,
-          offset: 0,
-          range: instrument.NumFrets,
-        }).then((newHeader: IGenerateResponseHeader<ScaleVariation>) => {
-          setHeader({ ...newHeader, Variations: null });
-          setVariations(newHeader.Variations);
-          if (newHeader.Variations.length) {
-            handleSetScaleVariation(newHeader.Variations[0], 0);
-          }
-        });
-      }
+      setSelected([]);
+      generate({
+        span: 5,
+        offset: 0,
+        range: instrument.NumFrets,
+      });
     }
   }, [instrument.NumFrets, scale, tuning, collapse]);
+
+  useEffect(() => {
+    if (header?.Variations?.length) {
+      handleSetScaleVariation(header.Variations[0], 0);
+    }
+  }, [header]);
 
   useEffect(() => {
     if (variations?.length) {
