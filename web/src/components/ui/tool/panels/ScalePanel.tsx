@@ -21,7 +21,7 @@ const scaleTypeOptions = filter(ScaleType, (t) => !isNaN(t)).map((t) => {
 interface ScalePanelProps
   extends Pick<ToolPanelProps, 'className' | 'collapse'> {}
 
-export const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
+const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
   // TODO: Same as in ChordPanel. This should really get combined
   const noteOptions = map(NoteUtils.StandardNotes(), (n, i) => {
     return { label: n.Label, value: n };
@@ -180,3 +180,5 @@ export const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
     </ToolPanel>
   );
 };
+
+export const MemoizedScalePanel = React.memo(ScalePanel);

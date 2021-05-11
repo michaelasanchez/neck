@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import {
-  ChordPanel,
+  MemoizedChordPanel,
   DockDirection,
   DockZones,
   DragState,
@@ -12,7 +12,7 @@ import {
 import { useAppOptionsContext } from '../../..';
 import { IndicatorsMode } from '../indicators';
 import { DefaultDockState, DockState } from './DockZones';
-import { ScalePanel } from './panels/ScalePanel';
+import { MemoizedScalePanel } from './panels/ScalePanel';
 
 const getDockDirectionClassName = (direction: DockDirection) => {
   switch (direction) {
@@ -104,10 +104,8 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
     }
   };
 
-  const handleDragStart = (e: DraggableEvent, data: DraggableData) =>
-    setDragState({ ...dragState, dragging: true });
-  const handleDragStop = (e: DraggableEvent, data: DraggableData) =>
-    setDragState({ ...dragState, dragging: false });
+  const handleDragStart = () => setDragState({ ...dragState, dragging: true });
+  const handleDragStop = () => setDragState({ ...dragState, dragging: false });
 
   return (
     <>
@@ -130,11 +128,11 @@ export const PanelContainer: React.FunctionComponent<PanelContainerProps> = (
               : ''
           }`}
         >
-          <ChordPanel
+          <MemoizedChordPanel
             className={getPanelClassName(IndicatorsMode.Chord, dockState)}
             collapse={IndicatorsMode.Chord != indicatorsMode}
           />
-          <ScalePanel
+          <MemoizedScalePanel
             className={getPanelClassName(IndicatorsMode.Scale, dockState)}
             collapse={IndicatorsMode.Scale != indicatorsMode}
           />

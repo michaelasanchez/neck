@@ -60,7 +60,7 @@ const getOptionsLabel = (key: string) => {
 interface ChordPanelProps
   extends Pick<ToolPanelProps, 'className' | 'collapse'> {}
 
-export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
+const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   // TODO: This doesn't wor outside of component. Borked import?
   const noteOptions = map(NoteUtils.StandardNotes(), (n, i) => {
     return { label: n.Label, value: n };
@@ -328,3 +328,5 @@ export const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
     </ToolPanel>
   );
 };
+
+export const MemoizedChordPanel = React.memo(ChordPanel);
