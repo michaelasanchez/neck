@@ -1,4 +1,3 @@
-import { render } from 'enzyme';
 import { filter, map } from 'lodash';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -19,7 +18,7 @@ const scaleTypeOptions = filter(ScaleType, (t) => !isNaN(t)).map((t) => {
 });
 
 interface ScalePanelProps
-  extends Pick<ToolPanelProps, 'className' | 'collapse'> {}
+  extends Pick<ToolPanelProps, 'className' | 'collapse' | 'docked'> {}
 
 const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
   // TODO: Same as in ChordPanel. This should really get combined
@@ -31,10 +30,9 @@ const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
   const { setScaleVariation } = useIndicatorsContext();
 
   const { instrument, scale, tuning } = appOptions;
-  const { collapse } = props;
-  const [header, setHeader] = useState<
-    IGenerateResponseHeader<ScaleVariation>
-  >();
+  const { className, collapse } = props;
+  const [header, setHeader] =
+    useState<IGenerateResponseHeader<ScaleVariation>>();
 
   const [currentIndex, setCurrentIndex] = useState<number>();
   const [variations, setVariations] = useState<ScaleVariation[]>();
@@ -168,10 +166,11 @@ const ScalePanel: React.FunctionComponent<ScalePanelProps> = (props) => {
       />
     </>
   );
-
+  ``;
   return (
     <ToolPanel
-      className={`scale ${props.className}`}
+      {...props}
+      className={`scale ${className}`}
       title="Scales"
       buttonGroup={buttonGroup}
       header={renderHeader}

@@ -1,7 +1,4 @@
-// $panel-height: 600px;
 $panel-width: 400px;
-
-$debugHeightWidth: 120px;
 
 .panel-container {
   position: absolute;
@@ -9,8 +6,9 @@ $debugHeightWidth: 120px;
   top: 0;
   left: 0;
 
-  // height: $panel-height;
-  width: $panel-width;
+  &:not(.docked) {
+    width: $panel-width;
+  }
 
   &.docked {
     transform: translate(0, 0) !important;
@@ -20,7 +18,6 @@ $debugHeightWidth: 120px;
       right: 0;
       left: 0;
 
-      height: $debugHeightWidth;
       width: 100%;
     }
 
@@ -30,7 +27,6 @@ $debugHeightWidth: 120px;
       bottom: $navbar-height;
 
       height: 100%;
-      width: $debugHeightWidth;
     }
 
     &.top {

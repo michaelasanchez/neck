@@ -1,7 +1,6 @@
 import { reduce, times } from 'lodash';
 import { CSSProperties, useEffect, useState } from 'react';
 import { useAppOptionsContext } from '..';
-import { DefaultDockState, DockState } from '../components/ui/tool';
 import { Instrument } from '../models';
 
 const navbarHeight = 67.6;

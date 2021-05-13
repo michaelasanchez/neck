@@ -9,8 +9,9 @@ import { useRequest } from '../../../../hooks';
 import { FretNote, Key, Note, TuningNote } from '../../../../models';
 import { KeyApi } from '../../../../network';
 import { SearchNote } from '../../slideins/SearchNote';
+
 export interface SearchPanelProps
-  extends Pick<ToolPanelProps, 'className' | 'collapse'> {}
+  extends Pick<ToolPanelProps, 'className' | 'collapse' | 'docked'> {}
 
 const getDisplayArray = (searchArray: FretNote[]): FretNote[] => {
   return uniqBy(searchArray, (n: FretNote) => n.Note?.Pitch);
@@ -19,6 +20,7 @@ const getDisplayArray = (searchArray: FretNote[]): FretNote[] => {
 export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
   props
 ) => {
+  const { className } = props;
   const { setAppOptions } = useAppOptionsContext();
   const {
     fretMap,
@@ -59,7 +61,7 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
   };
 
   return (
-    <ToolPanel className={`search ${props.className}`} title="Search">
+    <ToolPanel {...props} className={`search ${className}`} title="Search">
       <div className="search-query">
         {searchArray.length ? (
           map(getDisplayArray(searchArray), (n: FretNote, i: number) => (

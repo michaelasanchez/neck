@@ -11,8 +11,10 @@ export enum DockDirection {
 
 export interface DragState {
   dragging: boolean;
-  pageX: number;
-  pageY: number;
+  x: number;
+  y: number;
+  mouseX?: number;
+  mouseY?: number;
 }
 
 export interface DockState {
@@ -21,11 +23,6 @@ export interface DockState {
 }
 
 const DockMargin = 40;
-
-export const DefaultDockState: DockState = {
-  docked: false,
-  direction: null,
-};
 
 const debugHeight = { height: DockMargin };
 const debugWidth = { width: DockMargin };
@@ -41,12 +38,12 @@ export const DockZones: React.FunctionComponent<DockZonesProps> = (props) => {
 
   const { navbar } = useStyles();
 
-  const topHover = dragState?.pageY < DockMargin;
-  const rightHover = dragState?.pageX > window.innerWidth - DockMargin;
+  const topHover = dragState?.mouseY < DockMargin;
+  const rightHover = dragState?.mouseX > window.innerWidth - DockMargin;
   const bottomHover =
-    dragState?.pageY >
+    dragState?.mouseY >
     window.innerHeight - DockMargin - (navbar.height as number);
-  const leftHover = dragState?.pageX < DockMargin;
+  const leftHover = dragState?.mouseX < DockMargin;
 
   useEffect(() => {
     const docked = topHover || rightHover || bottomHover || leftHover;

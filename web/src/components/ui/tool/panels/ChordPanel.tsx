@@ -58,7 +58,7 @@ const getOptionsLabel = (key: string) => {
 };
 
 interface ChordPanelProps
-  extends Pick<ToolPanelProps, 'className' | 'collapse'> {}
+  extends Pick<ToolPanelProps, 'className' | 'collapse' | 'docked'> {}
 
 const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   // TODO: This doesn't wor outside of component. Borked import?
@@ -70,13 +70,12 @@ const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
   const { setChordVariation } = useIndicatorsContext();
 
   // Props
-  const { collapse } = props;
+  const { className, collapse } = props;
   const { chord, instrument, tuning } = appOptions;
 
   // Variation
-  const [header, setHeader] = useState<
-    IGenerateResponseHeader<ChordVariation>
-  >();
+  const [header, setHeader] =
+    useState<IGenerateResponseHeader<ChordVariation>>();
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [variations, setVariations] = useState<ChordVariation[]>();
@@ -318,7 +317,8 @@ const ChordPanel: React.FunctionComponent<ChordPanelProps> = (props) => {
 
   return (
     <ToolPanel
-      className={`chord ${props.className}`}
+      {...props}
+      className={`chord ${className}`}
       title="Chords"
       buttonGroup={buttonGroup}
       header={renderNoteSelection}

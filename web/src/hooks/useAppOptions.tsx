@@ -2,7 +2,6 @@ import { every, filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { useNeckCookie } from '.';
 import { IError } from '../components/Loading';
-import { DefaultDockState, DockState } from '../components/ui/tool';
 import { NoteSuffix, NoteValue, ScaleType } from '../enums';
 import {
   Chord,
@@ -12,14 +11,14 @@ import {
   Key,
   KeyType,
   Scale,
-  Tuning
+  Tuning,
 } from '../models';
 import {
   ChordApi,
   InstrumentApi,
   KeyApi,
   ScaleApi,
-  TuningApi
+  TuningApi,
 } from '../network';
 import { AppOptions } from '../shared';
 
@@ -36,7 +35,6 @@ const validateAppOptions = (appOptions: AppOptions): IError => {
 
   return null;
 };
-
 
 const loadKey = (keyId?: string): Promise<Key> => {
   if (!!keyId) {
@@ -155,14 +153,11 @@ export const useAppOptions = () => {
           leftHandMode: cookie.leftHandMode,
           leftHandUi: cookie.leftHandUi,
           autoScroll: cookie.autoScroll,
-
-
         } as AppOptions;
 
         setAppOptions(options);
         setLoading(false);
       }
-
     });
   };
 
