@@ -62,11 +62,10 @@
 
       .variations {
         display: flex;
-        justify-content: space-around;
-
         overflow-y: auto;
 
         &::-webkit-scrollbar {
+          height: 6px;
           width: 6px;
         }
         &::-webkit-scrollbar-thumb {
@@ -103,11 +102,22 @@
   .tool-panel {
     .content .variations {
       flex-wrap: wrap;
+      justify-content: space-around;
     }
   }
 }
 
 .panel-container.docked {
+  &.top,
+  &.bottom {
+    .tool-panel {
+      .content .variations {
+        overflow-x: auto;
+        overflow-y: none;
+      }
+    }
+  }
+
   &.left,
   &.right {
     .tool-panel {

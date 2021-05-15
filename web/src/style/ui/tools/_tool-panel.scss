@@ -124,12 +124,15 @@ $debug-scrollbar-width: 20px;
     }
   }
 
+  /* Horizontal */
   &.top,
   &.bottom {
     .tool-panel {
+      width: calc(100% - 10px);
     }
   }
 
+  /* Vertical */
   &.right,
   &.left {
     .tool-panel {
@@ -143,9 +146,16 @@ $debug-scrollbar-width: 20px;
     }
   }
 
+  /* Top */
   &.top .tool-panel {
+    > .btn-group {
+      top: unset;
+      bottom: -40px;
+      right: 10px;
+    }
   }
 
+  /* Right */
   &.right .tool-panel {
     right: 0;
     > .btn-group {
@@ -153,10 +163,16 @@ $debug-scrollbar-width: 20px;
     }
   }
 
+  /* Bottom */
   &.bottom .tool-panel {
     bottom: 0;
+    > .btn-group {
+      top: -40px;
+      right: 10px;
+    }
   }
 
+  /* Left */
   &.left .tool-panel {
     > .btn-group {
       left: 10px;

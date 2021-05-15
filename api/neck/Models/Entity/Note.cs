@@ -212,7 +212,6 @@ namespace neck.Models.Entity
                 }
                 else
                 {
-                    Debug.WriteLine(Suffix);
                     step = 1;
                     nextSuffix = NoteSuffix.Sharp;
                 }
