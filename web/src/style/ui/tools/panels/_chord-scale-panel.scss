@@ -12,8 +12,9 @@
     .content {
       $option-height: 30px;
 
+      /* Options */
       .options .show {
-        margin-bottom: 1rem;
+        // margin-bottom: 1rem;
       }
 
       .options-container {
@@ -60,6 +61,7 @@
         }
       }
 
+      /* Variations */
       .variations {
         display: flex;
         overflow-y: auto;
