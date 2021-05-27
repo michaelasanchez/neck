@@ -43,7 +43,7 @@ namespace neck.Services
             return keyResult;
         }
 
-        public async Task<OperationResult<List<Key>>> Search(KeySearchArgs args)
+        public async Task<OperationResult<List<Key>>> Search(SearchArgs args)
         {
             // TODO: Again.. figure out where validation goes
             //  Also, maybe we should be returning a different status code here. 300?

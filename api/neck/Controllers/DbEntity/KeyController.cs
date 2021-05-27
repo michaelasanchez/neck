@@ -52,7 +52,7 @@ namespace neck.Controllers.DbEntity
 		}
 
 		[HttpPost("search")]
-		public virtual async Task<ActionResult<List<Key>>> Search(KeySearchArgs args)
+		public virtual async Task<ActionResult<List<Key>>> Search(SearchArgs args)
         {
 			var keyResult = await _keyService.Value.Search(args);
 			if (!keyResult.Success)

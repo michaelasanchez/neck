@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace neck.Services.Interfaces
 {
-    public interface IKeyService
+    public interface IChordService
     {
-        Task<OperationResult<Key>> Locate(KeyLocateArgs args);
+        //Task<OperationResult<Key>> Locate(KeyLocateArgs args);
 
-        Task<OperationResult<List<Key>>> Search(SearchArgs args);
+        Task<OperationResult<List<Chord>>> Search(SearchArgs args);
     }
 }

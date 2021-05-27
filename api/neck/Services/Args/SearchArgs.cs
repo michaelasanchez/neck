@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace neck.Services.Args
 {
-    public class KeySearchArgs
+    public class SearchArgs
     {
         public List<Note> Notes { get; set; }
 
-        public KeySearchArgs(List<Note> notes)
+        public SearchArgs()
+        {
+
+        }
+
+        public SearchArgs(List<Note> notes)
         {
             Notes = notes;
         }

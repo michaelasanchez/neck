@@ -32,7 +32,7 @@ namespace neck.Services
 
 		protected async override Task<OperationResult<List<Key>>> GetKeys(Chord @base)
 		{
-			return await _keyService.Search(new Args.KeySearchArgs(@base.Tones));
+			return await _keyService.Search(new Args.SearchArgs(@base.Tones));
 		}
 
 		public async Task<OperationResult<GenerateResponseHeader<ChordVariation>>> Generate(Guid baseId, Guid tuningId, int offset, int span, int range, ChordVariationGenerateOptions options)

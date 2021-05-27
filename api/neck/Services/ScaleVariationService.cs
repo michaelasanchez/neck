@@ -32,7 +32,7 @@ namespace neck.Services
 
 		protected async override Task<OperationResult<List<Key>>> GetKeys(Scale @base)
 		{
-			return await _keyService.Search(new Args.KeySearchArgs(@base.Notes));
+			return await _keyService.Search(new Args.SearchArgs(@base.Notes));
 		}
 
 		public async Task<OperationResult<GenerateResponseHeader<ScaleVariation>>> Generate(Guid baseId, Guid tuningId, int offset, int span, int range, ScaleVariationGenerateOptions options)
