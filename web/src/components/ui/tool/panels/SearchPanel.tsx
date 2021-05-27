@@ -3,12 +3,21 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Badge, Button } from 'react-bootstrap';
 import { ToolPanel, ToolPanelProps } from '.';
+import { PanelDropdown } from '..';
 import { useIndicatorsContext } from '../../..';
 import { useAppOptionsContext } from '../../../..';
 import { useRequest } from '../../../../hooks';
 import { FretNote, Key, Note, TuningNote } from '../../../../models';
 import { KeyApi } from '../../../../network';
 import { SearchNote } from '../../slideins/SearchNote';
+
+export enum SearchMode {
+  Chords,
+  Keys,
+  //Scales
+}
+
+const DefaultSearchMode = SearchMode.Chords;
 
 export interface SearchPanelProps
   extends Pick<ToolPanelProps, 'className' | 'collapse' | 'docked'> {}
@@ -30,19 +39,30 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
     setSelectedMatrix,
   } = useIndicatorsContext();
 
-  const [keysQuery, setKeysQuery] = useState<FretNote[]>();
+  const [searchMode, setSearchMode] = useState<SearchMode>(DefaultSearchMode);
+
+  const [query, setQuery] = useState<FretNote[]>();
+
   const [keysResult, setKeysResult] = useState<Key[]>();
 
   const { req: searchKeys } = useRequest(new KeyApi().SearchAsync);
 
   const handleSetKey = (k: Key) => setAppOptions({ key: k });
 
-  const handleSetKeys = () => {
+  const handleSubmitQuery = () => {
     if (!!searchArray.length) {
-      searchKeys(map(searchArray, (n) => n.Note)).then((keys) => {
-        setKeysQuery(getDisplayArray(searchArray));
-        setKeysResult(keys);
-      });
+      switch (searchMode) {
+        case SearchMode.Keys:
+          searchKeys(map(searchArray, (n) => n.Note)).then((keys) => {
+            setQuery(getDisplayArray(searchArray));
+            setKeysResult(keys);
+          });
+          break;
+        case SearchMode.Chords:
+          break;
+        default:
+          console.error('Something is wrong'); // TODO: debug
+      }
     }
   };
 
@@ -60,8 +80,22 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
     setSelectedMatrix(filteredMatrix);
   };
 
+  const searchOptions = [{ label: 'Chords', value: SearchMode.Chords}, { label: 'Keys', value: SearchMode.Keys }];//, { label: 'Scales', value: 'scale' }];
+
+  
+  /* ButtonGroup */
+  const buttonGroup = (
+    <>
+      <PanelDropdown
+        active={searchOptions[searchMode]}  // TODO: this only works because SearchMode enum matches options array
+        options={searchOptions}
+        onSelect={setSearchMode}
+      />
+    </>
+  );
+
   return (
-    <ToolPanel {...props} className={`search ${className}`} title="Search">
+    <ToolPanel {...props} className={`search ${className}`} title="Search" buttonGroup={buttonGroup}>
       <div className="search-query">
         {searchArray.length ? (
           map(getDisplayArray(searchArray), (n: FretNote, i: number) => (
@@ -83,7 +117,7 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
         >
           Clear
         </Button>
-        <Button disabled={!searchArray.length} onClick={() => handleSetKeys()}>
+        <Button disabled={!searchArray.length} onClick={() => handleSubmitQuery()}>
           Go
         </Button>
       </div>
@@ -93,7 +127,7 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
           <div className="results-header">
             <h4>Results</h4>
             <div>
-              {map(keysQuery, (n: FretNote, i: number) => (
+              {map(query, (n: FretNote, i: number) => (
                 <Badge pill variant="light" key={i}>
                   {n?.Label}
                 </Badge>

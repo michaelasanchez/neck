@@ -11,45 +11,52 @@ using static neck.Enums.ChordEnums;
 
 namespace neck.Services
 {
-    public class ChordService : IChordService
-    {
-        private Lazy<IRepository<Note>> _noteRepo;
+	public class ChordService : IChordService
+	{
+		private Lazy<IRepository<Note>> _noteRepo;
 
-        public ChordService(IRepository<Note> noteRepository)
-        {
-            _noteRepo = new Lazy<IRepository<Note>>(noteRepository);
-        }
+		public ChordService(IRepository<Note> noteRepository)
+		{
+			_noteRepo = new Lazy<IRepository<Note>>(noteRepository);
+		}
 
-        public async Task<OperationResult<List<Chord>>> Search(SearchArgs args)
-        {
-            var modifierValues = Enum.GetValues(typeof(ChordModifier)) as ChordModifier[];
+		public async Task<OperationResult<List<Chord>>> Search(SearchArgs args)
+		{
+			var modifierValues = Enum.GetValues(typeof(ChordModifier)) as ChordModifier[];
 
-            var rootsQuery = await _noteRepo.Value.GetAll();
+			var rootsQuery = await _noteRepo.Value.GetAll();
 
-            var chordMatches = new List<Chord>();
+			var chordMatches = new List<Chord>();
 
-            foreach (var rootNote in rootsQuery.Result)
-            {
-                foreach (var modifier in modifierValues)
-                {
-                    try
-                    {
-                        var chord = new Chord(rootNote, modifier);
+			foreach (var rootNote in rootsQuery.Result)
+			{
+				foreach (var modifier in modifierValues)
+				{
+					try
+					{
+						var chord = new Chord(rootNote, modifier);
 
-                        // TODO: We shouldn't need null checks here. Somthing with diminished
-                        if (chord.Tones.All(t => args.Notes.Any(s => s?.Pitch == t?.Pitch)))
-                        {
-                            chordMatches.Add(chord);
-                        }
-                    }
-                    catch
-                    {
+						// TODO: We shouldn't need null checks here. Somthing with diminished
+						if (args.Notes.All(t =>
+						{
+							return chord.Tones.Any(s =>
+							{
+								return s?.Pitch == t?.Pitch;
+							});
+						}))
+						{
+							chordMatches.Add(chord);
+						}
+					}
 
-                    }
-                }
-            }
+					catch
+					{
 
-            return OperationResult<List<Chord>>.CreateSuccess(chordMatches);
-        }
-    }
+					}
+				}
+			}
+
+			return OperationResult<List<Chord>>.CreateSuccess(chordMatches);
+		}
+	}
 }

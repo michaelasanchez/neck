@@ -48,7 +48,7 @@ $debug-scrollbar-width: 20px;
     top: 10px;
     right: -10px;
 
-    > .btn-group {
+    > .btn-group:not(:only-child) {
       &:first-child button {
         padding-right: 0.6rem;
       }
