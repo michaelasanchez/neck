@@ -36,6 +36,11 @@ namespace neck.Services
 					{
 						var chord = new Chord(rootNote, modifier);
 
+						if (chord.Tones.Any(c => c ==null))
+						{
+							;
+						}
+
 						// TODO: We shouldn't need null checks here. Somthing with diminished
 						if (args.Notes.All(t =>
 						{

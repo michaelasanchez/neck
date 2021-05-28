@@ -10,15 +10,16 @@ namespace neck.Enums
         public enum ChordModifier
 		{
 			Major,
-			Minor,
-			Diminished,
-			Augmented,
-			Sus2,
-			Sus4,
-			Major7,
-			Minor7,
-			Dominant7,
-			Diminished7,
+			Minor,			// Aeolian, Dorian, Phryigan
+			Diminished,		// Locrian
+			Augmented,		// Lydian Augmented
+			Sus2,			// Ionian
+			Sus4,           // Ionian
+			//Flated5		// Lydian
+			Major7,			// Dorian
+			Minor7,			// Dorian
+			Dominant7,		// Mixolydian
+			Diminished7,	// 
 			Augmented7,
 			//MajorSixth,
 			//MinorSixth,

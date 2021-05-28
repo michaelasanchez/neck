@@ -167,6 +167,8 @@ namespace neck.Models.Entity
                 case ChordModifier.Minor:
                 case ChordModifier.Minor7:
                     return new Mode(ModeType.Aeolian);
+                case ChordModifier.Diminished:
+                    return new Mode(ModeType.Locrian);
                 case ChordModifier.Dominant7:
                     return new Mode(ModeType.Mixolydian);
                 default:
