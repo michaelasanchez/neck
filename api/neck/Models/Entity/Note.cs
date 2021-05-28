@@ -2,7 +2,6 @@
 using neck.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
 
 namespace neck.Models.Entity
 {
@@ -56,7 +55,9 @@ namespace neck.Models.Entity
             return note;
         }
 
-        public override bool Equals(object obj)
+		#region IEquatable
+
+		public override bool Equals(object obj)
         {
             return Equals(obj as Note);
         }
@@ -73,7 +74,9 @@ namespace neck.Models.Entity
             return HashCode.Combine(Base, Suffix);
         }
 
-        private string SuffixSymbol(NoteSuffix suffix)
+		#endregion
+
+		private string SuffixSymbol(NoteSuffix suffix)
         {
             switch (suffix)
             {
@@ -107,24 +110,35 @@ namespace neck.Models.Entity
             }
         }
 
+        #region Utilities
+
+        private int stepValue(int value, int step)
+        {
+            return (value + step) % Notes.Count;
+        }
+
+        private NoteValue noteValue(int value, int step) => (NoteValue)stepValue(value, step);
+
+        private bool noteValueExists(int value, int step) => Enum.IsDefined(typeof(NoteValue), stepValue(value, step));
+
+        #endregion
+
         #region Calculate note intervals & accidentals
 
         // TODO: Add half/whole step down?
         public Note HalfStepDown()
         {
-            //int step = 0;
-
-            return new Note();
+            throw new NotImplementedException();
         }
 
         public Note HalfStepUp()
         {
             int step = 1;
 
-            var nextValue = (Pitch + step) % Notes.Count;
-            var nextSuffix = NoteSuffix.Natural;
+            NoteValue nextValue;
+            NoteSuffix nextSuffix = NoteSuffix.Natural;
 
-            if (Enum.IsDefined(typeof(NoteValue), nextValue))
+            if (noteValueExists(Pitch, step))
             {
                 if (Suffix == NoteSuffix.Flat)
                 {
@@ -151,16 +165,19 @@ namespace neck.Models.Entity
                 }
             }
 
-            nextValue = (Pitch + step) % Notes.Count;
-
-            if (!Enum.IsDefined(typeof(NoteValue), nextValue))
+            if (!noteValueExists(Pitch, step))
             {
-                nextValue = (int)(Base + step) % Notes.Count;
+                nextValue = noteValue((int)Base, step);
+
                 if (nextSuffix == NoteSuffix.Flat)
                 {
                     nextSuffix = NoteSuffix.DoubleFlat;
                 }
             }
+            else
+			{
+                nextValue = noteValue(Pitch, step);
+			}
             return new Note((NoteValue)nextValue, nextSuffix);
         }
 
@@ -171,22 +188,20 @@ namespace neck.Models.Entity
 
         public Note WholeStepDown()
         {
-            //int step = 0;
-
-            return new Note();
+            throw new NotImplementedException();
         }
 
         public Note WholeStepUp()
         {
             var step = 2;
 
-            var nextValue = (Pitch + step) % Notes.Count;
-            var nextSuffix = NoteSuffix.Natural;
+            NoteValue nextValue;
+            NoteSuffix nextSuffix = NoteSuffix.Natural;
 
             // TODO: get rid of this
             var calcFromBase = false;
 
-            if (Enum.IsDefined(typeof(NoteValue), nextValue))
+            if (noteValueExists(Pitch, step))
             {
                 if (Suffix == NoteSuffix.Sharp)
                 {
@@ -196,9 +211,17 @@ namespace neck.Models.Entity
                 else if (Suffix == NoteSuffix.DoubleFlat)
                 {
                     step = 3;
-                    nextSuffix = NoteSuffix.Flat;
-                }
-                else if (Suffix == NoteSuffix.DoubleSharp)
+                    if (!noteValueExists(Pitch, step))
+					{
+                        step = 4;
+                        nextSuffix = NoteSuffix.DoubleFlat;
+                    }
+                    else
+                    {
+                        nextSuffix = NoteSuffix.Flat;
+                    }
+				}
+				else if (Suffix == NoteSuffix.DoubleSharp)
                 {
                     calcFromBase = true;
                 }
@@ -217,11 +240,10 @@ namespace neck.Models.Entity
                 }
             }
 
-            nextValue = (Pitch + step) % Notes.Count;
-
-            if (!Enum.IsDefined(typeof(NoteValue), nextValue) || calcFromBase)
+            if (!noteValueExists(Pitch, step) || calcFromBase)
             {
-                nextValue = (int)(Base + step) % Notes.Count;
+                nextValue = noteValue((int)Base, step);
+
                 if (nextSuffix == NoteSuffix.Flat)
                 {
                     nextSuffix = NoteSuffix.DoubleFlat;
@@ -231,7 +253,11 @@ namespace neck.Models.Entity
                     nextSuffix = NoteSuffix.DoubleSharp;
                 }
             }
-            return new Note((NoteValue)nextValue, nextSuffix);
+            else
+            {
+                nextValue = noteValue(Pitch, step);
+            }
+            return new Note(nextValue, nextSuffix);
         }
         #endregion
 

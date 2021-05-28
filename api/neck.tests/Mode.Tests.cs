@@ -29,7 +29,7 @@ namespace neck.tests
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, new Mode(ModeType.Ionian));
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+			Assert.Equal(scaleLabels, getLabelArray(scale.Notes));
 		}
 
 		[Theory]
@@ -53,7 +53,7 @@ namespace neck.tests
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, new Mode(ModeType.Dorian));
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+			Assert.Equal(scaleLabels, getLabelArray(scale.Notes));
 		}
 
 		[Theory]
@@ -77,7 +77,7 @@ namespace neck.tests
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, new Mode(ModeType.Phrygian));
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+			Assert.Equal(scaleLabels, getLabelArray(scale.Notes));
 		}
 
 		[Theory]
@@ -101,7 +101,7 @@ namespace neck.tests
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, new Mode(ModeType.Lydian));
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+			Assert.Equal(scaleLabels, getLabelArray(scale.Notes));
 		}
 
 		[Theory]
@@ -125,7 +125,7 @@ namespace neck.tests
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, new Mode(ModeType.Mixolydian));
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+			Assert.Equal(scaleLabels, getLabelArray(scale.Notes));
 		}
 
 		[Theory]
@@ -149,7 +149,7 @@ namespace neck.tests
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, new Mode(ModeType.Aeolian));
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+			Assert.Equal(scaleLabels, getLabelArray(scale.Notes));
 		}
 
 		[Theory]
@@ -173,7 +173,7 @@ namespace neck.tests
 			var note = new Note(value, suffix);
 			var scale = new Scale(note, new Mode(ModeType.Locrian));
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+			Assert.Equal(scaleLabels, getLabelArray(scale.Notes));
 		}
 	}
 }

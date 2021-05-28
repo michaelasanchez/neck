@@ -35,37 +35,37 @@ namespace neck.tests
 			}
 		}
 
-		[Theory]
-		[InlineData(NoteValue.C, NoteSuffix.DoubleFlat, "Cbb", "Dbb", "Ebb", "Fbb", "Gbb", "Abb", "Bbb")]
-		[InlineData(NoteValue.G, NoteSuffix.DoubleFlat, "Gbb", "Abb", "Bbb", "Cbb", "Dbb", "Ebb", "Fb")]
-		[InlineData(NoteValue.D, NoteSuffix.DoubleFlat, "Dbb", "Ebb", "Fb", "Gbb", "Abb", "Bbb", "Cb")]
-		[InlineData(NoteValue.A, NoteSuffix.DoubleFlat, "Abb", "Bbb", "Cb", "Dbb", "Ebb", "Fb", "Gb")]
-		[InlineData(NoteValue.E, NoteSuffix.DoubleFlat, "Ebb", "Fb", "Gb", "Abb", "Bbb", "Cb", "Db")]
-		[InlineData(NoteValue.B, NoteSuffix.DoubleFlat, "Bbb", "Cb", "Db", "Ebb", "Fb", "Gb", "Ab")]
-		[InlineData(NoteValue.F, NoteSuffix.Flat, "Fb", "Gb", "Ab", "Bbb", "Cb", "Db", "Eb")]
-		public void Theoretical_DoubleFlat(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
-		{
-			var note = new Note(value, suffix);
-			var scale = new Scale(note, ScaleType.Diatonic);
+		//[Theory]
+		//[InlineData(NoteValue.C, NoteSuffix.DoubleFlat, "Cbb", "Dbb", "Ebb", "Fbb", "Gbb", "Abb", "Bbb")]
+		//[InlineData(NoteValue.G, NoteSuffix.DoubleFlat, "Gbb", "Abb", "Bbb", "Cbb", "Dbb", "Ebb", "Fb")]
+		//[InlineData(NoteValue.D, NoteSuffix.DoubleFlat, "Dbb", "Ebb", "Fb", "Gbb", "Abb", "Bbb", "Cb")]
+		//[InlineData(NoteValue.A, NoteSuffix.DoubleFlat, "Abb", "Bbb", "Cb", "Dbb", "Ebb", "Fb", "Gb")]
+		//[InlineData(NoteValue.E, NoteSuffix.DoubleFlat, "Ebb", "Fb", "Gb", "Abb", "Bbb", "Cb", "Db")]
+		//[InlineData(NoteValue.B, NoteSuffix.DoubleFlat, "Bbb", "Cb", "Db", "Ebb", "Fb", "Gb", "Ab")]
+		//[InlineData(NoteValue.F, NoteSuffix.Flat, "Fb", "Gb", "Ab", "Bbb", "Cb", "Db", "Eb")]
+		//public void Theoretical_DoubleFlat(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
+		//{
+		//	var note = new Note(value, suffix);
+		//	var scale = new Scale(note, ScaleType.Diatonic);
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
-		}
+		//	Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+		//}
 
-		[Theory]
-		[InlineData(NoteValue.G, NoteSuffix.Sharp, "G#", "A#", "B#", "C#", "D#", "E#", "F##")]
-		[InlineData(NoteValue.D, NoteSuffix.Sharp, "D#", "E#", "F##", "G#", "A#", "B#", "C##")]
-		[InlineData(NoteValue.A, NoteSuffix.Sharp, "A#", "B#", "C##", "D#", "E#", "F##", "G##")]
-		[InlineData(NoteValue.E, NoteSuffix.Sharp, "E#", "F##", "G##", "A#", "B#", "C##", "D##")]
-		[InlineData(NoteValue.B, NoteSuffix.Sharp, "B#", "C##", "D##", "E#", "F##", "G##", "A##")]
-		[InlineData(NoteValue.F, NoteSuffix.DoubleSharp, "F##", "G##", "A##", "B#", "C##", "D##", "E##")]
-		[InlineData(NoteValue.C, NoteSuffix.DoubleSharp, "C##", "D##", "E##", "F##", "G##", "A##", "B##")]
-		public void Theoretical_DoubleSharp(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
-		{
-			var note = new Note(value, suffix);
-			var scale = new Scale(note, ScaleType.Diatonic);
+		//[Theory]
+		//[InlineData(NoteValue.G, NoteSuffix.Sharp, "G#", "A#", "B#", "C#", "D#", "E#", "F##")]
+		//[InlineData(NoteValue.D, NoteSuffix.Sharp, "D#", "E#", "F##", "G#", "A#", "B#", "C##")]
+		//[InlineData(NoteValue.A, NoteSuffix.Sharp, "A#", "B#", "C##", "D#", "E#", "F##", "G##")]
+		//[InlineData(NoteValue.E, NoteSuffix.Sharp, "E#", "F##", "G##", "A#", "B#", "C##", "D##")]
+		//[InlineData(NoteValue.B, NoteSuffix.Sharp, "B#", "C##", "D##", "E#", "F##", "G##", "A##")]
+		//[InlineData(NoteValue.F, NoteSuffix.DoubleSharp, "F##", "G##", "A##", "B#", "C##", "D##", "E##")]
+		//[InlineData(NoteValue.C, NoteSuffix.DoubleSharp, "C##", "D##", "E##", "F##", "G##", "A##", "B##")]
+		//public void Theoretical_DoubleSharp(NoteValue value, NoteSuffix suffix, params string[] scaleLabels)
+		//{
+		//	var note = new Note(value, suffix);
+		//	var scale = new Scale(note, ScaleType.Diatonic);
 
-			Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
-		}
+		//	Assert.Equal(getLabelArray(scale.Notes), scaleLabels);
+		//}
 
 		[Theory]
 		[InlineData(NoteValue.A, NoteSuffix.Flat, "Ab", "Bb", "Cb", "Db", "Eb", "Fb", "Gb")]
