@@ -9,7 +9,27 @@ namespace neck.Models
 
     public class Mode
     {
-        private static List<Step> _intervals = new List<Step> { Step.Whole, Step.Whole, Step.Half, Step.Whole, Step.Whole, Step.Whole, Step.Half };
+        private static List<Step> _intervals = new List<Step>
+        {
+            Step.Whole,
+            Step.Whole,
+            Step.Half,
+            Step.Whole,
+            Step.Whole,
+            Step.Whole,
+            Step.Half
+        };
+
+        private static List<Step> _augmentedIntervals = new List<Step>
+        {
+            Step.Whole,
+            Step.Whole,
+            Step.Whole,
+            Step.Whole,
+            Step.Half,
+            Step.Whole,
+            Step.Half
+        };
 
         /*
          * 
@@ -29,16 +49,18 @@ namespace neck.Models
 
         public List<Step> Steps { get; set; }
 
-        public Mode(ModeType type)
+        public Mode(ModeType type, bool augmented = false)
 		{
             Type = type;
             Label = type.ToString();
-            Steps = calcSteps(type);
+            Steps = calcSteps(type, augmented);
 		}
 
-        private List<Step> calcSteps(ModeType type)
+        private List<Step> calcSteps(ModeType type, bool augmented)
 		{
-            return  _intervals.Select((s, i) => _intervals[(i + (int)type) % _intervals.Count]).ToList();
+            var intervals = augmented ? _augmentedIntervals : _intervals;
+
+            return  intervals.Select((s, i) => intervals[(i + (int)type) % intervals.Count]).ToList();
 		}
     }
 }

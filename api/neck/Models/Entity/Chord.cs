@@ -119,43 +119,43 @@ namespace neck.Models.Entity
             var scale = new Scale(root, getMode(modifier));
 
             List<Note> components;
-            if (modifier == ChordModifier.Augmented || modifier == ChordModifier.Augmented7)
-            {
-                components = intervals
-                    .Select(i =>
-                    {
-                        var note = scale.Notes.FirstOrDefault(n => n.Interval == i);
-                        Note adjustedNote = null;
-                        if (note == null)
-                        {
-                            var flat = scale.Notes.FirstOrDefault(n => n.Interval == i + 1);
-                            if (flat != null && (flat.Interval == Interval.PerfectFifth || flat.Interval == Interval.MajorSeventh))
-                            {
-                                adjustedNote = new Note(flat.Base, NoteSuffix.Flat);
-                            }
+            //if (modifier == ChordModifier.Augmented || modifier == ChordModifier.Augmented7)
+            //{
+            //    components = intervals
+            //        .Select(i =>
+            //        {
+            //            var note = scale.Notes.FirstOrDefault(n => n.Interval == i);
+            //            Note adjustedNote = null;
+            //            if (note == null)
+            //            {
+            //                var flat = scale.Notes.FirstOrDefault(n => n.Interval == i + 1);
+            //                if (flat != null && (flat.Interval == Interval.PerfectFifth || flat.Interval == Interval.MajorSeventh))
+            //                {
+            //                    adjustedNote = new Note(flat.Base, NoteSuffix.Flat);
+            //                }
 
-                            var sharp = scale.Notes.FirstOrDefault(n => n.Interval == i - 1);
-                            if (sharp != null && (sharp.Interval == Interval.PerfectFifth || sharp.Interval == Interval.MajorSeventh))
-                            {
-                                adjustedNote = new Note(sharp.Base, NoteSuffix.Sharp);
-                            }
+            //                var sharp = scale.Notes.FirstOrDefault(n => n.Interval == i - 1);
+            //                if (sharp != null && (sharp.Interval == Interval.PerfectFifth || sharp.Interval == Interval.MajorSeventh))
+            //                {
+            //                    adjustedNote = new Note(sharp.Base, NoteSuffix.Sharp);
+            //                }
 
-                            if (adjustedNote != null)
-                            {
-                                var degreeNote = scale.Notes.FirstOrDefault(n => n.Base == adjustedNote.Base);
-                                adjustedNote.Degree = degreeNote.Degree;
-                                note = adjustedNote;
-                            }
-                        }
+            //                if (adjustedNote != null)
+            //                {
+            //                    var degreeNote = scale.Notes.FirstOrDefault(n => n.Base == adjustedNote.Base);
+            //                    adjustedNote.Degree = degreeNote.Degree;
+            //                    note = adjustedNote;
+            //                }
+            //            }
 
-                        return note;
-                    })
-                    .ToList();
-            }
-            else
-            {
+            //            return note;
+            //        })
+            //        .ToList();
+            //}
+            //else
+            //{
                 components = intervals.Select(i => scale.Notes.FirstOrDefault(n => n.Interval == i)).ToList();
-            }
+            //}
 
             return components;
         }
