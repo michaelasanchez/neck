@@ -7,8 +7,8 @@ import { PanelDropdown } from '..';
 import { useIndicatorsContext } from '../../..';
 import { useAppOptionsContext } from '../../../..';
 import { useRequest } from '../../../../hooks';
-import { FretNote, Key, Note, TuningNote } from '../../../../models';
-import { KeyApi } from '../../../../network';
+import { Chord, FretNote, Key, Note, TuningNote } from '../../../../models';
+import { ChordApi, KeyApi } from '../../../../network';
 import { SearchNote } from '../../slideins/SearchNote';
 
 export enum SearchMode {
@@ -43,8 +43,10 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
 
   const [query, setQuery] = useState<FretNote[]>();
 
+  const [chordsResult, setChordsResult] = useState<Chord[]>();
   const [keysResult, setKeysResult] = useState<Key[]>();
 
+  const { req: searchChords } = useRequest(new ChordApi().SearchAsync);
   const { req: searchKeys } = useRequest(new KeyApi().SearchAsync);
 
   const handleSetKey = (k: Key) => setAppOptions({ key: k });
@@ -59,6 +61,10 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
           });
           break;
         case SearchMode.Chords:
+          searchChords(map(searchArray, (n) => n.Note)).then((chords) => {
+            setQuery(getDisplayArray(searchArray));
+            setChordsResult(chords);
+          });
           break;
         default:
           console.error('Something is wrong'); // TODO: debug
@@ -80,22 +86,71 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
     setSelectedMatrix(filteredMatrix);
   };
 
-  const searchOptions = [{ label: 'Chords', value: SearchMode.Chords}, { label: 'Keys', value: SearchMode.Keys }];//, { label: 'Scales', value: 'scale' }];
+  const searchOptions = [
+    { label: 'Chords', value: SearchMode.Chords },
+    { label: 'Keys', value: SearchMode.Keys },
+  ]; //, { label: 'Scales', value: 'scale' }];
 
-  
   /* ButtonGroup */
   const buttonGroup = (
     <>
       <PanelDropdown
-        active={searchOptions[searchMode]}  // TODO: this only works because SearchMode enum matches options array
+        active={searchOptions[searchMode]} // TODO: this only works because SearchMode enum matches options array
         options={searchOptions}
         onSelect={setSearchMode}
       />
     </>
   );
 
+  const renderResults = () => {
+    switch (searchMode) {
+      case SearchMode.Keys:
+        return (
+          <>
+            <h5>
+              Keys <span className="text-muted">({keysResult.length})</span>
+            </h5>
+            <div className="key-result">
+              {map(keysResult, (k: Key, i: number) => (
+                <div key={i} onClick={() => handleSetKey(k)}>
+                  <h6>{k.LongLabel}</h6>
+                  {map(k.Scale.Notes, (n: Note, j: number) => (
+                    <span key={j}>{n.Label}</span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </>
+        );
+      case SearchMode.Chords:
+        console.log(chordsResult);
+        return (
+          <>
+            <h5>
+              Chords <span className="text-muted">({chordsResult.length})</span>
+            </h5>
+            <div className="chord-result">
+              {map(chordsResult, (c: Chord, i: number) => (
+                <div key={i}>
+                  <h6>{c.Label}</h6>
+                  {map(c.Tones, (n: Note, j: number) => (
+                    <span key={j}>{n.Label}</span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </>
+        );
+    }
+  };
+
   return (
-    <ToolPanel {...props} className={`search ${className}`} title="Search" buttonGroup={buttonGroup}>
+    <ToolPanel
+      {...props}
+      className={`search ${className}`}
+      title="Search"
+      buttonGroup={buttonGroup}
+    >
       <div className="search-query">
         {searchArray.length ? (
           map(getDisplayArray(searchArray), (n: FretNote, i: number) => (
@@ -117,12 +172,15 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
         >
           Clear
         </Button>
-        <Button disabled={!searchArray.length} onClick={() => handleSubmitQuery()}>
+        <Button
+          disabled={!searchArray.length}
+          onClick={() => handleSubmitQuery()}
+        >
           Go
         </Button>
       </div>
 
-      {!!keysResult && (
+      {(!!keysResult || !!chordsResult) && (
         <>
           <div className="results-header">
             <h4>Results</h4>
@@ -134,19 +192,7 @@ export const SearchPanel: React.FunctionComponent<SearchPanelProps> = (
               ))}
             </div>
           </div>
-          <h5>
-            Keys <span className="text-muted">({keysResult.length})</span>
-          </h5>
-          <div className="key-result">
-            {map(keysResult, (k: Key, i: number) => (
-              <div key={i} onClick={() => handleSetKey(k)}>
-                <h6>{k.LongLabel}</h6>
-                {map(k.Scale.Notes, (n: Note, j: number) => (
-                  <span key={j}>{n.Label}</span>
-                ))}
-              </div>
-            ))}
-          </div>
+          <div className="results-body">{renderResults()}</div>
         </>
       )}
     </ToolPanel>

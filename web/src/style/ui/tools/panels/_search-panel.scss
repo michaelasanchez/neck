@@ -82,8 +82,11 @@
     }
   }
 
+  .results-body {
+    flex-grow: 1;
+  }
+
   .key-result {
-    max-height: 300px;
     overflow-y: auto;
     padding-right: 0.5em;
 
@@ -106,4 +109,12 @@
       }
     }
   }
+}
+
+.panel-container:not(.docked) {
+  .tool-panel.search {
+    .key-result {
+      max-height: 300px;
+    }
+  } 
 }
