@@ -89,7 +89,7 @@ namespace neck.Models.Entity
                 case ChordModifier.Minor:
                     return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.PerfectFifth };
                 case ChordModifier.Diminished:
-                    return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.DiminishedFifth }; // BROKEN
+                    return new List<Interval> { Interval.Root, Interval.MinorThird, Interval.DiminishedFifth };
                 case ChordModifier.Augmented:
                     return new List<Interval> { Interval.Root, Interval.MajorThird, (Interval)AugmentedInterval.AugmentedFifth };
                 case ChordModifier.Sus2:
