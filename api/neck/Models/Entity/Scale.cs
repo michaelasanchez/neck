@@ -48,7 +48,7 @@ namespace neck.Models.Entity
 
         // TODO: Chord uses this to define mode explicity
         //	Potentially need to add ScaleType enum values for modes
-        internal Scale(Note root, Mode mode)
+        public Scale(Note root, Mode mode)
         {
             Tonic = root;
 

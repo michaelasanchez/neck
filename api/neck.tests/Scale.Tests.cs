@@ -1,8 +1,5 @@
 ﻿using neck.Enums;
-using neck.Models;
 using neck.Models.Entity;
-using System;
-using System.Collections.Generic;
 using Xunit;
 
 namespace neck.tests
